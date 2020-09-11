@@ -2,7 +2,7 @@ from torch import linspace, zeros
 from pytorch_DOPRIstep import pytorch_DOPRIstep
 
 def pytorch_DOPRI(originalfunc,ta,tb,x0,h,p):
-    npts = round((tb - ta)/h + 1)
+    npts = int(round((tb - ta)/h + 1))
     h = (tb - ta)/(npts-1)
     dim = x0.shape
     xout = zeros(dim[0], npts)
