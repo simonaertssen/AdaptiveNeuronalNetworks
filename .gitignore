@@ -1,18 +1,46 @@
-# Build and Release Folders
-bin-debug/
-bin-release/
-[Oo]bj/
-[Bb]in/
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
 
-# Other files and folders
-.settings/
+# Matlab files
+# Windows default autosave extension
+*.asv
+# OSX / *nix default autosave extension
+*.m~
+# Compiled MEX binaries (all platforms)
+*.mex*
+# Simulink Code Generation
+slprj/
+# Session info
+octave-workspace
+# Simulink autosave extension
+.autosave
 
-# Executables
-*.swf
-*.air
-*.ipa
-*.apk
+# Icon must end with two \r
+Icon
 
-# Project files, i.e. `.project`, `.actionScriptProperties` and `.flexProperties`
-# should NOT be excluded as they contain compiler settings and other important
-# information for Eclipse / Flash Builder.
+# We do not want any compiled code
+*.exe
+*.out
+*.o
+*.so
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
