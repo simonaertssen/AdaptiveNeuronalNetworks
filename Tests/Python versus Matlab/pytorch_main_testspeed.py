@@ -55,4 +55,6 @@ ax.set_ylim([x.min(), x.max()])
 #plt.show()
 print(time.time() - start)
 
-# % Elapsed time is 8.17128300666809 seconds.
+# Elapsed time is 8.17128300666809 seconds (native MAC OS cpu)
+# Elapsed time is 10.1577579975 seconds (SXM2SH GPU)
+# Elapsed time is 14.0350928307 seconds (VOLTASH GPU)
