@@ -1,8 +1,8 @@
-from numpy import linspace, zeros, round
-from DOPRIstep import DOPRIstep
+from torch import linspace, zeros
+from pytorch_DOPRIstep import pytorch_DOPRIstep
 
-def DOPRI45(originalfunc,ta,tb,x0,h,p):
-    npts = round((tb - ta)/h + 1, 0).astype(int)
+def pytorch_DOPRI(originalfunc,ta,tb,x0,h,p):
+    npts = round((tb - ta)/h + 1)
     h = (tb - ta)/(npts-1)
     dim = x0.shape
     xout = zeros((dim[0], npts))
@@ -14,5 +14,5 @@ def DOPRI45(originalfunc,ta,tb,x0,h,p):
         return originalfunc(t, x, e, KN, a_n)
 
     for i in range(npts-1):
-        xout[:,i+1] = DOPRIstep(func,tout[i],xout[:,i],h);
+        xout[:,i+1] = pytorch_DOPRIstep(func,tout[i],xout[:,i],h);
     return tout, xout

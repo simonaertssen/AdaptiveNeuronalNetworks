@@ -1,4 +1,4 @@
-function P = randcauchy(seed, x0, gamma, n, m)
+function P = matlab_randcauchy(seed, x0, gamma, n, m)
 rng(seed);
     switch nargin
         case 4

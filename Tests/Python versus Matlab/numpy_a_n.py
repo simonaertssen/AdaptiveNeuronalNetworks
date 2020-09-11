@@ -8,5 +8,5 @@ def factorial(n):
         return n * factorial(n-1)
 
 @njit(fastmath=True)
-def a_n(n):
+def numpy_a_n(n):
     return (2**n)*(factorial(n)**2)/factorial(2*n)
