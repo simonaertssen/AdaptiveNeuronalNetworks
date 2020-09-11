@@ -5,7 +5,7 @@ def pytorch_DOPRI(originalfunc,ta,tb,x0,h,p):
     npts = round((tb - ta)/h + 1)
     h = (tb - ta)/(npts-1)
     dim = x0.shape
-    xout = zeros((dim[0], npts))
+    xout = zeros(dim[0], npts)
     xout[:,0] = x0
 
     tout = linspace(ta,tb,npts);
