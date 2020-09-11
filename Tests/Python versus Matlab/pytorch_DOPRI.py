@@ -9,15 +9,15 @@ def pytorch_DOPRI(originalfunc,ta,tb,x0,h,p):
     cuda_available = cuda.is_available()
     if cuda_available:
         print("cuda session enabled")
-        device = device("cuda")
+        currentdevice = device("cuda")
     else:
         print("cpu session enabled")
-        device = device("cpu")
+        currentdevice = device("cpu")
 
-    xout = zeros(dim[0], npts).to(device)
+    xout = zeros(dim[0], npts).to(currentdevice)
     xout[:,0] = x0
 
-    tout = linspace(ta,tb,npts).to(device)
+    tout = linspace(ta,tb,npts).to(currentdevice)
     # Make new function handle to improve speed!
     def func(t, x, e=p["e"], KN=p["K"]/p["N"], a_n=p["a_n"]):
         return originalfunc(t, x, e, KN, a_n)
