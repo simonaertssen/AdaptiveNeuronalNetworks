@@ -40,9 +40,12 @@ pars["delta"] = 0.5
 pars["K"] = -9
 seed = 0
 pars["e"] = torch.distributions.Cauchy(loc=pars["eta0"], scale=pars["delta"]).sample((pars["N"],))
-#pars["e"] = torch.tensor(cauchy.rvs(random_state=seed, loc=pars["eta0"], scale=pars["delta"], size=pars["N"]));
 
 t, x = pytorch_DOPRI(F, tnow, tend, IC, h, pars)
+if cuda:
+    t = t.cpu()
+    x = x.cpu()
+
 tnew = np.vstack([t.numpy()] * pars["N"])
 data = np.stack((tnew,x.numpy()), axis=2)
 
