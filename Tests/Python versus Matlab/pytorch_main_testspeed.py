@@ -4,6 +4,17 @@ import time
 start = time.time()
 
 import torch
+
+cuda = torch.cuda.is_available()
+if cuda:
+    print("cuda session enabled")
+    device = torch.device("cuda")
+    torch.set_default_tensor_type('torch.cuda.FloatTensor')
+else:
+    print("cpu session enabled")
+    device = torch.device("cpu")
+    torch.set_default_tensor_type('torch.FloatTensor')
+
 import numpy as np
 from pytorch_a_n import pytorch_a_n
 from pytorch_DOPRI import pytorch_DOPRI
@@ -41,4 +52,4 @@ ax.set_ylim([x.min(), x.max()])
 #plt.show()
 print(time.time() - start)
 
-# % Elapsed time is 9.352510929107666 seconds.
+# % Elapsed time is 8.17128300666809 seconds.
