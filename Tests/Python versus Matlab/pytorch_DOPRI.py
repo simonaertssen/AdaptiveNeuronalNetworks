@@ -6,8 +6,8 @@ def pytorch_DOPRI(originalfunc,ta,tb,x0,h,p):
     h = (tb - ta)/(npts-1)
     dim = x0.shape
 
-    cuda = cuda.is_available()
-    if cuda:
+    cuda_available = cuda.is_available()
+    if cuda_available:
         print("cuda session enabled")
         device = device("cuda")
     else:
