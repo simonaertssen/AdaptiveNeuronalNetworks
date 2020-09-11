@@ -1,5 +1,3 @@
-from numba import jit, njit
-
 def DOPRIstep(func,t,x,h):
     K1 = h*func(t,x)
     K2 = h*func(t+h/5,x+K1/5)
