@@ -3,6 +3,9 @@
 .AppleDouble
 .LSOverride
 
+# No pycache
+__pycache__/
+
 # Matlab files
 # Windows default autosave extension
 *.asv
