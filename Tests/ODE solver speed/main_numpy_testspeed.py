@@ -14,7 +14,6 @@ from scipy.stats import cauchy
 
 # Parameters
 pars = {}
-pars["a_n"] = numpy_a_n(2)
 pars["N"] = 10000
 F = numpy_thetaneurons
 tnow = 0

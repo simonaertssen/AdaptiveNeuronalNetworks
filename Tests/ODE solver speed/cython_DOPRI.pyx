@@ -1,7 +1,7 @@
 from numpy import linspace, zeros, round
-from numpy_DOPRIstep import numpy_DOPRIstep
+from cython_DOPRIstep import cython_DOPRIstep
 
-def numpy_DOPRI(originalfunc,ta,tb,x0,h,p):
+cdef cython_DOPRI(originalfunc,ta,tb,x0,h,p):
     npts = round((tb - ta)/h + 1, 0).astype(int)
     h = (tb - ta)/(npts-1)
     dim = x0.shape
@@ -14,5 +14,5 @@ def numpy_DOPRI(originalfunc,ta,tb,x0,h,p):
         return originalfunc(t, x, e, KN, a_n)
 
     for i in range(npts-1):
-        xout[:,i+1] = numpy_DOPRIstep(func,tout[i],xout[:,i],h);
+        xout[:,i+1] = cython_DOPRIstep(func,tout[i],xout[:,i],h);
     return tout, xout
