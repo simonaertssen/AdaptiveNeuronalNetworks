@@ -3,8 +3,10 @@
 .AppleDouble
 .LSOverride
 
-# No pycache
+# No pycache and build folders:
+build/
 __pycache__/
+
 
 # Matlab files
 # Windows default autosave extension
@@ -23,7 +25,8 @@ octave-workspace
 # Icon must end with two \r
 Icon
 
-# We do not want any compiled code
+# We do not want any compiled code:
+*.html
 *.exe
 *.out
 *.o
