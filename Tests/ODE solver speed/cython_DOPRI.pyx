@@ -1,7 +1,7 @@
 from numpy import linspace, zeros, round
 from cython_DOPRIstep import cython_DOPRIstep
 
-cdef cython_DOPRI(originalfunc,ta,tb,x0,h,p):
+def cython_DOPRI(originalfunc,ta,tb,x0,h,p):
     npts = round((tb - ta)/h + 1, 0).astype(int)
     h = (tb - ta)/(npts-1)
     dim = x0.shape

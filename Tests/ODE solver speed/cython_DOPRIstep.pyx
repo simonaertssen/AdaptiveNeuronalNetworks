@@ -1,4 +1,4 @@
-cdef cython_DOPRIstep(func,t,x,h):
+def cython_DOPRIstep(func,t,x,h):
     K1 = h*func(t,x)
     K2 = h*func(t+h/5,x+K1/5)
     K3 = h*func(t+3*h/10,x+3*K1/40+9*K2/40)

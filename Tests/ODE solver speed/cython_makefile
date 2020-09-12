@@ -1,0 +1,14 @@
+# Run me with make -f cython_makefile
+
+make:
+	echo "Running makefile"
+	python3 cython_setyp.py build_ext --inplace
+	python3 main_cython_testspeed.py
+	clean
+
+clean:
+	rm *.so
+	rm *.html
+	rm *.c
+	rm -rf __pycache__
+	rm -rf build
