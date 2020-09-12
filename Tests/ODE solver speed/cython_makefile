@@ -1,15 +1,18 @@
 # Run me with make -f cython_makefile
 
-all: make clean
+# For cleaning up after yourself:
+# all: make clean
+
+all: make
+
 make:
-	echo "Running makefile."
 	python3 cython_setyp.py build_ext --inplace
 	python3 main_cython_testspeed.py
 
 clean:
-	rm *.so
-	rm *.html
-	rm *.c
-	rm -rf __pycache__
-	rm -rf build
-	echo "Clean done."
+	@rm *.so
+	@rm *.html
+	@rm *.c
+	@rm -rf __pycache__
+	@rm -rf build
+	@echo "Clean done."
