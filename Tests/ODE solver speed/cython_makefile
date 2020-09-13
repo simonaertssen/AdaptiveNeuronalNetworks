@@ -6,7 +6,7 @@
 all: make
 
 make:
-	python3 cython_setyp.py build_ext --inplace
+	python3 cython_setup.py build_ext --inplace
 	python3 main_cython_testspeed.py
 
 clean:

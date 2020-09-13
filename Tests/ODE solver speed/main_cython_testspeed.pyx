@@ -39,6 +39,9 @@ cpdef testtiming():
 from cython_DOPRI import cython_DOPRI
 
 cdef extern from "c_thetaneurons.h":
+    double c_pulse(float)
+
+cdef extern from "c_functions.h":
     double c_thetaneurons(float)
 
 import matplotlib.pyplot as plt
