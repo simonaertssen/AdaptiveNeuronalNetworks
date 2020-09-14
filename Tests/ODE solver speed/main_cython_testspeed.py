@@ -8,4 +8,4 @@ from main_cython_testspeed import testtiming_cython
 from main_cython_testspeed import testtiming
 
 if __name__ == "__main__":
-    main()
+    testtiming()
