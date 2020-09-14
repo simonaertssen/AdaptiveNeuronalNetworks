@@ -14,16 +14,11 @@ def compute():
     # This main function has been adapted to use as many c functions where possible!
     # Other functions are gathered in the pxd declarator
     # Parameters
+    c_functions.printing(23)
     start = time.time()
     pars = {}
-    # for _ in range(1000000):
-    #     c_functions.c_a_n(2)
-    print(c_functions.factorial(4))
-    # print(c_functions.c_a_n(2))
-    # pars["a_n"] = c_functions.c_a_n(2)
-    pars["N"] = 1
 
-    print("time: ", time.time() - start)
+    # Implementation does not work as there is a segmentation fault in the c file...
     # Takes about 0.3462 seconds so not the fastest...
 
 if __name__ == '__main__':

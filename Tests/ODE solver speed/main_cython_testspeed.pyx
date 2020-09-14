@@ -1,8 +1,6 @@
 import sys
 import time
 
-start = time.time()
-
 import numpy as np
 cimport numpy as np
 
@@ -36,23 +34,21 @@ cpdef testtiming():
   print("time: ", time.time() - start)
   # Takes about 0.0034s unoptimised
 
-from cython_DOPRI import cython_DOPRI
-
 cdef extern from "cython_c_functions.h":
-    double c_a_n(int)
-
-import matplotlib.pyplot as plt
-from matplotlib.collections import LineCollection
-from scipy.stats import cauchy
+    double sumtest(double, int)
 
 cpdef main():
   # This main function has been adapted to use as many c functions where possible!
   # Other functions are gathered in the pxd declarator
   # Parameters
-  # pars = {}
-  # cdef int n = 2
-  # pars["a_n"] = c_a_n(n)
-  # pars["N"] = 1
+  start = time.time()
+  pars = {}
+  cdef int n = 2
+  pars["a_n"] = c_a_n(n)
+  pars["N"] = 1
+
+  theta = np.ones(100)
+  print(sumtest(theta, 100))
   #
   # cdef float t = 1.0
   # cdef double F = c_thetaneurons(t)
@@ -77,6 +73,6 @@ cpdef main():
   # # ax.add_collection(LineCollection(data))
   # # ax.set_ylim([x.min(1).min(), x.max(1).max()])
   # #plt.show()
-  # print(time.time() - start)
+  print(time.time() - start)
 
 # Elapsed time is 21.666523933410645 seconds (changed nothing, just ran with .pyx instead of py)
