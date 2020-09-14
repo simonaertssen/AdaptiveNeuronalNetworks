@@ -18,8 +18,9 @@ def compute():
     pars = {}
     # for _ in range(1000000):
     #     c_functions.c_a_n(2)
-    print(c_functions.c_a_n(2))
-    pars["a_n"] = c_functions.c_a_n(2)
+    print(c_functions.factorial(4))
+    # print(c_functions.c_a_n(2))
+    # pars["a_n"] = c_functions.c_a_n(2)
     pars["N"] = 1
 
     print("time: ", time.time() - start)
