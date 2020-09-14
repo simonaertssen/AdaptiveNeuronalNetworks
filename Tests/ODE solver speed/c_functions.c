@@ -43,10 +43,10 @@ long c_factorial(long *n) {
 }
 
 static PyObject *c_a_n(PyObject *self, PyObject *args){
-  long *n, *m;
+  long *n, m;
   if (!PyArg_ParseTuple(args, "l", &n)) {
         return NULL;
   }
-  m = &(2*(*n));
-  return Py_BuildValue("l", pow(2,(double)(*n))*pow(c_factorial(n),2)/c_factorial(m));
+  m = 2*(*n);
+  return Py_BuildValue("l", pow(2,(double)(*n))*pow(c_factorial(n),2)/c_factorial(&m));
 }
