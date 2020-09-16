@@ -16,6 +16,7 @@
             "-Wunused-function"
         ],
         "include_dirs": [
+            "/anaconda3/lib/python3.7/site-packages/numpy/core/include",
             "/anaconda3/lib/python3.7/site-packages/numpy/core/include"
         ],
         "libraries": [
@@ -39,7 +40,7 @@ END: Cython Metadata */
 #else
 #define CYTHON_ABI "0_29_10"
 #define CYTHON_HEX_VERSION 0x001D0AF0
-#define CYTHON_FUTURE_DIVISION 0
+#define CYTHON_FUTURE_DIVISION 1
 #include <stddef.h>
 #ifndef offsetof
   #define offsetof(type, member) ( (size_t) & ((type*)0) -> member )

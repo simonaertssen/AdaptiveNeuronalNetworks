@@ -1,9 +1,10 @@
-
 cimport numpy as np
 import numpy as np
 
-cdef np.ndarray[np.float64_t, mode="fortran", ndim=1] DSCAL(np.ndarray[np.float64_t, mode="fortran", ndim=1] A, double scalar)
-cdef np.ndarray[np.float64_t, mode="fortran", ndim=1] cython_pulse(np.ndarray[np.float64_t, mode="fortran", ndim=1] theta)
-cdef np.ndarray[np.float64_t, mode="fortran", ndim=1] cython_thetaneurons(double t, np.ndarray[np.float64_t, mode="fortran", ndim=1] x, np.ndarray[np.float64_t, mode="fortran", ndim=1] e, double KdivN, double a)
-cdef np.ndarray[np.float64_t, mode="fortran", ndim=1] cython_DOPRIstep(double t, np.ndarray[np.float64_t, mode="fortran", ndim=1] x, double h, np.ndarray[np.float64_t, mode="fortran", ndim=1] e, double kn, double an)
-cdef np.ndarray[np.float64_t, mode="fortran", ndim=2] cython_DOPRI(double tnow, double tend, np.ndarray[np.float64_t, mode="fortran", ndim=1] IC, double h, dict pars)
+cdef double[:] DSCAL(double scalar, double[:] A)
+cdef double[:] DAXPY(double scalar, double[:] x, double[:] y)
+
+cdef double[:] cython_pulse(double[:] theta)
+cdef double[:] cython_thetaneurons(double t, double[:] x, double[:] e, double KdivN, double a)
+cdef double[:] cython_DOPRIstep(double t, double[:] x, double h, double[:] e, double kn, double an)
+cdef double[:,:] cython_DOPRI(double tnow, double tend, double[:] IC, double h, dict pars)

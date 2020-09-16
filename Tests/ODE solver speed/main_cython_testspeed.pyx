@@ -54,31 +54,32 @@ cpdef main():
   cdef dict pars = {}
   cdef int n = 2
   pars["a_n"] = c_a_n(n)
-  pars["N"] = 10000
+  pars["N"] = 100
   F = cython_thetaneurons
   pars["eta0"] = 10.75
   pars["delta"] = 0.5
   pars["K"] = -9
 
   seed = 0
-  pars["e"] = cauchy.rvs(random_state=seed, loc=pars["eta0"], scale=pars["delta"], size=pars["N"]);
-  cdef np.ndarray[np.float64_t, mode="fortran", ndim=1] IC = np.random.randn(pars["N"])*0.9 + 1
+  cdef double[:] e = cauchy.rvs(random_state=seed, loc=pars["eta0"], scale=pars["delta"], size=pars["N"]);
+  pars["e"] = e
+  cdef double[:] IC = np.random.randn(pars["N"])*0.9 + 1
 
   print("pars[a_n] =", pars["a_n"])
 
   cdef int npts = int(round((tend - tnow)/h + 1))
-  cdef np.ndarray[np.float64_t, mode="fortran", ndim=1] t = np.linspace(tnow,tend,npts);
-  cdef np.ndarray[np.float64_t, mode="fortran", ndim=2] x = cython_DOPRI(tnow, tend, IC, h, pars)
+  cdef double[:] t = np.linspace(tnow,tend,npts);
+  cdef double[:,:] x = cython_DOPRI(tnow, tend, IC, h, pars)
 
   tnew = np.vstack([t] * pars["N"])
   data = np.stack((tnew,x), axis=2)
 
   fig, ax = plt.subplots()
   ax.add_collection(LineCollection(data))
-  ax.set_ylim([x.min(1).min(), x.max(1).max()])
   # #plt.show()
   print("time: ", time.time() - start)
 
 # Elapsed time is 21.666523933410645 seconds (changed nothing, just ran with .pyx instead of py)
 # Elapsed time is 7.829545259475708 seconds when rewriting everything in cython
 # Elapsed time is 3.5402348041534424 seconds when using fortran mode
+# Elapsed time is 0.316767930984497 seconds when using cython memoryviews and BLAS subroutines
