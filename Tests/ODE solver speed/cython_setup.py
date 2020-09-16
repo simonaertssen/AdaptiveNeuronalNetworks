@@ -16,7 +16,7 @@ extensions = cythonize([
         sources=["*.pyx"],
         include_dirs=[numpy.get_include()],
         define_macros = [('NPY_NO_DEPRECATED_API', 'NPY_1_7_API_VERSION')],
-        extra_compile_args = ["-ffast-math", "-O3", "-Wno-unreachable-code."],
+        extra_compile_args = ["-ffast-math", "-O3", "-Wno-unreachable-code", "-Wunused-function"],
         libraries=["m"],
     ),
 ])
