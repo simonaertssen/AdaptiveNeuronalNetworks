@@ -33,3 +33,5 @@ f2 = figure('Renderer', 'painters', 'DefaultLegendFontSize',10);
 plot(real(z), imag(z)) 
 
 
+
+
