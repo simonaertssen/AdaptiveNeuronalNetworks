@@ -15,7 +15,6 @@ from scipy.stats import cauchy
 # Parameters
 pars = {}
 pars["N"] = 10000
-F = numpy_thetaneurons
 tnow = 0
 tend = 10
 h = 0.005
@@ -28,7 +27,7 @@ pars["K"] = -9
 seed = 0
 pars["e"] = cauchy.rvs(random_state=seed, loc=pars["eta0"], scale=pars["delta"], size=pars["N"]);
 
-t, x = numpy_DOPRI(F, tnow, tend, IC, h, pars)
+t, x = numpy_DOPRI(tnow, tend, IC, h, pars)
 tnew = np.vstack([t] * pars["N"])
 data = np.stack((tnew,x), axis=2)
 

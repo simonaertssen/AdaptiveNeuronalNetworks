@@ -24,6 +24,7 @@ cpdef testtiming_cython():
   # Takes about 0.045s using from libc.math cimport pow
   # Takes about 0.0063s using .pxd for all functions
 
+
 cpdef testtiming():
   # Test speed improvement by calling c++ functions
   start = time.time()
@@ -34,7 +35,11 @@ cpdef testtiming():
   print("time: ", time.time() - start)
   # Takes about 0.0034s unoptimised
 
-from cython_functions cimport cython_pulse
+
+from cython_functions cimport cython_thetaneurons, cython_DOPRI
+import matplotlib.pyplot as plt
+from matplotlib.collections import LineCollection
+from scipy.stats import cauchy
 
 cpdef main():
   # This main function has been adapted to use as many c functions where possible!
@@ -50,16 +55,19 @@ cpdef main():
   cdef int n = 2
   pars["a_n"] = c_a_n(n)
   pars["N"] = 1
+  F = cython_thetaneurons
   pars["eta0"] = 10.75
   pars["delta"] = 0.5
   pars["K"] = -9
 
+  seed = 0
+  pars["e"] = cauchy.rvs(random_state=seed, loc=pars["eta0"], scale=pars["delta"], size=pars["N"]);
+
   print("pars[a_n] =", pars["a_n"])
 
-  seed = 0
-  cdef np.ndarray[:] IC = np.random.randn(pars["N"])*0.9 + 1
+  cdef double[:] IC = np.random.randn(pars["N"])*0.9 + 1
 
-  t, x = cython_DOPRI(F, tnow, tend, IC, h, pars)
+  x = cython_DOPRI(tnow, tend, IC, h, pars)
   # # tnew = np.vstack([t] * pars["N"])
   # # data = np.stack((tnew,x), axis=2)
   # #

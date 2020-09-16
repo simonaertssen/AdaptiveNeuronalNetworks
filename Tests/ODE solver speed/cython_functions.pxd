@@ -1,9 +1,4 @@
-cdef class FunctionHandle:
-    cdef double e
-    cdef double kn
-    cdef double an
-
-cdef double[:] cython_pulse(double[:] theta)
-cdef double[:] cython_thetaneurons(double t, double[:] x, double[:] e, double KdivN, double a)
-cdef double[:] numpy_DOPRIstep(func, double t, double[:] x, double h)
-cdef double[:,:] cython_DOPRI(F, double tnow, double tend, double[:] IC, double h, dict pars)
+cdef np.ndarray[np.float64_t, ndim=1] cython_pulse(np.ndarray[np.float64_t, ndim=1] theta)
+cdef np.ndarray[np.float64_t, ndim=1] cython_thetaneurons(double t, np.ndarray[np.float64_t, ndim=1] x, np.ndarray[np.float64_t, ndim=1] e, double KdivN, double a)
+cdef np.ndarray[np.float64_t, ndim=1] cython_DOPRIstep(double t, np.ndarray[np.float64_t, ndim=1] x, double h, np.ndarray[np.float64_t, ndim=1] e, double kn, double an)
+cdef np.ndarray[np.float64_t, ndim=2] cython_DOPRI(double tnow, double tend, np.ndarray[np.float64_t, ndim=1] IC, double h, dict pars)
