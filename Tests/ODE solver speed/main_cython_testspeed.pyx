@@ -83,3 +83,4 @@ cpdef main():
 # Elapsed time is 7.829545259475708 seconds when rewriting everything in cython
 # Elapsed time is 3.5402348041534424 seconds when using fortran mode
 # Elapsed time is 0.316767930984497 seconds when using cython memoryviews and BLAS subroutines
+# Elapsed time is 0.13723421096801758 seconds when using loops for all K's

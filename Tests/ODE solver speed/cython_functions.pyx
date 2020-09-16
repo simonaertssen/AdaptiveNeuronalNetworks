@@ -9,12 +9,12 @@ from libc.math cimport cos
 
 import time
 
-cdef double[:] DSCAL(double scalar, double[:] A):
-  cdef int Asize = A.size
+cdef double[:] DSCAL(double scalar, double[:] x):
+  cdef int xsize = x.size
   cdef double *alpha = &scalar
   cdef int increment = 1
-  dscal(&Asize, alpha, &A[0], &increment)
-  return A
+  dscal(&xsize, alpha, &x[0], &increment)
+  return x
 
 
 cdef double[:] DAXPY(double scalar, double[:] x, double[:] y):
@@ -55,6 +55,55 @@ cdef double[:] cython_DOPRIstep(double t, double[:] x, double h, double[:] e, do
   return DAXPY(1, x, DAXPY(1, DAXPY(1, DAXPY(1, DAXPY(1,DSCAL(35/384,K1), DSCAL(500/1113,K3)), DSCAL(125/192,K4)), DSCAL(-2187/6784,K5)), DSCAL(11/84,K6)))
 
 
+cdef double[:] cython_DOPRIstep_loop(double t, double[:] x, double h, double[:] e, double kn, double an):
+  cdef double[:] K1, K2, K3, K4, K5, K6, Ktmp
+  cdef int xlength = x.size, i
+
+  K1 = cython_thetaneurons(t,x,e,kn,an)
+  for i in range(xlength):
+    K1[i] *= h
+
+  Ktmp = K1
+  for i in range(xlength): # x + K1/5
+    Ktmp[i] = x[i] + 0.2*Ktmp[i]
+  K2 = cython_thetaneurons(t,Ktmp,e,kn,an)
+  for i in range(xlength):
+    K2[i] *= h
+
+  Ktmp = K2
+  for i in range(xlength): # x + 3*K1/40 + 9*K2/40
+    Ktmp[i] = x[i] + 3*K1[i]/40 + 9*K2[i]/40
+  K3 = cython_thetaneurons(t,Ktmp,e,kn,an)
+  for i in range(xlength):
+    K3[i] *= h
+
+  Ktmp = K3
+  for i in range(xlength): # x + 44*K1/45 - 56*K2/15 + 32*K3/9
+    Ktmp[i] = x[i] + 44*K1[i]/45 - 56*K2[i]/15 + 32*K3[i]/9
+  K4 = cython_thetaneurons(t,Ktmp,e,kn,an)
+  for i in range(xlength):
+    K4[i] *= h
+
+  Ktmp = K4
+  for i in range(xlength): # x + 19372*K1/6561 - 25360*K2/2187 + 64448*K3/6561 - 212*K4/729
+    Ktmp[i] = x[i] + 19372*K1[i]/6561 - 25360*K2[i]/2187 + 64448*K3[i]/6561 - 212*K4[i]/729
+  K5 = cython_thetaneurons(t,Ktmp,e,kn,an)
+  for i in range(xlength):
+    K5[i] *= h
+
+  Ktmp = K5
+  for i in range(xlength): # x + 9017*K1/3168 - 355*K2/33 + 46732*K3/5247 + 49*K4/176 - 5103*K5/18656
+    Ktmp[i] = x[i] + 9017*K1[i]/3168 - 355*K2[i]/33 + 46732*K3[i]/5247 + 49*K4[i]/176 - 5103*K5[i]/18656
+  K6 = cython_thetaneurons(t,Ktmp,e,kn,an)
+  for i in range(xlength):
+    K6[i] *= h
+
+  for i in range(xlength): # x + 35*K1/384 + 500*K3/1113 + 125*K4/192 - 2187*K5/6784 + 11*K6/84
+    x[i] = x[i] + 35*K1[i]/384 + 500*K3[i]/1113 + 125*K4[i]/192 - 2187*K5[i]/6784 + 11*K6[i]/84
+
+  return x
+
+
 cdef double[:,:] cython_DOPRI(double ta, double tb, double[:] x0, double h, dict pars):
     cdef int npts = int(round((tb - ta)/h + 1))
     cdef double htemp = (tb - ta)/(npts-1)
@@ -62,14 +111,13 @@ cdef double[:,:] cython_DOPRI(double ta, double tb, double[:] x0, double h, dict
       h = htemp
       print("Setting h to", h)
     cdef int xlength = x0.size
-    cdef double[:,:] xout = np.zeros((xlength, npts), order='F', dtype=np.double)
-    cdef double[:,:] *xtest = np.zeros((xlength, npts), order='F', dtype=np.double)
-
-    xout[:,0] = x0
-
     cdef double[:] tout = np.linspace(ta,tb,npts);
+    cdef double[:,:] xout = np.zeros((xlength, npts), order='F', dtype=np.double)
+    xout[:,0] = x0
     cdef int i
-    cdef double timingresult = 0
+
+    # for i in range(npts-1):
+    #     xout[:,i+1] = cython_DOPRIstep(tout[i], xout[:,i], h, pars["e"], pars["K"]/pars["N"], pars["a_n"]);
     for i in range(npts-1):
-        xout[:,i+1] = cython_DOPRIstep(tout[i], xout[:,i], h, pars["e"], pars["K"]/pars["N"], pars["a_n"]);
+        xout[:,i+1] = cython_DOPRIstep_loop(tout[i], xout[:,i], h, pars["e"], pars["K"]/pars["N"], pars["a_n"]);
     return xout
