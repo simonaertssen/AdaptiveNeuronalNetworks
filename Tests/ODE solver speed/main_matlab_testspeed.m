@@ -18,4 +18,7 @@ pars.e = matlab_randcauchy(seed, pars.eta0, pars.delta, pars.N);
 plot(t,x)
 toc;
 
-% Elapsed time is 8.204944 seconds.
+% Elapsed time is 8.204944 seconds (MacbookPro 2015).
+% Elapsed time is 14.607684 seconds (cluster)
+% Elapsed time is 12.248643 seconds (sxm2sh)
+
