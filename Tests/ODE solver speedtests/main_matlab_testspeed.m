@@ -13,7 +13,7 @@ pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 seed = 0;
 pars.e = matlab_randcauchy(seed, pars.eta0, pars.delta, pars.N);
 
-%% Builtin Matlab functionality:
+%% ODE solver results:
 [t,x] = matlab_DOPRI(F, tnow, tend, IC, h, pars);
 plot(t,x)
 toc;
@@ -22,3 +22,7 @@ toc;
 % Elapsed time is 14.607684 seconds (cluster)
 % Elapsed time is 12.248643 seconds (sxm2sh)
 
+
+%% 
+options = odeset('RelTol', 1.0e-6,'AbsTol', 1.0e-6);
+[TT, Z] = ode45(@(t,x) MFR(t,x,pars), [0, 2], MRFIC, options);
