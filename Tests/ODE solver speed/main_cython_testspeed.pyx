@@ -41,6 +41,9 @@ import matplotlib.pyplot as plt
 from matplotlib.collections import LineCollection
 from scipy.stats import cauchy
 
+import pyximport
+pyximport.install()
+
 cpdef main():
   # This main function has been adapted to use as many c functions where possible!
   # Other functions are gathered in the pxd declarator
@@ -84,3 +87,4 @@ cpdef main():
 # Elapsed time is 3.5402348041534424 seconds when using fortran mode
 # Elapsed time is 0.316767930984497 seconds when using cython memoryviews and BLAS subroutines
 # Elapsed time is 0.13723421096801758 seconds when using loops for all K's
+# Elapsed time is 0.10562777519226074 seconds when accessing the data pointer of xout
