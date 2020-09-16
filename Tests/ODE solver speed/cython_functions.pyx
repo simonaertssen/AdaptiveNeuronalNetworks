@@ -45,7 +45,6 @@ cdef double[:] cython_thetaneurons(double t, double[:] x, double[:] e, double Kd
   return x
 
 
-# @cdivision(True)
 cdef double[:] cython_DOPRIstep(double t, double[:] x, double h, double[:] e, double kn, double an):
   cdef double[:] K1 = DSCAL(h,cython_thetaneurons(t,x,e,kn,an))
   cdef double[:] K2 = DSCAL(h,cython_thetaneurons(t+h/5,    DAXPY(0.2,K1,x),e,kn,an))
@@ -56,9 +55,7 @@ cdef double[:] cython_DOPRIstep(double t, double[:] x, double h, double[:] e, do
   return DAXPY(1, x, DAXPY(1, DAXPY(1, DAXPY(1, DAXPY(1,DSCAL(35/384,K1), DSCAL(500/1113,K3)), DSCAL(125/192,K4)), DSCAL(-2187/6784,K5)), DSCAL(11/84,K6)))
 
 
-@cdivision(True)
 cdef double[:,:] cython_DOPRI(double ta, double tb, double[:] x0, double h, dict pars):
-
     cdef int npts = int(round((tb - ta)/h + 1))
     cdef double htemp = (tb - ta)/(npts-1)
     if h != htemp:
@@ -66,6 +63,8 @@ cdef double[:,:] cython_DOPRI(double ta, double tb, double[:] x0, double h, dict
       print("Setting h to", h)
     cdef int xlength = x0.size
     cdef double[:,:] xout = np.zeros((xlength, npts), order='F', dtype=np.double)
+    cdef double[:,:] *xtest = np.zeros((xlength, npts), order='F', dtype=np.double)
+
     xout[:,0] = x0
 
     cdef double[:] tout = np.linspace(ta,tb,npts);
