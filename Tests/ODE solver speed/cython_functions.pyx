@@ -64,8 +64,5 @@ cdef np.ndarray[np.float64_t, mode="fortran", ndim=2] cython_DOPRI(double ta, do
     cdef int i
     cdef double timingresult = 0
     for i in range(npts-1):
-        # start = time.time()
         xout[:,i+1] = cython_DOPRIstep(tout[i], xout[:,i], h, pars["e"], pars["K"]/pars["N"], pars["a_n"]);
-        # timingresult = timingresult * (npts-1)/npts + (time.time() - start)/npts
-    # print("Average time =", timingresult)
     return xout
