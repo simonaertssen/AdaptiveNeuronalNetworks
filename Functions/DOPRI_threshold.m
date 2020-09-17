@@ -16,8 +16,9 @@ function [tout,xout] = DOPRI_threshold(originalfunc,ta,tb,x0,h,p)
         return
     end
     
+    K7 = h*func(ta, x0);
     for i = 1:(npts-1)
-        K1 = h*func(ta, x0);
+        K1 = K7;
         K2 = h*func(tout(i), xout(:,i) + K1*0.2);
         K3 = h*func(tout(i), xout(:,i) + K1*0.075 +  K2*0.225);
         K4 = h*func(tout(i), xout(:,i) + 44*K1/45 - 56*K2/15 + 32*K3/9);
@@ -29,7 +30,7 @@ function [tout,xout] = DOPRI_threshold(originalfunc,ta,tb,x0,h,p)
         tmp(tmp < -pi) = tmp(tmp < -pi) + 2*pi;
         
         xout(:,i+1) = tmp; % wrapToPi(tmp);
-        %textprogressbar(double(i)/(npts-1)*100);
+        K7 = h*func(tout(i), xout(:,i+1));
     end
     disp("End integration.")
 end
