@@ -1,4 +1,5 @@
 function [tout,xout] = DOPRI_threshold(originalfunc,ta,tb,x0,h,p)
+    disp("Start integration.")
     % ODE solver parameters:
     npts = round((tb - ta)/h + 1);
     h = (tb - ta)/(npts-1);
@@ -24,6 +25,11 @@ function [tout,xout] = DOPRI_threshold(originalfunc,ta,tb,x0,h,p)
         K6 = h*func(tout(i), xout(:,i) + 9017*K1/3168 - 355*K2/33 + 46732*K3/5247 + 49*K4/176 - 5103*K5/18656);
         tmp = xout(:,i) + 35*K1/384 + 500*K3/1113 + 125*K4/192 - 2187*K5/6784 + 11*K6/84;
         
-        xout(:,i+1) = wrapToPi(tmp);
+        tmp(tmp > pi) = tmp(tmp > pi) - 2*pi;
+        tmp(tmp < -pi) = tmp(tmp < -pi) + 2*pi;
+        
+        xout(:,i+1) = tmp; % wrapToPi(tmp);
+        %textprogressbar(double(i)/(npts-1)*100);
     end
+    disp("End integration.")
 end
