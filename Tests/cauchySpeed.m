@@ -6,12 +6,12 @@
 
 %% Results:
 % Method 3 will be used as the standard approach, as it is the fastest and the most accurate.
-% Tested for N = 1000, 5000, 10.000 
+% Tested for N = 1000, 5000, 10.000 (best)
 
+%% Setup: the pdf as a benchmark
 addpath('../Functions');
 rng(0);
 
-%% Setup: the pdf as a benchmark
 N = 2000; mu = -5; gamma = 2.7;
 
 xloc = mu + linspace(-10*gamma, 10*gamma, N);
