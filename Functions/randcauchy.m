@@ -8,8 +8,6 @@ rng(seed);
         otherwise
             n = 1; m = 1; gamma = 1;
     end
-    nsamples = 1000;
-    P = mu + gamma*tan(pi*(linspace(0, 1, nsamples) - 0.5));
-    P = repmat(P + sqrt(nsamples/N)*rand(nsamples,1), 1, N/nsamples);
+    P = reshape(mu + gamma*tan(pi*(linspace(1.e-6, 1-1.e-6, n) - 0.5)), n, m);
 end
 

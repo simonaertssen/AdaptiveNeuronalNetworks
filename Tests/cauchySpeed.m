@@ -5,25 +5,25 @@
 % mu + gamma*tan(pi*(cdf - 0.5)) = x
 
 %% Results:
-% Methods 1 and 2 are the fastest but do not give the most accurate
-% results. Method 3 will be used as the standard.
+% Method 3 will be used as the standard approach, as it is the fastest and the most accurate.
 % Tested for N = 1000, 5000, 10.000 
 
 addpath('../Functions');
 rng(0);
 
 %% Setup: the pdf as a benchmark
-N = 5000; mu = -5; gamma = 2.7;
+N = 2000; mu = -5; gamma = 2.7;
 
 xloc = mu + linspace(-10*gamma, 10*gamma, N);
-pdf = 1 ./ (pi*gamma*(1 + power((xloc - mu)/gamma, 2)));
+pdffunc = @(x) 1 ./ (pi*gamma*(1 + power((x - mu)/gamma, 2)));
+pdf = pdffunc(xloc);
 
 %% 1. Using matlab 'makedist':
 tic;
 pd = makedist('tLocationScale','mu',mu,'sigma',gamma,'nu',1);
 e1 = random(pd, N, 1);
 toc
-% Elapsed time is 0.002678 seconds.
+% Elapsed time is 0.003010 seconds.
 
 %% 2. Using 'cauchy' on Matlab File Exchange
 tic;
@@ -33,15 +33,14 @@ e2 = mu + gamma.*tan(pi*(r-0.5));
 e2(r == 0)=	-Inf;
 e2(r == 1)=	Inf;
 toc
-% Elapsed time is 0.001867 seconds.
+% Elapsed time is 0.002249 seconds.
 
-%% 3. Using simple inverse and mean interpolation:
+%% 3. Using simple inverse:
 tic;
-nsamples = 1000;
-e3 = mu + gamma*tan(pi*(linspace(0, 1, nsamples) - 0.5));
-e3 = repmat(e3 + sqrt(nsamples/N)*rand(nsamples,1), 1, N/nsamples);
+x0 = 1.e-6;
+e3 = reshape(mu + gamma*tan(pi*(linspace(x0, 1-x0, N) - 0.5)), N, 1);
 toc
-% Elapsed time is 0.019065 seconds.
+% Elapsed time is 0.001055 seconds.
 
 %% Plotting:
 f = figure; hold on
@@ -62,7 +61,7 @@ h3values = h3.Values;
 geterror = @(pdf, hist) sum(power(pdf(1:50:end-50) - hist, 2));
 geterror(pdf, h1values) % = 0.0015
 geterror(pdf, h2values) % = 0.0013
-geterror(pdf, h3values) % = 7.2943e-05
+geterror(pdf, h3values) % = 2.7637e-04
 
 
 
