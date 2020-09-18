@@ -32,7 +32,7 @@ plot(t, I(t), '-', 'LineWidth', 1, 'color', '#A2142F');
 ylim([-100, max(I(t))*5]);
 ylabel('$I$','Interpreter','latex', 'FontSize', 20)
 ax = gca; ax.YAxis(1).Color = 'k'; ax.YAxis(2).Color = '#A2142F';
-set(gca, 'xticklabel', []);
+set(gca, 'yticklabel', []);
 
 removewhitspace();
 
@@ -56,6 +56,7 @@ plot(t, I(t), '-', 'LineWidth', 1, 'color', '#A2142F');
 ylim([-1, max(I(t))*5]);
 ylabel('$I$','Interpreter','latex', 'FontSize', 20)
 ax = gca; ax.YAxis(1).Color = 'k'; ax.YAxis(2).Color = '#A2142F';
+set(gca, 'yticklabel', []);
 
 removewhitspace();
 
@@ -93,16 +94,16 @@ ax.Position = [left bottom ax_width ax_height];
 
 %% Functions:
 function I = excitabilitycurrent(t)
-    I = max(t/10, power(t,2.5));
+    I = max(t/10, power(t,3));
 end
 
 function I = spikecurrent(t)
     I = zeros(size(t));
-    spike = 50;
+    spike = 5;
     I(t > 1 & t < 2) = spike;
     I(t > 3 & t < 4) = spike;
     
-    burst = 500;
+    burst = 800;
     I(t > 5 & t < 6) = burst;
     I(t > 7 & t < 8) = burst;
 end
