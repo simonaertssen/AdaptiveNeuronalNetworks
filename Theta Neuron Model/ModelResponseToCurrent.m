@@ -23,7 +23,7 @@ m = 1; n = 3;
 I = @excitabilitycurrent;
 
 [t, thetas] = DOPRI_singleneuron(F, tnow, tend, -pi, h, I);
-%drawthetas = spikesNaN(thetas);
+NaNthetas = spikesNaN(thetas);
 drawthetas = 1 + cos(thetas);
 
 imrow(1) = subplot(m,n,1); hold on; box on;
@@ -35,8 +35,11 @@ plot(t, drawthetas, '-', 'LineWidth', 2, 'color', '#0072BD');
 ylabel('$\theta_i$','Interpreter','latex', 'FontSize', labelfont);
 xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
 
-idx = [1, find(isnan(drawthetas))];
-frequencies = diff(t(idx));
+% figure
+% idx = [1, find(isnan(NaNthetas))];
+% NaNnum = length(idx)-1;
+% frequencies = diff(t(idx));
+% plot(1:NaNnum, frequencies(1:NaNnum), 1:NaNnum, pi./sqrt(I(1:NaNnum)));
 
 yyaxis right
 maxy = max(I(t));
