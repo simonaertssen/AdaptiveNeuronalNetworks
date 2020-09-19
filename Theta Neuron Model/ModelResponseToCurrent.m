@@ -9,8 +9,13 @@ addpath('../Functions');
 set(groot,'DefaultAxesXGrid','on')
 set(groot,'DefaultAxesYGrid','on')
 
-tnow = 0; tend = 9;
+tnow = 0; tend = 10;
 F = @thetaneuron; h = 0.001;
+
+fexcite = figure('Position', [50 800 1000 300]);
+titlefont = 15;
+labelfont = 15;
+m = 2; n = 3;
 
 %% Excitability:
 % The theta neuron model is of type 1 excitability, meaning that the frequency 
@@ -20,19 +25,21 @@ I = @excitabilitycurrent;
 [t, thetas] = DOPRI_singleneuron(F, tnow, tend, -pi, h, I);
 drawthetas = spikesNaN(thetas);
 
-fexcite = figure('Position', [50 800 1000 200]); hold on; box on
+imrow(1) = subplot(m,n,1); hold on; box on;
+removewhitspace();
+
+title("Class 1 excitability", 'FontSize', titlefont, 'FontName', 'SansSerif');
 yyaxis left
-ylim([-pi - 0.1, pi + 0.1]);
+ylim([-pi - 1.5, pi + 0.3]);
 plot(t, thetas, ':k', 'LineWidth', 1)
 plot(t, drawthetas, '-', 'LineWidth', 2.5, 'color', '#0072BD');
-ylabel('$\theta_i$','Interpreter','latex', 'FontSize', 20)
+ylabel('$\theta_i$','Interpreter','latex', 'FontSize', labelfont);
 
 yyaxis right
+maxy = max(I(t));
 plot(t, I(t), '-', 'LineWidth', 1, 'color', '#A2142F');
-ylim([-100, max(I(t))*5]);
-ylabel('$I$','Interpreter','latex', 'FontSize', 20)
 ax = gca; ax.YAxis(1).Color = 'k'; ax.YAxis(2).Color = '#A2142F';
-set(gca, 'yticklabel', []);
+set(gca,'YTick', 0:maxy:maxy, 'YLim', [-250, maxy*8]);
 
 removewhitspace();
 
@@ -44,19 +51,20 @@ I = @spikecurrent;
 [t, thetas] = DOPRI_singleneuron(F, tnow, tend, -pi, h, I);
 drawthetas = spikesNaN(thetas);
 
-fspiking = figure('Position', [50 800 1000 200]); hold on; box on
+imrow(2) = subplot(m,n,2); hold on; box on;
+removewhitspace();
+
+title("Spiking", 'FontSize', titlefont, 'FontName', 'SansSerif');
 yyaxis left
-ylim([-pi - 0.1, pi + 0.1]);
+ylim([-pi - 1.5, pi + 0.3]);
 plot(t, thetas, ':k', 'LineWidth', 1)
 plot(t, drawthetas, '-', 'LineWidth', 2.5, 'color', '#0072BD');
-ylabel('$\theta_i$','Interpreter','latex', 'FontSize', 20)
 
 yyaxis right
+maxy = max(I(t));
 plot(t, I(t), '-', 'LineWidth', 1, 'color', '#A2142F');
-ylim([-1, max(I(t))*5]);
-ylabel('$I$','Interpreter','latex', 'FontSize', 20)
 ax = gca; ax.YAxis(1).Color = 'k'; ax.YAxis(2).Color = '#A2142F';
-set(gca, 'yticklabel', []);
+set(gca,'YTick', 0:maxy:maxy, 'YLim', [-1, maxy*8]);
 
 removewhitspace();
 
@@ -68,28 +76,51 @@ I = @burstcurrent;
 [t, thetas] = DOPRI_singleneuron(F, tnow, tend, -pi, h, I);
 drawthetas = spikesNaN(thetas);
 
-fexcite = figure('Position', [50 800 1000 200]); hold on; box on
+imrow(3) = subplot(m,n,3); hold on; box on;
+removewhitspace();
+
+title("Bursting", 'FontSize', titlefont, 'FontName', 'SansSerif');
 yyaxis left
-ylim([-pi - 0.1, pi + 0.1]);
+ylim([-pi - 1.5, pi + 0.3]);
 plot(t, thetas, ':k', 'LineWidth', 1)
 plot(t, drawthetas, '-', 'LineWidth', 2.5, 'color', '#0072BD');
-ylabel('$\theta_i$','Interpreter','latex', 'FontSize', 20)
 
 yyaxis right
+maxy = max(I(t));
 plot(t, I(t), '-', 'LineWidth', 1, 'color', '#A2142F');
 ylim([-1, max(I(t))*5]);
-ylabel('$I$','Interpreter','latex', 'FontSize', 20)
-xlabel('$t$','Interpreter','latex', 'FontSize', 20)
+ylabel('$I$','Interpreter','latex', 'FontSize', labelfont)
 ax = gca; ax.YAxis(1).Color = 'k'; ax.YAxis(2).Color = '#A2142F';
+set(gca,'YTick', 0:maxy:maxy, 'YLim', [-200, maxy*8])
 
-ax = gca;
-outerpos = ax.OuterPosition;
-ti = ax.TightInset; 
-left = outerpos(1) + ti(1);
-bottom = outerpos(2) + ti(2);
-ax_width = outerpos(3) - ti(1) - ti(3);
-ax_height = outerpos(4) - ti(2) - ti(4);
-ax.Position = [left bottom ax_width ax_height];
+removewhitspace();
+
+
+%% Rebound behaviour:
+% The neuron spikes when the input current > 0
+I = @rebound;
+
+[t, thetas] = DOPRI_singleneuron(F, tnow, tend, -pi, h, I);
+drawthetas = spikesNaN(thetas);
+
+imrow(3) = subplot(m,n,3); hold on; box on;
+removewhitspace();
+
+title("Bursting", 'FontSize', titlefont, 'FontName', 'SansSerif');
+yyaxis left
+ylim([-pi - 1.5, pi + 0.3]);
+plot(t, thetas, ':k', 'LineWidth', 1)
+plot(t, drawthetas, '-', 'LineWidth', 2.5, 'color', '#0072BD');
+
+yyaxis right
+maxy = max(I(t));
+plot(t, I(t), '-', 'LineWidth', 1, 'color', '#A2142F');
+ylim([-1, max(I(t))*5]);
+ylabel('$I$','Interpreter','latex', 'FontSize', labelfont)
+ax = gca; ax.YAxis(1).Color = 'k'; ax.YAxis(2).Color = '#A2142F';
+set(gca,'YTick', 0:maxy:maxy, 'YLim', [-200, maxy*8])
+
+removewhitspace();
 
 
 %% Functions:
@@ -103,25 +134,20 @@ function I = spikecurrent(t)
     I(t > 1 & t < 2) = spike;
     I(t > 3 & t < 4) = spike;
     
-    burst = 800;
-    I(t > 5 & t < 6) = burst;
-    I(t > 7 & t < 8) = burst;
+    I(t > 5 & t < 6) = spike;
+    I(t > 7 & t < 8) = spike;
 end
 
 function I = burstcurrent(t)
     I = zeros(size(t));
-    bump = -500;
-    I(t > 2 & t < 3) = bump;
-    I(t > 6 & t < 7) = bump;
+    burst = 500;
+    I(t > 2 & t < 3) = burst;
+    I(t > 6 & t < 7) = burst;
 end
 
-% For a tight layout:
-% ax = gca;
-% outerpos = ax.OuterPosition;
-% ti = ax.TightInset; 
-% left = outerpos(1) + ti(1);
-% bottom = outerpos(2) + ti(2);
-% ax_width = outerpos(3) - ti(1) - ti(3);
-% ax_height = outerpos(4) - ti(2) - ti(4);
-% ax.Position = [left bottom ax_width ax_height];
-
+function I = burstcurrent(t)
+    I = zeros(size(t));
+    burst = 500;
+    I(t > 2 & t < 3) = burst;
+    I(t > 6 & t < 7) = burst;
+end
