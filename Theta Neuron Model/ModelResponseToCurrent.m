@@ -32,7 +32,7 @@ title("Class 1 excitability", 'FontSize', titlefont, 'FontName', 'SansSerif');
 yyaxis left
 ylim([-0.5, 2.1]);
 plot(t, drawthetas, '-', 'LineWidth', 2, 'color', '#0072BD');
-ylabel('$\theta_i$','Interpreter','latex', 'FontSize', labelfont);
+ylabel('$1 + \cos\theta$','Interpreter','latex', 'FontSize', labelfont);
 xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
 
 % figure
@@ -97,6 +97,7 @@ set(gca,'YTick', 0:maxy:maxy, 'YLim', [-200, maxy*8])
 
 %% Save the figure:
 print(fexcite, '../Figures/ThetaNeuronResponseToCurrent.png', '-dpng', '-r300')
+%exportgraphics(fexcite, '../Figures/ThetaNeuronResponseToCurrent.png', 'Resolution', 300')
 
 %% Functions:
 function I = excitabilitycurrent(t)
