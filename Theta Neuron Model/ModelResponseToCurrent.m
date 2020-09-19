@@ -23,15 +23,15 @@ m = 1; n = 3;
 I = @excitabilitycurrent;
 
 [t, thetas] = DOPRI_singleneuron(F, tnow, tend, -pi, h, I);
-drawthetas = spikesNaN(thetas);
+%drawthetas = spikesNaN(thetas);
+drawthetas = 1 + cos(thetas);
 
 imrow(1) = subplot(m,n,1); hold on; box on;
 
 title("Class 1 excitability", 'FontSize', titlefont, 'FontName', 'SansSerif');
 yyaxis left
-ylim([-pi - 1.5, pi + 0.3]);
-plot(t, thetas, ':k', 'LineWidth', 1)
-plot(t, drawthetas, '-', 'LineWidth', 2.5, 'color', '#0072BD');
+ylim([-0.5, 2.1]);
+plot(t, drawthetas, '-', 'LineWidth', 2, 'color', '#0072BD');
 ylabel('$\theta_i$','Interpreter','latex', 'FontSize', labelfont);
 xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
 
@@ -42,7 +42,7 @@ yyaxis right
 maxy = max(I(t));
 plot(t, I(t), '-', 'LineWidth', 1, 'color', '#A2142F');
 ax = gca; ax.YAxis(1).Color = 'k'; ax.YAxis(2).Color = '#A2142F';
-set(gca,'YTick', 0:maxy:maxy, 'YLim', [-250, maxy*8]);
+set(gca,'YTick', 0:maxy:maxy, 'YLim', [-10, maxy*8]);
 
 
 
@@ -51,22 +51,21 @@ set(gca,'YTick', 0:maxy:maxy, 'YLim', [-250, maxy*8]);
 I = @spikecurrent;
 
 [t, thetas] = DOPRI_singleneuron(F, tnow, tend, -pi, h, I);
-drawthetas = spikesNaN(thetas);
+drawthetas = 1 + cos(thetas);
 
 imrow(2) = subplot(m,n,2); hold on; box on;
 
 title("Spiking", 'FontSize', titlefont, 'FontName', 'SansSerif');
 yyaxis left
-ylim([-pi - 1.5, pi + 0.3]);
-plot(t, thetas, ':k', 'LineWidth', 1)
-plot(t, drawthetas, '-', 'LineWidth', 2.5, 'color', '#0072BD');
+ylim([-0.5, 2.1]);
+plot(t, drawthetas, '-', 'LineWidth', 2, 'color', '#0072BD');
 xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
 
 yyaxis right
 maxy = max(I(t));
 plot(t, I(t), '-', 'LineWidth', 1, 'color', '#A2142F');
 ax = gca; ax.YAxis(1).Color = 'k'; ax.YAxis(2).Color = '#A2142F';
-set(gca,'YTick', 0:maxy:maxy, 'YLim', [-1, maxy*8]);
+set(gca,'YTick', 0:maxy:maxy, 'YLim', [-2, maxy*8]);
 
 
 %% Bursting behaviour:
@@ -74,15 +73,14 @@ set(gca,'YTick', 0:maxy:maxy, 'YLim', [-1, maxy*8]);
 I = @burstcurrent;
 
 [t, thetas] = DOPRI_singleneuron(F, tnow, tend, -pi, h, I);
-drawthetas = spikesNaN(thetas);
+drawthetas = 1 + cos(thetas);
 
 imrow(3) = subplot(m,n,3); hold on; box on;
 
 title("Bursting", 'FontSize', titlefont, 'FontName', 'SansSerif');
 yyaxis left
-ylim([-pi - 1.5, pi + 0.3]);
-plot(t, thetas, ':k', 'LineWidth', 1)
-plot(t, drawthetas, '-', 'LineWidth', 2.5, 'color', '#0072BD');
+ylim([-0.5, 2.1]);
+plot(t, drawthetas, '-', 'LineWidth', 2, 'color', '#0072BD');
 xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
 
 yyaxis right
@@ -99,7 +97,7 @@ print(fexcite, '../Figures/ThetaNeuronResponseToCurrent.png', '-dpng', '-r300')
 
 %% Functions:
 function I = excitabilitycurrent(t)
-    I = max(t/10, power(t,3));
+    I = max(t/10, power(t,2));
 end
 
 function I = spikecurrent(t)
