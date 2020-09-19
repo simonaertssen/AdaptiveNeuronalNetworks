@@ -3,9 +3,10 @@
 .AppleDouble
 .LSOverride
 
-# No pycache and build folders:
+# No pycache and build folders, no notebook backups:
 build/
 __pycache__/
+.ipynb_checkpoints/
 
 
 # Matlab files
