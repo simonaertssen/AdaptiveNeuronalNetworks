@@ -35,12 +35,6 @@ plot(t, drawthetas, '-', 'LineWidth', 2, 'color', '#0072BD');
 ylabel('$1 + \cos\theta$','Interpreter','latex', 'FontSize', labelfont);
 xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
 
-% figure
-% idx = [1, find(isnan(NaNthetas))];
-% NaNnum = length(idx)-1;
-% frequencies = diff(t(idx));
-% plot(1:NaNnum, frequencies(1:NaNnum), 1:NaNnum, pi./sqrt(I(1:NaNnum)));
-
 yyaxis right
 maxy = max(I(t));
 plot(t, I(t), '-', 'LineWidth', 1, 'color', '#A2142F');
