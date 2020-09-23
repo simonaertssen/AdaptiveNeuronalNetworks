@@ -1,0 +1,18 @@
+TODO:
+- 4 questions from Erik? Send a mail. DONE
+- Thesis description. DONE
+- Make and upload project plan (project milestones).
+- Ask room for guest master students.
+- Look at MatCont
+
+
+NOTES:
+- Adaptive learning rule and Hebbian learning = 'fire & wire'
+
+dK_ij/dt = e * f(K_ij, {phi_j})
+e = timescale
+Question: can we still obtain solutions for e = 0?
+
+- Monthly presentations for Erik and Poul
+- 1 hour of meetings per 2 weeks
+- Thesis description should be precise but give enough freedom. Title does not have tone the title of the thesis paper.

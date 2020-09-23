@@ -1,0 +1,40 @@
+DONE:
+- get video of Chandra talks on the minisymposium.
+- get the matlab scripts to work with interpolation.
+- get the equilibrium points from the different types of networks.
+- Havel-Hakimi algorithm?
+- refine research questions.
+- Read 'Structural Self-Assembly".
+- Read "The meta-stable brain", but don't use the models as inspiration.
+
+
+NOTES:
+- Erik found research questions. Three were scrapped.
+1: stabilizing the OA manifold - SCRAPPED
+2. model with two populations with chimera states - SCRAPPED
+3. population of Kuramoto oscillators, make connections time-dependent.
+Can chaotic motion occur? Three equations remain after the OA manifold, so chaos is possible. - SCRAPPED
+4. Kuramoto model / theta neuron model with nonuniform coupling matrix K_ij. Try to have the coupling be adaptive / use an adaptation rule. Can we still apply the OA manifold?
+
+- Kuramoto model makes the analysis easier? Theta models, with excitatory / resting behavior, we have no guaranteed oscillations, which makes the analysis difficult.
+- Chaos can occur in 3D systems, so not in the order parameter. But maybe in different networks we can see chaos among the multiple parameters.
+- Plasticity: can we experience chaos when plasticity is introduced? 
+
+dK_ij/dt = K_ij + e * f(K_ij, phi_j)
+
+- Imagine an onion shell. You will stay on the shell you are currently on. When we introduce a symmetry break into the system as a heterogeneous system of oscillators, many different manifolds 
+- Perhaps a continuous change of K_ij is too difficult to compute, so perhaps. we should use a map to compute the K_ij over time.
+
+
+RESEARCH QUESTIONS:
+- Is the OA manifold attractive for networks with synaptic plasticity?
+- Can we apply OA (from Chandra et al) on networks with synaptic plasticity?
+- What types of networks emerge when allowing synaptic plasticity? With and without OA.
+- Glassy states: glass is an amorf structure, and it's a fluid (contradiction). Are the states that we find stable in the. sense that they continue to exist, or do they destroy themselves?
+- The brain does not converge to an equilibrium, it has to be in a constant meta-stable state which keeps flowing. How do the coefficients of the connectivity matrix evolve over time? Are there partial synchronizations, or are there chimeras?
+* Partial synchronizations = different groups of synchronized oscillators.
+* Chimera states occur when we have dynamic symmetry breaking between IDENTICAL oscillators.
+- How can we modify Chandra's work to binary state connections (as there exists no continuous coupling between neurons). This should be the edge case of continuous graphons. 
+
+
+
