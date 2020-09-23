@@ -48,7 +48,7 @@ for i = 1:3
         ylabel('$\theta$','Interpreter','latex', 'FontSize', labelfont);
     end
 
-
+  
     yyaxis right
     maxy = max(I(t));
     plot(t, I(t), '-', 'LineWidth', 1, 'color', '#A2142F');
