@@ -10,7 +10,7 @@ set(groot,'DefaultAxesXGrid','on')
 set(groot,'DefaultAxesYGrid','on')
 
 tnow = 0; tend = 10;
-F = @thetaneuron; h = 0.001;
+F = @thetaneuron; h = 0.0005;
 
 fexcite = figure('Renderer', 'painters', 'Position', [50 800 1000 200]);
 titlefont = 15;
