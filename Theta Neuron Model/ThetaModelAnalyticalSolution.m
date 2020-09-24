@@ -56,7 +56,7 @@ I = @linearcurrent;
 
 [t, thetas] = DOPRI_singleneuron(F, tnow, tend, IC, h, I);
 drawthetas = spikesNaN(thetas);
-realthetas = 2*atan(exp(t)./(1 - exp(t)));
+realthetas = 2*atan(-sqrt(I(t)).*cot(t.*sqrt(I(t))));
 
 imrow(2) = subplot(m,n,2); hold on; box on;
 
@@ -74,7 +74,7 @@ xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
 yyaxis right
 maxy = max(I(t));
 plot(t, I(t), '-', 'LineWidth', 1, 'color', '#A2142F');
-ylabel('$I = $','Interpreter','latex', 'FontSize', labelfont);
+ylabel('$I = 2 + t 1.0e^{-3}$','Interpreter','latex', 'FontSize', labelfont);
 ax = gca; ax.YAxis(1).Color = 'k'; ax.YAxis(2).Color = '#A2142F';
 set(gca,'YTick', 0:maxy:maxy, 'YLim', [0, maxy*10]);
 
@@ -111,7 +111,6 @@ set(gca,'YTick', 0:maxy:maxy, 'YLim', [0, maxy*10]);
 legend('Simulation', 'Analytical');
 
 
-
 %% Save the figure:
 print(fanalytic, '../Figures/ThetaNeuronAnalyticalSolution.png', '-dpng', '-r300')
 
@@ -123,7 +122,7 @@ function I = simplecurrent(t)
 end
 
 function I = linearcurrent(t)
-    I = t;
+    I = 2 + 1.0e-3.*t;
 end
 
 function I = paraboliccurrent(t)
@@ -131,5 +130,5 @@ function I = paraboliccurrent(t)
 end
 
 function I = sinecurrent(t)
-    I = 1.1 + sin(t);
+    I = 1.1 + sin(t./100);
 end

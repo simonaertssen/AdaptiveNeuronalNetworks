@@ -97,23 +97,32 @@ print(fexcite, '../Figures/ThetaNeuronResponseToCurrent.png', '-dpng', '-r300')
 %% Investigate the frequency - current curve:
 % We know that T = pi/sqrt(I)
 
-fI = figure('Renderer', 'painters', 'Position', [50 800 500 200]); hold on; box on;
-
+fI = figure('Renderer', 'painters', 'Position', [1500 800 500 200]); hold on; box on;
 I = @fI_current;
+h = 0.01;
 
-tend = 50;
+tend = 10000;
+
 [t, thetas] = DOPRI_singleneuron(F, 0, tend, -pi, h, I);
 NaNthetas = spikesNaN(thetas);
 drawthetas = 1 + cos(thetas);
 
+% plot(t, NaNthetas, 'LineWidth', 2, 'HandleVisibility','off');
+% Theoratical result:
+Idraw = linspace(tnow + 1.0e-3,10, 200);
+plot(Idraw, pi./sqrt(Idraw), 'LineWidth', 2);
+
+% Measurements:
 idx = [1, find(isnan(NaNthetas))];
 NaNnum = length(idx)-1;
 frequencies = diff(t(idx));
 plot(I(t(idx(2:end))), frequencies, 'LineWidth', 2);
-plot(I(t(idx(2:end))), pi./sqrt(I(t(idx(2:end)))), 'LineWidth', 2);
+
 xlabel('$I$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('$T$','Interpreter','latex', 'FontSize', labelfont)
-legend('$\hat{T}$','$\frac{\pi}{\sqrt{I}}$', 'Interpreter','latex', 'FontSize', labelfont)
+legend('$\frac{\pi}{\sqrt{I}}$', '$\hat{T}$', 'Interpreter','latex', 'FontSize', labelfont)
+
+set(gca, 'YScale', 'log', 'XScale', 'log')
 
 print(fI, '../Figures/ThetaNeuronResponseToCurrentPeriod.png', '-dpng', '-r300')
 
@@ -140,5 +149,5 @@ function I = burstcurrent(t)
 end
 
 function I = fI_current(t)
-    I = t;
+    I = 1.0e-6.*t.^(1.7);
 end
