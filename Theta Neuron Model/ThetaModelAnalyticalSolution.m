@@ -52,11 +52,12 @@ legend('Simulation', 'Analytical');
 
 %% A more difficult linear current
 
-I = @linearcurrent;
+epsilon = 0.01;
+I = @(t) linearcurrent(epsilon, t);
 
 [t, thetas] = DOPRI_singleneuron(F, tnow, tend, IC, h, I);
 drawthetas = spikesNaN(thetas);
-realthetas = 2*atan(-sqrt(I(t)).*cot(t.*sqrt(I(t))));
+realthetas = 2*atan(-sqrt(I(t)).*cot(t.*sqrt(I(t))) + epsilon);
 
 imrow(2) = subplot(m,n,2); hold on; box on;
 
@@ -121,8 +122,8 @@ function I = simplecurrent(t)
     I = 2*ones(size(t));
 end
 
-function I = linearcurrent(t)
-    I = 2 + 1.0e-3.*t;
+function I = linearcurrent(e, t)
+    I = 2 + e.*t;
 end
 
 function I = paraboliccurrent(t)
