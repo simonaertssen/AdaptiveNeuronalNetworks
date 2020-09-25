@@ -101,28 +101,36 @@ fI = figure('Renderer', 'painters', 'Position', [1500 800 500 200]); hold on; bo
 I = @fI_current;
 h = 0.01;
 
-tend = 10000;
+tend = 50;
 
-[t, thetas] = DOPRI_singleneuron(F, 0, tend, -pi, h, I);
-NaNthetas = spikesNaN(thetas);
-drawthetas = 1 + cos(thetas);
-
-% plot(t, NaNthetas, 'LineWidth', 2, 'HandleVisibility','off');
 % Theoratical result:
-Idraw = linspace(tnow + 1.0e-3,10, 200);
-plot(Idraw, pi./sqrt(Idraw), 'LineWidth', 2);
+Idraw = linspace(-10,10, 200);
+plot(Idraw, sqrt(Idraw)./pi, 'LineWidth', 2);
 
-% Measurements:
-idx = [1, find(isnan(NaNthetas))];
-NaNnum = length(idx)-1;
-frequencies = diff(t(idx));
-plot(I(t(idx(2:end))), frequencies, 'LineWidth', 2);
+nmeasure = 51;
+Imeasure = linspace(-10,10, nmeasure);
+frequencies = zeros(nmeasure,1);
+for i = 1:nmeasure
+    I = @(t) Imeasure(i);
+
+    % Simulate
+    [t, thetas] = DOPRI_singleneuron(F, 0, tend, -pi, h, I);
+    NaNthetas = spikesNaN(thetas);
+
+    % Measurements:
+    if sum(isnan(NaNthetas)) > 0
+        idx = [1, find(isnan(NaNthetas))];
+        frequencies(i) = mean(1./diff(t(idx))) + 0;
+    else    
+        frequencies(i) = 0;
+    end
+end
+
+scatter(Imeasure, frequencies, 'x', 'LineWidth', 2);
 
 xlabel('$I$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('$T$','Interpreter','latex', 'FontSize', labelfont)
-legend('$\frac{\pi}{\sqrt{I}}$', '$\hat{T}$', 'Interpreter','latex', 'FontSize', labelfont)
-
-set(gca, 'YScale', 'log', 'XScale', 'log')
+legend('$\frac{\pi}{\sqrt{I}}$', '$\hat{T}$', 'Interpreter','latex', 'FontSize', labelfont, 'Location', 'northwest')
 
 print(fI, '../Figures/ThetaNeuronResponseToCurrentPeriod.png', '-dpng', '-r300')
 
@@ -149,5 +157,5 @@ function I = burstcurrent(t)
 end
 
 function I = fI_current(t)
-    I = 1.0e-6.*t.^(1.7);
+    I = 1.0e-3.*t.^(1);
 end
