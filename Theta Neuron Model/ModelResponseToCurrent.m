@@ -105,10 +105,10 @@ tend = 50;
 
 % Theoratical result:
 Idraw = linspace(-10,10, 200);
-plot(Idraw, sqrt(Idraw)./pi, 'LineWidth', 2);
+plot(Idraw, sqrt(Idraw)./pi, 'LineWidth', 6);
 
-nmeasure = 51;
-Imeasure = linspace(-10,10, nmeasure);
+nmeasure = 33;
+Imeasure = [linspace(-10,-1, nmeasure/3), linspace(0,1, nmeasure/3), linspace(2,10, nmeasure/3)];
 frequencies = zeros(nmeasure,1);
 for i = 1:nmeasure
     I = @(t) Imeasure(i);
@@ -126,7 +126,9 @@ for i = 1:nmeasure
     end
 end
 
-scatter(Imeasure, frequencies, 'x', 'LineWidth', 2);
+drawfrequencies = interp1(Imeasure',frequencies,Idraw);
+
+plot(Idraw, drawfrequencies, ':k', 'LineWidth', 2);
 
 xlabel('$I$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('$T$','Interpreter','latex', 'FontSize', labelfont)
