@@ -38,6 +38,7 @@ Icon
 *.log
 *.out
 *.synctex.gz
+*.bbl
 
 # Thumbnails
 ._*
