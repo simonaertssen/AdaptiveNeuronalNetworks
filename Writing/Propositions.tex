@@ -1,0 +1,35 @@
+\input{Setup.tex}
+\begin{document}
+
+
+1. We distinguish between two types of dynamics: we study the dynamics of pulse-coupled networks ON networks, and the dynamics OF such networks is how they evolve over time.
+
+2. The dynamics of the network occur on a different (slower) time-scale than the dynamics on the network. Both types of dynamics influence each other.
+
+3. Neurons communicate through synapses with electrical and chemical signals, in the form of action potentials and neurotransmitters respectively. We will speak of the presynaptic neuron as the neuron that sends a signal and of the postsynaptic neuron as the neuron that receives a signal. When the membrane voltage of a presynaptic neuron reaches an internal threshold, the neuron spikes (or fires) and an electrical signal travels down the neuron axons. At the synapse, the electrical signal is converted into a chemical signal, 
+Most neurons in the central nervous system use either the excitatory neurotransmitter glutamate (AMPA or NMDA) or the inhibitory neurotransmitter GABA. 
+As signals are converted from electrical to chemical and back, we will model the communication process as entirely electrical, consisting solely of action potentials. These will be modeled by a pulse-shaped curve, modulated by a dynamic variable of the neuron (fx the phase angle for the Theta neuron). The magnitude of the response of the postsynaptic neuron can be modeled by a continuous coupling strength. The inhibitory/excitatory behavior can be modeled by allowing a negative/positive coupling strength between neurons. 
+
+4. Another electrical communication process occurs when current flows between neurons proportional to the difference in their membrane voltages. We will avoid modeling the two communication modes at the same time, due to tractability. 
+
+5. The process that allows neurons to adjust the strength of their synapses is called synaptic plasticity. Over time more (or less) neurotransmitters can be released (potentiation/depression). We will model this behavior by allowing the coupling strength to change over time, according to a rule.
+
+6. The specific rule that determines the evolution of coupling strength over time is spike-timing-dependent plasticity, where the relative timing of action potentials from the pre- and postsynaptic neuron determine causality. This is a temporal interpretation of Hebbian learning. If the postsynaptic neuron fires right after the presynaptic neuron, then we will strengthen the coupling strength from post- to presynaptic neuron, and vice versa. The magnitude of change is modulated by an asymmetric biphasic learning window around pulses originating from the postsynaptic neuron. Asymmetric because the peak is not situated at 0 and the integral over the window is generally positive, biphasic because this allows both to strengthen and weaken coupling strengths. Recently, triphasic learning windows have been used to account for when it takes too long for the postsynaptic neuron to fire, and thus to decorrelate the relation between neurons. These learning windows are curves that were fitted to experimental data of the cortex and the hippocampus.
+This approach simplifies modeling the neuronal back-propagation, where another pulse is generated as an echo of the action potential which travels through the neuron dendrites (so, backwards). This behaviors is believed to adjust the presynaptic weights.
+
+7. In recent years, 
+
+7. The human brain is seen as a graph, with neurons as graph nodes, where the pre- to postsynaptic relation models a directional edge. These edges are usually unidirectional though it can happen that the post- reconnects to the presynaptic neuron. We will model this by allowing the adjacency matrix to be asymmetric. Axon-axon and dendrite-dendrite connections exist but will be ignored.
+
+8. As the brain grows and learns we can observe neuronal plasticity, where new connections between neurons are made, or whole regions of the brain are remapped. This is (structural) plasticity on the level of the network topology, and can be modeled by allowing the adjacency matrix to change over time.
+However, it might be more practical to incorporate both plasticities in a single coupling matrix, where connections between neurons are either a negative or positive number, and when two neurons are not connected the
+
+Questions:
+- Would it make sense to introduce a delay in the model between the time a spike is fired and the time a spike is received? I do not seem to find this in many models and I assume it is because the time delay is incredibly small.
+
+- It was a little difficult to 
+
+
+, trying to find an implementation where discrete connections are adjusted over time. To combine 
+
+\end{document}

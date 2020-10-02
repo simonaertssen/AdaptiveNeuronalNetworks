@@ -1,0 +1,7 @@
+clean:
+	@echo "Clean start."
+	@rm *.aux
+	@rm *.log
+	@rm *.out
+	@rm *.synctex.gz
+	@echo "Clean done."

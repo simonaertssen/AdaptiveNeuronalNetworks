@@ -33,6 +33,12 @@ Icon
 *.o
 *.so
 
+# And no latex code:
+*.aux
+*.log
+*.out
+*.synctex.gz
+
 # Thumbnails
 ._*
 

@@ -1,0 +1,77 @@
+%% ------ Packages ------ %%
+% Related to the document setup:
+\documentclass[9.5pt, a4paper]{extarticle}
+\usepackage[a4paper, top = 2.4cm, bottom = 2.4 cm, right= 2.1cm, left= 2.1cm]{geometry}
+\usepackage[english]{babel}
+\renewcommand\familydefault{\sfdefault}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+
+\usepackage[T1]{fontenc}
+\setlength\parindent{0pt}
+\usepackage{multicol}
+\usepackage{xspace}
+
+% Colouring the references
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage[dvipsnames]{xcolor}
+\newcommand\myshade{85}
+\colorlet{mylinkcolor}{violet}
+\colorlet{mycitecolor}{YellowOrange}
+\definecolor{myurlcolor}{rgb}{ 0, 0.4470, 0.6410}
+
+\hypersetup{
+  linkcolor  = mylinkcolor!\myshade!black,
+  citecolor  = mycitecolor!\myshade!black,
+  urlcolor   = myurlcolor!\myshade!black,
+  colorlinks = true,
+}
+
+
+\makeatletter
+\renewcommand\section{\@startsection {section}{1}{\z@}{3ex }{0.1ex } {\normalfont\large\bfseries}}
+\renewcommand\subsection{\@startsection{subsection}{1}{\z@}{2ex }{0.1ex } {\normalfont \bfseries}}
+\renewcommand\subsubsection{\@startsection{subsubsection}{3}{\z@}{-1.5ex\@plus -1ex \@minus -.2ex}{.5ex}{\normalfont}}
+\makeatother
+
+% Graphics interfaces:
+\usepackage{graphicx}
+\usepackage{tikz}
+\tikzset{every picture/.style={line width=1pt}}
+\usepackage{float}
+\usepackage{subcaption} 
+\usepackage[font=small,aboveskip=3pt, belowskip=-0pt]{caption}
+
+
+% Headers and footers:
+\usepackage{url}
+\usepackage{footnote}
+\usepackage{fancyhdr}
+\pagestyle{fancy} 
+\fancyhf{} 
+\renewcommand{\headrulewidth}{0pt}
+\newcommand{\mainmatter}{\clearpage \cfoot{\thepage\ of \pageref{LastPage}}
+\setcounter{page}{1}
+\pagenumbering{arabic}}
+\usepackage{comment}
+
+% sort the bibliography
+\usepackage[sort]{cite}
+\setlength\columnsep{15pt}
+
+% Command definitions:
+\newcommand{\mfr}{{\textsl{MFR}}\xspace}
+\newcommand{\SNIC}{{\textsl{SNIC}}\xspace}
+\newcommand{\PSR}{{\textsl{PSR}}\xspace}
+\newcommand{\PSS}{{\textsl{PSS}}\xspace}
+\newcommand{\CPW}{{\textsl{CPW}}\xspace}
+
+\renewcommand{\k}{{\langle k\rangle}\xspace}
+\newcommand{\dtheta}{{\dot{\theta}}\xspace}
+\newcommand{\ic}{\mathrm{i}}
+
+
+%% ------ Front page ------ %%
