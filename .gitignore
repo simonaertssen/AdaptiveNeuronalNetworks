@@ -39,6 +39,7 @@ Icon
 *.out
 *.synctex.gz
 *.bbl
+*.blg
 
 # Thumbnails
 ._*
