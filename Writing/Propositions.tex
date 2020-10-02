@@ -1,27 +1,38 @@
 \input{Setup.tex}
 \begin{document}
 
+Msc Thesis - Dynamics of adaptive neuronal networks. \\
+Simon Aertssen (s181603), \today \\ 
 
-1. We distinguish between two types of dynamics: we study the dynamics of pulse-coupled networks ON networks, and the dynamics OF such networks is how they evolve over time.
+{\large \textbf{Postulates on modeling network plasticity}}
 
-2. The dynamics of the network occur on a different (slower) time-scale than the dynamics on the network. Both types of dynamics influence each other.
+This document gathers the postulates on which modeling the interactions in a network of neurons will rely. It condenses information from an initial reading list featured at the end of this document.
 
-3. Neurons communicate through synapses with electrical and chemical signals, in the form of action potentials and neurotransmitters respectively. We will speak of the presynaptic neuron as the neuron that sends a signal and of the postsynaptic neuron as the neuron that receives a signal. When the membrane voltage of a presynaptic neuron reaches an internal threshold, the neuron spikes (or fires) and an electrical signal travels down the neuron axons. At the synapse, the electrical signal is converted into a chemical signal, 
-Most neurons in the central nervous system use either the excitatory neurotransmitter glutamate (AMPA or NMDA) or the inhibitory neurotransmitter GABA. 
-As signals are converted from electrical to chemical and back, we will model the communication process as entirely electrical, consisting solely of action potentials. These will be modeled by a pulse-shaped curve, modulated by a dynamic variable of the neuron (fx the phase angle for the Theta neuron). The magnitude of the response of the postsynaptic neuron can be modeled by a continuous coupling strength. The inhibitory/excitatory behavior can be modeled by allowing a negative/positive coupling strength between neurons. 
+\begin{enumerate}
+\item We distinguish between two types of dynamics: we study the dynamics of pulse-coupled networks \textsl{on} networks, and the dynamics \textsl{of} such networks is how they evolve over time.
 
-4. Another electrical communication process occurs when current flows between neurons proportional to the difference in their membrane voltages. We will avoid modeling the two communication modes at the same time, due to tractability. 
+\item The dynamics of the network occur on a different (slower) time-scale than the dynamics on the network. Both types of dynamics influence each other \cite{AdaptiveNetworks2009}.
 
-5. The process that allows neurons to adjust the strength of their synapses is called synaptic plasticity. Over time more (or less) neurotransmitters can be released (potentiation/depression). We will model this behavior by allowing the coupling strength to change over time, according to a rule.
+\item Neurons communicate through \textsl{synapses} with electrical and chemical signals, in the form of action potentials and neurotransmitters respectively. We will speak of the presynaptic neuron as the neuron that sends a signal and of the postsynaptic neuron as the neuron that receives a signal. When the membrane voltage of a presynaptic neuron reaches an internal threshold, the neuron spikes (or fires) and an electrical signal travels down the neuron axons \cite{IntroductionModelingDynamics}. At the synapse, the electrical signal is converted into a chemical signal in the form of a neurotransmitter release of the presynaptic neuron, upon which the postsynaptic neuron receives the neurotransmitters and constructs another electrical signal \cite{ActionPotentialsAndSynapses}. Most neurons in the central nervous system use either the excitatory neurotransmitter glutamate (AMPA or NMDA) or the inhibitory neurotransmitter GABA \cite{MathFoundationNeuroscience, Zhang2012}. 
 
-6. The specific rule that determines the evolution of coupling strength over time is spike-timing-dependent plasticity, where the relative timing of action potentials from the pre- and postsynaptic neuron determine causality. This is a temporal interpretation of Hebbian learning. If the postsynaptic neuron fires right after the presynaptic neuron, then we will strengthen the coupling strength from post- to presynaptic neuron, and vice versa. The magnitude of change is modulated by an asymmetric biphasic learning window around pulses originating from the postsynaptic neuron. Asymmetric because the peak is not situated at 0 and the integral over the window is generally positive, biphasic because this allows both to strengthen and weaken coupling strengths. Recently, triphasic learning windows have been used to account for when it takes too long for the postsynaptic neuron to fire, and thus to decorrelate the relation between neurons. These learning windows are curves that were fitted to experimental data of the cortex and the hippocampus.
-This approach simplifies modeling the neuronal back-propagation, where another pulse is generated as an echo of the action potential which travels through the neuron dendrites (so, backwards). This behaviors is believed to adjust the presynaptic weights.
+As signals are converted from electrical to chemical and back, we will model the communication process as entirely electrical, consisting solely of action potentials. These will be modeled by a pulse-shaped curve, modulated by a dynamic variable of the neuron (for example the phase angle for the Theta neuron). The magnitude of the response of the postsynaptic neuron can be modeled by a continuous coupling strength. The inhibitory/excitatory behavior can be modeled by allowing a negative/positive coupling strength between neurons \cite{Luke2013, Martens2020, Montbrio2015, OttAntonsen2017}.
 
-7. In recent years, 
+\item Another electrical communication process occurs when current flows between neurons proportional to the difference in their membrane voltages. We will avoid modeling the two communication modes at the same time, due to tractability \cite{Martens2020}. 
 
-7. The human brain is seen as a graph, with neurons as graph nodes, where the pre- to postsynaptic relation models a directional edge. These edges are usually unidirectional though it can happen that the post- reconnects to the presynaptic neuron. We will model this by allowing the adjacency matrix to be asymmetric. Axon-axon and dendrite-dendrite connections exist but will be ignored.
+\item The process that allows neurons to adjust the strength of their synapses is called \textsl{synaptic plasticity}. Over time more (or less) neurotransmitters can be released (potentiation/depression). We will model this behavior by allowing the coupling strength to change over time, according to a rule. As we are interested in the long term effects on synchronization of the network, short-term potentiation and depression will not be considered \cite{MathFoundationNeuroscience}.
 
-8. As the brain grows and learns we can observe neuronal plasticity, where new connections between neurons are made, or whole regions of the brain are remapped. This is (structural) plasticity on the level of the network topology, and can be modeled by allowing the adjacency matrix to change over time.
+\item The specific rule that determines the evolution of coupling strength over time is \textsl{spike-timing-dependent plasticity} (STDP), where the relative timing of action potentials from the pre- and postsynaptic neuron determine causality. This is a temporal interpretation of Hebbian learning \cite{Kempter1999, Gerstner2002}. 
+
+If the postsynaptic neuron fires right after the presynaptic neuron, then we will strengthen the coupling strength from post- to presynaptic neuron, and vice versa. The magnitude of change is modulated by an asymmetric biphasic learning window around pulses originating from the postsynaptic neuron. Asymmetric because the peak is not situated at 0 and the integral over the window is generally positive, biphasic because this allows both to strengthen and weaken coupling strengths \cite{Gerstner2002}. Recently, triphasic learning windows have been used to account for when it takes too long for the postsynaptic neuron to fire, and thus to decorrelate the relation between neurons. These learning windows are curves that were fitted to experimental data of the cortex and the hippocampus \cite{ChrolCannon2014}.
+
+This approach simplifies modeling the neuronal back-propagation, where another pulse is generated as an echo of the action potential which travels through the neuron dendrites (so, backwards). This behaviors is believed to adjust the presynaptic weights \cite{Gerstner2002}.
+
+
+\item In recent years, criticism on STDP has been growing, as experimental data has shown that STDP is far from the only process that makes neurons adapt. Additional processes like \textsl{intrinsic plasticity}, where the neuron's excitability is adjusted to the  \cite{ChrolCannon2014}.
+
+\item The human brain is seen as a graph, with neurons as graph nodes, where the pre- to postsynaptic relation models a directional edge \cite{Bullmore2010}. These edges are usually unidirectional though it can happen that the post- reconnects to the presynaptic neuron. We will model this by allowing the adjacency matrix to be asymmetric. Axon-axon and dendrite-dendrite connections exist but will be ignored. \cite{Didier1997} 
+
+\item As the brain grows and learns we can observe neuronal plasticity, where new connections between neurons are made, or whole regions of the brain are remapped. This is (structural) plasticity on the level of the network topology, and can be modeled by allowing the adjacency matrix to change over time.
 However, it might be more practical to incorporate both plasticities in a single coupling matrix, where connections between neurons are either a negative or positive number, and when two neurons are not connected the
 
 Questions:
@@ -31,5 +42,11 @@ Questions:
 
 
 , trying to find an implementation where discrete connections are adjusted over time. To combine 
+
+\end{enumerate}
+
+
+\bibliographystyle{utphys}
+\small{\bibliography{references}}
 
 \end{document}
