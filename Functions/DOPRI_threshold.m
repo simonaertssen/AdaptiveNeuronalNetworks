@@ -4,8 +4,15 @@ function [tout,xout] = DOPRI_threshold(originalfunc,ta,tb,x0,h,p)
     npts = round((tb - ta)/h + 1);
     h = (tb - ta)/(npts-1);
     dim = size(x0);
-    tout = linspace(ta,tb,npts);
-    xout = zeros(dim(1),npts); xout(:,1) = x0;
+    
+    if gpuDeviceCount > 0
+        arrayinit = @(array) gpuArray(array);
+    else 
+        arrayinit = @(array) array;
+    end
+    
+    tout = arrayinit(linspace(ta,tb,npts));
+    xout = arrayinit(zeros(dim(1),npts)); xout(:,1) = x0;
     
     % Make new function handle to improve speed of function evaluation!
     func = @(t, x) originalfunc(t, x, p.e, p.K/p.N, p.a_n);
