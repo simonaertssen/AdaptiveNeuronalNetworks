@@ -17,10 +17,11 @@ function [tout,xout] = DOPRI_singleneuron(func,ta,tb,x0,h,I)
         K6 = h*func(tout(i), xout(:,i) + 9017*K1/3168 - 355*K2/33 + 46732*K3/5247 + 49*K4/176 - 5103*K5/18656, I(tout(i)));
         tmp = xout(:,i) + 35*K1/384 + 500*K3/1113 + 125*K4/192 - 2187*K5/6784 + 11*K6/84;
         
-        tmp(tmp > pi) = tmp(tmp > pi) - 2*pi;
-        tmp(tmp < -pi) = tmp(tmp < -pi) + 2*pi;
+        % Unsuccessful bounds
+        %tmp(tmp > pi) = tmp(tmp > pi) - 2*pi;
+        %tmp(tmp < -pi) = tmp(tmp < -pi) + 2*pi;
         
-        xout(:,i+1) = tmp; % wrapToPi(tmp);
+        xout(:,i+1) = wrapToPi(tmp); % tmp;
         K7 = h*func(tout(i), xout(:,i+1), I(tout(i)));
     end
     disp("End integration.")
