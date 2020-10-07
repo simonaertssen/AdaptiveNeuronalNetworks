@@ -1,27 +1,19 @@
-function [tout,xout] = DOPRI_threshold(originalfunc,ta,tb,x0,h,p)
+function [tout,xout] = DOPRI_threshold(originalfunc,ta,tb,x0,h,p,on_gpu)
+    if nargin < 7
+        on_gpu = @arrayinit;
+    end
+    
     disp("Start integration.")
     % ODE solver parameters:
     npts = round((tb - ta)/h + 1);
     h = (tb - ta)/(npts-1);
     dim = size(x0);
     
-    if gpuDeviceCount > 0
-        arrayinit = @(array) gpuArray(array);
-    else 
-        arrayinit = @(array) array;
-    end
-    
-    tout = arrayinit(linspace(ta,tb,npts));
-    xout = arrayinit(zeros(dim(1),npts)); xout(:,1) = x0;
+    tout = on_gpu(linspace(ta,tb,npts));
+    xout = on_gpu(zeros(dim(1),npts)); xout(:,1) = x0;
     
     % Make new function handle to improve speed of function evaluation!
     func = @(t, x) originalfunc(t, x, p.e, p.K/p.N, p.a_n);
-    
-    % Check if we are using the right integration function:
-    if isfield(p,'bif') == 1
-        disp("Use DOPRI45_bifurcations.m if you wish to study bifurcations")
-        return
-    end
     
     K7 = h*func(ta, x0);
     for i = 1:(npts-1)
