@@ -19,6 +19,15 @@ numlinks = netp*N*(N-1)/2;
 degrees_in = poissrnd(meandegree,N,1)';
 degrees_out = degrees_in(randperm(N)); % because these two have to contain the same number of elements
 
+% Or better: start from a known matrix:
+Astart = randn(N);
+Astart(Astart < 0) = 0;
+Astart(Astart > 0) = 1;
+Astart = Astart - diag(diag(Astart));
+degrees_in = sum(Astart,2)';
+degrees_out = sum(Astart,1);
+
+assert(sum(degrees_in) == sum(degrees_out))
 P = @(x) poisspdf(x, meandegree)*N;   
 
 %% Reconstructing A
@@ -47,19 +56,25 @@ for i = 1:N
 %         probs(choosefrom==choice) = probs(choosefrom==choice) - 1;
 %         chosen(n) = choice;
 %     end
-    chosen = datasample(choosefrom, num, 'Replace', num > nnz(probs), 'Weights', probs)
-%         choosefrom
+%     chosen = datasample(choosefrom, num, 'Replace', num > nnz(probs), 'Weights', probs)
+    try 
+        % sampling without replacement
+        chosen = datasample(choosefrom, num, 'Replace', false, 'Weights', probs);
+    catch
+        % ok, there's not enough probabilities available
+        chosen = maxk(choosefrom, num);
+    end
 
     yidx(start:(start+(num-1))) = chosen;
 
-    [~, chosenidx] = ismember(chosen, choosefrom)
+    [~, chosenidx] = ismember(chosen, choosefrom) 
     uniqueidx = unique(chosenidx)
-    freq = unique(sum(uniqueidx==uniqueidx'), 'stable')
+%     freq = unique(sum(chosenidx==chosenidx'), 'stable')
 %     [freq, uniqueidx] = hist(chosenidx,unique(chosenidx))
 %     frequency = sum(chosenidx==chosenidx')
 %     [freq,uniqueidx] = groupcounts(chosenidx) 
     probs
-    probs(uniqueidx) = probs(uniqueidx) - freq;
+    probs(uniqueidx) = probs(uniqueidx) - 1;
     probs
     deleteme(i*ones(num,1), choosefrom(randperm(N-1,num))) = 1;
     
@@ -74,15 +89,29 @@ for i = 1:N
 %     probs(probs < 0) = 0
     start = start + num; 
 end
+
+% Test if we have unique values:
+test = xidx + 100*yidx;
+numel(test)
+numel(unique(test))
+
 A = sparse(xidx, yidx, ones(nonzeros, 1, 'logical'));
+assert(full(sum(diag(A))) == 0)
 whos A
 toc
 
+% Test and swap rows and columns if necessary
+diffrows = degrees_in - full(sum(A,2))'
+diffcols = degrees_out - full(sum(A,1))
+[nnzrows, irows] = max(diffrows)
+[nnzcols, icols] = max(diffcols)
 
-disp(degrees_in - full(sum(A,2))')
-disp(degrees_out - full(sum(A,1)))
+for i = 1:nnzrows
+    
+end
 
-% immse(degrees_in, full(sum(A,2))')
-% immse(degrees_out, full(sum(A,1))')
+Astart
+full(A)
 
+assert(sum(Astart, 'all') == sum(A, 'all'))
 %Or go through and switch columns
