@@ -18,29 +18,49 @@ netp = 0.2;
 meandegree = netp*(N - 1);
 numlinks = netp*N*(N-1)/2;
 
-degrees_in = poissrnd(meandegree,N,1)';
+degrees_in = poissrnd(meandegree,N,1);
 degrees_out = degrees_in(randperm(N)); % because these two have to contain the same number of elements
+
+assert(sum(degrees_in) == sum(degrees_out))
+
+A_random = adjacencymatrix(degrees_in, degrees_out);
+f_random = figure('Renderer', 'painters', 'Position', [50 800 400 400]);
+imshow(full(A_random));
+print(f_random, '../Figures/A_random.png', '-dpng', '-r300')
+
+%% Test a fixed degree network:
+netdegree = 600;
+degrees_in = zeros(N,1);
+degrees_in(randperm(N)) = netdegree;
+degrees_out = degrees_in(randperm(N));
 
 assert(sum(degrees_in) == sum(degrees_out))
 
 A_fixeddegree = adjacencymatrix(degrees_in, degrees_out);
 f_fixeddegree = figure('Renderer', 'painters', 'Position', [50 800 400 400]);
 imshow(full(A_fixeddegree));
+print(f_fixeddegree, '../Figures/A_fixeddegree.png', '-dpng', '-r300')
 
 %% Now using scale free networks:
-degree = 5;
-kmin = 0; kmax = 1000;
+degree = 3;
+kmin = 750; kmax = 2000;
 
 P = @(x) scalefreepdf(x, N, degree, kmin, kmax);
 
-x = kmin:kmax;
-degrees = kmin + P(x);
-degrees_in = randi([kmin, kmax], 1, N);
-degrees_out = degrees_in(randperm(N));
+x = linspace(kmin,kmax,N);
 
+degrees_in = randsample(kmin + P(x)', N, true);
+degrees_out = degrees_in(randperm(N));
+histogram(degrees_in, 'Normalization', 'pdf')
+%%
 assert(sum(degrees_in) == sum(degrees_out))
 
-%% Reconstructing A
+A_scalefree = adjacencymatrix(degrees_in, degrees_out);
+f_scalefree = figure('Renderer', 'painters', 'Position', [50 800 400 400]);
+imshow(full(A_scalefree));
+print(f_scalefree, '../Figures/A_scalefree.png', '-dpng', '-r300')
+
+%% Reconstructing A:
 % Using A = spalloc(N, N, nonzeros); takes 0.142176 seconds.
 % Using A = sparse(xidx, yidx, ones(nonzeros, 1, 'logical')); takes 0.049687 seconds.
 
@@ -93,8 +113,8 @@ assert(sum(diag(A)) == 0)
 
 imshow(full(A));
 
-diffrows = degrees_in - full(sum(A,2))';
-diffcols = degrees_out - full(sum(A,1));
+diffrows = degrees_in' - full(sum(A,2))';
+diffcols = degrees_out' - full(sum(A,1));
 
 N2 = N^2; thresh = 1.0e-9;
 assert(sum(diffrows)/N2 < thresh)
