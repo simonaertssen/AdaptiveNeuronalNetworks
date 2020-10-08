@@ -1,4 +1,4 @@
-close all; clear all; clc
+close all; clear vars; clc
 addpath('../Functions');
 
 %% Making the adjacency matrix from a degree distribution
@@ -12,6 +12,19 @@ addpath('../Functions');
 % k_out so that we get the right number of degrees.
 
 N = 1000;
+
+%% Test a fixed degree network:
+netdegree = 600;
+degrees_in = zeros(N,1);
+degrees_in(randperm(N)) = netdegree;
+degrees_out = degrees_in(randperm(N));
+
+assert(sum(degrees_in) == sum(degrees_out))
+
+A_fixeddegree = adjacencymatrix(degrees_in, degrees_out);
+f_fixeddegree = figure('Renderer', 'painters', 'Position', [50 800 400 400]);
+imshow(full(A_fixeddegree));
+print(f_fixeddegree, '../Figures/A_fixeddegree.png', '-dpng', '-r300')
 
 %% Test using the poisson distribution of random networks
 netp = 0.2;
@@ -27,19 +40,6 @@ A_random = adjacencymatrix(degrees_in, degrees_out);
 f_random = figure('Renderer', 'painters', 'Position', [50 800 400 400]);
 imshow(full(A_random));
 print(f_random, '../Figures/A_random.png', '-dpng', '-r300')
-
-%% Test a fixed degree network:
-netdegree = 600;
-degrees_in = zeros(N,1);
-degrees_in(randperm(N)) = netdegree;
-degrees_out = degrees_in(randperm(N));
-
-assert(sum(degrees_in) == sum(degrees_out))
-
-A_fixeddegree = adjacencymatrix(degrees_in, degrees_out);
-f_fixeddegree = figure('Renderer', 'painters', 'Position', [50 800 400 400]);
-imshow(full(A_fixeddegree));
-print(f_fixeddegree, '../Figures/A_fixeddegree.png', '-dpng', '-r300')
 
 %% Now using scale free networks:
 degree = 3;

@@ -4,7 +4,7 @@ function diracpars = makeDiracPars(pars, netdegree)
     diracpars.netdegree = netdegree;
     diracpars.degrees = zeros(pars.N,1);
     degree_idx = randperm(pars.N); 
-    diracpars.degrees(degree_idx) = diracpars.netdegree;
+    diracpars.degrees(randperm(pars.N)) = diracpars.netdegree;
 
     diracpars.meandegree = diracpars.netdegree;
     diracpars.P = @(x) diracpdf(x - diracpars.netdegree)*pars.N;
