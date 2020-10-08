@@ -1,17 +1,23 @@
-%% Test the different networks and their statistical properties
-% We need to evaluate whether some of the random numbers we are pulling are
-% actually following the right pdf.
 close all; clear vars; clc;
 addpath('../Functions');
 
-%% A fixed degree networc / diracnet:
-diracpars.netdegree = netdegree;
-    diracpars.degrees = zeros(pars.N,1);
-    degree_idx = randperm(pars.N); 
-    diracpars.degrees(randperm(pars.N)) = diracpars.netdegree;
+%% Test the different networks and their statistical properties
+% We need to evaluate whether some of the random numbers we are pulling are
+% actually following the right pdf.
 
-    diracpars.meandegree = diracpars.netdegree;
-    diracpars.P = @(x) diracpdf(x - diracpars.netdegree)*pars.N;
+N = 1000;
+
+%% A fixed degree networc / diracnet:
+netdegree = 100;
+degrees = zeros(N,1);
+degrees(randperm(N)) = netdegree;
+
+P = @(x) diracpdf(x - netdegree)*N;
+
+figure; hold on; grid on;
+x = linspace(min(degrees), max(degrees), N);
+histogram(degrees, 'Normalization', 'pdf');
+plot(x, P(x));
 
 %% Setup: the pdf as a benchmark
 addpath('../Functions');
