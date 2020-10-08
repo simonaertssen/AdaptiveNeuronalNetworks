@@ -7,13 +7,15 @@ function scalefreepars = make_scalefreeparameters(pars, degree, kmin, kmax)
         case 3
             kmax = round(pars.N*2/5);
     end
+    if degree < 2
+        warning('Scale free networks do not exist for degress less than 2');
+    end
 
     scalefreepars.degree = degree;
     scalefreepars.P = @(x) scalefreepdf(x, pars.N, scalefreepars.degree, kmin, kmax);
 
-    x = kmin:kmax;
-    scalefreepars.degrees_in = kmin + scalefreepars.P(x)';
-    
+    scalefreepars.degrees_in = randsample(kmin:kmax, pars.N, true, scalefreepars.P(kmin:kmax));
+
     fsolveoptions = optimset('Display','off');
     scalefreepars.meandegree = fsolve(@(z) scalefreepars.P(z) - mean(scalefreepars.P(kmin:kmax)), kmin, fsolveoptions);
 end

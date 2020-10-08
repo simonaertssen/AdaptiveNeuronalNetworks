@@ -5,19 +5,43 @@ addpath('../Functions');
 % We need to evaluate whether some of the random numbers we are pulling are
 % actually following the right pdf.
 
-N = 1000;
+pars.N = 10000;
 
-%% A fixed degree networc / diracnet:
-netdegree = 100;
-degrees = zeros(N,1);
-degrees(randperm(N)) = netdegree;
+%% A fixed degree network / diracnet: CORRECT
+fixeddegreepars = make_fixeddegreeparameters(pars, 100);
 
-P = @(x) diracpdf(x - netdegree)*N;
+limits = round(fixeddegreepars.meandegree + fixeddegreepars.meandegree*[-0.5, 0.5]);
 
 figure; hold on; grid on;
-x = linspace(min(degrees), max(degrees), N);
-histogram(degrees, 'Normalization', 'pdf');
-plot(x, P(x));
+xlim(limits);
+x = limits(1):limits(2);
+histogram(fixeddegreepars.degrees_in, 'Normalization', 'pdf');
+plot(x, fixeddegreepars.P(x)/pars.N);
+
+%% A random network: CORRECT
+randompars = make_randomparameters(pars, 0.02);
+
+limits = round(randompars.meandegree + randompars.meandegree*[-1, 1]);
+
+figure; hold on; grid on;
+xlim(limits);
+x = limits(1):limits(2);
+histogram(randompars.degrees_in, 'Normalization', 'pdf');
+plot(x, randompars.P(x)/pars.N);
+
+%% A scale free network:
+kmin = 1000; kmax = 2000;
+scalefreepars = make_scalefreeparameters(pars, 3, kmin, kmax);
+
+limits = [kmin, kmax];
+
+figure; hold on; grid on;
+x = limits(1):limits(2);
+histogram(scalefreepars.degrees_in, 'Normalization', 'pdf');
+plot(x, scalefreepars.P(x)/pars.N);
+
+
+%% A scale free network:
 
 %% Setup: the pdf as a benchmark
 addpath('../Functions');
