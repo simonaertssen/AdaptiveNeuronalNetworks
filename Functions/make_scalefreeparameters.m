@@ -10,7 +10,8 @@ function scalefreepars = make_scalefreeparameters(pars, degree, kmin, kmax)
     if degree < 2
         warning('Scale free networks do not exist for degress less than 2');
     end
-
+    scalefreepars.kmin = kmin;
+    scalefreepars.kmax = kmax;
     scalefreepars.degree = degree;
     scalefreepars.P = @(x) scalefreepdf(x, pars.N, scalefreepars.degree, kmin, kmax);
 
