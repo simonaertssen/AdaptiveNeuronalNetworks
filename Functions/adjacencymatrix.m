@@ -1,8 +1,15 @@
 function A = adjacencymatrix(degrees_in, degrees_out)
-    % Test whether the number of elemets is the same.
+    N = numel(degrees_in);
+    if max(degrees_in) >= N
+        warning('Degree too large');
+        return
+    end
+    if nargin == 1
+        degrees_out = degrees_in(randperm(N));
+    end
+    % Test whether the number of elements is the same.
     assert(sum(degrees_in) == sum(degrees_out))
     
-    N = numel(degrees_in);
     nonzeros = sum(degrees_in);
     xidx = uint16(zeros(nonzeros, 1));
     yidx = uint16(zeros(nonzeros, 1));
