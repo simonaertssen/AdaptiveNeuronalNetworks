@@ -20,6 +20,7 @@ idx = find(A);
 p = 0.12; 
 rewires = rand(numel(idx), 1) < p;
 numrewires = sum(rewires);
+rewireidx = find(rewires);
 
 notallowed_idx = [idx; sub2ind(size(A), 1:pars.N, 1:pars.N)'];
 
@@ -27,20 +28,22 @@ freeidx = setdiff(1:pars.N^2, notallowed_idx);
 assert(numel(freeidx) + numel(notallowed_idx) == pars.N^2)
 [freexidx,freeyidx] = ind2sub(size(A),freeidx);
 
-yidx(rewires) = freeyidx(randperm(numel(freeidx), numrewires));
+for j = 1:numrewires
+    yidx(rewireidx(j)) = randsample(freeyidx(freeyidx == yidx(rewireidx(j))), 1);
+end
 
 % delete rewired links:
-A_fixeddegree(idx(rewires)) = 0;
+A(rewireidx) = 0;
 idx = sub2ind(xidx,yidx);
-A_fixeddegree(idx) = 1;
-
+A(idx) = 1;
 
 diffcols = full(sum(A_fixeddegree,2)) - full(sum(A,2));
 diffrows = full(sum(A_fixeddegree,1)) - full(sum(A,1));
 
+sum(diffcols)
+sum(diffrows)
 N2 = pars.N^2; thresh = 1.0e-9;
-assert(sum(diffcols)/N2 < thresh)
-assert(sum(diffrows)/N2 < thresh)
+
 
 %%
 degrees_in = sum(A,2);
@@ -51,7 +54,7 @@ histogram(degrees_in, 'Normalization', 'pdf', 'NumBins', round(sqrt(numel(degree
 %% Strogatz1998
 % Do we obtain the same behaviour as in Strogatz1998? Let's see.
 pars.N = 500;
-fixeddegreepars = make_fixeddegreeparameters(pars, 50);
+fixeddegreepars = make_fixeddegreeparameters(pars, 10);
 A_fixeddegree = adjacencymatrix(fixeddegreepars.degrees_in);
 
 nsamples = 10;
@@ -66,19 +69,21 @@ for i = 1:nsamples
     A = A_fixeddegree;
     idx = find(A);
     [xidx,yidx] = ind2sub(size(A),idx);
-    
-    p = 0.12;
+
     rewires = rand(numel(idx), 1) < p;
     numrewires = sum(rewires);
-    
-    notallowed_idx = [idx; sub2ind(size(A_fixeddegree), 1:pars.N, 1:pars.N)'];
+    rewireidx = find(rewires);
+
+    notallowed_idx = [idx; sub2ind(size(A), 1:pars.N, 1:pars.N)'];
 
     freeidx = setdiff(1:pars.N^2, notallowed_idx);
     assert(numel(freeidx) + numel(notallowed_idx) == pars.N^2)
     [freexidx,freeyidx] = ind2sub(size(A),freeidx);
-    
-    yidx(rewires) = freeyidx(randperm(numel(freeidx), numrewires));
-    
+
+    for j = 1:numrewires
+        yidx(rewireidx(j)) = randsample(freeyidx(freeyidx == yrewire), 1);
+    end
+
     % delete rewired links:
     A(idx(rewires)) = 0;
     idx = sub2ind(xidx,yidx);
@@ -88,7 +93,6 @@ for i = 1:nsamples
     Ls(i) = L;
     Cs(i) = CClosed;
 end
-
 
 Cs = Cs/C0;
 Ls = Ls/L0;
