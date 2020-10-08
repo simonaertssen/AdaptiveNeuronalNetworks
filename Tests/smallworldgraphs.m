@@ -2,28 +2,178 @@ close all; clear all; clc;
 addpath('../Functions');
 
 %% Make and investigate some small-world networks!
+% Whe rewiringg, the in-degree has to change! Outgoing connections stay the
+% same.
 pars.N = 1000;
-fixeddegreepars = make_fixeddegreeparameters(pars, round(pars.N/2));
+fixeddegreepars = make_fixeddegreeparameters(pars, 10);
 
-%% A:
+%% Get fixed degree matrix:
 A_fixeddegree = adjacencymatrix(fixeddegreepars.degrees_in);
 
-%%
-p = 0.3; numrewires = round(0.3*pars.N);
-idx = find(A_fixeddegree);
+%% Interchange a percentage of links
+A_fixeddegree = adjacencymatrix(fixeddegreepars.degrees_in);
 
-freeidx = setdiff(1:pars.N^2, idx);
-assert(numel(idx) + numel(freeidx) == pars.N^2)
+A = A_fixeddegree;
+idx = find(A);
+[xidx,yidx] = ind2sub(size(A),idx);
 
-idx(randperm(numel(idx), numrewires)) = freeidx(randperm(numel(freeidx), numrewires));
+p = 0.12; 
+rewires = rand(numel(idx), 1) < p;
+numrewires = sum(rewires);
 
-[xidx,yidx] = ind2sub(size(A_fixeddegree),idx);
-A = sparse(xidx, yidx, ones(nnz(A_fixeddegree), 1, 'logical'));
+notallowed_idx = [idx; sub2ind(size(A), 1:pars.N, 1:pars.N)'];
 
-immse(full(double(A_fixeddegree)), full(double(A)))
+freeidx = setdiff(1:pars.N^2, notallowed_idx);
+assert(numel(freeidx) + numel(notallowed_idx) == pars.N^2)
+[freexidx,freeyidx] = ind2sub(size(A),freeidx);
+
+yidx(rewires) = freeyidx(randperm(numel(freeidx), numrewires));
+
+% delete rewired links:
+A_fixeddegree(idx(rewires)) = 0;
+idx = sub2ind(xidx,yidx);
+A_fixeddegree(idx) = 1;
+
+
+diffcols = full(sum(A_fixeddegree,2)) - full(sum(A,2));
+diffrows = full(sum(A_fixeddegree,1)) - full(sum(A,1));
+
+N2 = pars.N^2; thresh = 1.0e-9;
+assert(sum(diffcols)/N2 < thresh)
+assert(sum(diffrows)/N2 < thresh)
 
 %%
 degrees_in = sum(A,2);
 degrees_out = sum(A,1); 
 
 histogram(degrees_in, 'Normalization', 'pdf', 'NumBins', round(sqrt(numel(degrees_in))));
+
+%% Strogatz1998
+% Do we obtain the same behaviour as in Strogatz1998? Let's see.
+pars.N = 500;
+fixeddegreepars = make_fixeddegreeparameters(pars, 50);
+A_fixeddegree = adjacencymatrix(fixeddegreepars.degrees_in);
+
+nsamples = 10;
+ps = logspace(-3, 0, nsamples);
+Cs = zeros(nsamples,1);
+Ls = zeros(nsamples,1);
+
+[L0, ~, C0, ~, ~, ~] = graphproperties(double(A_fixeddegree));
+
+for i = 1:nsamples
+    p = ps(i); 
+    A = A_fixeddegree;
+    idx = find(A);
+    [xidx,yidx] = ind2sub(size(A),idx);
+    
+    p = 0.12;
+    rewires = rand(numel(idx), 1) < p;
+    numrewires = sum(rewires);
+    
+    notallowed_idx = [idx; sub2ind(size(A_fixeddegree), 1:pars.N, 1:pars.N)'];
+
+    freeidx = setdiff(1:pars.N^2, notallowed_idx);
+    assert(numel(freeidx) + numel(notallowed_idx) == pars.N^2)
+    [freexidx,freeyidx] = ind2sub(size(A),freeidx);
+    
+    yidx(rewires) = freeyidx(randperm(numel(freeidx), numrewires));
+    
+    % delete rewired links:
+    A(idx(rewires)) = 0;
+    idx = sub2ind(xidx,yidx);
+    A(idx) = 1;
+
+    [L, ~, CClosed, ~, ~, ~] = graphproperties(double(A))
+    Ls(i) = L;
+    Cs(i) = CClosed;
+end
+
+
+Cs = Cs/C0;
+Ls = Ls/L0;
+
+figure; grid on; hold on
+plot(ps, Cs, '-k', 'LineWidth', 2)
+plot(ps, Ls, '-r', 'LineWidth', 2)
+set(gca, 'XScale', 'log')
+xlabel('p')
+legend('C', 'L')
+
+
+%% Old:
+p = 0.1; numrewires = sum(rand(pars.N));
+idx = find(A_fixeddegree);
+
+freeidx = setdiff(1:pars.N^2, idx);
+assert(numel(idx) + numel(freeidx) == pars.N^2)
+
+% Link a certain number and delink another part: 
+rewireidx = randperm(numel(idx), numrewires*2);
+idx(rewireidx(1:numrewires)) = freeidx(randperm(numel(freeidx), numrewires));
+idx(rewireidx((numrewires+1):end)) = 0;
+
+[xidx,yidx] = ind2sub(size(A_fixeddegree),idx);
+A = sparse(xidx, yidx, ones(nnz(A_fixeddegree), 1, 'logical'));
+
+immse(full(double(A_fixeddegree)), full(double(A)))
+
+%% Check
+degrees_in = sum(A,2);
+degrees_out = sum(A,1); 
+
+histogram(degrees_in, 'Normalization', 'pdf', 'NumBins', round(sqrt(numel(degrees_in))));
+
+%% Strogatz1998
+% Do we obtain the same behaviour as in Strogatz1998? Let's see.
+pars.N = 500;
+fixeddegreepars = make_fixeddegreeparameters(pars, 50);
+
+nsamples = 10;
+ps = logspace(-3, 0, nsamples);
+Cs = zeros(nsamples,1);
+Ls = zeros(nsamples,1);
+
+[L0, ~, C0, ~, ~, ~] = graphproperties(double(A_fixeddegree));
+
+for i = 1:nsamples
+    p = ps(i); 
+    numrewires = round(p*pars.N);
+    
+    idx = find(A_fixeddegree);
+    freeidx = setdiff(1:pars.N^2, idx);
+    assert(numel(idx) + numel(freeidx) == pars.N^2)
+
+    % Link a certain number and delink another part: 
+    rewireidx = randperm(numel(idx), numrewires*2);
+    idx(rewireidx(1:numrewires)) = freeidx(randperm(numel(freeidx), numrewires));
+
+    [xidx,yidx] = ind2sub(size(A_fixeddegree),idx);
+    A = sparse(xidx, yidx, ones(nnz(A_fixeddegree), 1));
+    A(idx(rewireidx((numrewires+1):end))) = 0;
+
+    [L, ~, CClosed, ~, ~, ~] = graphproperties(A)
+    Ls(i) = L;
+    Cs(i) = CClosed;
+end
+
+
+Cs = Cs/C0;
+Ls = Ls/L0;
+
+figure; grid on; hold on
+plot(ps, Cs, '-k', 'LineWidth', 2)
+plot(ps, Ls, '-r', 'LineWidth', 2)
+set(gca, 'XScale', 'log')
+xlabel('p')
+legend('C', 'L')
+
+
+%% Realisation:
+% We don't need to change elements in the adjacency matrix to model the
+% displaced links, we can just 'add' a vector of zero-mean.
+% If p*N links will change, p*N links will be added and p*N links will be
+% removed.
+
+linkstoadd = randfixedsum(pars.N, 1, numrewires, 0, numrewires);
+sum(linkstoadd)

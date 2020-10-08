@@ -119,9 +119,9 @@ assert(sum(diag(A)) == 0)
 
 imshow(full(A));
 
-diffrows = degrees_in' - full(sum(A,2))';
-diffcols = degrees_out' - full(sum(A,1));
+diffcols = degrees_in' - full(sum(A,2))';
+diffrows = degrees_out' - full(sum(A,1));
 
 N2 = N^2; thresh = 1.0e-9;
-assert(sum(diffrows)/N2 < thresh)
 assert(sum(diffcols)/N2 < thresh)
+assert(sum(diffrows)/N2 < thresh)
