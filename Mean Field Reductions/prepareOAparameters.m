@@ -1,4 +1,4 @@
-function [struct] = prepareOApars(struct)
+function struct = prepareOAparameters(struct)
     struct.assortativity = @(kaccent, k, c) max(0, min(1, (kaccent.*k/(struct.meandegree*struct.N) + c*(1))));
 
     struct.k = unique(struct.degrees);
