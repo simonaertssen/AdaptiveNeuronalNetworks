@@ -1,17 +1,20 @@
-function [tout,xout] = DOPRI_threshold(originalfunc,ta,tb,x0,h,p)
+function [tout, xout, Kout] = DOPRI_simulatenetwork(ta,tb,x0,K0,h,p) 
     initarray = make_GPUhandle();
-    disp("Start integration.")
+    disp("Start simulation.")
     
     % ODE solver parameters:
     npts = round((tb - ta)/h + 1);
     h = (tb - ta)/(npts-1);
     dim = size(x0);
     
+    % Network parameters and handles:
+    A = initarray(adjacencymatrix());
+    K = p.K; % For introducing synaptic plasticity
+    func = @(t, x, K) thetaneurons_full(t, x, K, A, p.e, 1/p.N, p.a);
+    
     tout = initarray(linspace(ta,tb,npts));
     xout = initarray(zeros(dim(1),npts)); xout(:,1) = x0;
-    
-    % Make new function handle to improve speed of function evaluation!
-    func = @(t, x) originalfunc(t, x, p.e, p.K/p.N, p.a_n);
+    Kout = initarray(zeros(dim(1),npts)); Kout(:,1) = K0;
     
     K7 = h*func(ta, x0);
     for i = 1:(npts-1)
@@ -30,5 +33,6 @@ function [tout,xout] = DOPRI_threshold(originalfunc,ta,tb,x0,h,p)
         xout(:,i+1) = wrapToPi(tmp); % tmp;
         K7 = h*func(tout(i), xout(:,i+1));
     end
-    disp("End integration.")
+    disp("Simulation done.")
 end
+
