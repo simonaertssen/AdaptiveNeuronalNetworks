@@ -1,20 +1,24 @@
 function A = adjacencymatrix(degrees_in, degrees_out)
+    initarray = make_GPUhandle();
     N = numel(degrees_in);
     if max(degrees_in) >= N
         error('Degree too large');
-        return
     end
     if nargin == 1
         degrees_out = degrees_in(randperm(N));
     end
-    % Test whether the number of elements is the same.
-    assert(sum(degrees_in) == sum(degrees_out))
-    
     nonzeros = sum(degrees_in);
-    xidx = uint16(zeros(nonzeros, 1));
-    yidx = uint16(zeros(nonzeros, 1));
+    % Test for laptop version or other:
     
-    choosefrom = uint16(2:N);
+    if version('-release') == "2020a"
+        numtype = @(x) uint16(x);
+    else
+        numtype = @(x) single(x);
+    end
+    xidx = initarray(numtype(zeros(nonzeros, 1)));
+    yidx = initarray(numtype(zeros(nonzeros, 1)));
+
+    choosefrom = numtype(2:N);
     prob_leftout = degrees_out(1);
     probs = degrees_out(choosefrom);
 
@@ -30,7 +34,7 @@ function A = adjacencymatrix(degrees_in, degrees_out)
             % ok, there's not enough probabilities available
             % chosen = maxk(choosefrom, num);
             probs = probs + 1;
-            chosen = datasample(choosefrom, num, 'Replace', false, 'Weights', probs+1);
+            chosen = datasample(choosefrom, num, 'Replace', false, 'Weights', probs);
         end
 
         xidx(start:(start+(num-1))) = i;
