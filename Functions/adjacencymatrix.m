@@ -57,7 +57,7 @@ function A = adjacencymatrix(degrees_in, degrees_out)
     % Create the matrix as sparse
     if gpuDeviceCount > 0
         A = zeros(N, N, 'logical');
-        A(xidx, yidx) = ones(nonzeros, 1);
+        A(xidx, yidx) = 1;
     else 
         A = sparse(xidx, yidx, ones(nonzeros, 1, 'logical'));
     end
