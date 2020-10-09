@@ -73,7 +73,7 @@ Ls(Ls == Inf) = 1.0e2;
 netpsinterp = linspace(min(netps), max(netps), nsamples^2);
 
 f_random = figure('Renderer', 'painters', 'Position', [50 800 600 350]); grid on; hold on;
-ylim([0, 5]); title('Fixed degree network', 'FontSize', 20)
+ylim([0, 5]); title('Random network', 'FontSize', 20)
 
 plot(netpsinterp, interp1(netps,Ls,netpsinterp,'pchip'), 'LineWidth', 2)
 scatter(netps, Ls, 'xk', 'HandleVisibility','off')
