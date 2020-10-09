@@ -60,9 +60,9 @@ function A = adjacencymatrix(degrees_in, degrees_out)
 %         A(sub2ind([N, N], xidx, yidx)) = 1;
         A = sparse(xidx, yidx, ones(nonzeros, 1, 'double'));
     else 
-        A = initarray(sparse(xidx, yidx, ones(nonzeros, 1, 'logical')));
+        A = sparse(xidx, yidx, ones(nonzeros, 1, 'logical'));
     end
-    assert(sum(gather(diag(A))) == 0);
+    assert(sum(diag(gather(A))) == 0);
 
     diffrows = degrees_in' - full(sum(A,2))';
     diffcols = degrees_out' - full(sum(A,1));
