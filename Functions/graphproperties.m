@@ -80,7 +80,7 @@ A = varargin{1};
 
 % test to make sure A is a square matrix
 [dimone, dimtwo] = size(A);
-if ~isnumeric(A) || ~ismatrix(A) || dimone~=dimtwo
+if ~ismatrix(A) || dimone~=dimtwo
     error([mfilename,':ANotSquare'],'Input must be a square matrix.');
 end
 

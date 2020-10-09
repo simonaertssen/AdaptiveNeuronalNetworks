@@ -20,7 +20,7 @@ COs = zeros(nsamples,1);
 
 for i = 1:nsamples
     fdpars = make_fixeddegreeparameters(pars, round(netdegrees(i)));    
-    [L, ~, CClosed, ~, COpen, ~] = graphproperties(double(adjacencymatrix(fdpars.degrees_in)));
+    [L, ~, CClosed, ~, COpen, ~] = graphproperties(adjacencymatrix(fdpars.degrees_in));
     Ls(i) = L;
     CCs(i) = CClosed;
     COs(i) = COpen;
@@ -57,7 +57,7 @@ COs = zeros(nsamples,1);
 
 for i = 1:nsamples
     randompars = make_randomparameters(pars, netps(i));
-    [L, ~, CClosed, ~, COpen, ~] = graphproperties(double(adjacencymatrix(randompars.degrees_in)));
+    [L, ~, CClosed, ~, COpen, ~] = graphproperties(adjacencymatrix(randompars.degrees_in));
     Ls(i) = L;
     CCs(i) = CClosed;
     COs(i) = COpen;
@@ -96,7 +96,7 @@ COs = zeros(nsamples,1);
 
 for i = 1:nsamples
     sfpars = make_scalefreeparameters(pars, netdegrees(i));
-    [L, ~, CClosed, ~, COpen, ~] = graphproperties(double(adjacencymatrix(sfpars.degrees_in)));
+    [L, ~, CClosed, ~, COpen, ~] = graphproperties(adjacencymatrix(sfpars.degrees_in));
     Ls(i) = L;
     CCs(i) = CClosed;
     COs(i) = COpen;
