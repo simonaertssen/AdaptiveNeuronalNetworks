@@ -85,7 +85,7 @@ if ~isnumeric(A) || ~ismatrix(A) || dimone~=dimtwo
 end
 
 % test to make sure A only contains zeros and ones
-if any((A~=0)&(A~=1))
+if any((gather(A)~=0)&(gather(A)~=1))
     error([mfilename,':ANotValid'],...
         'Input matrix must contain only zeros and ones.');
 end
