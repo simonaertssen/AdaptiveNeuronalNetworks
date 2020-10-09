@@ -1,7 +1,7 @@
 function A = adjacencymatrix(degrees_in, degrees_out)
     N = numel(degrees_in);
     if max(degrees_in) >= N
-        warning('Degree too large');
+        error('Degree too large');
         return
     end
     if nargin == 1
