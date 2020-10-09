@@ -55,7 +55,13 @@ function A = adjacencymatrix(degrees_in, degrees_out)
     end
     
     % Create the matrix as sparse
-    A = sparse(xidx, yidx, ones(nonzeros, 1, 'logical'));
+    if gpuDeviceCount > 0
+        sparsenumtype = 'double';
+    else 
+        sparsenumtype = 'logical';
+    end
+    sparsenumtype = 
+    A = sparse(xidx, yidx, ones(nonzeros, 1, sparsenumtype));
     assert(sum(diag(A)) == 0)
 
     diffrows = degrees_in' - full(sum(A,2))';
