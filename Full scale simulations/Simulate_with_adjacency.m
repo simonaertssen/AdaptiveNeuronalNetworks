@@ -1,6 +1,6 @@
 clear all; close all; clc;
-% In this script we will be testing the performance of different order
-% parameters as suggested in Timme2017.
+% Simulate a full scale fixed degree network and test whether the results
+% are correct, with respect to the order parameters.
 
 %% Setup
 addpath('../Functions');
@@ -10,18 +10,17 @@ set(groot,'DefaultAxesXGrid','on')
 set(groot,'DefaultAxesYGrid','on')
 
 titlefont = 15;
-labelfont = 18;
+labelfont = 15;
 
 %% Make a GPU init handle:
 if gpuDeviceCount > 0
     d = gpuDevice(gpuDeviceCount);
     disp(d)
 end
-initarray = makeGPUinitHandle();
+initarray = make_GPUhandle();
 
 %% Theta model parameters:
-F = @thetaneurons_adjacency;
-tnow = 0; tend = 5;
+tnow = 0; tend = 3;
 h = 0.01;
 
 pars.N = 1000;
@@ -32,22 +31,27 @@ IC = randn(pars.N, 1) + 1;
 pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
 
 %% Perform a full scale simulation of the dirac network:
-diracpars = makeDiracPars(pars, 100);
+[t, thetas] = DOPRI_threshold(@thetaneurons, tnow, tend, IC, h, pars);
+z = orderparameter(thetas);
 
+fixeddegreepars = make_fixeddegreeparameters(pars, round(pars.N*0.6));
+[t, thetas_full] = DOPRI_simulatenetwork(tnow,tend,IC,h,fixeddegreepars);
+z_full = orderparameter(thetas_full);
 
-%%
-fspace = figure('Renderer', 'painters', 'Position', [50 800 800 200]);
+% Predict order parameter from mean field theory for fixed degree networks:
+MRFIC = z(1);
+options = odeset('RelTol', 1.0e-6,'AbsTol', 1.0e-6);
+[T, Z] = ode45(@(t,x) MFR(t,x,pars), [tnow, tend], MRFIC, options);
 
-hold on;
-plot(t, abs(z), 'LineWidth', 2);
-plot(t, abs(z_net), 'LineWidth', 2);
-plot(t, abs(z_mf), 'LineWidth', 2);
-plot(t, abs(z_link), 'LineWidth', 2);
+%% Plotting the results:
+f_inspect = figure('Renderer', 'painters', 'Position', [50 800 800 400]); box on; hold on;
 
-xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
-ylabel('$\| Z (t) \|$','Interpreter','latex', 'FontSize', labelfont)
+xlim([tnow, tend]); ylim([0, 1])
+plot(t, abs(z), '-', 'LineWidth', 2);
+plot(t, abs(z_full), '-', 'LineWidth', 2);
+plot(T, abs(Z), '-', 'LineWidth', 2);
+xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
+ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
 
-legend('Kuramoto order parameter', 'Network order parameter', 'Mean field order parameter', 'Link field order parameter', 'FontSize', labelfont-5, 'Location', 'southeast')
+legend('$$Z(t)$$', '$$Z(t)_{A}$$', '$$\overline{Z(t)}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southwest')
 removewhitspace();
-
-
