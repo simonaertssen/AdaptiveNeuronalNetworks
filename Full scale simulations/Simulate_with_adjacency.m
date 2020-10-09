@@ -13,6 +13,10 @@ titlefont = 15;
 labelfont = 18;
 
 %% Make a GPU init handle:
+if gpuDeviceCount > 0
+    d = gpuDevice(gpuDeviceCount);
+    disp(d)
+end
 initarray = makeGPUinitHandle();
 
 %% Theta model parameters:
