@@ -18,7 +18,7 @@ function A = adjacencymatrix(degrees_in, degrees_out)
     xidx = initarray(zeros(nonzeros, 1, numtype));
     yidx = initarray(zeros(nonzeros, 1, numtype));
 
-    choosefrom = typecast(2:N,numtype);
+    choosefrom = cast(2:N,numtype);
     prob_leftout = degrees_out(1);
     probs = degrees_out(choosefrom);
 
@@ -61,7 +61,6 @@ function A = adjacencymatrix(degrees_in, degrees_out)
     else 
         A = sparse(xidx, yidx, ones(nonzeros, 1, 'logical'));
     end
-    A = sparse(xidx, yidx, ones(nonzeros, 1, 'logical'));
     assert(sum(diag(A)) == 0);
 
     diffrows = degrees_in' - full(sum(A,2))';
