@@ -1,5 +1,4 @@
 function A = adjacencymatrix(degrees_in, degrees_out)
-    initarray = make_GPUhandle();
     N = numel(degrees_in);
     if max(degrees_in) >= N
         error('Degree too large');
@@ -15,8 +14,8 @@ function A = adjacencymatrix(degrees_in, degrees_out)
     else
         numtype = 'single';
     end
-    xidx = initarray(zeros(nonzeros, 1, numtype));
-    yidx = initarray(zeros(nonzeros, 1, numtype));
+    xidx = zeros(nonzeros, 1, numtype);
+    yidx = zeros(nonzeros, 1, numtype);
 
     choosefrom = cast(2:N,numtype);
     prob_leftout = degrees_out(1);
@@ -56,13 +55,12 @@ function A = adjacencymatrix(degrees_in, degrees_out)
     
     % Create the matrix as sparse
     if gpuDeviceCount > 0
-%         A = initarray(zeros(N, N, 'logical'));
-%         A(sub2ind([N, N], xidx, yidx)) = 1;
-        A = sparse(xidx, yidx, ones(nonzeros, 1, 'double'));
+        A = zeros(N, N, 'logical');
+        A(sub2ind([N, N], xidx, yidx)) = 1;
     else 
         A = sparse(xidx, yidx, ones(nonzeros, 1, 'logical'));
     end
-    assert(sum(diag(gather(A))) == 0);
+    assert(sum(diag(A)) == 0);
 
     diffrows = degrees_in' - full(sum(A,2))';
     diffcols = degrees_out' - full(sum(A,1));
