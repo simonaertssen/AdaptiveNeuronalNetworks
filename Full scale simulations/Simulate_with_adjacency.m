@@ -69,5 +69,4 @@ removewhitspace();
 
 print(f_fullyconnected, '../Figures/InspectMeanFieldFullyConnected.png', '-dpng', '-r300')
 
-%% 1. Perform a full scale simulation of a FULLY CONNECTED network:
 
