@@ -92,7 +92,9 @@ end
 
 % change A to sparse if necessary
 if ~issparse(A)
+    disp('converting')
     A = sparse(A);
+    disp(issparse(A))
 end
 
 end
