@@ -11,12 +11,12 @@ function A = adjacencymatrix(degrees_in, degrees_out)
     % Test for laptop version or other:
     
     if version('-release') == "2020a"
-        numtype = @(x) uint16(x);
+        numtype = 'uint16';
     else
-        numtype = @(x) single(x);
+        numtype = 'single';
     end
-    xidx = initarray(numtype(zeros(nonzeros, 1)));
-    yidx = initarray(numtype(zeros(nonzeros, 1)));
+    xidx = initarray(zeros(nonzeros, 1, numtype));
+    yidx = initarray(zeros(nonzeros, 1, numtype));
 
     choosefrom = numtype(2:N);
     prob_leftout = degrees_out(1);
@@ -61,7 +61,7 @@ function A = adjacencymatrix(degrees_in, degrees_out)
     else 
         A = sparse(xidx, yidx, ones(nonzeros, 1, 'logical'));
     end
-    sum(find(xidx == yidx))
+    A = sparse(xidx, yidx, ones(nonzeros, 1, 'logical'));
     assert(sum(diag(A)) == 0);
 
     diffrows = degrees_in' - full(sum(A,2))';
