@@ -18,7 +18,7 @@ function A = adjacencymatrix(degrees_in, degrees_out)
     xidx = initarray(zeros(nonzeros, 1, numtype));
     yidx = initarray(zeros(nonzeros, 1, numtype));
 
-    choosefrom = numtype(2:N);
+    choosefrom = typecast(2:N,numtype);
     prob_leftout = degrees_out(1);
     probs = degrees_out(choosefrom);
 
