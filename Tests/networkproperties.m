@@ -2,15 +2,18 @@ close all; clear all; clc;
 addpath('../Functions');
 
 %% Investigate the properties of different network graphs
-pars.N = 100;
+pars.N = 1000;
 
 if gpuDeviceCount > 0
     d = gpuDevice(gpuDeviceCount);
     disp(d)
+else 
+    disp('cpu session active')
 end
 initarray = make_GPUhandle();
 
 %% Graph properties of a fixed degree network / diracnet:
+disp('Graph properties of a fixed degree network.')
 nsamples = 10;
 netdegrees = linspace(log(pars.N), pars.N-1, nsamples); % Use log to make sure k >>> log(N)
 
@@ -49,6 +52,7 @@ removewhitspace();
 print(f_fixeddegree, '../Figures/FixedDegreeNetworkProperties.png', '-dpng', '-r300')
 
 %% Graph properties of a random network:
+disp('Graph properties of a random network.')
 netps = linspace(0.05, 0.95, nsamples); % Use log to make sure k >>> log(N)
 
 Ls = zeros(nsamples,1);
@@ -87,7 +91,8 @@ removewhitspace();
 print(f_random, '../Figures/RandomNetworkProperties.png', '-dpng', '-r300')
 
 
-%% Graph properties of a random network:
+%% Graph properties of a scale free network:
+disp('Graph properties of a scale free network.')
 netdegrees = linspace(2.1, 5, nsamples);
 
 Ls = zeros(nsamples,1);
