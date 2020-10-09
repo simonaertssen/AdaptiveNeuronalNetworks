@@ -62,7 +62,7 @@ function A = adjacencymatrix(degrees_in, degrees_out)
     else 
         A = initarray(sparse(xidx, yidx, ones(nonzeros, 1, 'logical')));
     end
-    assert(sum(diag(A)) == 0);
+    assert(sum(gather(diag(A))) == 0);
 
     diffrows = degrees_in' - full(sum(A,2))';
     diffcols = degrees_out' - full(sum(A,1));
