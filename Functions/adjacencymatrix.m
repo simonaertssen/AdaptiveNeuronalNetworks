@@ -60,7 +60,6 @@ function A = adjacencymatrix(degrees_in, degrees_out)
     else 
         sparsenumtype = 'logical';
     end
-    sparsenumtype = 
     A = sparse(xidx, yidx, ones(nonzeros, 1, sparsenumtype));
     assert(sum(diag(A)) == 0)
 
