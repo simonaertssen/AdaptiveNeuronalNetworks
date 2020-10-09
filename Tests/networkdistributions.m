@@ -41,18 +41,6 @@ histogram(scalefreepars.degrees_in, 'Normalization', 'pdf');
 plot(x, scalefreepars.P(x)/pars.N);
 
 
-%% A small world network:
-A_fixeddegree = adjacencymatrix(fixeddegreepars.degrees_in);
-
-%%
-p = 0.3;
-idx = find(A_fixeddegree);
-freeidx = setdiff(1:pars.N^2, idx);
-assert(numel(idx) + numel(freeidx))
-disp(numel(idx) + numel(freeidx))
-
-indices = randperm(pars.N, round(0.3*pars.N));
-
 
 
 

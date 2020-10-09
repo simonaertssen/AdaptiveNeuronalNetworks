@@ -2,7 +2,7 @@ close all; clear all; clc;
 addpath('../Functions');
 
 %% Make and investigate some small-world networks!
-% Whe rewiringg, the in-degree has to change! Outgoing connections stay the
+% Whe rewiring, the in-degree has to change! Outgoing connections stay the
 % same.
 pars.N = 1000;
 fixeddegreepars = make_fixeddegreeparameters(pars, 10);
@@ -33,7 +33,7 @@ for j = 1:numrewires
 end
 
 % delete rewired links:
-A(rewireidx) = 0;
+A(idx) = 0;
 idx = sub2ind(xidx,yidx);
 A(idx) = 1;
 
@@ -59,7 +59,7 @@ A_fixeddegree = adjacencymatrix(fixeddegreepars.degrees_in);
 
 nsamples = 10;
 ps = logspace(-3, 0, nsamples);
-Cs = zeros(nsamples,1);
+CCs = zeros(nsamples,1);
 Ls = zeros(nsamples,1);
 
 [L0, ~, C0, ~, ~, ~] = graphproperties(double(A_fixeddegree));
@@ -91,14 +91,14 @@ for i = 1:nsamples
 
     [L, ~, CClosed, ~, ~, ~] = graphproperties(double(A))
     Ls(i) = L;
-    Cs(i) = CClosed;
+    CCs(i) = CClosed;
 end
 
-Cs = Cs/C0;
+CCs = CCs/C0;
 Ls = Ls/L0;
 
 figure; grid on; hold on
-plot(ps, Cs, '-k', 'LineWidth', 2)
+plot(ps, CCs, '-k', 'LineWidth', 2)
 plot(ps, Ls, '-r', 'LineWidth', 2)
 set(gca, 'XScale', 'log')
 xlabel('p')
@@ -130,15 +130,17 @@ histogram(degrees_in, 'Normalization', 'pdf', 'NumBins', round(sqrt(numel(degree
 
 %% Strogatz1998
 % Do we obtain the same behaviour as in Strogatz1998? Let's see.
-pars.N = 500;
-fixeddegreepars = make_fixeddegreeparameters(pars, 50);
+pars.N = 1000;
+fixeddegreepars = make_fixeddegreeparameters(pars, 100);
+A_fixeddegree = adjacencymatrix(fixeddegreepars.degrees_in);
 
 nsamples = 10;
-ps = logspace(-3, 0, nsamples);
-Cs = zeros(nsamples,1);
+ps = logspace(-4, 0, nsamples);
 Ls = zeros(nsamples,1);
+CCs = zeros(nsamples,1);
+COs = zeros(nsamples,1);
 
-[L0, ~, C0, ~, ~, ~] = graphproperties(double(A_fixeddegree));
+[L0, ~, CC0, ~, CO0, ~] = graphproperties(double(A_fixeddegree));
 
 for i = 1:nsamples
     p = ps(i); 
@@ -156,21 +158,21 @@ for i = 1:nsamples
     A = sparse(xidx, yidx, ones(nnz(A_fixeddegree), 1));
     A(idx(rewireidx((numrewires+1):end))) = 0;
 
-    [L, ~, CClosed, ~, ~, ~] = graphproperties(A)
+    [L, ~, CClosed, ~, COpen, ~] = graphproperties(A);
     Ls(i) = L;
-    Cs(i) = CClosed;
+    CCs(i) = CClosed;
+    COs(i) = COpen;
 end
 
-
-Cs = Cs/C0;
-Ls = Ls/L0;
-
+%%
+pinterp = logspace(-4, 0, nsamples^2);
 figure; grid on; hold on
-plot(ps, Cs, '-k', 'LineWidth', 2)
-plot(ps, Ls, '-r', 'LineWidth', 2)
+plot(pinterp, interp1(ps,Ls/L0,pinterp), 'LineWidth', 2)
+plot(pinterp, interp1(ps,CCs/CC0,pinterp), 'LineWidth', 2)
+plot(pinterp, interp1(ps,COs/CO0,pinterp), 'LineWidth', 2)
 set(gca, 'XScale', 'log')
 xlabel('p')
-legend('C', 'L')
+legend('L', 'C closed', 'C Open')
 
 
 %% Realisation:
