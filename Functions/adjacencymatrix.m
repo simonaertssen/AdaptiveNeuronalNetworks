@@ -12,7 +12,7 @@ function A = adjacencymatrix(degrees_in, degrees_out)
     if version('-release') == "2020a"
         numtype = 'uint16';
     else
-        numtype = 'single';
+        numtype = 'double';
     end
     xidx = zeros(nonzeros, 1, numtype);
     yidx = zeros(nonzeros, 1, numtype);
