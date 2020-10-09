@@ -2,7 +2,7 @@ close all; clear all; clc;
 addpath('../Functions');
 
 %% Investigate the properties of different network graphs
-pars.N = 1000;
+pars.N = 100;
 
 if gpuDeviceCount > 0
     d = gpuDevice(gpuDeviceCount);
