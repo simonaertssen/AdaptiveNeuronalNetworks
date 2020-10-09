@@ -58,11 +58,12 @@ fixeddegreepars = make_fixeddegreeparameters(pars, 10);
 A_fixeddegree = adjacencymatrix(fixeddegreepars.degrees_in);
 
 nsamples = 10;
-ps = logspace(-3, 0, nsamples);
-CCs = zeros(nsamples,1);
+ps = logspace(-4, 0, nsamples);
 Ls = zeros(nsamples,1);
+CCs = zeros(nsamples,1);
+COs = zeros(nsamples,1);
 
-[L0, ~, C0, ~, ~, ~] = graphproperties(double(A_fixeddegree));
+[L0, ~, CC0, ~, CO0, ~] = graphproperties(double(A_fixeddegree));
 
 for i = 1:nsamples
     p = ps(i); 
@@ -81,7 +82,7 @@ for i = 1:nsamples
     [freexidx,freeyidx] = ind2sub(size(A),freeidx);
 
     for j = 1:numrewires
-        yidx(rewireidx(j)) = randsample(freeyidx(freeyidx == yrewire), 1);
+        yidx(rewireidx(j)) = randsample(freeyidx(freeyidx == yidx(rewireidx(j))), 1);
     end
 
     % delete rewired links:
@@ -89,20 +90,23 @@ for i = 1:nsamples
     idx = sub2ind(xidx,yidx);
     A(idx) = 1;
 
-    [L, ~, CClosed, ~, ~, ~] = graphproperties(double(A))
+    [L, ~, CClosed, ~, COpen, ~] = graphproperties(double(A));
     Ls(i) = L;
     CCs(i) = CClosed;
+    COs(i) = COpen;
+    i
 end
 
-CCs = CCs/C0;
-Ls = Ls/L0;
-
+%%
+pinterp = logspace(-4, 0, nsamples^2);
 figure; grid on; hold on
-plot(ps, CCs, '-k', 'LineWidth', 2)
-plot(ps, Ls, '-r', 'LineWidth', 2)
+plot(pinterp, interp1(ps,Ls/L0,pinterp), 'LineWidth', 2)
+plot(pinterp, interp1(ps,CCs/CC0,pinterp), 'LineWidth', 2)
+%plot(pinterp, interp1(ps,COs/CO0,pinterp), 'LineWidth', 2)
 set(gca, 'XScale', 'log')
-xlabel('p')
-legend('C', 'L')
+xlabel('$$p$$', 'Interpreter', 'latex')
+legend('$$L(p)/L_0$$', '$$C(p)/C_0$$', 'Location' ,'southwest', 'Interpreter', 'latex', 'FontSize', 20)
+% Saved as 'nosmallworldfromdirac.png'
 
 
 %% Old:
@@ -130,7 +134,7 @@ histogram(degrees_in, 'Normalization', 'pdf', 'NumBins', round(sqrt(numel(degree
 
 %% Strogatz1998
 % Do we obtain the same behaviour as in Strogatz1998? Let's see.
-pars.N = 1000;
+pars.N = 500;
 fixeddegreepars = make_fixeddegreeparameters(pars, 100);
 A_fixeddegree = adjacencymatrix(fixeddegreepars.degrees_in);
 
@@ -162,6 +166,7 @@ for i = 1:nsamples
     Ls(i) = L;
     CCs(i) = CClosed;
     COs(i) = COpen;
+    i
 end
 
 %%
@@ -169,11 +174,11 @@ pinterp = logspace(-4, 0, nsamples^2);
 figure; grid on; hold on
 plot(pinterp, interp1(ps,Ls/L0,pinterp), 'LineWidth', 2)
 plot(pinterp, interp1(ps,CCs/CC0,pinterp), 'LineWidth', 2)
-plot(pinterp, interp1(ps,COs/CO0,pinterp), 'LineWidth', 2)
+%plot(pinterp, interp1(ps,COs/CO0,pinterp), 'LineWidth', 2)
 set(gca, 'XScale', 'log')
-xlabel('p')
-legend('L', 'C closed', 'C Open')
-
+xlabel('$$p$$', 'Interpreter', 'latex')
+legend('$$L(p)/L_0$$', '$$C(p)/C_0$$', 'Location' ,'southwest', 'Interpreter', 'latex', 'FontSize', 20)
+% Saved as 'nosmallworldfromdirac.png'
 
 %% Realisation:
 % We don't need to change elements in the adjacency matrix to model the
