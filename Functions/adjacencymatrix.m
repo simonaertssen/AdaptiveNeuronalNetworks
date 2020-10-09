@@ -56,8 +56,9 @@ function A = adjacencymatrix(degrees_in, degrees_out)
     
     % Create the matrix as sparse
     if gpuDeviceCount > 0
-        A = initarray(zeros(N, N, 'logical'));
-        A(sub2ind([N, N], xidx, yidx)) = 1;
+%         A = initarray(zeros(N, N, 'logical'));
+%         A(sub2ind([N, N], xidx, yidx)) = 1;
+        A = initarray(sparse(xidx, yidx, ones(nonzeros, 1, 'double')));
     else 
         A = initarray(sparse(xidx, yidx, ones(nonzeros, 1, 'logical')));
     end
