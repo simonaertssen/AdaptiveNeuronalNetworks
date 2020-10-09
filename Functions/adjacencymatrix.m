@@ -61,7 +61,7 @@ function A = adjacencymatrix(degrees_in, degrees_out)
     else 
         A = sparse(xidx, yidx, ones(nonzeros, 1, 'logical'));
     end
-    sum(diag(A))
+    sum(find(xidx == yidx))
     assert(sum(diag(A)) == 0);
 
     diffrows = degrees_in' - full(sum(A,2))';
