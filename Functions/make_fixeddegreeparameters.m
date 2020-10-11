@@ -9,7 +9,8 @@ function fixeddegreepars = make_fixeddegreeparameters(pars, netdegree)
     end
     fixeddegreepars.degrees_in = zeros(pars.N,1);
     fixeddegreepars.degrees_in(randperm(pars.N)) = fixeddegreepars.netdegree;
-
+    fixeddegreepars.degrees_out = fixeddegreepars.degrees_in(randperm(pars.N));
+    
     fixeddegreepars.meandegree = fixeddegreepars.netdegree;
     fixeddegreepars.P = @(x) fixeddegreepdf(x - fixeddegreepars.netdegree)*pars.N;
 end
