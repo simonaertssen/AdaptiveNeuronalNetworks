@@ -20,10 +20,10 @@ end
 initarray = make_GPUhandle();
 
 %% Theta model parameters:
-tnow = 0; tend = 2;
+tnow = 0; tend = 10;
 h = 0.005;
 
-pars.N = 1000;
+pars.N = 10000;
 pars.a_n = 0.666667;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 seed = 1; rng(seed);
@@ -68,6 +68,7 @@ removewhitspace();
 
 print(f_fullyconnected, '../Figures/InspectMeanFieldFullyConnected.png', '-dpng', '-r300')
 close(f_fullyconnected)
+disp('Made fully connected network figure')
 
 %% 1. Perform a full scale simulation of a fixed degree network:
 % The full scale simulation using the adjacency matrix:
@@ -104,6 +105,7 @@ removewhitspace();
 
 print(f_fixeddegree, '../Figures/InspectMeanFieldFixedDegree.png', '-dpng', '-r300')
 close(f_fixeddegree)
+disp('Made fixed degree network figure')
 
 %% 2. Perform a full scale simulation of a random network:
 % The full scale simulation using the adjacency matrix:
@@ -139,6 +141,7 @@ removewhitspace();
 
 print(f_random, '../Figures/InspectMeanFieldRandom.png', '-dpng', '-r300')
 close(f_random)
+disp('Made random network figure')
 
 %% 3. Perform a full scale simulation of a scale-free network:
 % The full scale simulation using the adjacency matrix:
@@ -174,3 +177,4 @@ removewhitspace();
 
 print(f_scalefree, '../Figures/InspectMeanFieldScaleFree.png', '-dpng', '-r300')
 close(f_scalefree)
+disp('Made scale-free network figure')
