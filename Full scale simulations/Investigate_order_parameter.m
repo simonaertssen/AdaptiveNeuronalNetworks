@@ -18,7 +18,7 @@ labelfont = 15;
 tnow = 0; tend = 3;
 h = 0.01;
 
-pars.N = 1000;
+pars.N = 100;
 pars.a_n = 0.666667;
 seed = 2; rng(seed);
 IC = randn(pars.N, 1);
@@ -69,20 +69,15 @@ for i = 1:3
     plot(t, abs(z_mf), 'LineWidth', 2);
     plot(t, abs(z_link), 'LineWidth', 2);
 
-    xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
     ylabel('$\| Z (t) \|$','Interpreter','latex', 'FontSize', labelfont)
 
     legend('Kuramoto order parameter', 'OA order parameter', 'Network order parameter', 'Mean field order parameter', 'Link field order parameter', 'FontSize', labelfont-5, 'Location', 'southeast')
     removewhitspace();
 end
 
+xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
 
 
-
-
-
-
-%%
 
 
 
