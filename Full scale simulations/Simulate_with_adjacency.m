@@ -21,9 +21,9 @@ initarray = make_GPUhandle();
 
 %% Theta model parameters:
 tnow = 0; tend = 2;
-h = 0.02;
+h = 0.005;
 
-pars.N = 10000;
+pars.N = 1000;
 pars.a_n = 0.666667;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 seed = 1; rng(seed);
