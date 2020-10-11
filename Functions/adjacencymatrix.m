@@ -3,17 +3,15 @@ function A = adjacencymatrix(degrees_in, degrees_out)
     if max(degrees_in) >= N
         error('Degree too large');
     end
-    if nargin == 1
-        degrees_out = degrees_in(randperm(N));
-    end
     nonzeros = sum(degrees_in);
-    % Test for laptop version or other:
     
+    % Test for laptop version or other:
     if version('-release') == "2020a"
         numtype = 'uint16';
     else
         numtype = 'double';
     end
+    
     xidx = zeros(nonzeros, 1, numtype);
     yidx = zeros(nonzeros, 1, numtype);
 
