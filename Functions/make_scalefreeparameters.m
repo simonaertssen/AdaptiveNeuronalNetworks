@@ -1,4 +1,5 @@
 function scalefreepars = make_scalefreeparameters(pars, degree, kmin, kmax)
+    scalefreepars = pars;
     % Make the necessery parameters for the scalefree networks
     switch nargin
         case 2
@@ -15,7 +16,7 @@ function scalefreepars = make_scalefreeparameters(pars, degree, kmin, kmax)
     scalefreepars.degree = degree;
     
     scalefreepars.P = @(x) scalefreepdf(x, pars.N, scalefreepars.degree, kmin, kmax);
-    scalefreepars.degrees_in = randsample(kmin:kmax, pars.N, true, scalefreepars.P(kmin:kmax));
+    scalefreepars.degrees_in = randsample(kmin:kmax, pars.N, true, scalefreepars.P(kmin:kmax))';
     
     fsolveoptions = optimset('Display','off');
     scalefreepars.meandegree = fsolve(@(z) scalefreepars.P(z) - mean(scalefreepars.P(kmin:kmax)), kmin, fsolveoptions);
