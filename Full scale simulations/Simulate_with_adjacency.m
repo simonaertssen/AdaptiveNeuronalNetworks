@@ -41,7 +41,7 @@ fixeddegreepars = make_fixeddegreeparameters(pars, pars.N - 1);
 z_full = orderparameter(thetas_full);
 
 % The mean field theory for fixed degree networks:
-MFIC = z(1);
+MFIC = gather(z(1));
 options = odeset('RelTol', 1.0e-6,'AbsTol', 1.0e-6);
 [T, Z] = ode45(@(t,x) MFR(t,x,pars), [tnow, tend], MFIC, options);
 
@@ -77,7 +77,7 @@ fixeddegreepars = make_fixeddegreeparameters(pars, netdegree);
 z_full = orderparameter(thetas_full);
 
 % The mean field theory for fixed degree networks:
-MFIC = z_full(1);
+MFIC = gather(z_full(1));
 options = odeset('RelTol', 1.0e-6,'AbsTol', 1.0e-6);
 [T, Z] = ode45(@(t,x) MFR(t,x,pars), [tnow, tend], MFIC, options);
 
@@ -113,7 +113,7 @@ randompars = make_randomparameters(pars, netp);
 z_full = orderparameter(thetas_full);
 
 % The mean field theory for fixed degree networks:
-MFIC = z_full(1);
+MFIC = gather(z_full(1));
 options = odeset('RelTol', 1.0e-6,'AbsTol', 1.0e-6);
 [T, Z] = ode45(@(t,x) MFR(t,x,pars), [tnow, tend], MFIC, options);
 
@@ -148,7 +148,7 @@ scalefreepars = make_scalefreeparameters(pars, degree);
 z_full = orderparameter(thetas_full);
 
 % The mean field theory for fixed degree networks:
-MFIC = z_full(1);
+MFIC = gather(z_full(1));
 options = odeset('RelTol', 1.0e-6,'AbsTol', 1.0e-6);
 [T, Z] = ode45(@(t,x) MFR(t,x,pars), [tnow, tend], MFIC, options);
 
