@@ -1,4 +1,4 @@
-function [tout, xout, Kout] = DOPRI_simulatenetwork(ta,tb,x0,h,p,K0) 
+function [tout, xout, A, Kout] = DOPRI_simulatenetwork(ta,tb,x0,h,p,K0) 
     initarray = make_GPUhandle();
     disp("Start simulation.")
     
