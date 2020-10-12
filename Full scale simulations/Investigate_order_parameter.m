@@ -35,6 +35,9 @@ scalefreepars = make_scalefreeparameters(pars, 3);
 f_PRS = figure('Renderer', 'painters', 'Position', [50 800 800 600]);
 options = odeset('RelTol', 1.0e-6,'AbsTol', 1.0e-6);
 
+titles = [sprintf('\\bf Fixed-degree network: $$\\langle k \\rangle$$ = %0.1f', fixeddegreepars.meandegree), ...
+          sprintf('\\bf Random network: $$\\langle k \\rangle$$ = %0.1f', randompars.meandegree), ...
+          sprintf('\\bf Scale-free network: $$\\langle k \\rangle$$ = %0.1f', scalefreepars.meandegree)];
 for i = 1:3
     if i == 1
         params = fixeddegreepars;
@@ -70,15 +73,12 @@ for i = 1:3
     plot(t, abs(z_link), 'LineWidth', 2);
 
     ylabel('$\| Z (t) \|$','Interpreter','latex', 'FontSize', labelfont)
+    title(titles(i), 'FontSize', titlefont, 'Interpreter', 'latex');
 
-    legend('Kuramoto order parameter', 'OA order parameter', 'Network order parameter', 'Mean field order parameter', 'Link field order parameter', 'FontSize', labelfont-5, 'Location', 'southeast')
     removewhitspace();
 end
 
+legend('Kuramoto order parameter', 'OA order parameter', 'Network order parameter', 'Mean field order parameter', 'Link field order parameter', 'FontSize', labelfont-5, 'Location', 'southeast')
 xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
-
-
-
-
 
 
