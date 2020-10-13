@@ -25,6 +25,12 @@ IC = wrapToPi(randn(pars.N, 1)*0.8);
 pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
 odeoptions = odeset('RelTol', 1.0e-6,'AbsTol', 1.0e-6, 'NormControl','on');
 
+%% Make a GPU init handle:
+if gpuDeviceCount > 0
+    d = gpuDevice(gpuDeviceCount-1);
+    disp(d)
+end
+initarray = make_GPUhandle();
 %% 0. Perform a full scale simulation of a FULLY CONNECTED network:
 % The simple DOPRI integration:
 tic;
@@ -34,7 +40,7 @@ toc
 
 tic
 fdpars = make_fixeddegreeparameters(pars, pars.N - 1);
-A = adjacencymatrix(fdpars.degrees_in, fdpars.degrees_out);
+A = initarray(adjacencymatrix(fdpars.degrees_in, fdpars.degrees_out));
 [t_full, thetas_full] = ode113(@(t,x,K) thetaneurons_full(t,x,fdpars.K,A,fdpars.e,1/fdpars.meandegree,fdpars.a_n), [tnow, tend], IC, odeoptions);
 thetas_full = wrapToPi(thetas_full)';
 z_full = orderparameter(thetas_full);
