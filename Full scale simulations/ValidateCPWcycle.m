@@ -16,12 +16,12 @@ labelfont = 15;
 tnow = 0; tend = 5;
 h = 0.001;
 
-pars.N = 5000;
+pars.N = 500;
 pars.a_n = 0.666667;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 
 seed = 1; rng(seed);
-IC = wrapToPi(randn(pars.N, 1)*0.8);
+IC = wrapToPi(randn(pars.N, 1)*0.2);
 pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
 odeoptions = odeset('RelTol', 1.0e-9,'AbsTol', 1.0e-9);
 
@@ -47,16 +47,14 @@ z_full = orderparameter(thetas_full);
 toc
 
 tic;
-options = odeset('RelTol', 1.0e-6,'AbsTol', 1.0e-6, 'NormControl','on');
-[tode45, theta_ode45] = ode113(@(t,x) thetaneurons(t,x,pars.e,pars.K/pars.N,pars.a_n), [tnow, tend], IC, options);
+[tode45, theta_ode45] = ode113(@(t,x) thetaneurons(t,x,pars.e,pars.K/pars.N,pars.a_n), [tnow, tend], IC, odeoptions);
 theta_ode45 = wrapToPi(theta_ode45);
 zode45 = orderparameter(theta_ode45');
 toc
 
 %% The mean field theory for fixed degree networks:
 MFIC = gather(z(1));
-options = odeset('RelTol', 1.0e-8,'AbsTol', 1.0e-8);
-[T, Z] = ode45(@(t,x) MFR2(t,x,pars), [tnow, tend], MFIC, options);
+[T, Z] = ode45(@(t,x) MFR2(t,x,pars), [tnow, tend], MFIC, odeoptions);
 
 %% Plotting:
 f_CPW = figure('Renderer', 'painters', 'Position', [50 800 800 400]); box on; hold on;
