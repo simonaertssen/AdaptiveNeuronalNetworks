@@ -5,7 +5,7 @@ function z_link = orderparameter_link(x, degrees, A)
     degreesum = sum(degrees);
     for i = 1:n
         angles = x(:, i);
-        z_link(i) = sum(A.*exp(1i*bsxfun(@minus, angles, angles')), 'all')./degreesum;
+        z_link(i) = gather(sum(A.*exp(1i*bsxfun(@minus, angles, angles')), 'all')./degreesum);
     end
 end
 
