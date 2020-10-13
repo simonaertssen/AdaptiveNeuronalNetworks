@@ -7,7 +7,7 @@ function A = adjacencymatrix(degrees_in, degrees_out)
     
     % Test for laptop version or other:
     if version('-release') == "2020a"
-        numtype = 'double';
+        numtype = 'uint16';
     else
         numtype = 'double';
     end
@@ -52,13 +52,12 @@ function A = adjacencymatrix(degrees_in, degrees_out)
     end
     
     % Create the matrix as sparse
-%     if gpuDeviceCount > 0
-%         A = zeros(N, N, 'double');
-%         A(sub2ind([N, N], xidx, yidx)) = 1;
-%     else 
-%         A = sparse(xidx, yidx, ones(nonzeros, 1, 'double'));
-%     end
-    A = sparse(xidx, yidx, ones(nonzeros, 1, 'double'));
+    if gpuDeviceCount > 0
+        A = zeros(N, N, 'double');
+        A(sub2ind([N, N], xidx, yidx)) = 1;
+    else 
+        A = sparse(xidx, yidx, ones(nonzeros, 1, 'logical'));
+    end
     assert(sum(diag(A)) == 0);
 
     diffrows = degrees_in' - full(sum(A,2))';

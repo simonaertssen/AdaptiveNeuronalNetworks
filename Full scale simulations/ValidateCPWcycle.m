@@ -16,7 +16,7 @@ labelfont = 15;
 tnow = 0; tend = 5;
 h = 0.001;
 
-pars.N = 500;
+pars.N = 1000;
 pars.a_n = 0.666667;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 
