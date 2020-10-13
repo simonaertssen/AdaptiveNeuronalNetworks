@@ -28,7 +28,7 @@ pars.a_n = 0.666667;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 
 seed = 1; rng(seed);
-IC = randn(pars.N, 1) + 1;
+IC = wrapToPi(randn(pars.N, 1)*0.8);
 pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
 odeoptions = odeset('RelTol', 1.0e-4,'AbsTol', 1.0e-4, 'NormControl','on');
 
