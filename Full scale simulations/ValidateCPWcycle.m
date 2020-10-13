@@ -16,7 +16,7 @@ labelfont = 15;
 tnow = 0; tend = 5;
 h = 0.001;
 
-pars.N = 5000;
+pars.N = 500;
 pars.a_n = 0.666667;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 
@@ -76,11 +76,3 @@ removewhitspace();
 disp('Made fully connected network figure')
 print(f_CPW, '../Figures/ValidateCPWcycle.png', '-dpng', '-r300')
 close(f_CPW)
-
-
-%% Functions:
-function [value,isterminal,direction] = theta_neuron_threshold(t,x)
-    value = t - 10*pi; % The value that we want to be zero
-    isterminal = 1;  % Halt integration 
-    direction = 0;   % The zero can be approached from either direction
-end
