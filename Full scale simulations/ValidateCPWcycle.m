@@ -16,14 +16,14 @@ labelfont = 15;
 tnow = 0; tend = 5;
 h = 0.001;
 
-pars.N = 500;
+pars.N = 1000;
 pars.a_n = 0.666667;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 
 seed = 1; rng(seed);
-IC = wrapToPi(randn(pars.N, 1)*0.2);
+IC = wrapToPi(randn(pars.N, 1)*0.8);
 pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
-odeoptions = odeset('RelTol', 1.0e-9,'AbsTol', 1.0e-9);
+odeoptions = odeset('RelTol', 1.0e-12,'AbsTol', 1.0e-12);
 
 %% Make a GPU init handle:
 if gpuDeviceCount > 0
@@ -41,13 +41,13 @@ toc
 tic
 fdpars = make_fixeddegreeparameters(pars, pars.N - 1);
 A = initarray(adjacencymatrix(fdpars.degrees_in, fdpars.degrees_out));
-[t_full, thetas_full] = ode113(@(t,x,K) thetaneurons_full(t,x,fdpars.K,A,fdpars.e,1/fdpars.meandegree,fdpars.a_n), [tnow, tend], IC, odeoptions);
+[t_full, thetas_full] = ode45(@(t,x,K) thetaneurons_full(t,x,fdpars.K,A,fdpars.e,1/fdpars.meandegree,fdpars.a_n), [tnow, tend], IC, odeoptions);
 thetas_full = wrapToPi(thetas_full)';
 z_full = orderparameter(thetas_full);
 toc
 
 tic;
-[tode45, theta_ode45] = ode113(@(t,x) thetaneurons(t,x,pars.e,pars.K/pars.N,pars.a_n), [tnow, tend], IC, odeoptions);
+[tode45, theta_ode45] = ode45(@(t,x) thetaneurons(t,x,pars.e,pars.K/pars.N,pars.a_n), [tnow, tend], IC, odeoptions);
 theta_ode45 = wrapToPi(theta_ode45);
 zode45 = orderparameter(theta_ode45');
 toc
@@ -70,6 +70,7 @@ ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
 
 legend('$$Z(t)_{\rm DOPRI}$$', '$$Z(t)_{A_{ij}}$$', '$$Z(t)_{\rm ode45}$$', '$$\overline{Z(t)}_{\rm MF}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southwest')
 removewhitspace();
+title(sprintf('\\bf Fully connected network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f', pars.N, fdpars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex')
 
 disp('Made fully connected network figure')
 print(f_CPW, '../Figures/ValidateCPWcycle.png', '-dpng', '-r300')
