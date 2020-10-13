@@ -61,7 +61,7 @@ for i = 1:3
  
     % The OA mean field theory:
     oa_params = prepareOAparameters(params);
-    OAIC = ones(oa_params.l,1)*z_full(1);
+    OAIC = ones(oa_params.l,1)*z(1);
     [Toa, b_i] = ode45(@(t,x) MFROA(t,x,oa_params), [tnow, tend], OAIC, options);
     Z_oa = orderparameter_oa(b_i, oa_params.P, oa_params.k, oa_params.N);
     
@@ -89,7 +89,7 @@ set(imrow(1).Title,'String', sprintf('\\bf Fixed-degree network:  $$N$$ = %d, $$
 set(imrow(2).Title,'String', sprintf('\\bf Random network:  $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f', pars.N, randompars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex');
 set(imrow(3).Title,'String', sprintf('\\bf Scale-free network:  $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f', pars.N, scalefreepars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex');
 
-legend('Kuramoto order parameter', 'OA order parameter', 'Network order parameter', 'Mean field order parameter', 'Link field order parameter', 'FontSize', labelfont-5, 'Location', 'southeast')
+legend('Kuramoto order parameter', 'OA order parameter', 'Network order parameter', 'Mean field order parameter', 'Link field order parameter', 'FontSize', labelfont-5, 'Location', 'southoutside', 'Orientation', 'horizontal')
 xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
 suptitle(sprintf('PSR state:  \\eta_0 = %0.1f, \\delta = %0.1f, K = %0.1f', pars.eta0, pars.delta, pars.K))
 
@@ -128,7 +128,7 @@ for i = 1:3
  
     % The OA mean field theory:
     oa_params = prepareOAparameters(params);
-    OAIC = ones(oa_params.l,1)*z_full(1);
+    OAIC = ones(oa_params.l,1)*z(1);
     [Toa, b_i] = ode45(@(t,x) MFROA(t,x,oa_params), [tnow, tend], OAIC, options);
     Z_oa = orderparameter_oa(b_i, oa_params.P, oa_params.k, oa_params.N);
     
@@ -156,7 +156,7 @@ set(imrow(1).Title,'String', sprintf('\\bf Fixed-degree network:  $$N$$ = %d, $$
 set(imrow(2).Title,'String', sprintf('\\bf Random network:  $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f', pars.N, randompars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex');
 set(imrow(3).Title,'String', sprintf('\\bf Scale-free network:  $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f', pars.N, scalefreepars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex');
 
-legend('Kuramoto order parameter', 'OA order parameter', 'Network order parameter', 'Mean field order parameter', 'Link field order parameter', 'FontSize', labelfont-5, 'Location', 'southeast')
+legend('Kuramoto order parameter', 'OA order parameter', 'Network order parameter', 'Mean field order parameter', 'Link field order parameter', 'FontSize', labelfont-5, 'Location', 'southoutside', 'Orientation', 'horizontal')
 xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
 
 suptitle(sprintf('PSS state:  \\eta_0 = %0.1f, \\delta = %0.1f, K = %0.1f', pars.eta0, pars.delta, pars.K))
@@ -195,7 +195,7 @@ for i = 1:3
  
     % The OA mean field theory:
     oa_params = prepareOAparameters(params);
-    OAIC = ones(oa_params.l,1)*z_full(1);
+    OAIC = ones(oa_params.l,1)*z(1);
     [Toa, b_i] = ode45(@(t,x) MFROA(t,x,oa_params), [tnow, tend], OAIC, options);
     Z_oa = orderparameter_oa(b_i, oa_params.P, oa_params.k, oa_params.N);
     
@@ -223,7 +223,7 @@ set(imrow(1).Title,'String', sprintf('\\bf Fixed-degree network:  $$N$$ = %d, $$
 set(imrow(2).Title,'String', sprintf('\\bf Random network:  $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f', pars.N, randompars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex');
 set(imrow(3).Title,'String', sprintf('\\bf Scale-free network:  $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f', pars.N, scalefreepars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex');
 
-legend('Kuramoto order parameter', 'OA order parameter', 'Network order parameter', 'Mean field order parameter', 'Link field order parameter', 'FontSize', labelfont-5, 'Location', 'southeast')
+legend('Kuramoto order parameter', 'OA order parameter', 'Network order parameter', 'Mean field order parameter', 'Link field order parameter', 'FontSize', labelfont-5, 'Location', 'southoutside', 'Orientation', 'horizontal')
 xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
 
 suptitle(sprintf('PSS state:  \\eta_0 = %0.1f, \\delta = %0.1f, K = %0.1f', pars.eta0, pars.delta, pars.K))
