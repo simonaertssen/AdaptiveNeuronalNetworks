@@ -73,9 +73,9 @@ ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
 legend('$$Z(t)_{\rm DOPRI}$$', '$$Z(t)_{A_{ij}}$$', '$$Z(t)_{\rm ode45}$$', '$$\overline{Z(t)}_{\rm MF}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southwest')
 removewhitspace();
 
-close(f_CPW)
 disp('Made fully connected network figure')
 print(f_CPW, '../Figures/ValidateCPWcycle.png', '-dpng', '-r300')
+close(f_CPW)
 
 
 %% Functions:
