@@ -15,13 +15,20 @@ titlefont = 15;
 labelfont = 15;
 
 %% Theta model parameters:
-tnow = 0; tend = 10;
+tnow = 0; tend = 2;
 h = 0.001;
 
 pars.N = 100;
 pars.a_n = 0.666667;
-seed = 2; rng(seed);
-IC = randn(pars.N, 1);
+seed = 1; rng(seed);
+IC = randn(pars.N, 1) + 1;
+
+%% Make a GPU init handle:
+if gpuDeviceCount > 0
+    d = gpuDevice(gpuDeviceCount-1);
+    disp(d)
+end
+initarray = make_GPUhandle();
 
 %% PSR state: one single stable node
 pars.eta0 = -0.9; pars.delta = 0.8; pars.K = -2;
@@ -47,10 +54,17 @@ for i = 1:3
     % The full scale simulation using the adjacency matrix:
     [t, thetas, A] = DOPRI_simulatenetwork(tnow,tend,IC,h,params);
     z = orderparameter(thetas);
-    
+    size(z)
+    size(thetas)
+    A = initarray(adjacencymatrix(params.degrees_in, params.degrees_out));
+    [t_full, thetas] = ode113(@(t,x,K) thetaneurons_full(t,x,params.K,A,params.e,1/params.meandegree,params.a_n), [tnow, tend], IC, options);
+    thetas = wrapToPi(thetas);
+    z_full = orderparameter(thetas');
+    size(z_full)
+    size(thetas)
     % The OA mean field theory:
     oa_params = prepareOAparameters(params);
-    OAIC = ones(oa_params.l,1)*z(1) + 0.001*randn(oa_params.l,1);
+    OAIC = ones(oa_params.l,1)*z_full(1);
     [Toa, b_i] = ode45(@(t,x) MFROA(t,x,oa_params), [tnow, tend], OAIC, options);
     Z_oa = orderparameter_oa(b_i, oa_params.P, oa_params.k, oa_params.N);
     

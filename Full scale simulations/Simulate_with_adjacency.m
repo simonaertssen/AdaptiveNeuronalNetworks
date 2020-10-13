@@ -20,18 +20,17 @@ end
 initarray = make_GPUhandle();
 
 %% Theta model parameters:
-tnow = 0; tend = 10;
+tnow = 0; tend = 2;
 h = 0.001;
 
-pars.N = 1000;
+pars.N = 100;
 pars.a_n = 0.666667;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
-% pars.eta0 = -0.9; pars.delta = 0.8; pars.K = -2;
 
 seed = 1; rng(seed);
 IC = randn(pars.N, 1) + 1;
 pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
-odeoptions = odeset('RelTol', 1.0e-6,'AbsTol', 1.0e-6, 'NormControl','on');
+odeoptions = odeset('RelTol', 1.0e-4,'AbsTol', 1.0e-4, 'NormControl','on');
 
 %% 0. Perform a full scale simulation of a FULLY CONNECTED network:
 % The simple DOPRI integration:
@@ -40,6 +39,7 @@ odeoptions = odeset('RelTol', 1.0e-6,'AbsTol', 1.0e-6, 'NormControl','on');
 [t, thetas] = ode113(@(t,x) thetaneurons(t,x,pars.e,pars.K/pars.N,pars.a_n), [tnow, tend], IC, odeoptions);
 thetas = wrapToPi(thetas);
 z = orderparameter(thetas');
+disp('Small scale test done')
 
 % The full scale simulation using the adjacency matrix:
 % fixeddegreepars = make_fixeddegreeparameters(pars, pars.N - 1);
@@ -50,17 +50,21 @@ A = initarray(adjacencymatrix(fdpars.degrees_in, fdpars.degrees_out));
 [t_full, thetas_full] = ode113(@(t,x,K) thetaneurons_full(t,x,fdpars.K,A,fdpars.e,1/fdpars.meandegree,fdpars.a_n), [tnow, tend], IC, odeoptions);
 thetas_full = wrapToPi(thetas_full);
 z_full = orderparameter(thetas_full');
+disp('Full scale test done')
 
 % The mean field theory for fixed degree networks:
 MFIC = gather(z(1));
 options = odeset('RelTol', 1.0e-6,'AbsTol', 1.0e-6);
 [T, Z] = ode45(@(t,x) MFR(t,x,pars), [tnow, tend], MFIC, options);
+disp('Mean field test done')
 
 % The OA mean field theory:
 fdpars = prepareOAparameters(fdpars);
 OAIC = ones(fdpars.l,1)*MFIC + 0.001*randn(fdpars.l,1);
 [Toa, b_i] = ode45(@(t,x) MFROA(t,x,fdpars), [tnow, tend], OAIC, options);
-Zoa = b_i * fdpars.P(fdpars.k)/fdpars.N;
+Zoa = gather(initarray(b_i) * fdpars.P(fdpars.k)/fdpars.N);
+disp('OA mean field test done')
+
 
 %% Plotting the results:
 f_fullyconnected = figure('Renderer', 'painters', 'Position', [50 800 800 400]); box on; hold on;
@@ -78,7 +82,7 @@ legend('$$Z(t)_{simple}$$', '$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF}$$', '$$
 removewhitspace();
 
 print(f_fullyconnected, '../Figures/InspectMeanFieldFullyConnected.png', '-dpng', '-r300')
-close(f_fullyconnected)
+% close(f_fullyconnected)
 disp('Made fully connected network figure')
 
 %% 1. Perform a full scale simulation of a fixed degree network:
@@ -91,17 +95,20 @@ A = initarray(adjacencymatrix(fdpars.degrees_in, fdpars.degrees_out));
 [t_full, thetas_full] = ode113(@(t,x,K) thetaneurons_full(t,x,fdpars.K,A,fdpars.e,1/fdpars.meandegree,fdpars.a_n), [tnow, tend], IC, odeoptions);
 thetas_full = wrapToPi(thetas_full);
 z_full = orderparameter(thetas_full');
+disp('Full scale test done')
 
 % The mean field theory for fixed degree networks:
 MFIC = gather(z_full(1));
 options = odeset('RelTol', 1.0e-6,'AbsTol', 1.0e-6);
 [T, Z] = ode45(@(t,x) MFR(t,x,pars), [tnow, tend], MFIC, options);
+disp('Mean field test done')
 
 % The OA mean field theory:
 fdpars = prepareOAparameters(fdpars);
 OAIC = ones(fdpars.l,1)*MFIC + 0.001*randn(fdpars.l,1);
 [Toa, b_i] = ode45(@(t,x) MFROA(t,x,fdpars), [tnow, tend], OAIC, options);
-Zoa = b_i * fdpars.P(fdpars.k)/fdpars.N;
+Zoa = gather(initarray(b_i) * fdpars.P(fdpars.k)/fdpars.N);
+disp('OA mean field test done')
 
 %% Plotting the results:
 f_fixeddegree = figure('Renderer', 'painters', 'Position', [50 800 800 400]); box on; hold on;
@@ -132,17 +139,20 @@ A = initarray(adjacencymatrix(rdpars.degrees_in, rdpars.degrees_out));
 [t_full, thetas_full] = ode113(@(t,x,K) thetaneurons_full(t,x,rdpars.K,A,rdpars.e,1/rdpars.meandegree,rdpars.a_n), [tnow, tend], IC, odeoptions);
 thetas_full = wrapToPi(thetas_full);
 z_full = orderparameter(thetas_full');
+disp('Full scale test done')
 
 % The mean field theory for fixed degree networks:
 MFIC = gather(z_full(1));
 options = odeset('RelTol', 1.0e-6,'AbsTol', 1.0e-6);
 [T, Z] = ode45(@(t,x) MFR(t,x,pars), [tnow, tend], MFIC, options);
+disp('Mean field test done')
 
 % The OA mean field theory:
 rdpars = prepareOAparameters(rdpars);
 OAIC = ones(rdpars.l,1)*MFIC + 0.001*randn(rdpars.l,1);
 [Toa, b_i] = ode45(@(t,x) MFROA(t,x,rdpars), [tnow, tend], OAIC, options);
-Zoa = b_i * rdpars.P(rdpars.k)/rdpars.N;
+Zoa = gather(initarray(b_i) * rdpars.P(rdpars.k)/rdpars.N);
+disp('OA mean field test done')
 
 %% Plotting the results:
 f_random = figure('Renderer', 'painters', 'Position', [50 800 800 400]); box on; hold on;
@@ -172,17 +182,20 @@ A = initarray(adjacencymatrix(sfpars.degrees_in, sfpars.degrees_out));
 [t_full, thetas_full] = ode113(@(t,x,K) thetaneurons_full(t,x,sfpars.K,A,sfpars.e,1/sfpars.meandegree,sfpars.a_n), [tnow, tend], IC, odeoptions);
 thetas_full = wrapToPi(thetas_full);
 z_full = orderparameter(thetas_full');
+disp('Full scale test done')
 
 % The mean field theory for fixed degree networks:
 MFIC = gather(z_full(1));
 options = odeset('RelTol', 1.0e-6,'AbsTol', 1.0e-6);
 [T, Z] = ode45(@(t,x) MFR(t,x,pars), [tnow, tend], MFIC, options);
+disp('Mean field test done')
 
 % The OA mean field theory:
 sfpars = prepareOAparameters(sfpars);
 OAIC = ones(sfpars.l,1)*MFIC + 0.001*randn(sfpars.l,1);
 [Toa, b_i] = ode45(@(t,x) MFROA(t,x,sfpars), [tnow, tend], OAIC, options);
-Zoa = b_i * sfpars.P(sfpars.k)/sfpars.N;
+Zoa = gather(initarray(b_i) * sfpars.P(sfpars.k)/sfpars.N);
+disp('OA mean field test done')
 
 %% Plotting the results:
 f_scalefree = figure('Renderer', 'painters', 'Position', [50 800 800 400]); box on; hold on;
