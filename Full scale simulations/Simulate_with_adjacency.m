@@ -14,7 +14,7 @@ labelfont = 15;
 
 %% Make a GPU init handle:
 if gpuDeviceCount > 0
-    d = gpuDevice(gpuDeviceCount);
+    d = gpuDevice(gpuDeviceCount-1);
     disp(d)
 end
 initarray = make_GPUhandle();
