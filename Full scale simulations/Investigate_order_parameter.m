@@ -15,10 +15,10 @@ titlefont = 15;
 labelfont = 15;
 
 %% Theta model parameters:
-tnow = 0; tend = 0.1;
+tnow = 0; tend = 10;
 h = 0.001;
 
-pars.N = 100;
+pars.N = 10000;
 pars.a_n = 0.666667;
 seed = 1; rng(seed);
 IC = randn(pars.N, 1) + 1;
