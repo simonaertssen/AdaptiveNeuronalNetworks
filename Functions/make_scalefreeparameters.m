@@ -18,7 +18,7 @@ function scalefreepars = make_scalefreeparameters(pars, degree, kmin, kmax)
     scalefreepars.P = @(x) scalefreepdf(x, pars.N, scalefreepars.degree, kmin, kmax);
     scalefreepars.degrees_in = randsample(kmin:kmax, pars.N, true, scalefreepars.P(kmin:kmax))';
     if max(scalefreepars.degrees_in) > pars.N - 1
-        disp(['Setting higher degrees to ', num2str(N-1)]);
+        disp(['Setting higher degrees to ', num2str(pars.N-1)]);
         scalefreepars.degrees_in(randompars.degrees_in > pars.N - 1) = pars.N - 1;
     end
     scalefreepars.degrees_out = scalefreepars.degrees_in(randperm(pars.N));
