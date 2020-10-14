@@ -13,7 +13,7 @@ function A = adjacencymatrix(degrees_in, degrees_out)
     end
     
     tries = 0;
-    while tries < 5  
+    while tries < 10  
         tries = tries + 1;
         
         xidx = zeros(numnonzeros, 1, numtype);
@@ -21,9 +21,9 @@ function A = adjacencymatrix(degrees_in, degrees_out)
         idxidx = cumsum([1; degrees_in]); % For indexing the idx and yidx vector
 
         probs = degrees_out;
-
+        rowpermutation = randperm(N);
         for i = 1:N
-            rowindex = i;
+            rowindex = rowpermutation(i);
             numelements = degrees_in(rowindex);
             if numelements == 0
                 continue
@@ -71,6 +71,6 @@ function A = adjacencymatrix(degrees_in, degrees_out)
             return
         end
     end
-    disp(['A might not be accurate: residue of ', num2str(sum(diffrows)/numnonzeros * 100)]);
+    error(['A might not be accurate: residue of ', num2str(sum(abs(diffrows))/numnonzeros * 100)]);
 end
 
