@@ -22,7 +22,7 @@ pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 seed = 1; rng(seed);
 IC = wrapToPi(randn(pars.N, 1)*0.8);
 pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
-odeoptions = odeset('RelTol', 1.0e-12,'AbsTol', 1.0e-12);
+odeoptions = odeset('RelTol', 1.0e-9,'AbsTol', 1.0e-9);
 
 %% Make a GPU init handle:
 if gpuDeviceCount > 0
