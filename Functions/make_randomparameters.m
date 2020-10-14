@@ -10,9 +10,9 @@ function randompars = make_randomparameters(pars, netp)
     randompars.netp = netp;
     randompars.meandegree = randompars.netp*(pars.N - 1);
     randompars.degrees_in = poissrnd(randompars.meandegree, [pars.N,1]);
-    randompars.degrees_out = randompars.degrees_in(randperm(pars.N));
     % Set higher degrees to N - 1:
     randompars.degrees_in(randompars.degrees_in > pars.N - 1) = pars.N - 1;
+    randompars.degrees_out = randompars.degrees_in(randperm(pars.N));
     randompars.P = @(x) poisspdf(x, randompars.meandegree)*pars.N;   
 end
 
