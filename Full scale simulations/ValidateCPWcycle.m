@@ -86,5 +86,5 @@ title(sprintf('\\bf Fully connected network: $$N$$ = %d, $$\\langle k \\rangle$$
 removewhitspace();
 
 disp('Made fully connected network figure')
-% print(f_CPW, '../Figures/ValidateCPWcycle.png', '-dpng', '-r300')
+print(f_CPW, '../Figures/ValidateCPWcycle.png', '-dpng', '-r300')
 close(f_CPW)
