@@ -129,19 +129,72 @@ toc
 % accurate.
 
 %% Test a fixed degree network:
-netdegree = 300;
-degrees_in = zeros(N,1);
-degrees_in(randperm(N)) = netdegree;
-degrees_out = degrees_in(randperm(N)); % because these two have to contain the same number of elements
+pars.N = 500;
+netdegree = 50;
+fdpars = make_fixeddegreeparameters(pars, netdegree); 
 
-assert(sum(degrees_in) == sum(degrees_out))
-
-A_fixeddegree = adjacencymatrix(degrees_in, degrees_out);
+A_fixeddegree = adjacencymatrix(fdpars.degrees_in, fdpars.degrees_out);
 f_fixeddegree = figure('Renderer', 'painters', 'Position', [0 800 400 400]);
 hAxes = axes(f_fixeddegree); 
 imshow(full(A_fixeddegree), 'Parent', hAxes);
-title(hAxes, ['Fixed degree $$A_{ij}$$: $$N$$ = ', num2str(N), ', $$\langle k \rangle$$ = ', num2str(mean(degrees_in))],'interpreter','latex', 'FontSize', 15)
-print(f_fixeddegree, '../Figures/A_fixeddegree.png', '-dpng', '-r300')
-
+title(hAxes, ['Fixed degree $$A_{ij}$$: $$N$$ = ', num2str(pars.N), ', $$\langle k \rangle$$ = ', num2str(fdpars.meandegree)],'interpreter','latex', 'FontSize', 15)
+print(f_fixeddegree, '../Figures/A_fixeddegree1.png', '-dpng', '-r300')
 close(f_fixeddegree)
 
+netdegree = 300;
+fdpars = make_fixeddegreeparameters(pars, netdegree); 
+
+A_fixeddegree = adjacencymatrix(fdpars.degrees_in, fdpars.degrees_out);
+f_fixeddegree = figure('Renderer', 'painters', 'Position', [0 800 400 400]);
+hAxes = axes(f_fixeddegree); 
+imshow(full(A_fixeddegree), 'Parent', hAxes);
+title(hAxes, ['Fixed degree $$A_{ij}$$: $$N$$ = ', num2str(pars.N), ', $$\langle k \rangle$$ = ', num2str(fdpars.meandegree)],'interpreter','latex', 'FontSize', 15)
+print(f_fixeddegree, '../Figures/A_fixeddegree2.png', '-dpng', '-r300')
+close(f_fixeddegree)
+
+
+%% Test using the poisson distribution of random networks
+netp = 0.10043;
+rdpars = make_randomparameters(pars, netp);
+
+A_random = adjacencymatrix(rdpars.degrees_in, rdpars.degrees_out);
+f_random = figure('Renderer', 'painters', 'Position', [50 800 400 400]);
+hAxes = axes(f_random); 
+imshow(full(A_random), 'Parent', hAxes);
+title(hAxes, ['Random $$A_{ij}$$: $$N$$ = ', num2str(pars.N), ', $$\langle k \rangle$$ = ', num2str(round(rdpars.meandegree))],'interpreter','latex', 'FontSize', 15)
+print(f_random, '../Figures/A_random1.png', '-dpng', '-r300')
+close(f_random)
+
+netp = netdegree/(pars.N-1);
+rdpars = make_randomparameters(pars, netp);
+
+A_random = adjacencymatrix(rdpars.degrees_in, rdpars.degrees_out);
+f_random = figure('Renderer', 'painters', 'Position', [50 800 400 400]);
+hAxes = axes(f_random); 
+imshow(full(A_random), 'Parent', hAxes);
+title(hAxes, ['Random $$A_{ij}$$: $$N$$ = ', num2str(pars.N), ', $$\langle k \rangle$$ = ', num2str(round(rdpars.meandegree))],'interpreter','latex', 'FontSize', 15)
+print(f_random, '../Figures/A_random2.png', '-dpng', '-r300')
+close(f_random)
+
+%% Now using scale free networks:
+degree = 2.1;
+sfpars = make_scalefreeparameters(pars, degree, 50, 400);
+
+A_scalefree = adjacencymatrix(sfpars.degrees_in, sfpars.degrees_out);
+f_scalefree = figure('Renderer', 'painters', 'Position', [50 800 400 400]);
+hAxes = axes(f_scalefree); 
+imshow(full(A_scalefree), 'Parent', hAxes);
+title(hAxes, ['Scale free $$A_{ij}$$: $$N$$ = ', num2str(pars.N), ', $$ k \in $$ [', num2str(sfpars.kmin), ',', num2str(sfpars.kmax), '], $$\gamma$$ = ', num2str(degree)],'interpreter','latex', 'FontSize', 15)
+print(f_scalefree, '../Figures/A_scalefree1.png', '-dpng', '-r300')
+close(f_scalefree)
+
+degree = 10;
+sfpars = make_scalefreeparameters(pars, degree, 50, pars.N);
+
+A_scalefree = adjacencymatrix(sfpars.degrees_in, sfpars.degrees_out);
+f_scalefree = figure('Renderer', 'painters', 'Position', [50 800 400 400]);
+hAxes = axes(f_scalefree); 
+imshow(full(A_scalefree), 'Parent', hAxes);
+title(hAxes, ['Scale free $$A_{ij}$$: $$N$$ = ', num2str(pars.N), ', $$ k \in $$ [', num2str(sfpars.kmin), ',', num2str(sfpars.kmax), '], $$\gamma$$ = ', num2str(degree)],'interpreter','latex', 'FontSize', 15)
+print(f_scalefree, '../Figures/A_scalefree2.png', '-dpng', '-r300')
+close(f_scalefree)
