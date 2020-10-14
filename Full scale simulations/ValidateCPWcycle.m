@@ -39,11 +39,11 @@ tic;
 z = orderparameter(thetas);
 toc
 
-tic;
-[t_ode45, theta_ode45] = ode45(@(t,x) thetaneurons(t,x,pars.e,pars.K/pars.N,pars.a_n), [tnow, tend], IC, odeoptions);
-theta_ode45 = wrapToPi(theta_ode45)';
-zode45 = orderparameter(theta_ode45)';
-toc
+% tic;
+% [t_ode45, theta_ode45] = ode45(@(t,x) thetaneurons(t,x,pars.e,pars.K/pars.N,pars.a_n), [tnow, tend], IC, odeoptions);
+% theta_ode45 = wrapToPi(theta_ode45)';
+% zode45 = orderparameter(theta_ode45)';
+% toc
 
 fdpars = make_fixeddegreeparameters(pars, pars.N - 1);
 tic;
@@ -51,11 +51,11 @@ tic;
 z_full = orderparameter(thetas_full);
 toc
 
-tic;
-[t_fullode45, thetas_fullode45] = ode45(@(t,x,K) thetaneurons_full(t,x,fdpars.K,A,fdpars.e,1/fdpars.meandegree,fdpars.a_n), [tnow, tend], IC, odeoptions);
-thetas_fullode45 = wrapToPi(thetas_fullode45)';
-z_fullode45 = orderparameter(thetas_fullode45)';
-toc
+% tic;
+% [t_fullode45, thetas_fullode45] = ode45(@(t,x,K) thetaneurons_full(t,x,fdpars.K,A,fdpars.e,1/fdpars.meandegree,fdpars.a_n), [tnow, tend], IC, odeoptions);
+% thetas_fullode45 = wrapToPi(thetas_fullode45)';
+% z_fullode45 = orderparameter(thetas_fullode45)';
+% toc
 
 
 %% The mean field theory for fixed degree networks:
@@ -75,13 +75,14 @@ plot(Toa, abs(Zoa), '-r', 'LineWidth', 3);
 plot(T, abs(Z), ':k', 'LineWidth', 2);
 
 plot(t, abs(z), '-', 'LineWidth', 4);
-plot(t_ode45, abs(zode45), '-', 'LineWidth', 3);
+% plot(t_ode45, abs(zode45), '-', 'LineWidth', 3);
 plot(t_full, abs(z_full), '-', 'LineWidth', 2);
-plot(t_fullode45, abs(z_fullode45), '-', 'LineWidth', 1);
+% plot(t_fullode45, abs(z_fullode45), '-', 'LineWidth', 1);
 xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
 ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
 
-legend('$$\overline{Z(t)}_{\rm MF}$$', '$$\overline{Z(t)}_{\rm OA}$$', '$$Z(t)_{\rm DOPRI}$$', '$$Z(t)_{\rm ode45}$$', '$$Z(t)_{A_{ij},\rm DOPRI}$$', '$$Z(t)_{A_{ij},\rm ode45}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southwest')
+% legend('$$\overline{Z(t)}_{\rm MF}$$', '$$\overline{Z(t)}_{\rm OA}$$', '$$Z(t)_{\rm DOPRI}$$', '$$Z(t)_{\rm ode45}$$', '$$Z(t)_{A_{ij},\rm DOPRI}$$', '$$Z(t)_{A_{ij},\rm ode45}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southwest')
+legend('$$\overline{Z(t)}_{\rm MF}$$', '$$\overline{Z(t)}_{\rm OA}$$', '$$Z(t)_{\rm DOPRI}$$', '$$Z(t)_{A_{ij},\rm DOPRI}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southwest')
 title(sprintf('\\bf Fully connected network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f', pars.N, fdpars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex')
 removewhitspace();
 
