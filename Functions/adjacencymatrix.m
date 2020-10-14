@@ -1,7 +1,13 @@
 function A = adjacencymatrix(degrees_in, degrees_out)
     N = numel(degrees_in);
+    assert(sum(degrees_in) == sum(degrees_out));
+    
     if max(degrees_in) >= N
         error('Degree too large');
+    end
+    if all(degrees_in == N - 1) && all(degrees_in == N - 1)
+        A = ones(N) - eye(N);
+        return
     end
     numnonzeros = sum(degrees_in);
     

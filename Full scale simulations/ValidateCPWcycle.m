@@ -14,9 +14,8 @@ labelfont = 15;
 
 %% Theta model parameters:
 tnow = 0; tend = 5;
-h = 0.001;
 
-pars.N = 5000;
+pars.N = 5;
 pars.a_n = 0.666667;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 
@@ -33,6 +32,11 @@ end
 initarray = make_GPUhandle();
 
 %% 0. Perform a full scale simulation of a FULLY CONNECTED network:
+tic;
+[t, thetas] = DOPRI_threshold(@thetaneurons, tnow, tend, IC, 0.001, pars);
+z = orderparameter(thetas);
+toc
+
 tic;
 [tode45, theta_ode45] = ode45(@(t,x) thetaneurons(t,x,pars.e,pars.K/pars.N,pars.a_n), [tnow, tend], IC, odeoptions);
 theta_ode45 = wrapToPi(theta_ode45)';
@@ -55,16 +59,17 @@ MFIC = gather(zode45(1));
 f_CPW = figure('Renderer', 'painters', 'Position', [50 800 800 400]); box on; hold on;
 
 xlim([tnow, tend]); ylim([0, 1])
+plot(t, abs(z), '-', 'LineWidth', 2);
 plot(tode45, abs(zode45), '-', 'LineWidth', 2);
 plot(t_full, abs(z_full), '-', 'LineWidth', 2);
 plot(T, abs(Z), '-', 'LineWidth', 2);
 xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
 ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
 
-legend('$$Z(t)_{A_{ij}}$$', '$$Z(t)_{\rm ode45}$$', '$$\overline{Z(t)}_{\rm MF}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southwest')
+legend('$$Z(t)_{\rm simple}$$', '$$Z(t)_{A_{ij}}$$', '$$Z(t)_{\rm ode45}$$', '$$\overline{Z(t)}_{\rm MF}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southwest')
 title(sprintf('\\bf Fully connected network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f', pars.N, fdpars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex')
 removewhitspace();
 
 disp('Made fully connected network figure')
-print(f_CPW, '../Figures/ValidateCPWcycle.png', '-dpng', '-r300')
+% print(f_CPW, '../Figures/ValidateCPWcycle.png', '-dpng', '-r300')
 close(f_CPW)
