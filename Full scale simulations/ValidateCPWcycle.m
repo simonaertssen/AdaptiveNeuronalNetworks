@@ -21,7 +21,7 @@ pars.a_n = 0.666666666666667;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 
 seed = 1; rng(seed);
-IC = wrapToPi(randn(pars.N, 1)*0.4);
+IC = wrapToPi(rand(pars.N, 1));
 pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
 odeoptions = odeset('RelTol', 1.0e-6,'AbsTol', 1.0e-6);
 
@@ -65,6 +65,7 @@ fdpars = prepareOAparameters(fdpars);
 OAIC = ones(fdpars.l,1)*MFIC + 0.001*randn(fdpars.l,1);
 [Toa, b_i] = ode45(@(t,x) MFROA(t,x,fdpars), [tnow, tend], OAIC, odeoptions);
 Zoa = gather(initarray(b_i) * fdpars.P(fdpars.k)/fdpars.N);
+
 %% Plotting:
 f_CPW = figure('Renderer', 'painters', 'Position', [50 800 800 400]); box on; hold on;
 
