@@ -16,14 +16,14 @@ labelfont = 15;
 tnow = 0; tend = 5;
 h = 0.001;
 
-pars.N = 5000;
+pars.N = 2500;
 pars.a_n = 0.666667;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 
 seed = 1; rng(seed);
 IC = wrapToPi(randn(pars.N, 1)*0.8);
 pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
-odeoptions = odeset('RelTol', 1.0e-9,'AbsTol', 1.0e-9);
+odeoptions = odeset('RelTol', 1.0e-6,'AbsTol', 1.0e-6);
 
 %% Make a GPU init handle:
 if gpuDeviceCount > 0
@@ -64,15 +64,15 @@ MFIC = gather(zode45(1));
 f_CPW = figure('Renderer', 'painters', 'Position', [50 800 800 400]); box on; hold on;
 
 xlim([tnow, tend]); ylim([0, 1])
-plot(t, abs(z), '-', 'LineWidth', 2);
-plot(t_ode45, abs(zode45), '-', 'LineWidth', 2);
+plot(T, abs(Z), '-k', 'LineWidth', 2);
+plot(t, abs(z), '-', 'LineWidth', 4);
+plot(t_ode45, abs(zode45), '-', 'LineWidth', 3);
 plot(t_full, abs(z_full), '-', 'LineWidth', 2);
-plot(t_fullode45, abs(z_fullode45), '-', 'LineWidth', 2);
-plot(T, abs(Z), '-', 'LineWidth', 2);
+plot(t_fullode45, abs(z_fullode45), '-', 'LineWidth', 1);
 xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
 ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
 
-legend('$$Z(t)_{\rm DOPRI}$$', '$$Z(t)_{\rm ode45}$$', '$$Z(t)_{A_{ij},\rm DOPRI}$$', '$$Z(t)_{A_{ij},\rm ode45}$$', '$$\overline{Z(t)}_{\rm MF}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southwest')
+legend('$$\overline{Z(t)}_{\rm MF}$$', '$$Z(t)_{\rm DOPRI}$$', '$$Z(t)_{\rm ode45}$$', '$$Z(t)_{A_{ij},\rm DOPRI}$$', '$$Z(t)_{A_{ij},\rm ode45}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southwest')
 title(sprintf('\\bf Fully connected network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f', pars.N, fdpars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex')
 removewhitspace();
 
