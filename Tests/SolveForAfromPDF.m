@@ -1,4 +1,4 @@
-close all; clear vars; clc
+close all; clear all; clc
 addpath('../Functions');
 
 %% Making the adjacency matrix from a degree distribution
@@ -36,11 +36,13 @@ else
     numtype = 'double';
 end
 
+
 xidx = zeros(numnonzeros, 1, numtype);
 yidx = zeros(numnonzeros, 1, numtype);
 idxidx = cumsum([1; degrees_in]); % For indexing the idx and yidx vector
 disp(idxidx')
 
+% Adjust for zeros in first and last row
 choosefrom = cast(2:N,numtype);
 prob_leftout = degrees_out(1);
 probs = degrees_out;
@@ -63,16 +65,18 @@ for i = 1:N
     disp(probs')
     prob_leftout = probs(rowindex);
     probs(rowindex) = -1;
-    [v, maxindex] = max(probs);
-    probs(maxindex) = probs(maxindex) + 1;
+%     [v, maxindex] = max(probs);
+%     probs(maxindex) = probs(maxindex) + 1;
     disp(probs')
     
-    probs = flip(probs);
-    disp(probs')
     [chosen, chosenidx] = maxk(probs, numelements)
-    probs = flip(probs);
-    [~, chosenidx] = ismember(chosen, probs)
-    disp(probs')
+
+%     probs = flip(probs);
+%     disp(probs')
+%     [chosen, chosenidx] = maxk(probs, numelements)
+%     probs = flip(probs);
+%     [~, chosenidx] = ismember(chosen, probs)
+%     disp(probs')
     
     indices = idxidx(rowindex):idxidx(rowindex+1)-1;
     xidx(indices) = rowindex;
@@ -83,9 +87,8 @@ for i = 1:N
     probs(chosenidx) = probs(chosenidx) - 1;
     
     % Reset the probability vector:
-    
     probs(rowindex) = prob_leftout;
-    probs(maxindex) = probs(maxindex) - 1;
+%     probs(maxindex) = probs(maxindex) - 1;
 
 %     A(nonzeros(xidx(indices)), nonzeros(yidx(indices))) = 1
     
@@ -93,6 +96,8 @@ for i = 1:N
 end
 
 A = sparse(xidx, yidx, ones(numnonzeros, 1, 'logical'));
+A(N,N) = 0;
+
 C = cat(1, full(A), degrees_out');
 C = cat(2, C, [degrees_in; -100])
 
