@@ -59,7 +59,7 @@ toc
 
 
 %% The mean field theory for fixed degree networks:
-MFIC = gather(zode45(1));
+MFIC = gather(z(1));
 [T, Z] = ode45(@(t,x) MFR2(t,x,pars), [tnow, tend], MFIC, odeoptions);
 
 fdpars = prepareOAparameters(fdpars);
