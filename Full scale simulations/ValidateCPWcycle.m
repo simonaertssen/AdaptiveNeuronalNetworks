@@ -16,13 +16,12 @@ labelfont = 15;
 tnow = 0; tend = 5;
 h = 0.005;
 
-pars.N = 5000;
+pars.N = 2;
 pars.a_n = 0.666666666666667;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 
 seed = 2; rng(seed);
-% IC = wrapToPi(rand(pars.N, 1)*2*pi - pi);
-IC = wrapToPi(randn(pars.N, 1)*2);
+IC = wrapToPi(randn(pars.N, 1)*1.3);
 pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
 odeoptions = odeset('RelTol', 1.0e-6,'AbsTol', 1.0e-6);
 
@@ -87,5 +86,5 @@ title(sprintf('\\bf Fully connected network: $$N$$ = %d, $$\\langle k \\rangle$$
 removewhitspace();
 
 disp('Made fully connected network figure')
-print(f_CPW, '../Figures/ValidateCPWcycle.png', '-dpng', '-r300')
+% print(f_CPW, '../Figures/ValidateCPWcycle.png', '-dpng', '-r300')
 close(f_CPW)
