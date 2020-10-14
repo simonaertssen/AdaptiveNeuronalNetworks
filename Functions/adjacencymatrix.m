@@ -3,7 +3,7 @@ function A = adjacencymatrix(degrees_in, degrees_out)
     if max(degrees_in) >= N
         error('Degree too large');
     end
-    nonzeros = sum(degrees_in);
+    numnonzeros = sum(degrees_in);
     
     % Test for laptop version or other:
     if version('-release') == "2020a"
@@ -12,63 +12,62 @@ function A = adjacencymatrix(degrees_in, degrees_out)
         numtype = 'double';
     end
     
-    xidx = zeros(nonzeros, 1, numtype);
-    yidx = zeros(nonzeros, 1, numtype);
+    tries = 0;
+    while tries < 5  
+        tries = tries + 1;
+        
+        xidx = zeros(numnonzeros, 1, numtype);
+        yidx = zeros(numnonzeros, 1, numtype);
+        idxidx = cumsum([1; degrees_in]); % For indexing the idx and yidx vector
 
-    choosefrom = cast(2:N,numtype);
-    prob_leftout = degrees_out(1);
-    probs = degrees_out(choosefrom);
+        probs = degrees_out;
 
-    start = 1;
-    for i = 1:N
-        num = degrees_in(i);
+        for i = 1:N
+            rowindex = i;
+            numelements = degrees_in(rowindex);
+            if numelements == 0
+                continue
+            end
+            prob_leftout = probs(rowindex); % Take out diagonal element
+            probs(rowindex) = -1;
 
-        % Sample with replacement when enough probabilities are nonzero.
-        try
-            % sampling without replacement
-            chosen = datasample(choosefrom, num, 'Replace', false, 'Weights', probs.^2);
-        catch
-            % ok, there's not enough probabilities available
-            % chosen = maxk(choosefrom, num);
-            probs = probs + 1;
-            chosen = datasample(choosefrom, num, 'Replace', false, 'Weights', probs);
+            % Permutation makes the implementation quite robust:
+            % Don't just sample the first maximum elements
+            probsperm = randperm(N);
+            % [~, probsperminv] = sort(probsperm); % Inverse not necessary?
+            [~, chosenidx] = maxk(probs(probsperm), numelements);
+            chosenidx = probsperm(chosenidx);
+
+            indices = idxidx(rowindex):idxidx(rowindex+1)-1;
+            xidx(indices) = rowindex;
+            yidx(indices) = chosenidx;
+
+            probs(chosenidx) = probs(chosenidx) - 1;
+
+            % Reset the probability vector:
+            probs(rowindex) = prob_leftout;
+
         end
 
-        xidx(start:(start+(num-1))) = i;
-        yidx(start:(start+(num-1))) = chosen;
-
-        [~, chosenidx] = ismember(chosen, choosefrom);
-        uniqueidx = unique(chosenidx);
-        probs(uniqueidx) = probs(uniqueidx) - 1;
-
-        if i ~= N
-            choosefrom(i) = i;
-
-            tmp = probs(i);
-            probs(i) = prob_leftout;
-            prob_leftout = tmp;
+        % Create the matrix as sparse
+        if gpuDeviceCount > 0
+            A = zeros(N, N, 'double');
+            A(sub2ind([N, N], xidx, yidx)) = 1;
+        else 
+            A = sparse(xidx, yidx, ones(numnonzeros, 1, 'logical'));
         end
-        start = start + num;
+        A(N,N) = 0; % Make it an N x N matrix
+        assert(sum(diag(A)) == 0);
+
+        diffrows = degrees_in' - full(sum(A,2))';
+        diffcols = degrees_out' - full(sum(A,1));
+        
+        if ~any(diffrows) && ~any(diffcols) % Then we have it all right
+            disp(['Found exact A after ', num2str(tries), 'tries']);
+            return
+        end
     end
     
-    % Create the matrix as sparse
-    if gpuDeviceCount > 0
-        A = zeros(N, N, 'double');
-        A(sub2ind([N, N], xidx, yidx)) = 1;
-    else 
-        A = sparse(xidx, yidx, ones(nonzeros, 1, 'logical'));
-    end
-    assert(sum(diag(A)) == 0);
-
-    diffrows = degrees_in' - full(sum(A,2))';
-    diffcols = degrees_out' - full(sum(A,1));
-
-    N2 = N^2; thresh = 1.0e-6;
-    if sum(diffrows)/N2 > thresh
-        sprintf(['Adjacency matrix might not be accurate: residue ', num2str(sum(diffrows)/N2)])
-    end
-    if sum(diffcols)/N2 > thresh
-        sprintf(['Adjacency matrix might not be accurate: residue ', num2str(sum(diffcols)/N2)])
-    end
+    sprintf('Adjacency matrix might not be accurate: residue of %d', sum(diffrows)/numnonzeros * 100)
 end
 

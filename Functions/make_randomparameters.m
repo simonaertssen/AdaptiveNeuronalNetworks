@@ -11,7 +11,10 @@ function randompars = make_randomparameters(pars, netp)
     randompars.meandegree = randompars.netp*(pars.N - 1);
     randompars.degrees_in = poissrnd(randompars.meandegree, [pars.N,1]);
     % Set higher degrees to N - 1:
-    randompars.degrees_in(randompars.degrees_in > pars.N - 1) = pars.N - 1;
+    if max(randompars.degrees_in) > pars.N - 1
+        disp(['Setting higher degrees to ', num2str(N-1)]);
+        randompars.degrees_in(randompars.degrees_in > pars.N - 1) = pars.N - 1;
+    end
     randompars.degrees_out = randompars.degrees_in(randperm(pars.N));
     randompars.P = @(x) poisspdf(x, randompars.meandegree)*pars.N;   
 end
