@@ -70,8 +70,8 @@ Zoa = gather(initarray(b_i) * fdpars.P(fdpars.k)/fdpars.N);
 f_CPW = figure('Renderer', 'painters', 'Position', [50 800 800 400]); box on; hold on;
 
 xlim([tnow, tend]); ylim([0, 1])
-plot(T, abs(Z), '-k', 'LineWidth', 2);
-plot(Toa, abs(Zoa), '-k', 'LineWidth', 2);
+plot(Toa, abs(Zoa), '-r', 'LineWidth', 3);
+plot(T, abs(Z), ':k', 'LineWidth', 2);
 
 plot(t, abs(z), '-', 'LineWidth', 4);
 plot(t_ode45, abs(zode45), '-', 'LineWidth', 3);
