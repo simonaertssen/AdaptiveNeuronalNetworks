@@ -62,13 +62,14 @@ function A = adjacencymatrix(degrees_in, degrees_out)
 
     diffrows = degrees_in' - full(sum(A,2))';
     diffcols = degrees_out' - full(sum(A,1));
-
-    N2 = N^2; thresh = 1.0e-6;
-    if sum(diffrows)/N2 > thresh
-        sprintf(['Adjacency matrix might not be accurate: residue ', num2str(sum(diffrows)/N2)])
+    
+    disp(['Adjacency matrix might not be accurate: residue ', num2str(sum(abs(diffrows))/nonzeros)])
+    thresh = 1.0e-12;
+    if sum(diffrows)/nonzeros > thresh
+        sprintf(['Adjacency matrix might not be accurate: residue ', num2str(sum(diffrows)/nonzeros)])
     end
-    if sum(diffcols)/N2 > thresh
-        sprintf(['Adjacency matrix might not be accurate: residue ', num2str(sum(diffcols)/N2)])
+    if sum(diffcols)/nonzeros > thresh
+        sprintf(['Adjacency matrix might not be accurate: residue ', num2str(sum(diffcols)/nonzeros)])
     end
 end
 

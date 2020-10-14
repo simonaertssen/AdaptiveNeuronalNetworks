@@ -63,11 +63,14 @@ function A = adjacencymatrix(degrees_in, degrees_out)
         diffcols = degrees_out' - full(sum(A,1));
         
         if ~any(diffrows) && ~any(diffcols) % Then we have it all right
-            disp(['Found exact A after ', num2str(tries), 'tries']);
+            if tries == 1
+                disp(['Found exact A after ', num2str(tries), ' try']);
+            else
+                disp(['Found exact A after ', num2str(tries), ' tries']);
+            end
             return
         end
     end
-    
-    sprintf('Adjacency matrix might not be accurate: residue of %d', sum(diffrows)/numnonzeros * 100)
+    disp(['A might not be accurate: residue of ', num2str(sum(diffrows)/numnonzeros * 100)]);
 end
 
