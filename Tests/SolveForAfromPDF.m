@@ -13,7 +13,7 @@ addpath('../Functions');
 % Try to just always get the largest k values to put in a randomly chosen
 % row.
 
-N = 100;
+N = 10;
 pars.N = N;
 % networkpars = make_scalefreeparameters(pars, 3);
 networkpars = make_randomparameters(pars, 0.3);
@@ -45,7 +45,6 @@ idxidx = cumsum([1; degrees_in]); % For indexing the idx and yidx vector
 disp(idxidx')
 
 % Adjust for zeros in first and last row
-choosefrom = cast(2:N,numtype);
 prob_leftout = degrees_out(1);
 probs = degrees_out;
 
@@ -61,11 +60,11 @@ for i = 1:N
     if numelements == 0
         continue
     end
-    disp(probs')
     prob_leftout = probs(rowindex); % Take out diagonal element
     probs(rowindex) = -1;
-    disp(probs')
     
+    % Permutation makes the implementation quite robust: 
+    % Don't just sample the first maximum elements 
     probsperm = randperm(N);
     [~, probsperminv] = sort(probsperm)
     disp('Shuffled')
@@ -83,20 +82,26 @@ for i = 1:N
     probs(rowindex) = prob_leftout;
 
 %     A(nonzeros(xidx(indices)), nonzeros(yidx(indices))) = 1
-    
-    probs
 end
 
 A = sparse(xidx, yidx, ones(numnonzeros, 1, 'logical'));
 A(N,N) = 0;
-
-C = cat(1, full(A), degrees_out');
-C = cat(2, C, [degrees_in; -100])
-
 assert(sum(diag(A)) == 0);
 
-diffrows = degrees_in' - full(sum(A,2))'
-diffcols = degrees_out' - full(sum(A,1))
+diffcols = degrees_out' - full(sum(A,1));
+nonzeroidx = find(diffcols);
+if numel(nonzeroidx) > 0
+    
+end
+
+
+% C = cat(1, full(A), degrees_out');
+% C = cat(2, C, [degrees_in; -100])
+% 
+% assert(sum(diag(A)) == 0);
+% 
+% diffrows = degrees_in' - full(sum(A,2))'
+% diffcols = degrees_out' - full(sum(A,1))
 
 %% Test the function:
 
