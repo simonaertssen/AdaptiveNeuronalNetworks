@@ -16,7 +16,7 @@ labelfont = 15;
 tnow = 0; tend = 5;
 h = 0.001;
 
-pars.N = 10;
+pars.N = 1000;
 pars.a_n = 0.666667;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 
@@ -66,5 +66,5 @@ removewhitspace();
 title(sprintf('\\bf Fully connected network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f', pars.N, fdpars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex')
 
 disp('Made fully connected network figure')
-% print(f_CPW, '../Figures/ValidateCPWcycle.png', '-dpng', '-r300')
-% close(f_CPW)
+print(f_CPW, '../Figures/ValidateCPWcycle.png', '-dpng', '-r300')
+close(f_CPW)
