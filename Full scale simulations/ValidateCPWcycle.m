@@ -14,14 +14,14 @@ labelfont = 15;
 
 %% Theta model parameters:
 tnow = 0; tend = 5;
-h = 0.001;
+h = 0.005;
 
-pars.N = 10000;
+pars.N = 5000;
 pars.a_n = 0.666666666666667;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 
 seed = 1; rng(seed);
-IC = wrapToPi(randn(pars.N, 1)*0.8);
+IC = wrapToPi(randn(pars.N, 1)*0.4);
 pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
 odeoptions = odeset('RelTol', 1.0e-6,'AbsTol', 1.0e-6);
 
@@ -50,10 +50,17 @@ tic;
 z_full = orderparameter(thetas_full);
 toc
 
-tic
+tic;
 [t_fullode45, thetas_fullode45] = ode45(@(t,x,K) thetaneurons_full(t,x,fdpars.K,A,fdpars.e,1/fdpars.meandegree,fdpars.a_n), [tnow, tend], IC, odeoptions);
 thetas_fullode45 = wrapToPi(thetas_fullode45)';
 z_fullode45 = orderparameter(thetas_fullode45)';
+toc
+
+tic;
+fdpars = prepareOAparameters(fdpars);
+OAIC = ones(fdpars.l,1)*MFIC + 0.001*randn(fdpars.l,1);
+[Toa, b_i] = ode45(@(t,x) MFROA(t,x,fdpars), [tnow, tend], OAIC, odeoptions);
+Zoa = gather(initarray(b_i) * fdpars.P(fdpars.k)/fdpars.N);
 toc
 
 %% The mean field theory for fixed degree networks:
