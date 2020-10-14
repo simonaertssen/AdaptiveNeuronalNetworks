@@ -17,7 +17,7 @@ tnow = 0; tend = 5;
 h = 0.001;
 
 pars.N = 2500;
-pars.a_n = 0.666667;
+pars.a_n = 0.666666666666667;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 
 seed = 1; rng(seed);
