@@ -3,6 +3,9 @@
 .AppleDouble
 .LSOverride
 
+# Ignore MatCont
+MatCont/
+
 # No pycache and build folders, no notebook backups:
 build/
 __pycache__/
