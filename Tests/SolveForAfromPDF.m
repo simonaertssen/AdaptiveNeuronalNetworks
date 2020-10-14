@@ -15,14 +15,10 @@ addpath('../Functions');
 
 N = 10;
 pars.N = N;
-% networkpars = make_scalefreeparameters(pars, 3);
 networkpars = make_randomparameters(pars, 0.3);
 
 degrees_in = networkpars.degrees_in;
 degrees_out = networkpars.degrees_out;
-
-% degrees_in = linspace(0,9,N)';
-% degrees_out = linspace(0,9,N)';
 
 %% The algorithm:
 clc
@@ -55,8 +51,8 @@ A = zeros(N,N);
 
 rowpermutation = randperm(N);
 for i = 1:N
-    rowindex = rowpermutation(i)
-    numelements = degrees_in(rowindex)
+    rowindex = i;
+    numelements = degrees_in(rowindex);
     if numelements == 0
         continue
     end
@@ -66,10 +62,8 @@ for i = 1:N
     % Permutation makes the implementation quite robust: 
     % Don't just sample the first maximum elements 
     probsperm = randperm(N);
-    [~, probsperminv] = sort(probsperm)
-    disp('Shuffled')
-    disp(probs(probsperm)')
-    [chosen, chosenidx] = maxk(probs(probsperm), numelements)
+    [~, probsperminv] = sort(probsperm);
+    [chosen, chosenidx] = maxk(probs(probsperm), numelements);
     chosenidx = probsperm(chosenidx);
     
     indices = idxidx(rowindex):idxidx(rowindex+1)-1;
@@ -86,22 +80,68 @@ end
 
 A = sparse(xidx, yidx, ones(numnonzeros, 1, 'logical'));
 A(N,N) = 0;
+
+C = cat(1, full(A), degrees_out');
+C = cat(2, C, [degrees_in; -100])
+
 assert(sum(diag(A)) == 0);
 
-diffcols = degrees_out' - full(sum(A,1));
-nonzeroidx = find(diffcols);
+diffcols = degrees_out' - full(sum(A,1))
+nonzeroidx = find(diffcols)
+numel(nonzeroidx)
 if numel(nonzeroidx) > 0
-    
+    if diffcols(nonzeroidx(1)) == -diffcols(nonzeroidx(2))
+        switchidx1 = find(A(:,nonzeroidx(1)) == 1)
+        for sw = 1:numel(switchidx1)
+            sw
+            A(sw,nonzeroidx(1)) 
+            A(sw,nonzeroidx(2)) 
+            if A(sw,nonzeroidx(2)) == 0
+                A(sw,nonzeroidx(2)) = 1;
+                A(sw,nonzeroidx(1)) = 0;
+                break
+            end
+        end
+    end
+    C = cat(1, full(A), degrees_out');
+    C = cat(2, C, [degrees_in; -100])
 end
 
-
-% C = cat(1, full(A), degrees_out');
-% C = cat(2, C, [degrees_in; -100])
-% 
-% assert(sum(diag(A)) == 0);
-% 
-% diffrows = degrees_in' - full(sum(A,2))'
-% diffcols = degrees_out' - full(sum(A,1))
+diffcols = degrees_out' - full(sum(A,1))
 
 %% Test the function:
+pars.N = 1000;
+netp = 0.60143;
+meandegree = netp*(N - 1);
+networkpars = make_randomparameters(pars, netp);
+
+assert(sum(networkpars.degrees_in) == sum(networkpars.degrees_out))
+
+tic 
+A_random = adjacencymatrix(networkpars.degrees_in, networkpars.degrees_out);
+toc
+
+tic 
+A_random = adjacencymatrix_from_sampling(networkpars.degrees_in, networkpars.degrees_out);
+toc
+
+% Lesson: faster if we just get it after one try, but it seems to be more
+% accurate.
+
+%% Test a fixed degree network:
+netdegree = 300;
+degrees_in = zeros(N,1);
+degrees_in(randperm(N)) = netdegree;
+degrees_out = degrees_in(randperm(N)); % because these two have to contain the same number of elements
+
+assert(sum(degrees_in) == sum(degrees_out))
+
+A_fixeddegree = adjacencymatrix(degrees_in, degrees_out);
+f_fixeddegree = figure('Renderer', 'painters', 'Position', [0 800 400 400]);
+hAxes = axes(f_fixeddegree); 
+imshow(full(A_fixeddegree), 'Parent', hAxes);
+title(hAxes, ['Fixed degree $$A_{ij}$$: $$N$$ = ', num2str(N), ', $$\langle k \rangle$$ = ', num2str(mean(degrees_in))],'interpreter','latex', 'FontSize', 15)
+print(f_fixeddegree, '../Figures/A_fixeddegree.png', '-dpng', '-r300')
+
+close(f_fixeddegree)
 
