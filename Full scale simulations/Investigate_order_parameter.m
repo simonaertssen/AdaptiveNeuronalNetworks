@@ -21,7 +21,7 @@ h = 0.001;
 pars.N = 10000;
 pars.a_n = 0.666667;
 seed = 1; rng(seed);
-IC = randn(pars.N, 1) + 1;
+IC = wrapToPi(randn(pars.N, 1)*1.3);
 
 %% Make a GPU init handle:
 if gpuDeviceCount > 0
