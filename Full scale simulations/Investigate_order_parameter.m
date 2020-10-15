@@ -19,7 +19,7 @@ tnow = 0; tend = 10;
 h = 0.001;
 
 pars.N = 10000;
-pars.a_n = 0.666667;
+pars.a_n = 0.666666666666666666667;
 seed = 1; rng(seed);
 IC = wrapToPi(randn(pars.N, 1)*1.3);
 
@@ -61,7 +61,7 @@ for i = 1:3
  
     % The OA mean field theory:
     oa_params = prepareOAparameters(params);
-    OAIC = ones(oa_params.l,1)*z(1);
+    OAIC = ones(oa_params.l,1)*gather(z(1));
     [Toa, b_i] = ode45(@(t,x) MFROA(t,x,oa_params), [tnow, tend], OAIC, options);
     Z_oa = orderparameter_oa(b_i, oa_params.P, oa_params.k, oa_params.N);
     
@@ -128,7 +128,7 @@ for i = 1:3
  
     % The OA mean field theory:
     oa_params = prepareOAparameters(params);
-    OAIC = ones(oa_params.l,1)*z(1);
+    OAIC = ones(oa_params.l,1)*gather(z(1));
     [Toa, b_i] = ode45(@(t,x) MFROA(t,x,oa_params), [tnow, tend], OAIC, options);
     Z_oa = orderparameter_oa(b_i, oa_params.P, oa_params.k, oa_params.N);
     
@@ -196,7 +196,7 @@ for i = 1:3
  
     % The OA mean field theory:
     oa_params = prepareOAparameters(params);
-    OAIC = ones(oa_params.l,1)*z(1);
+    OAIC = ones(oa_params.l,1)*gather(z(1));
     [Toa, b_i] = ode45(@(t,x) MFROA(t,x,oa_params), [tnow, tend], OAIC, options);
     Z_oa = orderparameter_oa(b_i, oa_params.P, oa_params.k, oa_params.N);
     
