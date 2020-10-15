@@ -83,8 +83,8 @@ ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
 
 legend('$$\overline{Z(t)}_{\rm MF}$$', '$$\overline{Z(t)}_{\rm OA}$$', '$$Z(t)_{\rm DOPRI}$$', '$$Z(t)_{A_{ij},\rm DOPRI}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southwest')
 title(sprintf('\\bf Fully connected network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f', pars.N, fdpars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex')
+exportgraphics(f_CPW,'../Figures/ValidateCPWcycle.pdf')
 
-exportpdf(export, f_CPW, 'ValidateCPWcycle');
 close(f_CPW)
 
 disp('Made fully connected network figure')
