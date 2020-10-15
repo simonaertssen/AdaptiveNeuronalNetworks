@@ -13,13 +13,12 @@ set(groot,'DefaultAxesYGrid','on')
 
 titlefont = 15;
 labelfont = 15;
-export = true;
 
 %% Theta model parameters:
-tnow = 0; tend = 10;
+tnow = 0; tend = 0.01;
 h = 0.005;
 
-pars.N = 5000;
+pars.N = 5;
 pars.a_n = 0.666666666666666666667;
 seed = 1; rng(seed);
 IC = wrapToPi(randn(pars.N, 1)*1.3);
@@ -80,7 +79,10 @@ for i = 1:3
     plot(t, abs(z_net), 'LineWidth', 2);
     plot(t, abs(z_mf), 'LineWidth', 2);
     plot(t, abs(z_link), 'LineWidth', 2);
-
+    
+    if i < 3
+        set(gca, 'XTickLabel', [])
+    end
     ylabel('$\| Z (t) \|$','Interpreter','latex', 'FontSize', labelfont)
 
     removewhitspace();
@@ -90,10 +92,11 @@ set(imrow(1).Title,'String', sprintf('\\bf Fixed-degree network:  $$N$$ = %d, $$
 set(imrow(2).Title,'String', sprintf('\\bf Random network:  $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f', pars.N, randompars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex');
 set(imrow(3).Title,'String', sprintf('\\bf Scale-free network:  $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f', pars.N, scalefreepars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex');
 
-legend('Kuramoto order parameter', 'OA order parameter', 'Network order parameter', 'Mean field order parameter', 'Link field order parameter', 'FontSize', labelfont-5, 'Location', 'southoutside', 'Orientation', 'horizontal')
+legend('Kuramoto o. p.', 'OA o. p.', 'Network o. p.', 'Mean field o. p.', 'Link field o. p.', 'FontSize', labelfont-5, 'Location', 'southoutside', 'Orientation', 'horizontal')
 xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
 suptitle(sprintf('PSR state:  \\eta_0 = %0.1f, \\delta = %0.1f, K = %0.1f', pars.eta0, pars.delta, pars.K))
-exportpdf(f_PRS, '../Figures/InvestigateOrderParametersPRS.pdf', export);
+% exportpdf(f_PRS, '../Figures/InvestigateOrderParametersPRS.pdf', export);
+print(f_PRS, '../Figures/InvestigateOrderParametersPRS.pdf', '-dpdf', '-bestfit');
 close(f_PRS)
 
 disp('Made PRS state')
@@ -147,7 +150,10 @@ for i = 1:3
     plot(t, abs(z_net), 'LineWidth', 2);
     plot(t, abs(z_mf), 'LineWidth', 2);
     plot(t, abs(z_link), 'LineWidth', 2);
-
+    
+    if i < 3
+        set(gca, 'XTickLabel', [])
+    end
     ylabel('$\| Z (t) \|$','Interpreter','latex', 'FontSize', labelfont)
 
     removewhitspace();
@@ -157,11 +163,12 @@ set(imrow(1).Title,'String', sprintf('\\bf Fixed-degree network:  $$N$$ = %d, $$
 set(imrow(2).Title,'String', sprintf('\\bf Random network:  $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f', pars.N, randompars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex');
 set(imrow(3).Title,'String', sprintf('\\bf Scale-free network:  $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f', pars.N, scalefreepars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex');
 
-legend('Kuramoto order parameter', 'OA order parameter', 'Network order parameter', 'Mean field order parameter', 'Link field order parameter', 'FontSize', labelfont-5, 'Location', 'southoutside', 'Orientation', 'horizontal')
+legend('Kuramoto o. p.', 'OA o. p.', 'Network o. p.', 'Mean field o. p.', 'Link field o. p.', 'FontSize', labelfont-5, 'Location', 'southoutside', 'Orientation', 'horizontal')
 xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
 
 suptitle(sprintf('PSS state:  \\eta_0 = %0.1f, \\delta = %0.1f, K = %0.1f', pars.eta0, pars.delta, pars.K))
-exportpdf(f_PSS, '../Figures/InvestigateOrderParametersPSS.pdf', export);
+% exportpdf(f_PSS, '../Figures/InvestigateOrderParametersPSS.pdf', export);
+print(f_PSS, '../Figures/InvestigateOrderParametersPSS.pdf', '-dpdf', '-bestfit');
 close(f_PSS)
 
 disp('Made PSS state')
@@ -215,7 +222,10 @@ for i = 1:3
     plot(t, abs(z_net), 'LineWidth', 2);
     plot(t, abs(z_mf), 'LineWidth', 2);
     plot(t, abs(z_link), 'LineWidth', 2);
-
+    
+    if i < 3
+        set(gca, 'XTickLabel', [])
+    end
     ylabel('$\| Z (t) \|$','Interpreter','latex', 'FontSize', labelfont)
 
     removewhitspace();
@@ -225,11 +235,13 @@ set(imrow(1).Title,'String', sprintf('\\bf Fixed-degree network:  $$N$$ = %d, $$
 set(imrow(2).Title,'String', sprintf('\\bf Random network:  $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f', pars.N, randompars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex');
 set(imrow(3).Title,'String', sprintf('\\bf Scale-free network:  $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f', pars.N, scalefreepars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex');
 
-legend('Kuramoto order parameter', 'OA order parameter', 'Network order parameter', 'Mean field order parameter', 'Link field order parameter', 'FontSize', labelfont-5, 'Location', 'southoutside', 'Orientation', 'horizontal')
+legend('Kuramoto o. p.', 'OA o. p.', 'Network o. p.', 'Mean field o. p.', 'Link field o. p.', 'FontSize', labelfont-5, 'Location', 'southoutside', 'Orientation', 'horizontal')
 xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
 
 suptitle(sprintf('PSS state:  \\eta_0 = %0.1f, \\delta = %0.1f, K = %0.1f', pars.eta0, pars.delta, pars.K))
-exportpdf(f_CPW, '../Figures/InvestigateOrderParametersCPW.pdf', export);
+% exportpdf(f_CPW, '../Figures/InvestigateOrderParametersCPW.pdf', export);
+print(f_CPW, '../Figures/InvestigateOrderParametersCPW.pdf', '-dpdf', '-bestfit');
 
 close(f_CPW)
+
 disp('Made PSS state')

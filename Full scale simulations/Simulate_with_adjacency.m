@@ -24,7 +24,7 @@ initarray = make_GPUhandle();
 tnow = 0; tend = 5;
 h = 0.005;
 
-pars.N = 15000;
+pars.N = 10;
 pars.a_n = 0.666666666666666666667;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 
@@ -163,7 +163,6 @@ odeoptions = odeset('RelTol', 1.0e-6,'AbsTol', 1.0e-6, 'NormControl','on');
 
 %% 3. Perform a full scale simulation of a scale-free network:
 % The full scale simulation using the adjacency matrix:
-pars.N = 500;
 seed = 3; rng(seed);
 IC = wrapToPi(randn(pars.N, 1)*0.2);
 degree = 4;
@@ -178,7 +177,7 @@ disp('Full scale test done')
 
 % The OA mean field theory:
 sfpars = prepareOAparameters(sfpars);
-OAIC = ones(sfpars.l,1)*gather(z_full(1));
+OAIC = randn(sfpars.l,1)*0.0001 + gather(z_full(1));
 [Toa, b_i] = ode45(@(t,x) MFROA(t,x,sfpars), [tnow, tend], OAIC, odeoptions);
 Zoa = gather(initarray(b_i) * sfpars.P(sfpars.k)/sfpars.N);
 disp('OA mean field test done')
