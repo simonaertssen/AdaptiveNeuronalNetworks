@@ -90,8 +90,8 @@ set(gca,'YTick', 0:maxy:maxy, 'YLim', [-200, maxy*8])
 
 
 %% Save the figure:
-print(fexcite, '../Figures/ThetaNeuronResponseToCurrent.png', '-dpng', '-r300')
-%exportgraphics(fexcite, '../Figures/ThetaNeuronResponseToCurrent.png', 'Resolution', 300')
+% print(fexcite, '../Figures/ThetaNeuronResponseToCurrent.png', '-dpng', '-r300')
+exportpdf(true, fexcite, 'ThetaNeuronResponseToCurrent');
 
 
 %% Investigate the frequency - current curve:
@@ -134,7 +134,8 @@ xlabel('$I$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('$T$','Interpreter','latex', 'FontSize', labelfont)
 legend('$\frac{\pi}{\sqrt{I}}$', '$\hat{T}$', 'Interpreter','latex', 'FontSize', labelfont, 'Location', 'northwest')
 
-print(fI, '../Figures/ThetaNeuronResponseToCurrentPeriod.png', '-dpng', '-r300')
+% print(fI, '../Figures/ThetaNeuronResponseToCurrentPeriod.png', '-dpng', '-r300')
+exportpdf(true, fI, 'ThetaNeuronResponseToCurrentPeriod');
 
 %% Functions:
 function I = excitabilitycurrent(t)
