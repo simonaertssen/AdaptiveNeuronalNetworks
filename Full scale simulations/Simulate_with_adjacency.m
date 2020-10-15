@@ -28,7 +28,7 @@ pars.N = 15000;
 pars.a_n = 0.666666666666666666667;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 
-seed = 1; rng(seed);
+seed = 2; rng(seed);
 IC = wrapToPi(randn(pars.N, 1)*1.3);
 pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
 odeoptions = odeset('RelTol', 1.0e-6,'AbsTol', 1.0e-6, 'NormControl','on');
@@ -163,6 +163,7 @@ disp('Made random network figure')
 
 %% 3. Perform a full scale simulation of a scale-free network:
 % The full scale simulation using the adjacency matrix:
+seed = 3; rng(seed);
 IC = wrapToPi(randn(pars.N, 1)*0.2);
 degree = 4;
 sfpars = make_scalefreeparameters(pars, degree);
