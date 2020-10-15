@@ -11,6 +11,7 @@ set(groot,'DefaultAxesYGrid','on')
 
 titlefont = 15;
 labelfont = 15;
+export = true;
 
 %% Theta model parameters:
 tnow = 0; tend = 5;
@@ -80,11 +81,10 @@ plot(t_full, abs(z_full), '-', 'LineWidth', 2);
 xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
 ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
 
-% legend('$$\overline{Z(t)}_{\rm MF}$$', '$$\overline{Z(t)}_{\rm OA}$$', '$$Z(t)_{\rm DOPRI}$$', '$$Z(t)_{\rm ode45}$$', '$$Z(t)_{A_{ij},\rm DOPRI}$$', '$$Z(t)_{A_{ij},\rm ode45}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southwest')
 legend('$$\overline{Z(t)}_{\rm MF}$$', '$$\overline{Z(t)}_{\rm OA}$$', '$$Z(t)_{\rm DOPRI}$$', '$$Z(t)_{A_{ij},\rm DOPRI}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southwest')
 title(sprintf('\\bf Fully connected network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f', pars.N, fdpars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex')
-removewhitspace();
+
+exportpdf(export, f_CPW, 'ValidateCPWcycle');
+close(f_CPW)
 
 disp('Made fully connected network figure')
-print(f_CPW, '../Figures/ValidateCPWcycle.png', '-dpng', '-r300')
-close(f_CPW)
