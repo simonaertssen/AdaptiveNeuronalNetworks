@@ -171,7 +171,7 @@ end
 
 %%
 pinterp = logspace(-4, 0, nsamples^2);
-f = figure; grid on; hold on
+f = figure('Renderer', 'painters', 'Position', [50 800 400 200]); grid on; hold on
 plot(pinterp, interp1(ps,Ls/L0,pinterp), 'LineWidth', 2)
 plot(pinterp, interp1(ps,CCs/CC0,pinterp), 'LineWidth', 2)
 %plot(pinterp, interp1(ps,COs/CO0,pinterp), 'LineWidth', 2)
@@ -179,7 +179,7 @@ set(gca, 'XScale', 'log')
 xlabel('$$p$$', 'Interpreter', 'latex')
 legend('$$L(p)/L_0$$', '$$C(p)/C_0$$', 'Location' ,'southwest', 'Interpreter', 'latex', 'FontSize', 20)
 % Saved as 'nosmallworldfromdirac.png'
-exportpdf(export, f, 'nosmallworldfromdirac');
+exportpdf(true, f, 'nosmallworldfromdirac');
 
 %% Realisation:
 % We don't need to change elements in the adjacency matrix to model the
