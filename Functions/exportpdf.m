@@ -1,8 +1,8 @@
 function fighandle = exportpdf(fighandle, figname, export)
     if export == true
         removewhitspace();
-        set(fighandle,'PaperPositionMode','auto', 'PaperOrientation', 'landscape')
-        set(gca,'units','centimeters')
+        set(fighandle,'PaperPositionMode','auto', 'PaperOrientation', 'landscape');
+        set(gca,'units','centimeters');
         pos = get(gca,'Position');
         ti = get(gca,'TightInset');
 

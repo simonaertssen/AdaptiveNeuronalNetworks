@@ -137,8 +137,9 @@ A_fixeddegree = adjacencymatrix(fdpars.degrees_in, fdpars.degrees_out);
 f_fixeddegree = figure('Renderer', 'painters', 'Position', [0 800 400 400]);
 hAxes = axes(f_fixeddegree); 
 imshow(full(A_fixeddegree), 'Parent', hAxes);
-title(hAxes, ['Fixed degree $$A_{ij}$$: $$N$$ = ', num2str(pars.N), ', $$\langle k \rangle$$ = ', num2str(fdpars.meandegree)],'interpreter','latex', 'FontSize', 15)
-print(f_fixeddegree, '../Figures/A_fixeddegree1.png', '-dpng', '-r300')
+title(hAxes, ['Fixed degree $$A_{ij}$$: $$N$$ = ', num2str(pars.N), ', $$\langle k \rangle$$ = ', num2str(fdpars.meandegree)],'interpreter','latex', 'FontSize', 10)
+exportpdf(f_fixeddegree, '../Figures/A_fixeddegree1.pdf', true);
+
 close(f_fixeddegree)
 
 netdegree = 300;
@@ -148,8 +149,9 @@ A_fixeddegree = adjacencymatrix(fdpars.degrees_in, fdpars.degrees_out);
 f_fixeddegree = figure('Renderer', 'painters', 'Position', [0 800 400 400]);
 hAxes = axes(f_fixeddegree); 
 imshow(full(A_fixeddegree), 'Parent', hAxes);
-title(hAxes, ['Fixed degree $$A_{ij}$$: $$N$$ = ', num2str(pars.N), ', $$\langle k \rangle$$ = ', num2str(fdpars.meandegree)],'interpreter','latex', 'FontSize', 15)
-print(f_fixeddegree, '../Figures/A_fixeddegree2.png', '-dpng', '-r300')
+title(hAxes, ['Fixed degree $$A_{ij}$$: $$N$$ = ', num2str(pars.N), ', $$\langle k \rangle$$ = ', num2str(fdpars.meandegree)],'interpreter','latex', 'FontSize', 10)
+exportpdf(f_fixeddegree, '../Figures/A_fixeddegree2.pdf', true);
+
 close(f_fixeddegree)
 
 
@@ -161,8 +163,9 @@ A_random = adjacencymatrix(rdpars.degrees_in, rdpars.degrees_out);
 f_random = figure('Renderer', 'painters', 'Position', [50 800 400 400]);
 hAxes = axes(f_random); 
 imshow(full(A_random), 'Parent', hAxes);
-title(hAxes, ['Random $$A_{ij}$$: $$N$$ = ', num2str(pars.N), ', $$\langle k \rangle$$ = ', num2str(round(rdpars.meandegree))],'interpreter','latex', 'FontSize', 15)
-print(f_random, '../Figures/A_random1.png', '-dpng', '-r300')
+title(hAxes, ['Random $$A_{ij}$$: $$N$$ = ', num2str(pars.N), ', $$\langle k \rangle$$ = ', num2str(round(rdpars.meandegree))],'interpreter','latex', 'FontSize', 10)
+exportpdf(f_random, '../Figures/A_random1.pdf', true);
+
 close(f_random)
 
 netp = netdegree/(pars.N-1);
@@ -172,8 +175,8 @@ A_random = adjacencymatrix(rdpars.degrees_in, rdpars.degrees_out);
 f_random = figure('Renderer', 'painters', 'Position', [50 800 400 400]);
 hAxes = axes(f_random); 
 imshow(full(A_random), 'Parent', hAxes);
-title(hAxes, ['Random $$A_{ij}$$: $$N$$ = ', num2str(pars.N), ', $$\langle k \rangle$$ = ', num2str(round(rdpars.meandegree))],'interpreter','latex', 'FontSize', 15)
-print(f_random, '../Figures/A_random2.png', '-dpng', '-r300')
+title(hAxes, ['Random $$A_{ij}$$: $$N$$ = ', num2str(pars.N), ', $$\langle k \rangle$$ = ', num2str(round(rdpars.meandegree))],'interpreter','latex', 'FontSize', 10)
+exportpdf(f_random, '../Figures/A_random2.pdf', true);
 close(f_random)
 
 %% Now using scale free networks:
@@ -184,8 +187,9 @@ A_scalefree = adjacencymatrix(sfpars.degrees_in, sfpars.degrees_out);
 f_scalefree = figure('Renderer', 'painters', 'Position', [50 800 400 400]);
 hAxes = axes(f_scalefree); 
 imshow(full(A_scalefree), 'Parent', hAxes);
-title(hAxes, ['Scale free $$A_{ij}$$: $$N$$ = ', num2str(pars.N), ', $$ k \in $$ [', num2str(sfpars.kmin), ',', num2str(sfpars.kmax), '], $$\gamma$$ = ', num2str(degree)],'interpreter','latex', 'FontSize', 15)
-print(f_scalefree, '../Figures/A_scalefree1.png', '-dpng', '-r300')
+title(hAxes, ['Scale free $$A_{ij}$$: $$N$$ = ', num2str(pars.N), ', $$ k \in $$ [', num2str(sfpars.kmin), ',', num2str(sfpars.kmax), '], $$\gamma$$ = ', num2str(degree)],'interpreter','latex', 'FontSize', 10)
+exportpdf(f_scalefree, '../Figures/A_scalefree1.pdf', true);
+
 close(f_scalefree)
 
 degree = 10;
@@ -195,6 +199,6 @@ A_scalefree = adjacencymatrix(sfpars.degrees_in, sfpars.degrees_out);
 f_scalefree = figure('Renderer', 'painters', 'Position', [50 800 400 400]);
 hAxes = axes(f_scalefree); 
 imshow(full(A_scalefree), 'Parent', hAxes);
-title(hAxes, ['Scale free $$A_{ij}$$: $$N$$ = ', num2str(pars.N), ', $$ k \in $$ [', num2str(sfpars.kmin), ',', num2str(sfpars.kmax), '], $$\gamma$$ = ', num2str(degree)],'interpreter','latex', 'FontSize', 15)
-print(f_scalefree, '../Figures/A_scalefree2.png', '-dpng', '-r300')
+title(hAxes, ['Scale free $$A_{ij}$$: $$N$$ = ', num2str(pars.N), ', $$ k \in $$ [', num2str(sfpars.kmin), ',', num2str(sfpars.kmax), '], $$\gamma$$ = ', num2str(degree)],'interpreter','latex', 'FontSize', 10)
+exportpdf(f_scalefree, '../Figures/A_scalefree2.pdf', true);
 close(f_scalefree)

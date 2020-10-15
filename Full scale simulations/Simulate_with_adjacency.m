@@ -72,14 +72,14 @@ f_fullyconnected = figure('Renderer', 'painters', 'Position', [50 800 800 400]);
 xlim([tnow, tend]); ylim([0, 1])
 plot(t, abs(z), '-', 'LineWidth', 5, 'Color', '#EDB120');
 plot(t_full, abs(z_full), '-', 'LineWidth', 4, 'Color', '#0072BD');
-plot(T, abs(Z), '-', 'LineWidth', 3, 'Color', '#0072BD');
+plot(T, abs(Z), '-', 'LineWidth', 3, 'Color', '#D95319');
 plot(Toa, abs(Zoa), '-', 'LineWidth', 2, 'Color', '#000000');
 xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
 ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
 
 title(sprintf('\\bf Fully connected network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f', pars.N, fdpars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex')
 legend('$$Z(t)_{simple}$$', '$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southwest', 'Orientation','horizontal')
-exportpdf(f_fullyconnected, '../Figures/InspectMeanFieldFullyConnected.pdf', export)
+exportpdf(f_fullyconnected, '../Figures/InspectMeanFieldFullyConnected.pdf', export);
 close(f_fullyconnected)
 
 disp('Made fully connected network figure')
@@ -113,7 +113,7 @@ f_fixeddegree = figure('Renderer', 'painters', 'Position', [50 800 800 400]); bo
 
 xlim([tnow, tend]); ylim([0, 1])
 plot(t_full, abs(z_full), '-', 'LineWidth', 4, 'Color', '#0072BD');
-plot(T, abs(Z), '-', 'LineWidth', 3, 'Color', '#0072BD');
+plot(T, abs(Z), '-', 'LineWidth', 3, 'Color', '#D95319');
 plot(Toa, abs(Zoa), '-', 'LineWidth', 2, 'Color', '#000000');
 xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
 ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
@@ -121,7 +121,7 @@ ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
 title(sprintf('\\bf Fixed degree network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f', pars.N, fdpars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex')
 
 legend('$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southwest', 'Orientation','horizontal')
-exportpdf(f_fixeddegree, '../Figures/InspectMeanFieldFixedDegree.pdf', export)
+exportpdf(f_fixeddegree, '../Figures/InspectMeanFieldFixedDegree.pdf', export);
 close(f_fixeddegree)
 
 disp('Made fixed degree network figure')
@@ -156,7 +156,7 @@ ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
 
 title(sprintf('\\bf Random network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f, $$p$$ = %0.1f', pars.N, rdpars.meandegree, rdpars.netp), 'FontSize', titlefont, 'Interpreter', 'latex')
 legend('$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southwest', 'Orientation','horizontal')
-exportpdf(f_random, '../Figures/InspectMeanFieldRandom.pdf', export)
+exportpdf(f_random, '../Figures/InspectMeanFieldRandom.pdf', export);
 close(f_random)
 
 disp('Made random network figure')
@@ -192,7 +192,7 @@ ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
 
 title(sprintf('\\bf Scale-free network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f, $$\\gamma$$ = %0.1f', pars.N, sfpars.meandegree, sfpars.degree), 'FontSize', titlefont, 'Interpreter', 'latex')
 legend('$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southwest', 'Orientation','horizontal')
-exportpdf(f_scalefree, '../Figures/InspectMeanFieldScaleFree.pdf', export)
+exportpdf(f_scalefree, '../Figures/InspectMeanFieldScaleFree.pdf', export);
 close(f_scalefree)
 
 disp('Made scale-free network figure')
