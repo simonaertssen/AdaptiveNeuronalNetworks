@@ -70,10 +70,10 @@ disp('OA mean field test done')
 f_fullyconnected = figure('Renderer', 'painters', 'Position', [50 800 800 400]); box on; hold on;
 
 xlim([tnow, tend]); ylim([0, 1])
-plot(t, abs(z), '-', 'LineWidth', 2);
-plot(t_full, abs(z_full), '-', 'LineWidth', 2);
-plot(T, abs(Z), '-', 'LineWidth', 2);
-plot(Toa, abs(Zoa), '-', 'LineWidth', 2);
+plot(t, abs(z), '-', 'LineWidth', 5);
+plot(t_full, abs(z_full), '-', 'LineWidth', 4);
+plot(T, abs(Z), '-', 'LineWidth', 3);
+plot(Toa, abs(Zoa), '-k', 'LineWidth', 2);
 xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
 ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
 
@@ -112,9 +112,9 @@ disp('OA mean field test done')
 f_fixeddegree = figure('Renderer', 'painters', 'Position', [50 800 800 400]); box on; hold on;
 
 xlim([tnow, tend]); ylim([0, 1])
-plot(t_full, abs(z_full), '-', 'LineWidth', 2);
-plot(T, abs(Z), '-', 'LineWidth', 2);
-plot(Toa, abs(Zoa), '-', 'LineWidth', 2);
+plot(t_full, abs(z_full), '-', 'LineWidth', 4);
+plot(T, abs(Z), '-', 'LineWidth', 3);
+plot(Toa, abs(Zoa), '-k', 'LineWidth', 2);
 xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
 ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
 
@@ -154,9 +154,9 @@ disp('OA mean field test done')
 f_random = figure('Renderer', 'painters', 'Position', [50 800 800 400]); box on; hold on;
 
 xlim([tnow, tend]); ylim([0, 1])
-plot(t_full, abs(z_full), '-', 'LineWidth', 2);
-plot(T, abs(Z), '-', 'LineWidth', 2);
-plot(Toa, abs(Zoa), '-', 'LineWidth', 2);
+plot(t_full, abs(z_full), '-', 'LineWidth', 4);
+plot(T, abs(Z), '-', 'LineWidth', 3);
+plot(Toa, abs(Zoa), '-k', 'LineWidth', 2);
 xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
 ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
 
@@ -195,9 +195,9 @@ disp('OA mean field test done')
 f_scalefree = figure('Renderer', 'painters', 'Position', [50 800 800 400]); box on; hold on;
 
 xlim([tnow, tend]); ylim([0, 1])
-plot(t_full, abs(z_full), '-', 'LineWidth', 2);
-plot(T, abs(Z), '-', 'LineWidth', 2);
-plot(Toa, abs(Zoa), '-', 'LineWidth', 2);
+plot(t_full, abs(z_full), '-', 'LineWidth', 4);
+plot(T, abs(Z), '-', 'LineWidth', 3);
+plot(Toa, abs(Zoa), '-k', 'LineWidth', 2);
 xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
 ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
 
