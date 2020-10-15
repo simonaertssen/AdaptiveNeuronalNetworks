@@ -11,6 +11,7 @@ set(groot,'DefaultAxesYGrid','on')
 
 titlefont = 15;
 labelfont = 15;
+export = true;
 
 %% Make a GPU init handle:
 if gpuDeviceCount > 0
@@ -23,33 +24,33 @@ initarray = make_GPUhandle();
 tnow = 0; tend = 5;
 h = 0.001;
 
-pars.N = 5000;
+pars.N = 10000;
 pars.a_n = 0.666667;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 
 seed = 1; rng(seed);
-IC = wrapToPi(randn(pars.N, 1)*0.8);
+IC = wrapToPi(randn(pars.N, 1)*1.3);
 pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
 odeoptions = odeset('RelTol', 1.0e-6,'AbsTol', 1.0e-6, 'NormControl','on');
 
 %% 0. Perform a full scale simulation of a FULLY CONNECTED network:
 % The simple DOPRI integration:
-% [~, thetas] = DOPRI_threshold(@thetaneurons, tnow, tend, IC, h, pars);
-% z = orderparameter(thetas);
-[t, thetas] = ode113(@(t,x) thetaneurons(t,x,pars.e,pars.K/pars.N,pars.a_n), [tnow, tend], IC, odeoptions);
-thetas = wrapToPi(thetas)';
+[t, thetas] = DOPRI_threshold(@thetaneurons, tnow, tend, IC, h, pars);
 z = orderparameter(thetas);
+% [t, thetas] = ode113(@(t,x) thetaneurons(t,x,pars.e,pars.K/pars.N,pars.a_n), [tnow, tend], IC, odeoptions);
+% thetas = wrapToPi(thetas)';
+% z = orderparameter(thetas);
 disp('Small scale test done')
 
 % The full scale simulation using the adjacency matrix:
-% fixeddegreepars = make_fixeddegreeparameters(pars, pars.N - 1);
-% [t, thetas_full] = DOPRI_simulatenetwork(tnow,tend,IC,h,fixeddegreepars);
-% z_full = orderparameter(thetas_full);
 fdpars = make_fixeddegreeparameters(pars, pars.N - 1);
-A = initarray(adjacencymatrix(fdpars.degrees_in, fdpars.degrees_out));
-[t_full, thetas_full] = ode113(@(t,x,K) thetaneurons_full(t,x,fdpars.K,A,fdpars.e,1/fdpars.meandegree,fdpars.a_n), [tnow, tend], IC, odeoptions);
-thetas_full = wrapToPi(thetas_full)';
-z_full = orderparameter(thetas_full)';
+[t_full, thetas_full] = DOPRI_simulatenetwork(tnow,tend,IC,h,fdpars);
+z_full = orderparameter(thetas_full);
+% fdpars = make_fixeddegreeparameters(pars, pars.N - 1);
+% A = initarray(adjacencymatrix(fdpars.degrees_in, fdpars.degrees_out));
+% [t_full, thetas_full] = ode113(@(t,x,K) thetaneurons_full(t,x,fdpars.K,A,fdpars.e,1/fdpars.meandegree,fdpars.a_n), [tnow, tend], IC, odeoptions);
+% thetas_full = wrapToPi(thetas_full)';
+% z_full = orderparameter(thetas_full)';
 disp('Full scale test done')
 
 % The mean field theory for fixed degree networks:
@@ -77,23 +78,22 @@ xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
 ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
 
 title(sprintf('\\bf Fully connected network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f', pars.N, fdpars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex')
-legend('$$Z(t)_{simple}$$', '$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF}$$', '$$\overline{Z(t)}_{OA}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southwest')
-removewhitspace();
+legend('$$Z(t)_{simple}$$', '$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'south', 'Orientation','horizontal')
+exportpdf(export, f_fullyconnected, 'InspectMeanFieldFullyConnected');
+close(f_fullyconnected)
 
-print(f_fullyconnected, '../Figures/InspectMeanFieldFullyConnected.png', '-dpng', '-r300')
-% close(f_fullyconnected)
 disp('Made fully connected network figure')
 
 %% 1. Perform a full scale simulation of a fixed degree network:
 % The full scale simulation using the adjacency matrix:
 netdegree = round(pars.N*0.3);
 fdpars = make_fixeddegreeparameters(pars, netdegree);
-% [t, thetas_full] = DOPRI_simulatenetwork(tnow,tend,IC,h,fdpars);
-% z_full = orderparameter(thetas_full);
-A = initarray(adjacencymatrix(fdpars.degrees_in, fdpars.degrees_out));
-[t_full, thetas_full] = ode113(@(t,x,K) thetaneurons_full(t,x,fdpars.K,A,fdpars.e,1/fdpars.meandegree,fdpars.a_n), [tnow, tend], IC, odeoptions);
-thetas_full = wrapToPi(thetas_full)';
-z_full = orderparameter(thetas_full)';
+[t_full, thetas_full] = DOPRI_simulatenetwork(tnow,tend,IC,h,fdpars);
+z_full = orderparameter(thetas_full);
+% A = initarray(adjacencymatrix(fdpars.degrees_in, fdpars.degrees_out));
+% [t_full, thetas_full] = ode113(@(t,x,K) thetaneurons_full(t,x,fdpars.K,A,fdpars.e,1/fdpars.meandegree,fdpars.a_n), [tnow, tend], IC, odeoptions);
+% thetas_full = wrapToPi(thetas_full)';
+% z_full = orderparameter(thetas_full)';
 disp('Full scale test done')
 
 % The mean field theory for fixed degree networks:
@@ -120,23 +120,22 @@ ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
 
 title(sprintf('\\bf Fixed degree network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f', pars.N, fdpars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex')
 
-legend('$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF}$$', '$$\overline{Z(t)}_{OA}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southwest')
-removewhitspace();
-
-print(f_fixeddegree, '../Figures/InspectMeanFieldFixedDegree.png', '-dpng', '-r300')
+legend('$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'south', 'Orientation','horizontal')
+exportpdf(export, f_fixeddegree, 'InspectMeanFieldFixedDegree');
 close(f_fixeddegree)
+
 disp('Made fixed degree network figure')
 
 %% 2. Perform a full scale simulation of a random network:
 % The full scale simulation using the adjacency matrix:
 netp = 0.3;
 rdpars = make_randomparameters(pars, netp);
-% [t, thetas_full] = DOPRI_simulatenetwork(tnow,tend,IC,h,randompars);
-% z_full = orderparameter(thetas_full);
-A = initarray(adjacencymatrix(rdpars.degrees_in, rdpars.degrees_out));
-[t_full, thetas_full] = ode113(@(t,x,K) thetaneurons_full(t,x,rdpars.K,A,rdpars.e,1/rdpars.meandegree,rdpars.a_n), [tnow, tend], IC, odeoptions);
-thetas_full = wrapToPi(thetas_full)';
-z_full = orderparameter(thetas_full)';
+[t_full, thetas_full] = DOPRI_simulatenetwork(tnow,tend,IC,h,rdpars);
+z_full = orderparameter(thetas_full);
+% A = initarray(adjacencymatrix(rdpars.degrees_in, rdpars.degrees_out));
+% [t_full, thetas_full] = ode113(@(t,x,K) thetaneurons_full(t,x,rdpars.K,A,rdpars.e,1/rdpars.meandegree,rdpars.a_n), [tnow, tend], IC, odeoptions);
+% thetas_full = wrapToPi(thetas_full)';
+% z_full = orderparameter(thetas_full)';
 disp('Full scale test done')
 
 % The mean field theory for fixed degree networks:
@@ -162,23 +161,22 @@ xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
 ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
 
 title(sprintf('\\bf Random network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f, $$p$$ = %0.1f', pars.N, rdpars.meandegree, rdpars.netp), 'FontSize', titlefont, 'Interpreter', 'latex')
-legend('$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF}$$', '$$\overline{Z(t)}_{OA}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southwest')
-removewhitspace();
-
-print(f_random, '../Figures/InspectMeanFieldRandom.png', '-dpng', '-r300')
+legend('$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'south', 'Orientation','horizontal')
+exportpdf(export, f_random, 'InspectMeanFieldRandom');
 close(f_random)
+
 disp('Made random network figure')
 
 %% 3. Perform a full scale simulation of a scale-free network:
 % The full scale simulation using the adjacency matrix:
 degree = 3;
 sfpars = make_scalefreeparameters(pars, degree);
-% [t, thetas_full] = DOPRI_simulatenetwork(tnow,tend,IC,h,scalefreepars);
-% z_full = orderparameter(thetas_full);
-A = initarray(adjacencymatrix(sfpars.degrees_in, sfpars.degrees_out));
-[t_full, thetas_full] = ode113(@(t,x,K) thetaneurons_full(t,x,sfpars.K,A,sfpars.e,1/sfpars.meandegree,sfpars.a_n), [tnow, tend], IC, odeoptions);
-thetas_full = wrapToPi(thetas_full)';
-z_full = orderparameter(thetas_full)';
+[t_full, thetas_full] = DOPRI_simulatenetwork(tnow,tend,IC,h,sfpars);
+z_full = orderparameter(thetas_full);
+% A = initarray(adjacencymatrix(sfpars.degrees_in, sfpars.degrees_out));
+% [t_full, thetas_full] = ode113(@(t,x,K) thetaneurons_full(t,x,sfpars.K,A,sfpars.e,1/sfpars.meandegree,sfpars.a_n), [tnow, tend], IC, odeoptions);
+% thetas_full = wrapToPi(thetas_full)';
+% z_full = orderparameter(thetas_full)';
 disp('Full scale test done')
 
 % The mean field theory for fixed degree networks:
@@ -204,9 +202,8 @@ xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
 ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
 
 title(sprintf('\\bf Scale-free network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f, $$\\gamma$$ = %0.1f', pars.N, sfpars.meandegree, sfpars.degree), 'FontSize', titlefont, 'Interpreter', 'latex')
-legend('$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF}$$', '$$\overline{Z(t)}_{OA}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southwest')
-removewhitspace();
-
-print(f_scalefree, '../Figures/InspectMeanFieldScaleFree.png', '-dpng', '-r300')
+legend('$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southwest', 'Orientation','horizontal')
+exportpdf(export, f_scalefree, 'InspectMeanFieldScaleFree');
 close(f_scalefree)
+
 disp('Made scale-free network figure')
