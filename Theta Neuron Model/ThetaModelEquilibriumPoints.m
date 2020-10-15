@@ -64,7 +64,8 @@ for i = 1:3
 end
 
 %% Save:
-print(feqpts, '../Figures/ThetaModelEquilibriumPoints.png', '-dpng', '-r300')
+% print(feqpts, '../Figures/ThetaModelEquilibriumPoints.png', '-dpng', '-r300')
+exportgraphics(feqpts,'../Figures/ThetaModelEquilibriumPoints.pdf')
 
 
 %% Functions:
