@@ -52,12 +52,12 @@ for i = 1:3
     end
     
     % The full scale simulation using the adjacency matrix:
-%     [t, thetas, A] = DOPRI_simulatenetwork(tnow,tend,IC,h,params);
-%     z = orderparameter(thetas);
-    A = initarray(adjacencymatrix(params.degrees_in, params.degrees_out));
-    [t, thetas] = ode113(@(t,x,K) thetaneurons_full(t,x,params.K,A,params.e,1/params.meandegree,params.a_n), [tnow, tend], IC, options);
-    thetas = wrapToPi(thetas)';
+    [t, thetas, A] = DOPRI_simulatenetwork(tnow,tend,IC,h,params);
     z = orderparameter(thetas);
+%     A = initarray(adjacencymatrix(params.degrees_in, params.degrees_out));
+%     [t, thetas] = ode113(@(t,x,K) thetaneurons_full(t,x,params.K,A,params.e,1/params.meandegree,params.a_n), [tnow, tend], IC, options);
+%     thetas = wrapToPi(thetas)';
+%     z = orderparameter(thetas);
  
     % The OA mean field theory:
     oa_params = prepareOAparameters(params);
@@ -92,9 +92,9 @@ set(imrow(3).Title,'String', sprintf('\\bf Scale-free network:  $$N$$ = %d, $$\\
 legend('Kuramoto order parameter', 'OA order parameter', 'Network order parameter', 'Mean field order parameter', 'Link field order parameter', 'FontSize', labelfont-5, 'Location', 'southoutside', 'Orientation', 'horizontal')
 xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
 suptitle(sprintf('PSR state:  \\eta_0 = %0.1f, \\delta = %0.1f, K = %0.1f', pars.eta0, pars.delta, pars.K))
-
-print(f_PRS, '../Figures/InvestigateOrderParametersPRS.png', '-dpng', '-r300')
+exportpdf(f_PRS, '../Figures/InvestigateOrderParametersPRS.pdf', export);
 close(f_PRS)
+
 disp('Made PRS state')
 
 %% PSS state: one single stable focus
@@ -160,8 +160,9 @@ legend('Kuramoto order parameter', 'OA order parameter', 'Network order paramete
 xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
 
 suptitle(sprintf('PSS state:  \\eta_0 = %0.1f, \\delta = %0.1f, K = %0.1f', pars.eta0, pars.delta, pars.K))
-print(f_PSS, '../Figures/InvestigateOrderParametersPSS.png', '-dpng', '-r300')
+exportpdf(f_PSS, '../Figures/InvestigateOrderParametersPSS.pdf', export);
 close(f_PSS)
+
 disp('Made PSS state')
 
 %% CPW state: the infamous limit cycle
@@ -227,6 +228,7 @@ legend('Kuramoto order parameter', 'OA order parameter', 'Network order paramete
 xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
 
 suptitle(sprintf('PSS state:  \\eta_0 = %0.1f, \\delta = %0.1f, K = %0.1f', pars.eta0, pars.delta, pars.K))
-print(f_CPW, '../Figures/InvestigateOrderParametersCPW.png', '-dpng', '-r300')
+exportpdf(f_CPW, '../Figures/InvestigateOrderParametersCPW.pdf', export);
+
 close(f_CPW)
 disp('Made PSS state')
