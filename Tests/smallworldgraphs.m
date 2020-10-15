@@ -136,7 +136,7 @@ histogram(degrees_in, 'Normalization', 'pdf', 'NumBins', round(sqrt(numel(degree
 % Do we obtain the same behaviour as in Strogatz1998? Let's see.
 pars.N = 500;
 fixeddegreepars = make_fixeddegreeparameters(pars, 100);
-A_fixeddegree = adjacencymatrix(fixeddegreepars.degrees_in);
+A_fixeddegree = adjacencymatrix(fixeddegreepars.degrees_in, fixeddegreepars.degrees_out);
 
 nsamples = 10;
 ps = logspace(-4, 0, nsamples);
@@ -171,7 +171,7 @@ end
 
 %%
 pinterp = logspace(-4, 0, nsamples^2);
-figure; grid on; hold on
+f = figure; grid on; hold on
 plot(pinterp, interp1(ps,Ls/L0,pinterp), 'LineWidth', 2)
 plot(pinterp, interp1(ps,CCs/CC0,pinterp), 'LineWidth', 2)
 %plot(pinterp, interp1(ps,COs/CO0,pinterp), 'LineWidth', 2)
@@ -179,6 +179,7 @@ set(gca, 'XScale', 'log')
 xlabel('$$p$$', 'Interpreter', 'latex')
 legend('$$L(p)/L_0$$', '$$C(p)/C_0$$', 'Location' ,'southwest', 'Interpreter', 'latex', 'FontSize', 20)
 % Saved as 'nosmallworldfromdirac.png'
+exportpdf(export, f, 'nosmallworldfromdirac');
 
 %% Realisation:
 % We don't need to change elements in the adjacency matrix to model the

@@ -169,6 +169,7 @@ disp('Made random network figure')
 
 %% 3. Perform a full scale simulation of a scale-free network:
 % The full scale simulation using the adjacency matrix:
+IC = wrapToPi(randn(pars.N, 1)*1.5);
 degree = 3;
 sfpars = make_scalefreeparameters(pars, degree);
 [t_full, thetas_full] = DOPRI_simulatenetwork(tnow,tend,IC,h,sfpars);
