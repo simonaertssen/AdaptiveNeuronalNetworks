@@ -4,7 +4,7 @@ function [TOA, ZOA] = OA_simulatenetwork(tnow, tend, IC, parameters, odeoptions)
     end
     opts = optimoptions('fsolve', 'Display','off', 'Algorithm', 'Levenberg-Marquardt');
     normP = parameters.P(parameters.k)/parameters.N;
-    OAIC = fsolve(@(b) b*normP - IC, ones(1,parameters.l)*IC, opts);
+    OAIC = fsolve(@(b) b*normP - IC, randn(1, parameters.l), opts);
     [TOA, b_i] = ode45(@(t,x) MFROA(t,x,parameters), [tnow, tend], OAIC, odeoptions);
     ZOA = b_i*normP;
 end
