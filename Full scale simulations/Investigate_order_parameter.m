@@ -16,10 +16,10 @@ labelfont = 15;
 export = true;
 
 %% Theta model parameters:
-tnow = 0; tend = 0.01;
+tnow = 0; tend = 10;
 h = 0.005;
 
-pars.N = 5;
+pars.N = 10000;
 pars.a_n = 0.666666666666666666667;
 seed = 1; rng(seed);
 IC = wrapToPi(randn(pars.N, 1)*1.3);
