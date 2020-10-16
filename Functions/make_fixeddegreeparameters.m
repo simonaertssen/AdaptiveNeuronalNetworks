@@ -8,7 +8,7 @@ function fixeddegreepars = make_fixeddegreeparameters(pars, netdegree)
         fixeddegreepars.netdegree = netdegree;
     end
     fixeddegreepars.degrees_in = zeros(pars.N,1);
-    fixeddegreepars.degrees_in(randperm(pars.N)) = fixeddegreepars.netdegree;
+    fixeddegreepars.degrees_in(randperm(pars.N-1)) = fixeddegreepars.netdegree;
     fixeddegreepars.degrees_out = fixeddegreepars.degrees_in(randperm(pars.N));
     
     fixeddegreepars.meandegree = fixeddegreepars.netdegree;
