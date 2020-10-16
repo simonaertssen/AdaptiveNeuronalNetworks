@@ -10,7 +10,7 @@ set(groot,'DefaultAxesXGrid','on')
 set(groot,'DefaultAxesYGrid','on')
 
 titlefont = 15;
-labelfont = 15;
+labelfont = 13;
 export = true;
 
 %% Make a GPU init handle:
