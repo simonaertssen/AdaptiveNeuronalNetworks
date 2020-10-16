@@ -74,7 +74,7 @@ for i = 1:3
     imrow(i) = subplot(3,1,i); hold on; box on;
     
     plot(t, abs(z), 'LineWidth', 2);
-    plot(Toa, abs(Z_oa), 'LineWidth', 2);
+    plot(TOA, abs(ZOA), 'LineWidth', 2);
     plot(t, abs(z_net), 'LineWidth', 2);
     plot(t, abs(z_mf), 'LineWidth', 2);
     plot(t, abs(z_link), 'LineWidth', 2);
@@ -130,9 +130,7 @@ for i = 1:3
  
     % The OA mean field theory:
     oa_params = prepareOAparameters(params);
-    OAIC = ones(oa_params.l,1)*gather(z(1));
-    [Toa, b_i] = ode45(@(t,x) MFROA(t,x,oa_params), [tnow, tend], OAIC, options);
-    Z_oa = orderparameter_oa(b_i, oa_params.P, oa_params.k, oa_params.N);
+    [TOA, ZOA] = OA_simulatenetwork(tnow, tend, gather(z(1)), oa_params, options);
     
     % Other order parameters:
     degrees = sum(A,2);
@@ -144,7 +142,7 @@ for i = 1:3
     imrow(i) = subplot(3,1,i); hold on; box on;
     
     plot(t, abs(z), 'LineWidth', 2);
-    plot(Toa, abs(Z_oa), 'LineWidth', 2);
+    plot(TOA, abs(ZOA), 'LineWidth', 2);
     plot(t, abs(z_net), 'LineWidth', 2);
     plot(t, abs(z_mf), 'LineWidth', 2);
     plot(t, abs(z_link), 'LineWidth', 2);
@@ -201,10 +199,8 @@ for i = 1:3
  
     % The OA mean field theory:
     oa_params = prepareOAparameters(params);
-    OAIC = ones(oa_params.l,1)*gather(z(1));
-    [Toa, b_i] = ode45(@(t,x) MFROA(t,x,oa_params), [tnow, tend], OAIC, options);
-    Z_oa = orderparameter_oa(b_i, oa_params.P, oa_params.k, oa_params.N);
-    
+    [TOA, ZOA] = OA_simulatenetwork(tnow, tend, gather(z(1)), oa_params, options);
+
     % Other order parameters:
     degrees = sum(A,2);
     z_net = orderparameter_net(thetas, degrees, A);
@@ -215,7 +211,7 @@ for i = 1:3
     imrow(i) = subplot(3,1,i); hold on; box on;
     
     plot(t, abs(z), 'LineWidth', 2);
-    plot(Toa, abs(Z_oa), 'LineWidth', 2);
+    plot(TOA, abs(ZOA), 'LineWidth', 2);
     plot(t, abs(z_net), 'LineWidth', 2);
     plot(t, abs(z_mf), 'LineWidth', 2);
     plot(t, abs(z_link), 'LineWidth', 2);
