@@ -1,4 +1,7 @@
 function fighandle = exportpdf(fighandle, figname, export)
+    if nargin < 2
+        export = true;
+    end
     if export == true
         removewhitspace();
         set(fighandle,'PaperPositionMode','auto', 'PaperOrientation', 'landscape');
