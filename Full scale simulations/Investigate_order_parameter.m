@@ -13,12 +13,13 @@ set(groot,'DefaultAxesYGrid','on')
 
 titlefont = 15;
 labelfont = 15;
+export = true;
 
 %% Theta model parameters:
-tnow = 0; tend = 0.01;
+tnow = 0; tend = 10;
 h = 0.005;
 
-pars.N = 5;
+pars.N = 10000;
 pars.a_n = 0.666666666666666666667;
 seed = 1; rng(seed);
 IC = wrapToPi(randn(pars.N, 1)*1.3);
@@ -61,7 +62,7 @@ for i = 1:3
  
     % The OA mean field theory:
     oa_params = prepareOAparameters(params);
-    [TOA, ZOA] = OA_simulatenetwork(tnow, tend, gather(z(1)), params, options);
+    [TOA, ZOA] = OA_simulatenetwork(tnow, tend, gather(z(1)), oa_params, options);
     
     % Other order parameters:
     degrees = sum(A,2);
@@ -93,8 +94,7 @@ set(imrow(3).Title,'String', sprintf('\\bf Scale-free network:  $$N$$ = %d, $$\\
 legend('Kuramoto o. p.', 'OA o. p.', 'Network o. p.', 'Mean field o. p.', 'Link field o. p.', 'FontSize', labelfont-5, 'Location', 'southoutside', 'Orientation', 'horizontal')
 xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
 suptitle(sprintf('PSR state:  \\eta_0 = %0.1f, \\delta = %0.1f, K = %0.1f', pars.eta0, pars.delta, pars.K))
-% exportpdf(f_PRS, '../Figures/InvestigateOrderParametersPRS.pdf', export);
-print(f_PRS, '../Figures/InvestigateOrderParametersPRS.pdf', '-dpdf', '-bestfit');
+exportpdf(f_PRS, '../Figures/InvestigateOrderParametersPRS.pdf', export);
 close(f_PRS)
 
 disp('Made PRS state')
@@ -165,8 +165,7 @@ legend('Kuramoto o. p.', 'OA o. p.', 'Network o. p.', 'Mean field o. p.', 'Link 
 xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
 
 suptitle(sprintf('PSS state:  \\eta_0 = %0.1f, \\delta = %0.1f, K = %0.1f', pars.eta0, pars.delta, pars.K))
-% exportpdf(f_PSS, '../Figures/InvestigateOrderParametersPSS.pdf', export);
-print(f_PSS, '../Figures/InvestigateOrderParametersPSS.pdf', '-dpdf', '-bestfit');
+exportpdf(f_PSS, '../Figures/InvestigateOrderParametersPSS.pdf', export);
 close(f_PSS)
 
 disp('Made PSS state')
@@ -237,9 +236,7 @@ legend('Kuramoto o. p.', 'OA o. p.', 'Network o. p.', 'Mean field o. p.', 'Link 
 xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
 
 suptitle(sprintf('PSS state:  \\eta_0 = %0.1f, \\delta = %0.1f, K = %0.1f', pars.eta0, pars.delta, pars.K))
-% exportpdf(f_CPW, '../Figures/InvestigateOrderParametersCPW.pdf', export);
-print(f_CPW, '../Figures/InvestigateOrderParametersCPW.pdf', '-dpdf', '-bestfit');
-
+exportpdf(f_CPW, '../Figures/InvestigateOrderParametersCPW.pdf', export);
 close(f_CPW)
 
 disp('Made PSS state')

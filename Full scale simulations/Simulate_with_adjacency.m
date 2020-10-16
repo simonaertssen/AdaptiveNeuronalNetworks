@@ -11,7 +11,7 @@ set(groot,'DefaultAxesYGrid','on')
 
 titlefont = 15;
 labelfont = 15;
-export = false;
+export = true;
 
 %% Make a GPU init handle:
 if gpuDeviceCount > 0
@@ -155,7 +155,7 @@ disp('Made random network figure')
 
 %% 3. Perform a full scale simulation of a scale-free network:
 % The full scale simulation using the adjacency matrix:
-IC = wrapToPi(randn(pars.N, 1)*0.2);
+% IC = wrapToPi(randn(pars.N, 1)*0.2);
 degree = 4;
 
 sfpars = make_scalefreeparameters(pars, degree);
