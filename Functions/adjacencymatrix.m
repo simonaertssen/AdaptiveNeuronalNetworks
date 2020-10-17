@@ -7,6 +7,7 @@ function A = adjacencymatrix(degrees_in, degrees_out)
     end
     if all(degrees_in == N - 1) && all(degrees_in == N - 1)
         A = ones(N) - eye(N);
+        disp('Found exact A after 1 try');
         return
     end
     numnonzeros = sum(degrees_in);

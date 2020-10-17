@@ -21,10 +21,10 @@ end
 initarray = make_GPUhandle();
 
 %% Theta model parameters:
-tnow = 0; tend = 5;
+tnow = 0; tend = 0.1;
 h = 0.005;
 
-pars.N = 10000;
+pars.N = 100;
 pars.a_n = 0.666666666666666666667;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 
@@ -112,7 +112,7 @@ disp('Made fixed degree network figure')
 
 %% 2. Perform a full scale simulation of a random network:
 % The full scale simulation using the adjacency matrix:
-netp = 0.3;
+netp = 0.2;
 rdpars = make_randomparameters(pars, netp);
 [tfull, thetasfull] = DOPRI_simulatenetwork(tnow,tend,IC,h,rdpars);
 zfull = orderparameter(thetasfull);
@@ -153,7 +153,6 @@ sfpars = prepareOAparameters(sfpars);
 [TOA, ZOA] = OA_simulatenetwork(tnow, tend, IC, sfpars, odeoptions);
 disp('OA mean field test done')
 
-
 %% Plotting the results:
 f_scalefree = figure('Renderer', 'painters', 'Position', [50 800 800 400]); box on; hold on;
 
@@ -169,3 +168,44 @@ exportpdf(f_scalefree, '../Figures/InspectMeanFieldScaleFree.pdf', export);
 close(f_scalefree)
 
 disp('Made scale-free network figure')
+
+%% Testing the OAIC 
+% %% From z to ZOA
+% clc
+% IC = 0.2*randn(pars.N, 1);
+% 
+% z = orderparameter(IC)
+% 
+% sfpars = make_scalefreeparameters(pars, 4);
+% sfpars = prepareOAparameters(sfpars);
+% 
+% OAIC = rand(1,sfpars.l);
+% for i = 1:sfpars.l
+%     meanthetaperdegree = IC(sfpars.degrees_in == sfpars.k(i));
+% %     OAIC(i) = orderparameter(meanthetaperdegree) / sfpars.P(sfpars.k(i)) * numel(meanthetaperdegree);
+%     OAIC(i) = sum(exp(1i*meanthetaperdegree)) / sfpars.P(sfpars.k(i));
+% %     OAIC(i) = mean(meanthetaperdegree);
+% end
+% Z = OAIC*sfpars.P(sfpars.k)/sfpars.N
+% % Z = orderparameter(OAIC)
+% % Z = ones(1,sfpars.N)*exp(1i*IC)/sfpars.N
+% 
+% %% From ZOA to z
+% clc
+% sfpars = make_scalefreeparameters(pars, 2.1);
+% sfpars = prepareOAparameters(sfpars);
+% 
+% OAIC = rand(1, sfpars.l);
+% testOAIC = orderparameter(OAIC)
+% 
+% Z = exp(1i*OAIC)*sfpars.P(sfpars.k)/sfpars.N
+% 
+% IC = zeros(pars.N, 1);
+% for j = 1:sfpars.l
+%     idx = sfpars.degrees_in == sfpars.k(j);
+%     IC(idx) = OAIC(j)*sfpars.P(sfpars.k(j));
+% end
+% OAIC(1)
+% IC(1)
+% testIC = orderparameter(IC)
+
