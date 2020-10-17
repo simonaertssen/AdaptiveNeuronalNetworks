@@ -41,7 +41,7 @@ fdpars = make_fixeddegreeparameters(pars, pars.N - 1);
 [t, thetas] = DOPRI_threshold(@thetaneurons, tnow, tend, IC, h, pars);
 z = orderparameter(thetas);
 
-[t, thetas] = ode45(@(t,x) thetaneurons(t,x,pars.e,pars.K/pars.N,params.a_n), [tnow, tend], IC, odeoptions);
+[t, thetas] = ode45(@(t,x) thetaneurons(t,x,pars.e,pars.K/pars.N,pars.a_n), [tnow, tend], IC, odeoptions);
 z = orderparameter(thetas);
 disp('Small scale test done')
 
