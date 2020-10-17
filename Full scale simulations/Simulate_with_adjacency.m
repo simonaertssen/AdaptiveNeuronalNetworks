@@ -40,6 +40,9 @@ optimopts = optimoptions('fsolve', 'Display','off', 'Algorithm', 'Levenberg-Marq
 fdpars = make_fixeddegreeparameters(pars, pars.N - 1);
 [t, thetas] = DOPRI_threshold(@thetaneurons, tnow, tend, IC, h, pars);
 z = orderparameter(thetas);
+
+[t, thetas] = ode45(@(t,x) thetaneurons(t,x,pars.e,pars.K/pars.N,params.a_n), [tnow, tend], gather(zfull(1)), odeoptions);
+z = orderparameter(thetas);
 disp('Small scale test done')
 
 % The full scale simulation using the adjacency matrix:
