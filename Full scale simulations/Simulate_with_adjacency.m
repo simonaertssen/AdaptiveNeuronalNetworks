@@ -22,7 +22,7 @@ initarray = make_GPUhandle();
 
 %% Theta model parameters:
 tnow = 0; tend = 10;
-h = 0.0005;
+h = 0.005;
 
 pars.N = 10000;
 pars.a_n = 0.666666666666666666667;
@@ -30,6 +30,7 @@ pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 
 seed = 2; rng(seed);
 IC = wrapToPi(randn(pars.N, 1)*1.3);
+IC = -pi/2 * ones(pars.N, 1);
 
 pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
 odeoptions = odeset('RelTol', 1.0e-8,'AbsTol', 1.0e-8);
@@ -41,9 +42,9 @@ fdpars = make_fixeddegreeparameters(pars, pars.N - 1);
 [t, thetas] = DOPRI_threshold(@thetaneurons, tnow, tend, IC, h, pars);
 z = orderparameter(thetas);
 
-[t, thetas] = ode45(@(t,x) thetaneurons(t,x,pars.e,pars.K/pars.N,pars.a_n), [tnow, tend], IC, odeoptions);
-thetas = wrapToPi(thetas)';
-z = orderparameter(thetas);
+% [t, thetas] = ode45(@(t,x) thetaneurons(t,x,pars.e,pars.K/pars.N,pars.a_n), [tnow, tend], IC, odeoptions);
+% thetas = wrapToPi(thetas)';
+% z = orderparameter(thetas);
 disp('Small scale test done')
 
 % The full scale simulation using the adjacency matrix:

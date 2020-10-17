@@ -17,12 +17,13 @@ export = true;
 
 %% Theta model parameters:
 tnow = 0; tend = 10;
-h = 0.0005;
+h = 0.005;
 
 pars.N = 10000;
 pars.a_n = 0.666666666666666666667;
 seed = 1; rng(seed);
 IC = wrapToPi(randn(pars.N, 1)*1.3);
+IC = -pi/2 * ones(pars.N, 1);
 
 %% Make a GPU init handle:
 if gpuDeviceCount > 0
