@@ -30,7 +30,7 @@ pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 
 seed = 2; rng(seed);
 IC = wrapToPi(randn(pars.N, 1)*1.3);
-IC = zeros(pars.N, 1); %-pi/2 * ones(pars.N, 1);
+IC = rand(pars.N, 1) * 2*pi - pi; %- pi/2 * ones(pars.N, 1);
 
 pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
 odeoptions = odeset('RelTol', 1.0e-8,'AbsTol', 1.0e-8);
