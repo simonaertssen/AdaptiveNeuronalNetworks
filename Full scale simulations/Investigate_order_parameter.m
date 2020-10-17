@@ -22,7 +22,7 @@ h = 0.005;
 pars.N = 10000;
 pars.a_n = 0.666666666666666666667;
 seed = 1; rng(seed);
-IC = wrapToPi(randn(pars.N, 1)*1.3);
+IC = zeros(pars.N, 1); %-pi/2 * ones(pars.N, 1);
 IC = -pi/2 * ones(pars.N, 1);
 
 %% Make a GPU init handle:
