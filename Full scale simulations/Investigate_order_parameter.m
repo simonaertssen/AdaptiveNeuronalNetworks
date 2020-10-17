@@ -17,9 +17,9 @@ export = true;
 
 %% Theta model parameters:
 tnow = 0; tend = 10;
-h = 0.005;
+h = 0.001;
 
-pars.N = 10000;
+pars.N = 15000;
 pars.a_n = 0.666666666666666666667;
 seed = 1; rng(seed);
 IC = wrapToPi(randn(pars.N, 1)*1.3);
@@ -41,7 +41,7 @@ fixeddegreepars = make_fixeddegreeparameters(pars, round(pars.N*0.3));
 randompars = make_randomparameters(pars, 0.3);
 scalefreepars = make_scalefreeparameters(pars, 3);
 
-f_PRS = figure('Renderer', 'painters', 'Position', [50 800 800 600]);
+f_PRS = figure('Renderer', 'painters', 'Position', [50 800 800 1000]);
 options = odeset('RelTol', 1.0e-6,'AbsTol', 1.0e-6);
 
 for i = 1:3
@@ -73,7 +73,8 @@ for i = 1:3
 
     % Plotting
     imrow(i) = subplot(3,1,i); hold on; box on;
-    
+    ylim([0,1]);
+
     plot(t, abs(z), 'LineWidth', 2);
     plot(TOA, abs(ZOA), 'LineWidth', 2);
     plot(t, abs(z_net), 'LineWidth', 2);
@@ -142,6 +143,7 @@ for i = 1:3
 
     % Plotting
     imrow(i) = subplot(3,1,i); hold on; box on;
+    ylim([0,1]);
     
     plot(t, abs(z), 'LineWidth', 2);
     plot(TOA, abs(ZOA), 'LineWidth', 2);
@@ -180,7 +182,7 @@ fixeddegreepars = make_fixeddegreeparameters(pars, round(pars.N*0.3));
 randompars = make_randomparameters(pars, 0.3);
 scalefreepars = make_scalefreeparameters(pars, 3);
 
-f_CPW = figure('Renderer', 'painters', 'Position', [50 800 800 600]);
+f_CPW = figure('Renderer', 'painters', 'Position', [50 800 1000 600]);
 options = odeset('RelTol', 1.0e-6,'AbsTol', 1.0e-6);
 
 for i = 1:3
@@ -212,6 +214,7 @@ for i = 1:3
 
     % Plotting
     imrow(i) = subplot(3,1,i); hold on; box on;
+    ylim([0,1]);
     
     plot(t, abs(z), 'LineWidth', 2);
     plot(TOA, abs(ZOA), 'LineWidth', 2);
@@ -234,7 +237,7 @@ set(imrow(3).Title,'String', sprintf('\\bf Scale-free network:  $$N$$ = %d, $$\\
 legend('Kuramoto o. p.', 'OA o. p.', 'Network o. p.', 'Mean field o. p.', 'Link field o. p.', 'FontSize', labelfont-5, 'Location', 'southoutside', 'Orientation', 'horizontal')
 xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
 
-suptitle(sprintf('PSS state: \\eta_0 = %0.1f, \\delta = %0.1f, K = %0.1f', pars.eta0, pars.delta, pars.K))
+suptitle(sprintf('CPW  state: \\eta_0 = %0.1f, \\delta = %0.1f, K = %0.1f', pars.eta0, pars.delta, pars.K))
 % exportpdf(f_CPW, '../Figures/InvestigateOrderParametersCPW.pdf', export);
 print(f_CPW, '../Figures/InvestigateOrderParametersCPW.pdf', '-dpdf', '-bestfit');
 close(f_CPW)

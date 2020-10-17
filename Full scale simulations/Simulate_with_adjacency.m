@@ -22,7 +22,7 @@ initarray = make_GPUhandle();
 
 %% Theta model parameters:
 tnow = 0; tend = 20;
-h = 0.005;
+h = 0.001;
 
 pars.N = 15000;
 pars.a_n = 0.666666666666666666667;
@@ -146,7 +146,7 @@ disp('Made random network figure')
 
 %% 3. Perform a full scale simulation of a scale-free network:
 % The full scale simulation using the adjacency matrix:
-degree = 4;
+degree = 3;
 
 sfpars = make_scalefreeparameters(pars, degree);
 [tfull, thetasfull] = DOPRI_simulatenetwork(tnow,tend,IC,h,sfpars);
@@ -158,8 +158,6 @@ sfpars = prepareOAparameters(sfpars);
 [TOA, ZOA] = OA_simulatenetwork(tnow, tend, IC, sfpars, odeoptions);
 disp('OA mean field test done')
 
-zfull(1)
-ZOA(1)
 %% Plotting the results:
 f_scalefree = figure('Renderer', 'painters', 'Position', [50 800 800 400]); box on; hold on;
 
