@@ -42,6 +42,7 @@ fdpars = make_fixeddegreeparameters(pars, pars.N - 1);
 z = orderparameter(thetas);
 
 [t, thetas] = ode45(@(t,x) thetaneurons(t,x,pars.e,pars.K/pars.N,pars.a_n), [tnow, tend], IC, odeoptions);
+thetas = wrapToPi(thetas)';
 z = orderparameter(thetas);
 disp('Small scale test done')
 
