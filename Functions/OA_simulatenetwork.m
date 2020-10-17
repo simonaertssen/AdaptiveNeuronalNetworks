@@ -23,7 +23,7 @@ function [TOA, ZOA, b] = OA_simulatenetwork(tnow, tend, IC, p, odeoptions)
         OAIC(i) = sum(exp(1i*IC(p.degrees_in == p.k(i)))) / p.P(p.k(i));
     end
 
-    [TOA, b] = ode45(@(t,x) MFROA(t,x,p), [tnow, tend], OAIC, odeoptions);
+    [TOA, b] = ode45(@(t,x) MFROA(t,x,p), [tnow, tend], gather(OAIC), odeoptions);
     ZOA = b*p.P(p.k)/p.N;
 end
 

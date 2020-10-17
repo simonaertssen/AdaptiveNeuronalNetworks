@@ -19,7 +19,7 @@ export = true;
 tnow = 0; tend = 10;
 h = 0.005;
 
-pars.N = 10000;
+pars.N = 5000;
 pars.a_n = 0.666666666666666666667;
 seed = 1; rng(seed);
 IC = wrapToPi(randn(pars.N, 1)*1.3);
@@ -62,7 +62,7 @@ for i = 1:3
  
     % The OA mean field theory:
     oa_params = prepareOAparameters(params);
-    [TOA, ZOA] = OA_simulatenetwork(tnow, tend, gather(z(1)), oa_params, options);
+    [TOA, ZOA] = OA_simulatenetwork(tnow, tend, IC, oa_params, options);
     
     % Other order parameters:
     degrees = sum(A,2);
@@ -93,7 +93,7 @@ set(imrow(3).Title,'String', sprintf('\\bf Scale-free network:  $$N$$ = %d, $$\\
 
 legend('Kuramoto o. p.', 'OA o. p.', 'Network o. p.', 'Mean field o. p.', 'Link field o. p.', 'FontSize', labelfont-5, 'Location', 'southoutside', 'Orientation', 'horizontal')
 xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
-suptitle(sprintf('PSR state:  \\eta_0 = %0.1f, \\delta = %0.1f, K = %0.1f', pars.eta0, pars.delta, pars.K))
+suptitle(sprintf('PSR state: \\eta_0 = %0.1f, \\delta = %0.1f, K = %0.1f', pars.eta0, pars.delta, pars.K))
 % exportpdf(f_PRS, '../Figures/InvestigateOrderParametersPRS.pdf', export);
 print(f_PRS, '../Figures/InvestigateOrderParametersPRS.pdf', '-dpdf', '-bestfit');
 close(f_PRS)
@@ -122,16 +122,16 @@ for i = 1:3
     end
     
     % The full scale simulation using the adjacency matrix:
-%     [t, thetas, A] = DOPRI_simulatenetwork(tnow,tend,IC,h,params);
-%     z = orderparameter(thetas);
-    A = initarray(adjacencymatrix(params.degrees_in, params.degrees_out));
-    [t, thetas] = ode113(@(t,x,K) thetaneurons_full(t,x,params.K,A,params.e,1/params.meandegree,params.a_n), [tnow, tend], IC, options);
-    thetas = wrapToPi(thetas)';
+    [t, thetas, A] = DOPRI_simulatenetwork(tnow,tend,IC,h,params);
     z = orderparameter(thetas);
+%     A = initarray(adjacencymatrix(params.degrees_in, params.degrees_out));
+%     [t, thetas] = ode113(@(t,x,K) thetaneurons_full(t,x,params.K,A,params.e,1/params.meandegree,params.a_n), [tnow, tend], IC, options);
+%     thetas = wrapToPi(thetas)';
+%     z = orderparameter(thetas);
  
     % The OA mean field theory:
     oa_params = prepareOAparameters(params);
-    [TOA, ZOA] = OA_simulatenetwork(tnow, tend, gather(z(1)), oa_params, options);
+    [TOA, ZOA] = OA_simulatenetwork(tnow, tend, IC, oa_params, options);
     
     % Other order parameters:
     degrees = sum(A,2);
@@ -163,7 +163,7 @@ set(imrow(3).Title,'String', sprintf('\\bf Scale-free network:  $$N$$ = %d, $$\\
 legend('Kuramoto o. p.', 'OA o. p.', 'Network o. p.', 'Mean field o. p.', 'Link field o. p.', 'FontSize', labelfont-5, 'Location', 'southoutside', 'Orientation', 'horizontal')
 xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
 
-suptitle(sprintf('PSS state:  \\eta_0 = %0.1f, \\delta = %0.1f, K = %0.1f', pars.eta0, pars.delta, pars.K))
+suptitle(sprintf('PSS state: \\eta_0 = %0.1f, \\delta = %0.1f, K = %0.1f', pars.eta0, pars.delta, pars.K))
 % exportpdf(f_PSS, '../Figures/InvestigateOrderParametersPSS.pdf', export);
 print(f_PSS, '../Figures/InvestigateOrderParametersPSS.pdf', '-dpdf', '-bestfit');
 close(f_PSS)
@@ -192,16 +192,16 @@ for i = 1:3
     end
     
     % The full scale simulation using the adjacency matrix:
-%     [t, thetas, A] = DOPRI_simulatenetwork(tnow,tend,IC,h,params);
-%     z = orderparameter(thetas);
-    A = initarray(adjacencymatrix(params.degrees_in, params.degrees_out));
-    [t, thetas] = ode113(@(t,x,K) thetaneurons_full(t,x,params.K,A,params.e,1/params.meandegree,params.a_n), [tnow, tend], IC, options);
-    thetas = wrapToPi(thetas)';
+    [t, thetas, A] = DOPRI_simulatenetwork(tnow,tend,IC,h,params);
     z = orderparameter(thetas);
+%     A = initarray(adjacencymatrix(params.degrees_in, params.degrees_out));
+%     [t, thetas] = ode113(@(t,x,K) thetaneurons_full(t,x,params.K,A,params.e,1/params.meandegree,params.a_n), [tnow, tend], IC, options);
+%     thetas = wrapToPi(thetas)';
+%     z = orderparameter(thetas);
  
     % The OA mean field theory:
     oa_params = prepareOAparameters(params);
-    [TOA, ZOA] = OA_simulatenetwork(tnow, tend, gather(z(1)), oa_params, options);
+    [TOA, ZOA] = OA_simulatenetwork(tnow, tend, IC, oa_params, options);
 
     % Other order parameters:
     degrees = sum(A,2);
@@ -233,7 +233,7 @@ set(imrow(3).Title,'String', sprintf('\\bf Scale-free network:  $$N$$ = %d, $$\\
 legend('Kuramoto o. p.', 'OA o. p.', 'Network o. p.', 'Mean field o. p.', 'Link field o. p.', 'FontSize', labelfont-5, 'Location', 'southoutside', 'Orientation', 'horizontal')
 xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
 
-suptitle(sprintf('PSS state:  \\eta_0 = %0.1f, \\delta = %0.1f, K = %0.1f', pars.eta0, pars.delta, pars.K))
+suptitle(sprintf('PSS state: \\eta_0 = %0.1f, \\delta = %0.1f, K = %0.1f', pars.eta0, pars.delta, pars.K))
 % exportpdf(f_CPW, '../Figures/InvestigateOrderParametersCPW.pdf', export);
 print(f_CPW, '../Figures/InvestigateOrderParametersCPW.pdf', '-dpdf', '-bestfit');
 close(f_CPW)
