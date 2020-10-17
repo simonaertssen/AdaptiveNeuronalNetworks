@@ -17,7 +17,7 @@ export = true;
 
 %% Theta model parameters:
 tnow = 0; tend = 10;
-h = 0.002;
+h = 0.0005;
 
 pars.N = 10000;
 pars.a_n = 0.666666666666666666667;

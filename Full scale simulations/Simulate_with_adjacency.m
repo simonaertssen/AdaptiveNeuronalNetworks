@@ -22,7 +22,7 @@ initarray = make_GPUhandle();
 
 %% Theta model parameters:
 tnow = 0; tend = 10;
-h = 0.002;
+h = 0.0005;
 
 pars.N = 10000;
 pars.a_n = 0.666666666666666666667;
@@ -153,6 +153,8 @@ sfpars = prepareOAparameters(sfpars);
 [TOA, ZOA] = OA_simulatenetwork(tnow, tend, IC, sfpars, odeoptions);
 disp('OA mean field test done')
 
+zfull(1)
+ZOA(1)
 %% Plotting the results:
 f_scalefree = figure('Renderer', 'painters', 'Position', [50 800 800 400]); box on; hold on;
 
