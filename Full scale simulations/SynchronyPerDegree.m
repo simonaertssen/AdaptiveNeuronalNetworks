@@ -15,7 +15,7 @@ export = true;
 
 %% Make a GPU init handle:
 if gpuDeviceCount > 0
-    d = gpuDevice(gpuDeviceCount-1);
+    d = gpuDevice(gpuDeviceCount-2);
     disp(d)
 end
 initarray = make_GPUhandle();
@@ -27,7 +27,6 @@ h = 0.001;
 pars.N = 100;
 pars.a_n = 0.666666666666666666667;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
-pars.eta0 = -0.9; pars.delta = 0.8; pars.K = -2;
 
 seed = 2; rng(seed);
 IC = - pi/2 * ones(pars.N, 1);
@@ -90,7 +89,7 @@ ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
 
 title(sprintf('\\bf Fixed degree network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f', pars.N, fdpars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex')
 
-legend('$$Z(t)_{A_{ij}}$$', '$$Z(t)_{\eta_{\rm  < 0.05}}$$', '$$Z(t)_{\eta_{\rm > 0.95}}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southwest', 'Orientation','horizontal')
+legend('$$Z(t)_{A_{ij}}$$', '$$Z(t)_{\eta_{\rm  < 0.05}}$$', '$$Z(t)_{\eta_{\rm > 0.95}}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southeast', 'Orientation','horizontal')
 exportpdf(f_fixeddegree, '../Figures/SynchronyFixedDegree.pdf', export);
 close(f_fixeddegree)
 
@@ -139,7 +138,7 @@ xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
 ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
 
 title(sprintf('\\bf Random network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f, $$p$$ = %0.1f', pars.N, rdpars.meandegree, rdpars.netp), 'FontSize', titlefont, 'Interpreter', 'latex')
-legend('$$Z(t)_{A_{ij}}$$', '$$Z(t)_{\eta_{\rm  < 0.05}}$$', '$$Z(t)_{\eta_{\rm > 0.95}}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southwest', 'Orientation','horizontal')
+legend('$$Z(t)_{A_{ij}}$$', '$$Z(t)_{\eta_{\rm  < 0.05}}$$', '$$Z(t)_{\eta_{\rm > 0.95}}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southeast', 'Orientation','horizontal')
 exportpdf(f_random, '../Figures/SynchronyRandom.pdf', export);
 % close(f_random)
 
