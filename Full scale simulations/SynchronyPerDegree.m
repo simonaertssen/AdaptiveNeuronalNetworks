@@ -132,7 +132,7 @@ plot(tfull, abs(zfull_hi), '-', 'LineWidth', 2, 'Color', '#EDB120');
 plot(TOA, abs(ZOA), '-', 'LineWidth', 2, 'Color', '#000000');
 
 for i = 1:nbins
-    plot(tfull, zdegrees(i,:), '-', 'LineWidth', 2, 'Color', [0, 1/nbins*i, 0])
+    plot(tfull, abs(zdegrees(i,:)), '-', 'LineWidth', 2, 'Color', [0, 1/nbins*i, 0])
 end
 
 xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
@@ -159,14 +159,32 @@ sfpars = prepareOAparameters(sfpars);
 [TOA, ZOA] = OA_simulatenetwork(tnow, tend, IC, sfpars, odeoptions);
 disp('OA mean field test done')
 
+% Order parameter per quantile:
+zfull_lo = orderparameter(thetasfull(lowidx));
+zfull_hi = orderparameter(thetasfull(highidx));
+
+% Order parameter per degree:
+nbins = 4;
+[N,edges] = histcounts(rdpars.degrees_in, nbins);
+zdegrees = zeros(nbins, numel(tfull));  
+for i = 1:nbins
+    idx = rdpars.degrees_in > edges(i) & rdpars.degrees_in < edges(i+1);
+    zdegrees(i,:) = orderparameter(thetasfull(idx,:));
+end
+
+
 %% Plotting the results:
 f_scalefree = figure('Renderer', 'painters', 'Position', [50 800 800 400]); box on; hold on;
 
 xlim([tnow, tend]); ylim([0, 1])
 plot(tfull, abs(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
-plot(TOA, abs(ZOA), '-k', 'LineWidth', 2, 'Color', '#000000');
-xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
-ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
+plot(tfull, abs(zfull_lo), '-', 'LineWidth', 2, 'Color', '#D95319');
+plot(tfull, abs(zfull_hi), '-', 'LineWidth', 2, 'Color', '#EDB120');
+plot(TOA, abs(ZOA), '-', 'LineWidth', 2, 'Color', '#000000');
+
+for i = 1:nbins
+    plot(tfull, abs(zdegrees(i,:)), '-', 'LineWidth', 2, 'Color', [0, 1/nbins*i, 0])
+end
 
 title(sprintf('\\bf Scale-free network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f, $$\\gamma$$ = %0.1f', pars.N, sfpars.meandegree, sfpars.degree), 'FontSize', titlefont, 'Interpreter', 'latex')
 legend('$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'northwest', 'Orientation','horizontal')
