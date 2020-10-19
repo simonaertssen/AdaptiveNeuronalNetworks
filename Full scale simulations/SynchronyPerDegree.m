@@ -21,10 +21,10 @@ end
 initarray = make_GPUhandle();
 
 %% Theta model parameters:
-tnow = 0; tend = 1;
+tnow = 0; tend = 20;
 h = 0.001;
 
-pars.N = 100;
+pars.N = 1000;
 pars.a_n = 0.666666666666666666667;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 
@@ -118,7 +118,7 @@ nbins = 4;
 zdegrees = zeros(nbins, numel(tfull));  
 for i = 1:nbins
     idx = rdpars.degrees_in > edges(i) & rdpars.degrees_in < edges(i+1);
-    zdegrees(i,:) = orderparameter(thetasfull(idx,:));
+    zdegrees(i,:) = gather(orderparameter(thetasfull(idx,:)));
 end
 
 %% Plotting the results:
@@ -168,7 +168,7 @@ nbins = 4;
 zdegrees = zeros(nbins, numel(tfull));  
 for i = 1:nbins
     idx = rdpars.degrees_in > edges(i) & rdpars.degrees_in < edges(i+1);
-    zdegrees(i,:) = orderparameter(thetasfull(idx,:));
+    zdegrees(i,:) = gather(orderparameter(thetasfull(idx,:)));
 end
 
 
