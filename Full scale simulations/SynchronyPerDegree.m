@@ -26,7 +26,7 @@ h = 0.005;
 
 pars.N = 10000;
 pars.a_n = 0.666666666666666666667;
-pars.eta0 = -0.9; pars.delta = 0.8; pars.K = -2;
+pars.eta0 = 0.5; pars.delta = 0.7; pars.K = 2;
 
 seed = 2; rng(seed);
 IC = - pi/2 * ones(pars.N, 1);
