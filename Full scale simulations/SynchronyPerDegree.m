@@ -22,11 +22,11 @@ initarray = make_GPUhandle();
 
 %% Theta model parameters:
 tnow = 0; tend = 20;
-h = 0.001;
+h = 0.005;
 
-pars.N = 1000;
+pars.N = 10000;
 pars.a_n = 0.666666666666666666667;
-pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
+pars.eta0 = -0.9; pars.delta = 0.8; pars.K = -2;
 
 seed = 2; rng(seed);
 IC = - pi/2 * ones(pars.N, 1);
@@ -75,14 +75,14 @@ disp('OA mean field test done')
 zfull_lo = orderparameter(thetasfull(lowidx,:));
 zfull_hi = orderparameter(thetasfull(highidx,:));
 
-%% Plotting the results:
+%% Plotting the results: per quantile
 f_fixeddegree = figure('Renderer', 'painters', 'Position', [50 800 800 400]); box on; hold on;
 
 xlim([tnow, tend]); ylim([0, 1])
 plot(tfull, abs(zfull), '-', 'LineWidth', 4, 'Color', '#0072BD');
 plot(tfull, abs(zfull_lo), '-', 'LineWidth', 2, 'Color', '#D95319');
 plot(tfull, abs(zfull_hi), '-', 'LineWidth', 2, 'Color', '#EDB120');
-plot(TOA, abs(ZOA), '-', 'LineWidth', 3, 'Color', '#000000');
+plot(TOA, abs(ZOA), '-', 'LineWidth', 2, 'Color', '#000000');
 
 xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
 ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
@@ -90,7 +90,7 @@ ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
 title(sprintf('\\bf Fixed degree network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f', pars.N, fdpars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex')
 
 legend('$$Z(t)_{A_{ij}}$$', '$$Z(t)_{\eta_{\rm  < 0.05}}$$', '$$Z(t)_{\eta_{\rm > 0.95}}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southeast', 'Orientation','horizontal')
-exportpdf(f_fixeddegree, '../Figures/SynchronyFixedDegree.pdf', export);
+exportpdf(f_fixeddegree, '../Figures/SynchronyFixedDegreeQuantiles.pdf', export);
 close(f_fixeddegree)
 
 disp('Made fixed degree network figure')
@@ -121,7 +121,7 @@ for i = 1:nbins
     zdegrees(i,:) = gather(orderparameter(thetasfull(idx,:)));
 end
 
-%% Plotting the results:
+%% Plotting the results: per quantile
 f_random = figure('Renderer', 'painters', 'Position', [50 800 800 400]); box on; hold on;
 
 xlim([tnow, tend]); ylim([0, 1])
@@ -130,19 +130,33 @@ plot(tfull, abs(zfull_lo), '-', 'LineWidth', 2, 'Color', '#D95319');
 plot(tfull, abs(zfull_hi), '-', 'LineWidth', 2, 'Color', '#EDB120');
 plot(TOA, abs(ZOA), '-', 'LineWidth', 2, 'Color', '#000000');
 
-for i = 1:nbins
-    plot(tfull, abs(zdegrees(i,:)), '-', 'LineWidth', 2, 'Color', [0, 1/nbins*i, 0])
-end
-
 xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
 ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
 
 title(sprintf('\\bf Random network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f, $$p$$ = %0.1f', pars.N, rdpars.meandegree, rdpars.netp), 'FontSize', titlefont, 'Interpreter', 'latex')
 legend('$$Z(t)_{A_{ij}}$$', '$$Z(t)_{\eta_{\rm  < 0.05}}$$', '$$Z(t)_{\eta_{\rm > 0.95}}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southeast', 'Orientation','horizontal')
-exportpdf(f_random, '../Figures/SynchronyRandom.pdf', export);
-% close(f_random)
+exportpdf(f_random, '../Figures/SynchronyRandomQuantiles.pdf', export);
+close(f_random)
 
-disp('Made random network figure')
+%% Plotting the results: per degree
+f_random = figure('Renderer', 'painters', 'Position', [50 800 800 400]); box on; hold on;
+
+xlim([tnow, tend]); ylim([0, 1])
+for i = 1:nbins
+    plot(tfull, abs(zdegrees(i,:)), '-', 'LineWidth', 2, 'Color', [0, 1/nbins*i, 0])
+end
+plot(TOA, abs(ZOA), '-', 'LineWidth', 2, 'Color', '#000000');
+
+xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
+ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
+
+title(sprintf('\\bf Random network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f, $$p$$ = %0.1f', pars.N, rdpars.meandegree, rdpars.netp), 'FontSize', titlefont, 'Interpreter', 'latex')
+legend('$$Z(t)_{0 \leq k < 0.25}$$', '$$Z(t)_{0.25 \leq k < 0.5}$$', '$$Z(t)_{0.5 \leq k < 0.75}$$', '$$Z(t)_{0.75 \leq k < 1}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southeast', 'Orientation','horizontal')
+exportpdf(f_random, '../Figures/SynchronyRandomDegrees.pdf', export);
+close(f_random)
+
+
+disp('Made random network figures')
 
 %% 3. Perform a full scale simulation of a scale-free network:
 % The full scale simulation using the adjacency matrix:
@@ -172,7 +186,7 @@ for i = 1:nbins
 end
 
 
-%% Plotting the results:
+%% Plotting the results: per quantile
 f_scalefree = figure('Renderer', 'painters', 'Position', [50 800 800 400]); box on; hold on;
 
 xlim([tnow, tend]); ylim([0, 1])
@@ -181,14 +195,24 @@ plot(tfull, abs(zfull_lo), '-', 'LineWidth', 2, 'Color', '#D95319');
 plot(tfull, abs(zfull_hi), '-', 'LineWidth', 2, 'Color', '#EDB120');
 plot(TOA, abs(ZOA), '-', 'LineWidth', 2, 'Color', '#000000');
 
+title(sprintf('\\bf Scale-free network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f, $$\\gamma$$ = %0.1f', pars.N, sfpars.meandegree, sfpars.degree), 'FontSize', titlefont, 'Interpreter', 'latex')
+legend('$$Z(t)_{A_{ij}}$$', '$$Z(t)_{\eta_{\rm  < 0.05}}$$', '$$Z(t)_{\eta_{\rm > 0.95}}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southeast', 'Orientation','horizontal')
+exportpdf(f_scalefree, '../Figures/SynchronyScaleFreeQuantiles.pdf', export);
+close(f_scalefree)
+
+%% Plotting the results: per quantile
+f_scalefree = figure('Renderer', 'painters', 'Position', [50 800 800 400]); box on; hold on;
+
+xlim([tnow, tend]); ylim([0, 1])
 for i = 1:nbins
     plot(tfull, abs(zdegrees(i,:)), '-', 'LineWidth', 2, 'Color', [0, 1/nbins*i, 0])
 end
+plot(TOA, abs(ZOA), '-', 'LineWidth', 2, 'Color', '#000000');
 
 title(sprintf('\\bf Scale-free network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f, $$\\gamma$$ = %0.1f', pars.N, sfpars.meandegree, sfpars.degree), 'FontSize', titlefont, 'Interpreter', 'latex')
-legend('$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'northwest', 'Orientation','horizontal')
-exportpdf(f_scalefree, '../Figures/SynchronyScaleFree.pdf', export);
+legend('$$Z(t)_{0 \leq k < 0.25}$$', '$$Z(t)_{0.25 \leq k < 0.5}$$', '$$Z(t)_{0.5 \leq k < 0.75}$$', '$$Z(t)_{0.75 \leq k < 1}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southeast', 'Orientation','horizontal')
+exportpdf(f_scalefree, '../Figures/SynchronyScaleFreeDegrees.pdf', export);
 close(f_scalefree)
 
-disp('Made scale-free network figure')
+disp('Made scale-free network figures')
 

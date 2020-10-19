@@ -17,7 +17,7 @@ export = true;
 
 %% Theta model parameters:
 tnow = 0; tend = 10;
-h = 0.001;
+h = 0.005;
 
 pars.N = 10000;
 pars.a_n = 0.666666666666666666667;
@@ -41,7 +41,7 @@ fixeddegreepars = make_fixeddegreeparameters(pars, round(pars.N*0.3));
 randompars = make_randomparameters(pars, 0.3);
 scalefreepars = make_scalefreeparameters(pars, 3);
 
-f_PRS = figure('Renderer', 'painters', 'Position', [50 800 800 1000]);
+f_PRS = figure('Renderer', 'painters', 'Position', [50 800 700 800]);
 options = odeset('RelTol', 1.0e-6,'AbsTol', 1.0e-6);
 
 for i = 1:3
@@ -97,7 +97,7 @@ legend('Kuramoto o. p.', 'OA o. p.', 'Network o. p.', 'Mean field o. p.', 'Link 
 xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
 suptitle(sprintf('PSR state: \\eta_0 = %0.1f, \\delta = %0.1f, K = %0.1f', pars.eta0, pars.delta, pars.K))
 % exportpdf(f_PRS, '../Figures/InvestigateOrderParametersPRS.pdf', export);
-print(f_PRS, '../Figures/InvestigateOrderParametersPRS.pdf', '-dpdf', '-bestfit');
+print(f_PRS, '../Figures/InvestigateOrderParametersPSR.pdf', '-dpdf', '-bestfit');
 close(f_PRS)
 
 disp('Made PRS state')
@@ -111,7 +111,7 @@ fixeddegreepars = make_fixeddegreeparameters(pars, round(pars.N*0.3));
 randompars = make_randomparameters(pars, 0.3);
 scalefreepars = make_scalefreeparameters(pars, 3);
 
-f_PSS = figure('Renderer', 'painters', 'Position', [50 800 800 1000]);
+f_PSS = figure('Renderer', 'painters', 'Position', [50 800 700 800]);
 options = odeset('RelTol', 1.0e-6,'AbsTol', 1.0e-6);
 
 for i = 1:3
@@ -182,7 +182,7 @@ fixeddegreepars = make_fixeddegreeparameters(pars, round(pars.N*0.3));
 randompars = make_randomparameters(pars, 0.3);
 scalefreepars = make_scalefreeparameters(pars, 3);
 
-f_CPW = figure('Renderer', 'painters', 'Position', [50 800 1000 1000]);
+f_CPW = figure('Renderer', 'painters', 'Position', [50 800 700 800]);
 options = odeset('RelTol', 1.0e-6,'AbsTol', 1.0e-6);
 
 for i = 1:3
