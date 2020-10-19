@@ -111,7 +111,7 @@ fixeddegreepars = make_fixeddegreeparameters(pars, round(pars.N*0.3));
 randompars = make_randomparameters(pars, 0.3);
 scalefreepars = make_scalefreeparameters(pars, 3);
 
-f_PSS = figure('Renderer', 'painters', 'Position', [50 800 800 600]);
+f_PSS = figure('Renderer', 'painters', 'Position', [50 800 800 1000]);
 options = odeset('RelTol', 1.0e-6,'AbsTol', 1.0e-6);
 
 for i = 1:3
@@ -174,7 +174,7 @@ close(f_PSS)
 disp('Made PSS state')
 
 %% CPW state: the infamous limit cycle
-pars.eta0 = 0.5; pars.delta = 0.7; pars.K = 2;
+pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
 
 % Network distributions and parameters:
@@ -182,7 +182,7 @@ fixeddegreepars = make_fixeddegreeparameters(pars, round(pars.N*0.3));
 randompars = make_randomparameters(pars, 0.3);
 scalefreepars = make_scalefreeparameters(pars, 3);
 
-f_CPW = figure('Renderer', 'painters', 'Position', [50 800 1000 600]);
+f_CPW = figure('Renderer', 'painters', 'Position', [50 800 1000 1000]);
 options = odeset('RelTol', 1.0e-6,'AbsTol', 1.0e-6);
 
 for i = 1:3
