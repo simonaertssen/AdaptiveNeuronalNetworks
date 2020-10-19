@@ -19,7 +19,7 @@ export = true;
 tnow = 0; tend = 10;
 h = 0.001;
 
-pars.N = 15000;
+pars.N = 10000;
 pars.a_n = 0.666666666666666666667;
 seed = 1; rng(seed);
 IC = wrapToPi(randn(pars.N, 1)*1.3);
