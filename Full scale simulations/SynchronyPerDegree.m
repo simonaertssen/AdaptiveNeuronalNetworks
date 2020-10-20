@@ -11,7 +11,7 @@ set(groot,'DefaultAxesYGrid','on')
 
 titlefont = 15;
 labelfont = 13;
-export = true;
+export = false;
 
 %% Make a GPU init handle:
 if gpuDeviceCount > 0
@@ -21,10 +21,10 @@ end
 initarray = make_GPUhandle();
 
 %% Theta model parameters:
-tnow = 0; tend = 20;
+tnow = 0; tend = 0.1;
 h = 0.005;
 
-pars.N = 10000;
+pars.N = 100;
 pars.a_n = 0.666666666666666666667;
 pars.eta0 = 0.5; pars.delta = 0.7; pars.K = 2;
 
@@ -109,8 +109,8 @@ rdpars = prepareOAparameters(rdpars);
 disp('OA mean field test done')
 
 % Order parameter per quantile:
-zfull_lo = orderparameter(thetasfull(lowidx));
-zfull_hi = orderparameter(thetasfull(highidx));
+zfull_lo = orderparameter(thetasfull(lowidx, :));
+zfull_hi = orderparameter(thetasfull(highidx, :));
 
 % Order parameter per degree:
 nbins = 4;
@@ -173,15 +173,15 @@ sfpars = prepareOAparameters(sfpars);
 disp('OA mean field test done')
 
 % Order parameter per quantile:
-zfull_lo = orderparameter(thetasfull(lowidx))
-zfull_hi = orderparameter(thetasfull(highidx))
+zfull_lo = orderparameter(thetasfull(lowidx, :))
+zfull_hi = orderparameter(thetasfull(highidx, :))
 
 % Order parameter per degree:
 nbins = 4;
-[N,edges] = histcounts(rdpars.degrees_in, nbins);
+[N,edges] = histcounts(sfpars.degrees_in, nbins);
 zdegrees = zeros(nbins, numel(tfull));  
 for i = 1:nbins
-    idx = rdpars.degrees_in > edges(i) & rdpars.degrees_in < edges(i+1);
+    idx = sfpars.degrees_in > edges(i) & sfpars.degrees_in < edges(i+1);
     zdegrees(i,:) = gather(orderparameter(thetasfull(idx,:)));
 end
 
