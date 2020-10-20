@@ -59,7 +59,7 @@ disp('Mean field test done')
 
 % The OA mean field theory:
 fdpars = prepareOAparameters(fdpars);
-[TOA, ZOA, b] = OA_simulatenetwork(tnow, tend, IC, fdpars, odeoptions);
+[TOA, ZOA, b] = OA_simulatenetwork(tnow, tend, gather(zfull(1)), fdpars, odeoptions);
 disp('OA mean field test done')
 
 %% Plotting the results:
@@ -95,7 +95,7 @@ disp('Mean field test done')
 
 % The OA mean field theory:
 fdpars = prepareOAparameters(fdpars);
-[TOA, ZOA] = OA_simulatenetwork(tnow, tend, IC, fdpars, odeoptions);
+[TOA, ZOA] = OA_simulatenetwork(tnow, tend, gather(zfull(1)), fdpars, odeoptions);
 disp('OA mean field test done')
 
 %% Plotting the results:
@@ -126,7 +126,7 @@ disp('Full scale test done')
 
 % The OA mean field theory:
 rdpars = prepareOAparameters(rdpars);
-[TOA, ZOA] = OA_simulatenetwork(tnow, tend, IC, rdpars, odeoptions);
+[TOA, ZOA] = OA_simulatenetwork(tnow, tend, gather(zfull(1)), rdpars, odeoptions);
 disp('OA mean field test done')
 
 %% Plotting the results:
@@ -156,7 +156,7 @@ disp('Full scale test done')
 
 % The OA mean field theory:
 sfpars = prepareOAparameters(sfpars);
-[TOA, ZOA] = OA_simulatenetwork(tnow, tend, IC, sfpars, odeoptions);
+[TOA, ZOA] = OA_simulatenetwork(tnow, tend, gather(zfull(1)), sfpars, odeoptions);
 disp('OA mean field test done')
 
 %% Plotting the results:
@@ -174,48 +174,3 @@ exportpdf(f_scalefree, '../Figures/InspectMeanFieldScaleFree.pdf', export);
 close(f_scalefree)
 
 disp('Made scale-free network figure')
-
-% %% From z to ZOA
-% clc
-% IC = 0.2*randn(pars.N, 1);
-% IC = linspace(-2*pi, 2*pi, pars.N + 1);
-% IC = IC(1:end-1);
-% % IC = rand(pars.N, 1) * 2*pi - pi;
-% z = orderparameter(IC)
-% 
-% sfpars = make_scalefreeparameters(pars, 4);
-% sfpars = prepareOAparameters(sfpars);
-% 
-% OAIC = rand(1,sfpars.l);
-% for i = 1:sfpars.l
-%     meanthetaperdegree = IC(sfpars.degrees_in == sfpars.k(i));
-% %     OAIC(i) = orderparameter(meanthetaperdegree) / sfpars.P(sfpars.k(i)) * numel(meanthetaperdegree);
-%     OAIC(i) = sum(exp(1i*meanthetaperdegree)) / sfpars.P(sfpars.k(i));
-% %     OAIC(i) = mean(meanthetaperdegree);
-% end
-% Z = OAIC*sfpars.P(sfpars.k)/sfpars.N
-% 
-% histogram(abs(OAIC), linspace(-2*pi, 2*pi, 10), 'Normalization' , 'pdf')
-% 
-% % Z = orderparameter(OAIC)
-% % Z = ones(1,sfpars.N)*exp(1i*IC)/sfpars.N
-% 
-% %% From ZOA to z
-% clc
-% sfpars = make_scalefreeparameters(pars, 2.1);
-% sfpars = prepareOAparameters(sfpars);
-% 
-% OAIC = rand(1, sfpars.l);
-% testOAIC = orderparameter(OAIC)
-% 
-% Z = exp(1i*OAIC)*sfpars.P(sfpars.k)/sfpars.N
-% 
-% IC = zeros(pars.N, 1);
-% for j = 1:sfpars.l
-%     idx = sfpars.degrees_in == sfpars.k(j);
-%     IC(idx) = OAIC(j)*sfpars.P(sfpars.k(j));
-% end
-% OAIC(1)
-% IC(1)
-% testIC = orderparameter(IC)
-% 

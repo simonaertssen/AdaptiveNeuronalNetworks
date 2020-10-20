@@ -68,7 +68,7 @@ disp('Full scale test done')
 
 % The OA mean field theory:
 fdpars = prepareOAparameters(fdpars);
-[TOA, ZOA] = OA_simulatenetwork(tnow, tend, IC, fdpars, odeoptions);
+[TOA, ZOA] = OA_simulatenetwork(tnow, tend, gather(zfull(1)), fdpars, odeoptions);
 disp('OA mean field test done')
 
 % Order parameter per quantile:
@@ -105,7 +105,7 @@ disp('Full scale test done')
 
 % The OA mean field theory:
 rdpars = prepareOAparameters(rdpars);
-[TOA, ZOA] = OA_simulatenetwork(tnow, tend, IC, rdpars, odeoptions);
+[TOA, ZOA] = OA_simulatenetwork(tnow, tend, gather(zfull(1)), rdpars, odeoptions);
 disp('OA mean field test done')
 
 % Order parameter per quantile:
@@ -169,7 +169,7 @@ disp('Full scale test done')
 
 % The OA mean field theory:
 sfpars = prepareOAparameters(sfpars);
-[TOA, ZOA] = OA_simulatenetwork(tnow, tend, IC, sfpars, odeoptions);
+[TOA, ZOA] = OA_simulatenetwork(tnow, tend, gather(zfull(1)), sfpars, odeoptions);
 disp('OA mean field test done')
 
 % Order parameter per quantile:
