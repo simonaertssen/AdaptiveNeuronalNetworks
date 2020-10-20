@@ -11,7 +11,7 @@ set(groot,'DefaultAxesYGrid','on')
 
 titlefont = 15;
 labelfont = 13;
-export = false;
+export = true;
 
 %% Make a GPU init handle:
 if gpuDeviceCount > 0
@@ -24,7 +24,7 @@ initarray = make_GPUhandle();
 tnow = 0; tend = 0.1;
 h = 0.005;
 
-pars.N = 100;
+pars.N = 10000;
 pars.a_n = 0.666666666666666666667;
 pars.eta0 = 0.5; pars.delta = 0.7; pars.K = 2;
 
