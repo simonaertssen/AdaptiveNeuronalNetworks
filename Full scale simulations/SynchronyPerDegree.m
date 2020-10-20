@@ -173,8 +173,8 @@ sfpars = prepareOAparameters(sfpars);
 disp('OA mean field test done')
 
 % Order parameter per quantile:
-zfull_lo = orderparameter(thetasfull(lowidx));
-zfull_hi = orderparameter(thetasfull(highidx));
+zfull_lo = orderparameter(thetasfull(lowidx))
+zfull_hi = orderparameter(thetasfull(highidx))
 
 % Order parameter per degree:
 nbins = 4;
