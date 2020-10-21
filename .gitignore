@@ -44,6 +44,9 @@ Icon
 *.bbl
 *.blg
 
+# And no maple code:
+*.bak
+
 # Thumbnails
 ._*
 
