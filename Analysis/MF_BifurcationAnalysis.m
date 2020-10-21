@@ -20,7 +20,9 @@ assume(x,'real'); assume(y,'real'); assume(x >= -1 & x <= 1); assume(y >= -1 & y
 
 %eqpts = vpasolve([f(x, y, 0, 0, 0) == 0, g(x, y, 0, 0, 0) == 0], [x,y])
 disp('searching equilibria')
-eqpts = solve([f(x, y, D, e, K) == 0, g(x, y, D, e, K) == 0], [x,y]);
+eqpts = solve([f(x, y, D, e, K) == 0, g(x, y, D, e, K) == 0], [x,y], 'ReturnConditions',true);
+eqpts.x
+eqpts.y
 save('equilibria_expression', 'eqpts');
 disp('equilibria found')
 
@@ -38,17 +40,17 @@ system = @(x, y, D, e, K) [func(x, y, D, e, K); gunc(x, y, D, e, K)];
 % fsurf(@(x,y) func(x,y,0,0,0))
 
 %%
-for D = Dgrid
-    for E = Egrid
-        for K = Kgrid
-%             [xval, yval] = vpasolve([f(x, y, D, E, K) == 0, g(x, y, D, E, K) == 0], [x,y]);
-            eqpt = fsolve(@(in) system(in(1), in(2), D, E, K), [0; 0], optimoptions('fsolve', 'Display', 'off'));
-            if norm(eqpt) <= 1
-            end
-        end
-    end
-end
-% eqpts = vpasolve([f(x, y, X, Y, Z) == 0, g(x, y, X, Y, Z) == 0], [x,y])
+% for D = Dgrid
+%     for E = Egrid
+%         for K = Kgrid
+% %             [xval, yval] = vpasolve([f(x, y, D, E, K) == 0, g(x, y, D, E, K) == 0], [x,y]);
+%             eqpt = fsolve(@(in) system(in(1), in(2), D, E, K), [0; 0], optimoptions('fsolve', 'Display', 'off'));
+%             if norm(eqpt) <= 1
+%             end
+%         end
+%     end
+% end
+% % eqpts = vpasolve([f(x, y, X, Y, Z) == 0, g(x, y, X, Y, Z) == 0], [x,y])
 
 disp('done')
 
