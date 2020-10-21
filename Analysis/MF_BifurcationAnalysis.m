@@ -16,9 +16,12 @@ d(x, y, D, e, K) = det(J(x, y, D, e, K));
 
 syms x y D e K
 assume(D,'real'); assume(e,'real'); assume(K,'real');
-assume(x >= -1 & x <= 1); assume(y >= -1 & y <= 1);
+assume(x,'real'); assume(y,'real'); assume(x >= -1 & x <= 1); assume(y >= -1 & y <= 1);
 
 %eqpts = vpasolve([f(x, y, 0, 0, 0) == 0, g(x, y, 0, 0, 0) == 0], [x,y])
+disp('searching equilibria')
+eqpts = solve([f(x, y, D, e, K) == 0, g(x, y, D, e, K) == 0], [x,y])
+disp('equilibria found')
 
 %% Solving for the equilibria
 step = 1;
@@ -27,8 +30,24 @@ Egrid = -10:step:10;
 Kgrid = -20:step:20;
 
 [X,Y,Z] = meshgrid(Dgrid,Egrid,Kgrid);
+func = matlabFunction(f);
+gunc = matlabFunction(g);
 
-eqpts = vpasolve([f(x, y, X, Y, Z) == 0, g(x, y, X, Y, Z) == 0], [x,y])
+system = @(x, y, D, e, K) [func(x, y, D, e, K); gunc(x, y, D, e, K)];
+% fsurf(@(x,y) func(x,y,0,0,0))
+
+%%
+for D = Dgrid
+    for E = Egrid
+        for K = Kgrid
+%             [xval, yval] = vpasolve([f(x, y, D, E, K) == 0, g(x, y, D, E, K) == 0], [x,y]);
+            eqpt = fsolve(@(in) system(in(1), in(2), D, E, K), [0; 0], optimoptions('fsolve', 'Display', 'off'));
+            if norm(eqpt) <= 1
+            end
+        end
+    end
+end
+% eqpts = vpasolve([f(x, y, X, Y, Z) == 0, g(x, y, X, Y, Z) == 0], [x,y])
 
 disp('done')
 
