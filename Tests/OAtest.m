@@ -12,7 +12,7 @@ export = true;
 
 %% Theta model parameters
 tnow = 0; tend = 8;
-h = 0.005;
+h = 0.008;
 
 pars.N = 5000;
 pars.a_n = 0.666666666666666666667;
@@ -35,7 +35,7 @@ z = orderparameter(IC)
 Z = OAIC*Ps/(p.N*p.N)
 
 %% Testing the OA approach:
-sfpars = make_scalefreeparameters(pars, 2.5);
+sfpars = make_scalefreeparameters(pars, 4);
 
 figure; hold on
 
