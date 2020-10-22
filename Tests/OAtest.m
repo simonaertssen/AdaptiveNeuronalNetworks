@@ -11,10 +11,10 @@ labelfont = 13;
 export = true;
 
 %% Theta model parameters
-tnow = 0; tend = 5;
+tnow = 0; tend = 8;
 h = 0.005;
 
-pars.N = 2500;
+pars.N = 3000;
 pars.a_n = 0.666666666666666666667;
 pars.eta0 = 0.5; pars.delta = 0.7; pars.K = 2;
 seed = 2; rng(seed);
@@ -22,8 +22,20 @@ seed = 2; rng(seed);
 pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
 IC = - pi/2 * ones(pars.N, 1);
 
+%% Testing initial conditions:
+p = prepareOAparameters2(make_scalefreeparameters(pars, 3));
+Ps = p.P(p.k(:,1)) .* p.P(p.k(:,2));
+OAIC = zeros(1, p.l);
+for i = 1:p.l
+    idx = (p.degrees_i == p.k(i, 1) & p.degrees_o == p.k(i, 2));
+    OAIC(i) = sum(exp(1i*IC(idx)) / Ps(i)) * p.N;
+end
+
+z = orderparameter(IC)
+Z = OAIC*Ps/(p.N*p.N)
+
 %% Testing the OA approach:
-sfpars = prepareOAparameters(make_scalefreeparameters(pars, 3));
+sfpars = prepareOAparameters(make_scalefreeparameters(pars, 2.1));
 
 figure; hold on
 
@@ -33,9 +45,9 @@ zfull = orderparameter(thetasfull);
 plot(tfull, abs(zfull), 'b', 'LineWidth', 2)
 toc;
 
+
 tic;
 % Old version:
-sfpars = prepareOAparameters(make_scalefreeparameters(pars, 3));
 [TOA, ZOA] = OA_simulatenetwork(tnow, tend, IC, sfpars);
 plot(TOA, abs(ZOA), 'k')
 toc;
@@ -43,10 +55,11 @@ toc;
 %%
 tic;
 % New version: a simulation per (k_in, k_out)
-sfpars = prepareOAparameters2(make_scalefreeparameters(pars, 3));
-[TOA, ZOA] = OA_simulatenetwork2(tnow, tend, -1i, sfpars);
+sfpars = prepareOAparameters2(make_scalefreeparameters(pars, 2.1));
+[TOA, ZOA] = OA_simulatenetwork2(tnow, tend, IC, sfpars);
 plot(TOA, abs(ZOA), 'r')
 toc;
+
 
 %% Functions
 function p = prepareOAparameters2(p)
@@ -61,7 +74,7 @@ function p = prepareOAparameters2(p)
 %     pkperm = p.k(randperm(p.l));
     p.OA = zeros(p.l, p.l);
     for i = 1:p.l
-        a = p.P(p.k(:,1)).*p.P(p.k(:,2)).*assortativity2(p.k, p.k(i,:).*ones(p.l,2), p.N*p.meandegree, 0)/p.meandegree;
+        a = p.P(p.k(:,1)).*assortativity2(p.k, p.k(i,:).*ones(p.l,2), p.N*p.meandegree, 0)/p.meandegree;
         p.OA(i,:) = a;
 %         ks = p.k(i,1)*ones(p.l,1);
 %         p.OA(i, :) = p.P(p.k(:,1)).*assortativity(p.k(:,1), p.k(:,1), ks, ks, p.N, p.meandegree, 0)/p.meandegree;
@@ -79,7 +92,7 @@ function [TOA, ZOA, b] = OA_simulatenetwork2(tnow, tend, IC, p, odeoptions)
         OAIC = zeros(p.l,1);
         for i = 1:p.l
             idx = (p.degrees_i == p.k(i, 1) & p.degrees_o == p.k(i, 2));
-            OAIC(i) = sum(exp(1i*IC(idx)) / Ps(i));
+            OAIC(i) = sum(exp(1i*IC(idx)) / Ps(i))*p.N;
         end
     elseif numel(IC) == 1
         OAIC = IC*ones(p.l,1);

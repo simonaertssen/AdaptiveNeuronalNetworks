@@ -1,6 +1,6 @@
 function [TOA, ZOA, b] = OA_simulatenetwork(tnow, tend, IC, p, odeoptions)
     if nargin < 5
-        odeoptions = odeset('RelTol', 1.0e-6,'AbsTol', 1.0e-6);
+        odeoptions = odeset('RelTol', 1.0e-9,'AbsTol', 1.0e-9);
     end
 
     if numel(IC) > 1
