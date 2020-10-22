@@ -114,10 +114,10 @@ zfull_hi = orderparameter(thetasfull(highidx, :));
 
 % Order parameter per degree:
 nbins = 4;
-[N,edges] = histcounts(rdpars.degrees_in, nbins);
+[N,edges] = histcounts(rdpars.degrees_i, nbins);
 zdegrees = zeros(nbins, numel(tfull));  
 for i = 1:nbins
-    idx = rdpars.degrees_in > edges(i) & rdpars.degrees_in < edges(i+1);
+    idx = rdpars.degrees_i > edges(i) & rdpars.degrees_i < edges(i+1);
     zdegrees(i,:) = gather(orderparameter(thetasfull(idx,:)));
 end
 
@@ -178,10 +178,10 @@ zfull_hi = orderparameter(thetasfull(highidx, :));
 
 % Order parameter per degree:
 nbins = 4;
-[N,edges] = histcounts(sfpars.degrees_in, nbins);
+[N,edges] = histcounts(sfpars.degrees_i, nbins);
 zdegrees = zeros(nbins, numel(tfull));  
 for i = 1:nbins
-    idx = sfpars.degrees_in > edges(i) & sfpars.degrees_in < edges(i+1);
+    idx = sfpars.degrees_i > edges(i) & sfpars.degrees_i < edges(i+1);
     zdegrees(i,:) = gather(orderparameter(thetasfull(idx,:)));
 end
 
