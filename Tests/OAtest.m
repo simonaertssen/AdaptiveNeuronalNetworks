@@ -11,10 +11,10 @@ labelfont = 13;
 export = true;
 
 %% Theta model parameters
-tnow = 0; tend = 10;
+tnow = 0; tend = 8;
 h = 0.005;
 
-pars.N = 7000;
+pars.N = 5000;
 pars.a_n = 0.666666666666666666667;
 pars.eta0 = 0.5; pars.delta = 0.7; pars.K = 2;
 seed = 2; rng(seed);
