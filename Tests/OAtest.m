@@ -35,7 +35,7 @@ z = orderparameter(IC)
 Z = OAIC*Ps/(p.N*p.N)
 
 %% Testing the OA approach:
-sfpars = make_scalefreeparameters(pars, 2.1);
+sfpars = make_scalefreeparameters(pars, 2.5);
 
 figure; hold on
 
