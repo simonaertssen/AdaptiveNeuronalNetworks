@@ -1,5 +1,5 @@
 function p = prepareOAparameters(p)
-    p.k = unique(p.degrees_in);
+    p.k = unique(p.degrees_i);
     p.l = numel(p.k);
     pkperm = p.k(randperm(p.l));
     p.OA = zeros(p.l, p.l);

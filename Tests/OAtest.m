@@ -30,29 +30,90 @@ sfpars = prepareOAparameters(sfpars);
 plot(TOA, abs(ZOA), 'k')
 
 % New version: a simulation per (k_in, k_out)
-sfpars = make_scalefreeparameters2(pars, 3);
+sfpars = make_scalefreeparameters(pars, 3);
 sfpars = prepareOAparameters2(sfpars);
 
 % The OA mean field theory:
 [TOA, ZOA] = OA_simulatenetwork2(tnow, tend, -1i, sfpars);
 plot(TOA, abs(ZOA), 'r')
 
-%% Testing the distributions
-pars.N = 5000;
-test = make_scalefreeparameters2(pars, true, 3.2, 3, [500, 1500], [1700, 2000])
-
-figure; hold on;
-x = test.krange_i(1):test.krange_i(2);
-histogram(test.degrees_i, 'Normalization', 'pdf')
-plot(x, test.P_i(x)/pars.N, 'LineWidth', 2)
-
-x = test.krange_o(1):test.krange_o(2);
-histogram(test.degrees_o, 'Normalization', 'pdf')
-plot(x, test.P_o(x)/pars.N, 'LineWidth', 2)
-
-% assert(sum(test.degrees_i) == sum(test.degrees_o))
 
 %% Functions
+pars.N = 100
+sfpars = make_scalefreeparameters(pars, 3);
+[TOA, ZOA] = OA_simulatenetwork2(tnow, tend, -i, sfpars);
+
+function [TOA, ZOA, b] = OA_simulatenetwork2(tnow, tend, IC, p, odeoptions)
+    if nargin < 5
+        odeoptions = odeset('RelTol', 1.0e-6,'AbsTol', 1.0e-6);
+    end
+        
+    p.l_i = numel(unique(p.degrees_i));
+    p.l_o = numel(unique(p.degrees_o));
+    p.k = unique([p.degrees_i, p.degrees_o], 'rows');
+    [p.l, ~] = size(p.k);
+    p.l
+    
+    if numel(IC) > 1
+        OAIC = zeros(1,p.l);
+        for i = 1:p.l
+            idx = (p.degrees_i == p.k(i, 1) & p.degrees_o == p.k(i, 2));
+            size(idx)
+            sum(exp(1i*IC(idx)))
+            OAIC(i) = sum(exp(1i*IC(idx)) / (p.P(p.k(i,1)) * p.P(p.k(i,2))));
+        end
+    elseif numel(IC) == 1
+        OAIC = IC*ones(1,p.l);
+    else
+        error('IC might be wrong?')
+    end
+    size(IC)
+%     [TOA, b] = ode45(@(t,x) MFROA2(t,x,p), [tnow, tend], gather(OAIC), odeoptions);
+%     ZOA = b*p.P(p.k)/p.N;
+end
+
+function dzdt = MFROA2(t, z, p)
+% Here we compute the differential equation for the mean field reduction 
+% using the formulation for different types of networks, Ott-Antonsen 2017
+    one = -1i.*(z-1).*(z-1)/2;
+    two = (z+1).*(z+1);
+    zc = conj(z);
+    H = (1 + (z.*z + zc.*zc)/6 - 4.*real(z)/3);
+    
+%     HOA = p.OA*H;
+    HOA = zeros(p.l)
+    for i = 1:p.l_i
+        
+    end
+    dzdt = one + two.*(-p.delta + 1i*p.eta0 + 1i*p.K.*HOA)/2;
+end
+
+
+function p = prepareOAparameters2(p)
+    p.pairs = unique([p.degrees_i, p.degrees_o], 'rows');
+    p.l = numel(p.pairs); 
+    p.k_i = unique(p.degrees_i);
+    p.k_o = unique(p.degrees_o);
+    
+    products = zeros(size(p.pairs));
+    for i = 1:p.l
+        products(i,1) = p.P(p.k_i)*assortativity(p.k_i, pkperm, ks, ks, p.N, p.meandegree, 0)
+        products(i,2) = p.P(p.k_i)*assortativity(p.k_i, pkperm, ks, ks, p.N, p.meandegree, 0)
+    end
+    p.products = products
+    
+    p.l_i = numel(p.k);
+    pkperm = p.k(randperm(p.l_i));
+    p.OA = zeros(p.l_i, p.l_i);
+    for i = 1:p.l
+        ks = p.k(i)*ones(p.l,1);
+        p.OA(i, :) = p.P(p.k).*assortativity(p.k, pkperm, ks, ks, p.N, p.meandegree, 0)/p.meandegree;
+    end
+end
+
+
+
+% Deprecated, only for inspiration
 function scalefreepars = make_scalefreeparameters2(pars, shouldbesame, degree_i, degree_o, krange_i, krange_o)
     scalefreepars = pars;
     fsolveoptions = optimset('Display','off');
@@ -127,47 +188,5 @@ function scalefreepars = make_scalefreeparameters2(pars, shouldbesame, degree_i,
     else
         scalefreepars.meandegree_o = fsolve(@(z) scalefreepars.P_o(z) - mean(scalefreepars.P_o(krange_o(1):krange_o(2))), krange_o(1), fsolveoptions);
     end
-end
-
-function p = prepareOAparameters2(p)
-    p.k = unique(p.degrees_in);
-    p.l = numel(p.k);
-    pkperm = p.k(randperm(p.l));
-    p.OA = zeros(p.l, p.l);
-    for i = 1:p.l
-        ks = p.k(i)*ones(p.l,1);
-        p.OA(i, :) = p.P(p.k).*assortativity(p.k, pkperm, ks, ks, p.N, p.meandegree, 0)/p.meandegree;
-    end
-end
-
-function dzdt = MFROA2(t, z, p)
-% Here we compute the differential equation for the mean field reduction 
-% using the formulation for different types of networks, Ott-Antonsen 2017
-    one = -1i.*(z-1).*(z-1)/2;
-    two = (z+1).*(z+1);
-    zc = conj(z);
-    H = (1 + (z.*z + zc.*zc)/6 - 4.*real(z)/3);
-    HOA = p.OA*H;
-    dzdt = one + two.*(-p.delta + 1i*p.eta0 + 1i*p.K.*HOA)/2;
-end
-
-function [TOA, ZOA, b] = OA_simulatenetwork2(tnow, tend, IC, p, odeoptions)
-    if nargin < 5
-        odeoptions = odeset('RelTol', 1.0e-6,'AbsTol', 1.0e-6);
-    end
-
-    if numel(IC) > 1
-        OAIC = zeros(1,p.l);
-        for i = 1:p.l
-            OAIC(i) = sum(exp(1i*IC(p.degrees_in == p.k(i)))) / p.P(p.k(i));
-        end
-    elseif numel(IC) == 1
-        OAIC = IC*ones(1,p.l);
-    else
-        error('IC might be wrong?')
-    end
-    
-    [TOA, b] = ode45(@(t,x) MFROA2(t,x,p), [tnow, tend], gather(OAIC), odeoptions);
-    ZOA = b*p.P(p.k)/p.N;
 end
 
