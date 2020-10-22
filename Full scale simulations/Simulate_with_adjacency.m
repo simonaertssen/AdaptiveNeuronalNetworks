@@ -57,7 +57,7 @@ disp('Mean field test done')
 
 % The OA mean field theory:
 fdpars = prepareOAparameters(fdpars);
-[TOA, ZOA, b] = OA_simulatenetwork(tnow, tend, gather(zfull(1)), fdpars, odeoptions);
+[TOA, ZOA, b] = OA_simulatenetwork(tnow, tend, IC, fdpars, odeoptions);
 disp('OA mean field test done')
 
 %% Plotting the results:
@@ -93,7 +93,7 @@ disp('Mean field test done')
 
 % The OA mean field theory:
 fdpars = prepareOAparameters(fdpars);
-[TOA, ZOA] = OA_simulatenetwork(tnow, tend, gather(zfull(1)), fdpars, odeoptions);
+[TOA, ZOA] = OA_simulatenetwork(tnow, tend, IC, fdpars, odeoptions);
 disp('OA mean field test done')
 
 %% Plotting the results:
@@ -124,7 +124,7 @@ disp('Full scale test done')
 
 % The OA mean field theory:
 rdpars = prepareOAparameters(rdpars);
-[TOA, ZOA] = OA_simulatenetwork(tnow, tend, gather(zfull(1)), rdpars, odeoptions);
+[TOA, ZOA] = OA_simulatenetwork(tnow, tend, IC, rdpars, odeoptions);
 disp('OA mean field test done')
 
 %% Plotting the results:
@@ -154,7 +154,7 @@ disp('Full scale test done')
 
 % The OA mean field theory:
 sfpars = prepareOAparameters(sfpars);
-[TOA, ZOA] = OA_simulatenetwork(tnow, tend, gather(zfull(1)), sfpars, odeoptions);
+[TOA, ZOA] = OA_simulatenetwork(tnow, tend, IC, sfpars, odeoptions);
 disp('OA mean field test done')
 
 %% Plotting the results:
