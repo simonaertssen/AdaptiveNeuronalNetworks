@@ -10,7 +10,7 @@ titlefont = 15;
 labelfont = 13;
 export = true;
 
-%% Testing the OA approach:
+%% Theta model parameters
 tnow = 0; tend = 10;
 h = 0.005;
 
@@ -21,56 +21,76 @@ pars.eta0 = 0.5; pars.delta = 0.7; pars.K = 2;
 seed = 2; rng(seed);
 IC = - pi/2 * ones(pars.N, 1);
 
-% Old version:
-sfpars = make_scalefreeparameters(pars, 3);
-sfpars = prepareOAparameters(sfpars);
+%% Testing the OA approach:
+figure; hold on
 
-% The OA mean field theory:
+tic;
+% Old version:
+sfpars = prepareOAparameters(make_scalefreeparameters(pars, 3));
 [TOA, ZOA] = OA_simulatenetwork(tnow, tend, -1i, sfpars);
 plot(TOA, abs(ZOA), 'k')
+toc;
 
+tic;
 % New version: a simulation per (k_in, k_out)
-sfpars = make_scalefreeparameters(pars, 3);
-sfpars = prepareOAparameters2(sfpars);
-
-% The OA mean field theory:
+sfpars = prepareOAparameters2(make_scalefreeparameters(pars, 3));
 [TOA, ZOA] = OA_simulatenetwork2(tnow, tend, -1i, sfpars);
 plot(TOA, abs(ZOA), 'r')
-
+toc;
 
 %% Functions
-pars.N = 100
-sfpars = make_scalefreeparameters(pars, 3);
-[TOA, ZOA] = OA_simulatenetwork2(tnow, tend, -i, sfpars);
+clc
+sfpars = prepareOAparameters2(make_scalefreeparameters(pars, 3));
+[TOA, ZOA] = OA_simulatenetwork2(tnow, tend, IC, sfpars);
+
+function p = prepareOAparameters2(p)
+    [d_i, d_o] = meshgrid(unique(p.degrees_i), unique(p.degrees_o));
+    p.k = [reshape(d_i, numel(d_i), 1), reshape(d_o, numel(d_o), 1)];
+    p.l = numel(p.k)/2;
+    
+    p.OA = zeros(p.l, p.l);
+    for i = 1:p.l
+        p.OA(:,i) = p.P(p.k(i,1)).*p.P(p.k(i,2)).*assortativity2(p.k, p.k(i,:).*ones(p.l,2), p.N, p.meandegree, 0);
+    end
+end
+
 
 function [TOA, ZOA, b] = OA_simulatenetwork2(tnow, tend, IC, p, odeoptions)
     if nargin < 5
         odeoptions = odeset('RelTol', 1.0e-6,'AbsTol', 1.0e-6);
     end
         
-    p.l_i = numel(unique(p.degrees_i));
-    p.l_o = numel(unique(p.degrees_o));
-    p.k = unique([p.degrees_i, p.degrees_o], 'rows');
-    [p.l, ~] = size(p.k);
-    p.l
+%     p.u_i = unique(p.degrees_i);
+%     p.u_o = unique(p.degrees_o);
+%     p.l_i = numel(unique(p.degrees_i));
+%     p.l_o = numel(unique(p.degrees_o));
+%     p.k = unique([p.degrees_i, p.degrees_o], 'rows');
     
+    Ps = p.P(p.k(:,1)) .* p.P(p.k(:,2));
     if numel(IC) > 1
-        OAIC = zeros(1,p.l);
+        OAIC = zeros(p.l,1);
         for i = 1:p.l
             idx = (p.degrees_i == p.k(i, 1) & p.degrees_o == p.k(i, 2));
-            size(idx)
-            sum(exp(1i*IC(idx)))
-            OAIC(i) = sum(exp(1i*IC(idx)) / (p.P(p.k(i,1)) * p.P(p.k(i,2))));
+            OAIC(i) = sum(exp(1i*IC(idx)) / Ps(i));
         end
     elseif numel(IC) == 1
-        OAIC = IC*ones(1,p.l);
+        OAIC = IC*ones(p.l,1);
     else
         error('IC might be wrong?')
     end
-    size(IC)
-%     [TOA, b] = ode45(@(t,x) MFROA2(t,x,p), [tnow, tend], gather(OAIC), odeoptions);
-%     ZOA = b*p.P(p.k)/p.N;
+    [TOA, b] = ode45(@(t,x) MFROA2(t,x,p), [tnow, tend], gather(OAIC), odeoptions);
+    ZOA = b*Ps/p.N;
 end
+
+function a = assortativity2(k_accent, k, N, k_mean, c)
+if c == 0
+    a = max(0, min(1, (k_accent(:,1).*k(:,2)/(N*k_mean))));
+% else
+%     a = max(0, min(1, (k_accent(2).*k(1)/(N*k_mean)) .* (1 + c*((k_accent_in - k_mean)./k_accent_out).*((k_out - k_mean)./k_in))));
+end
+end
+
+
 
 function dzdt = MFROA2(t, z, p)
 % Here we compute the differential equation for the mean field reduction 
@@ -79,37 +99,16 @@ function dzdt = MFROA2(t, z, p)
     two = (z+1).*(z+1);
     zc = conj(z);
     H = (1 + (z.*z + zc.*zc)/6 - 4.*real(z)/3);
-    
-%     HOA = p.OA*H;
-    HOA = zeros(p.l)
-    for i = 1:p.l_i
-        
-    end
-    dzdt = one + two.*(-p.delta + 1i*p.eta0 + 1i*p.K.*HOA)/2;
+
+    HOA = p.OA*H;
+%     HOA = zeros(p.l, 1);
+%     for i = 1:p.l
+%         a = p.P(p.k(i,1)).*p.P(p.k(i,2)).*assortativity2(p.k, p.k(i,:).*ones(p.l,2), p.N, p.meandegree, 0) ;
+%         HOA(i) = H'*a;
+%     end
+    dzdt = one + two.*(-p.delta + 1i*p.eta0 + 1i*p.K.*HOA/p.meandegree)/2;
 end
 
-
-function p = prepareOAparameters2(p)
-    p.pairs = unique([p.degrees_i, p.degrees_o], 'rows');
-    p.l = numel(p.pairs); 
-    p.k_i = unique(p.degrees_i);
-    p.k_o = unique(p.degrees_o);
-    
-    products = zeros(size(p.pairs));
-    for i = 1:p.l
-        products(i,1) = p.P(p.k_i)*assortativity(p.k_i, pkperm, ks, ks, p.N, p.meandegree, 0)
-        products(i,2) = p.P(p.k_i)*assortativity(p.k_i, pkperm, ks, ks, p.N, p.meandegree, 0)
-    end
-    p.products = products
-    
-    p.l_i = numel(p.k);
-    pkperm = p.k(randperm(p.l_i));
-    p.OA = zeros(p.l_i, p.l_i);
-    for i = 1:p.l
-        ks = p.k(i)*ones(p.l,1);
-        p.OA(i, :) = p.P(p.k).*assortativity(p.k, pkperm, ks, ks, p.N, p.meandegree, 0)/p.meandegree;
-    end
-end
 
 
 
