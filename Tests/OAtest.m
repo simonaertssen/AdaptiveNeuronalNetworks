@@ -14,7 +14,7 @@ export = true;
 tnow = 0; tend = 10;
 h = 0.005;
 
-pars.N = 50;
+pars.N = 1000;
 pars.a_n = 0.666666666666666666667;
 pars.eta0 = 0.5; pars.delta = 0.7; pars.K = 2;
 
@@ -26,11 +26,13 @@ figure; hold on
 
 tic;
 % Old version:
-sfpars = prepareOAparameters(make_scalefreeparameters(pars, 3));
+sfpars = prepareOAparameters(make_randomparameters(pars, 0.3));
 [TOA, ZOA] = OA_simulatenetwork(tnow, tend, -1i, sfpars);
 plot(TOA, abs(ZOA), 'k')
 toc;
 
+%%
+rng(2)
 tic;
 % New version: a simulation per (k_in, k_out)
 sfpars = prepareOAparameters2(make_scalefreeparameters(pars, 3));
@@ -38,19 +40,21 @@ sfpars = prepareOAparameters2(make_scalefreeparameters(pars, 3));
 plot(TOA, abs(ZOA), 'r')
 toc;
 
-%% Functions
-clc
-sfpars = prepareOAparameters2(make_scalefreeparameters(pars, 3));
-[TOA, ZOA] = OA_simulatenetwork2(tnow, tend, IC, sfpars);
-
 function p = prepareOAparameters2(p)
     [d_i, d_o] = meshgrid(unique(p.degrees_i), unique(p.degrees_o));
     p.k = [reshape(d_i, numel(d_i), 1), reshape(d_o, numel(d_o), 1)];
+    disp(p.k)
     p.l = numel(p.k)/2;
     
+%     p.k = unique(p.degrees_i);
+%     p.l = numel(p.k);
+%     pkperm = p.k(randperm(p.l));
     p.OA = zeros(p.l, p.l);
     for i = 1:p.l
-        p.OA(:,i) = p.P(p.k(i,1)).*p.P(p.k(i,2)).*assortativity2(p.k, p.k(i,:).*ones(p.l,2), p.N, p.meandegree, 0);
+        a = p.K*p.P(p.k(:,1)).*p.P(p.k(:,2)).*assortativity2(p.k, p.k(i,:).*ones(p.l,2), p.N, p.meandegree, 0)/p.meandegree;
+        p.OA(i,:) = a;
+%         ks = p.k(i,1)*ones(p.l,1);
+%         p.OA(i, :) = p.P(p.k(:,1)).*assortativity(p.k(:,1), p.k(:,1), ks, ks, p.N, p.meandegree, 0)/p.meandegree;
     end
 end
 
@@ -60,12 +64,6 @@ function [TOA, ZOA, b] = OA_simulatenetwork2(tnow, tend, IC, p, odeoptions)
         odeoptions = odeset('RelTol', 1.0e-6,'AbsTol', 1.0e-6);
     end
         
-%     p.u_i = unique(p.degrees_i);
-%     p.u_o = unique(p.degrees_o);
-%     p.l_i = numel(unique(p.degrees_i));
-%     p.l_o = numel(unique(p.degrees_o));
-%     p.k = unique([p.degrees_i, p.degrees_o], 'rows');
-    
     Ps = p.P(p.k(:,1)) .* p.P(p.k(:,2));
     if numel(IC) > 1
         OAIC = zeros(p.l,1);
@@ -79,17 +77,16 @@ function [TOA, ZOA, b] = OA_simulatenetwork2(tnow, tend, IC, p, odeoptions)
         error('IC might be wrong?')
     end
     [TOA, b] = ode45(@(t,x) MFROA2(t,x,p), [tnow, tend], gather(OAIC), odeoptions);
-    ZOA = b*Ps/p.N;
+    ZOA = b*Ps/(p.N*p.N);
 end
 
 function a = assortativity2(k_accent, k, N, k_mean, c)
 if c == 0
-    a = max(0, min(1, (k_accent(:,1).*k(:,2)/(N*k_mean))));
+    a = max(0, min(1, (k_accent(:,2).*k(:,1)/(N*k_mean))));
 % else
 %     a = max(0, min(1, (k_accent(2).*k(1)/(N*k_mean)) .* (1 + c*((k_accent_in - k_mean)./k_accent_out).*((k_out - k_mean)./k_in))));
 end
 end
-
 
 
 function dzdt = MFROA2(t, z, p)
@@ -101,12 +98,7 @@ function dzdt = MFROA2(t, z, p)
     H = (1 + (z.*z + zc.*zc)/6 - 4.*real(z)/3);
 
     HOA = p.OA*H;
-%     HOA = zeros(p.l, 1);
-%     for i = 1:p.l
-%         a = p.P(p.k(i,1)).*p.P(p.k(i,2)).*assortativity2(p.k, p.k(i,:).*ones(p.l,2), p.N, p.meandegree, 0) ;
-%         HOA(i) = H'*a;
-%     end
-    dzdt = one + two.*(-p.delta + 1i*p.eta0 + 1i*p.K.*HOA/p.meandegree)/2;
+    dzdt = one + 0.5*two.*(-p.delta + 1i*p.eta0 + 1i.*HOA);
 end
 
 
