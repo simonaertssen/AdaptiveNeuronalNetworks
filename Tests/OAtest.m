@@ -1,4 +1,4 @@
-close all; clc;
+close all; clear all; clc;
 %% Setup
 addpath('../Functions');
 addpath('../Mean Field Reductions');
@@ -11,37 +11,36 @@ labelfont = 13;
 export = true;
 
 %% Theta model parameters
-tnow = 0; tend = 10;
+tnow = 0; tend = 5;
 h = 0.005;
 
-pars.N = 100;
+pars.N = 2500;
 pars.a_n = 0.666666666666666666667;
 pars.eta0 = 0.5; pars.delta = 0.7; pars.K = 2;
-
 seed = 2; rng(seed);
+
+pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
 IC = - pi/2 * ones(pars.N, 1);
 
 %% Testing the OA approach:
+sfpars = prepareOAparameters(make_scalefreeparameters(pars, 3));
+
 figure; hold on
+
+tic;
+[tfull, thetasfull] = DOPRI_simulatenetwork(tnow,tend,IC,h,sfpars);
+zfull = orderparameter(thetasfull);
+plot(tfull, abs(zfull), 'b', 'LineWidth', 2)
+toc;
 
 tic;
 % Old version:
 sfpars = prepareOAparameters(make_scalefreeparameters(pars, 3));
-[TOA, ZOA] = OA_simulatenetwork(tnow, tend, -1i, sfpars);
+[TOA, ZOA] = OA_simulatenetwork(tnow, tend, IC, sfpars);
 plot(TOA, abs(ZOA), 'k')
 toc;
 
-%% 
-N = 1000; l = 100;
-k = randi([sfpars.kmin, sfpars.kmax], l, 2);
-k = k ./ sum(k);
-ks = k(2, 1)*ones(l,2);
-test1 = assortativity(k(:,2), k(:,1), ks(:,2), ks(:,1), N, round(0.3*N), 0)'
-test2 = assortativity2(k, ks, N, round(0.3*N), 0)'
-
-
 %%
-rng(2)
 tic;
 % New version: a simulation per (k_in, k_out)
 sfpars = prepareOAparameters2(make_scalefreeparameters(pars, 3));
@@ -49,10 +48,12 @@ sfpars = prepareOAparameters2(make_scalefreeparameters(pars, 3));
 plot(TOA, abs(ZOA), 'r')
 toc;
 
+%% Functions
 function p = prepareOAparameters2(p)
-    [d_i, d_o] = meshgrid(unique(p.degrees_i), unique(p.degrees_o));
-    p.k = [reshape(d_i, numel(d_i), 1), reshape(d_o, numel(d_o), 1)];
-    p.l = numel(p.k)/2;
+%     [d_i, d_o] = meshgrid(unique(p.degrees_i), unique(p.degrees_o));
+%     p.k = [reshape(d_i, numel(d_i), 1), reshape(d_o, numel(d_o), 1)];
+    p.k = unique([p.degrees_i, p.degrees_o], 'rows');
+    p.l = numel(p.k)/2
 %     p.P = @(x) p.P(x)*sum(p.P(p.k(:,1)))/p.N;
     
 %     p.k = unique(p.degrees_i);
@@ -60,7 +61,7 @@ function p = prepareOAparameters2(p)
 %     pkperm = p.k(randperm(p.l));
     p.OA = zeros(p.l, p.l);
     for i = 1:p.l
-        a = p.P(p.k(:,1)).*p.P(p.k(:,2)).*assortativity2(p.k, p.k(i,:).*ones(p.l,2), p.N, p.meandegree, 0)/p.meandegree;
+        a = p.P(p.k(:,1)).*p.P(p.k(:,2)).*assortativity2(p.k, p.k(i,:).*ones(p.l,2), p.N*p.meandegree, 0)/p.meandegree;
         p.OA(i,:) = a;
 %         ks = p.k(i,1)*ones(p.l,1);
 %         p.OA(i, :) = p.P(p.k(:,1)).*assortativity(p.k(:,1), p.k(:,1), ks, ks, p.N, p.meandegree, 0)/p.meandegree;
@@ -89,10 +90,9 @@ function [TOA, ZOA, b] = OA_simulatenetwork2(tnow, tend, IC, p, odeoptions)
     ZOA = b*Ps/(p.N*p.N);
 end
 
-function a = assortativity2(k_accent, k, N, k_mean, c)
+function a = assortativity2(k_accent, k, Nk_mean, c)
 if c == 0
-    a = max(0, min(1, (k_accent(:,2).*k(:,1)/(N*k_mean))));
-    a = k_accent(:,2).*k(:,1)/(N*k_mean);
+    a = max(0, min(1, (k_accent(:,2).*k(:,1)/(Nk_mean))));
 % else
 %     a = max(0, min(1, (k_accent(2).*k(1)/(N*k_mean)) .* (1 + c*((k_accent_in - k_mean)./k_accent_out).*((k_out - k_mean)./k_in))));
 end
