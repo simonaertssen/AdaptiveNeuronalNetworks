@@ -11,10 +11,10 @@ labelfont = 13;
 export = true;
 
 %% Theta model parameters
-tnow = 0; tend = 8;
+tnow = 0; tend = 10;
 h = 0.005;
 
-pars.N = 3000;
+pars.N = 7000;
 pars.a_n = 0.666666666666666666667;
 pars.eta0 = 0.5; pars.delta = 0.7; pars.K = 2;
 seed = 2; rng(seed);
@@ -35,28 +35,29 @@ z = orderparameter(IC)
 Z = OAIC*Ps/(p.N*p.N)
 
 %% Testing the OA approach:
-sfpars = prepareOAparameters(make_scalefreeparameters(pars, 2.1));
+sfpars = make_scalefreeparameters(pars, 2.1);
 
 figure; hold on
 
-tic;
-[tfull, thetasfull] = DOPRI_simulatenetwork(tnow,tend,IC,h,sfpars);
-zfull = orderparameter(thetasfull);
+% tic;
+% [tfull, thetasfull] = DOPRI_simulatenetwork(tnow,tend,IC,h,sfpars);
+% zfull = orderparameter(thetasfull);
 plot(tfull, abs(zfull), 'b', 'LineWidth', 2)
-toc;
+% toc;
 
 
 tic;
 % Old version:
+sfpars = prepareOAparameters(sfpars);
 [TOA, ZOA] = OA_simulatenetwork(tnow, tend, IC, sfpars);
-plot(TOA, abs(ZOA), 'k')
+plot(TOA, abs(ZOA), 'r', 'LineWidth', 2)
 toc;
 
 %%
 tic;
 % New version: a simulation per (k_in, k_out)
 sfpars = prepareOAparameters2(make_scalefreeparameters(pars, 2.1));
-[TOA, ZOA] = OA_simulatenetwork2(tnow, tend, IC, sfpars);
+[TOA, ZOA] = OA_simulatenetwork2(tnow, 4, IC, sfpars);
 plot(TOA, abs(ZOA), 'r')
 toc;
 
@@ -74,7 +75,7 @@ function p = prepareOAparameters2(p)
 %     pkperm = p.k(randperm(p.l));
     p.OA = zeros(p.l, p.l);
     for i = 1:p.l
-        a = p.P(p.k(:,1)).*assortativity2(p.k, p.k(i,:).*ones(p.l,2), p.N*p.meandegree, 0)/p.meandegree;
+        a = p.P(p.k(:,1)).*p.P(p.k(:,2)).*assortativity2(p.k, p.k(i,:).*ones(p.l,2), p.N*p.meandegree, 0)/p.meandegree*p.N;
         p.OA(i,:) = a;
 %         ks = p.k(i,1)*ones(p.l,1);
 %         p.OA(i, :) = p.P(p.k(:,1)).*assortativity(p.k(:,1), p.k(:,1), ks, ks, p.N, p.meandegree, 0)/p.meandegree;
