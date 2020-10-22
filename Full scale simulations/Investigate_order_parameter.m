@@ -63,7 +63,7 @@ for i = 1:3
  
     % The OA mean field theory:
     oa_params = prepareOAparameters(params);
-    [TOA, ZOA] = OA_simulatenetwork(tnow, tend, gather(z(1)), oa_params, options);
+    [TOA, ZOA] = OA_simulatenetwork(tnow, tend, IC, oa_params, options);
     
     % Other order parameters:
     degrees = sum(A,2);
@@ -133,7 +133,7 @@ for i = 1:3
  
     % The OA mean field theory:
     oa_params = prepareOAparameters(params);
-    [TOA, ZOA] = OA_simulatenetwork(tnow, tend, gather(z(1)), oa_params, options);
+    [TOA, ZOA] = OA_simulatenetwork(tnow, tend, IC, oa_params, options);
     
     % Other order parameters:
     degrees = sum(A,2);
@@ -204,7 +204,7 @@ for i = 1:3
  
     % The OA mean field theory:
     oa_params = prepareOAparameters(params);
-    [TOA, ZOA] = OA_simulatenetwork(tnow, tend, gather(z(1)), oa_params, options);
+    [TOA, ZOA] = OA_simulatenetwork(tnow, tend, IC, oa_params, options);
 
     % Other order parameters:
     degrees = sum(A,2);
