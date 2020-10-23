@@ -22,9 +22,9 @@ initarray = make_GPUhandle();
 
 %% Theta model parameters:
 tnow = 0; tend = 10;
-h = 0.001;
+h = 0.005;
 
-pars.N = 20000;
+pars.N = 10000;
 pars.a_n = 0.666666666666666666667;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 
@@ -40,10 +40,6 @@ optimopts = optimoptions('fsolve', 'Display','off', 'Algorithm', 'Levenberg-Marq
 fdpars = make_fixeddegreeparameters(pars, pars.N - 1);
 [t, thetas] = DOPRI_threshold(@thetaneurons, tnow, tend, IC, h, pars);
 z = orderparameter(thetas);
-
-% [t, thetas] = ode45(@(t,x) thetaneurons(t,x,pars.e,pars.K/pars.N,pars.a_n), [tnow, tend], IC, odeoptions);
-% thetas = wrapToPi(thetas)';
-% z = orderparameter(thetas);
 disp('Small scale test done')
 
 % The full scale simulation using the adjacency matrix:
@@ -57,7 +53,7 @@ disp('Mean field test done')
 
 % The OA mean field theory:
 fdpars = prepareOAparameters(fdpars);
-[TOA, ZOA, b] = OA_simulatenetwork(tnow, tend, IC, fdpars, odeoptions);
+[TOA, ZOA, b] = OA_simulatenetwork(tnow, tend, gather(zfull(1)), fdpars, odeoptions);
 disp('OA mean field test done')
 
 %% Plotting the results:
@@ -93,7 +89,7 @@ disp('Mean field test done')
 
 % The OA mean field theory:
 fdpars = prepareOAparameters(fdpars);
-[TOA, ZOA] = OA_simulatenetwork(tnow, tend, IC, fdpars, odeoptions);
+[TOA, ZOA] = OA_simulatenetwork(tnow, tend, gather(zfull(1)), fdpars, odeoptions);
 disp('OA mean field test done')
 
 %% Plotting the results:
@@ -124,7 +120,7 @@ disp('Full scale test done')
 
 % The OA mean field theory:
 rdpars = prepareOAparameters(rdpars);
-[TOA, ZOA] = OA_simulatenetwork(tnow, tend, IC, rdpars, odeoptions);
+[TOA, ZOA] = OA_simulatenetwork(tnow, tend, gather(zfull(1)), rdpars, odeoptions);
 disp('OA mean field test done')
 
 %% Plotting the results:
@@ -145,7 +141,7 @@ disp('Made random network figure')
 
 %% 3. Perform a full scale simulation of a scale-free network:
 % The full scale simulation using the adjacency matrix:
-degree = 3;
+degree = 2.1;
 
 sfpars = make_scalefreeparameters(pars, degree);
 [tfull, thetasfull] = DOPRI_simulatenetwork(tnow,tend,IC,h,sfpars);
@@ -172,3 +168,33 @@ exportpdf(f_scalefree, '../Figures/InspectMeanFieldScaleFree.pdf', export);
 close(f_scalefree)
 
 disp('Made scale-free network figure')
+
+%% 4. Perform a full scale simulation of a lognorm network:
+% The full scale simulation using the adjacency matrix:
+
+lnpars = make_lognormparameters(pars, 3, 1, round(pars.N/7));
+[tfull, thetasfull] = DOPRI_simulatenetwork(tnow,tend,IC,h,lnpars);
+zfull = orderparameter(thetasfull);
+disp('Full scale test done')
+
+% The OA mean field theory:
+lnpars = prepareOAparameters(lnpars);
+[TOA, ZOA] = OA_simulatenetwork(tnow, tend, IC, lnpars, odeoptions);
+disp('OA mean field test done')
+
+%% Plotting the results:
+f_lognorm = figure('Renderer', 'painters', 'Position', [50 800 800 400]); box on; hold on;
+
+xlim([tnow, tend]); ylim([0, 1])
+plot(tfull, abs(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
+plot(TOA, abs(ZOA), '-k', 'LineWidth', 2, 'Color', '#000000');
+xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
+ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
+
+title(sprintf('\\bf Lognorm network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f', pars.N, lnpars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex')
+legend('$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southwest', 'Orientation','horizontal')
+exportpdf(f_lognorm, '../Figures/InspectMeanFieldLogNorm.pdf', export);
+close(f_lognorm)
+
+disp('Made lognorm network figure')
+
