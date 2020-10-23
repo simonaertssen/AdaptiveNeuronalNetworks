@@ -29,7 +29,7 @@ pars.a_n = 0.666666666666666666667;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 
 seed = 2; rng(seed);
-IC = wrapToPi(randn(pars.N, 1)*1.2);
+IC = wrapToPi(randn(pars.N, 1));
 
 pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
 odeoptions = odeset('RelTol', 1.0e-8,'AbsTol', 1.0e-8);
@@ -171,8 +171,7 @@ disp('Made scale-free network figure')
 
 %% 4. Perform a full scale simulation of a lognorm network:
 % The full scale simulation using the adjacency matrix:
-
-lnpars = make_lognormparameters(pars, 3, 1, round(pars.N/7));
+lnpars = make_lognormparameters(pars, 3, 1, round(pars.N/5));
 [tfull, thetasfull] = DOPRI_simulatenetwork(tnow,tend,IC,h,lnpars);
 zfull = orderparameter(thetasfull);
 disp('Full scale test done')
