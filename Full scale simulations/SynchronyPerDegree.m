@@ -266,7 +266,7 @@ for i = 1:nbins
 end
 plot(TOA, abs(ZOA), '-', 'LineWidth', 2, 'Color', '#000000');
 
-title(sprintf('\\bf Scale-free network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f', pars.N, lnpars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex')
+title(sprintf('\\bf Lognorm network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f', pars.N, lnpars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex')
 legend('$$Z(t)_{0 \leq k < 0.25}$$', '$$Z(t)_{0.25 \leq k < 0.5}$$', '$$Z(t)_{0.5 \leq k < 0.75}$$', '$$Z(t)_{0.75 \leq k < 1}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southeast', 'Orientation','horizontal')
 exportpdf(f_lognorm, '../Figures/SynchronyLogNormDegrees.pdf', export);
 close(f_lognorm)
