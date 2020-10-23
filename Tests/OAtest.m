@@ -12,7 +12,7 @@ export = true;
 
 %% Theta model parameters
 tnow = 0; tend = 8;
-h = 0.008;
+h = 0.01;
 
 pars.N = 5000;
 pars.a_n = 0.666666666666666666667;
@@ -23,44 +23,39 @@ pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
 IC = - pi/2 * ones(pars.N, 1);
 
 %% Testing initial conditions:
-p = prepareOAparameters2(make_scalefreeparameters(pars, 3));
-Ps = p.P(p.k(:,1)) .* p.P(p.k(:,2));
-OAIC = zeros(1, p.l);
-for i = 1:p.l
-    idx = (p.degrees_i == p.k(i, 1) & p.degrees_o == p.k(i, 2));
-    OAIC(i) = sum(exp(1i*IC(idx)) / Ps(i)) * p.N;
-end
+oapars = prepareOAparameters(make_lognormparameters(pars, 3, 1, 500));
 
-z = orderparameter(IC)
-Z = OAIC*Ps/(p.N*p.N)
+OAIC = zeros(1,oapars.l);
+for i = 1:oapars.l
+    OAIC(i) = sum(exp(1i*IC(oapars.degrees_i == oapars.k(i)))) / (oapars.P(oapars.k(i))+1.0e-24);
+end
+ZOA = OAIC*oapars.P(oapars.k)/oapars.N
 
 %% Testing the OA approach:
-sfpars = make_scalefreeparameters(pars, 4);
+oapars = make_lognormparameters(pars, 3, 1, 500);
 
 figure; hold on
 
 % tic;
-% [tfull, thetasfull] = DOPRI_simulatenetwork(tnow,tend,IC,h,sfpars);
+% [tfull, thetasfull] = DOPRI_simulatenetwork(tnow,tend,IC,h,oapars);
 % zfull = orderparameter(thetasfull);
 plot(tfull, abs(zfull), 'b', 'LineWidth', 2)
 % toc;
 
-
 tic;
 % Old version:
-sfpars = prepareOAparameters(sfpars);
-sfpars.meandegree = sum(sfpars.degrees_i)/pars.N;
-[TOA, ZOA] = OA_simulatenetwork(tnow, tend, IC, sfpars);
+oapars = prepareOAparameters(oapars);
+[TOA, ZOA] = OA_simulatenetwork(tnow, tend, IC, oapars);
 plot(TOA, abs(ZOA), 'r', 'LineWidth', 2)
 toc;
 
 %%
-tic;
-% New version: a simulation per (k_in, k_out)
-sfpars = prepareOAparameters2(make_scalefreeparameters(pars, 2.1));
-[TOA, ZOA] = OA_simulatenetwork2(tnow, 4, IC, sfpars);
-plot(TOA, abs(ZOA), 'r')
-toc;
+% tic;
+% % New version: a simulation per (k_in, k_out)
+% sfpars = prepareOAparameters2(make_scalefreeparameters(pars, 2.1));
+% [TOA, ZOA] = OA_simulatenetwork2(tnow, 4, IC, sfpars);
+% plot(TOA, abs(ZOA), 'r')
+% toc;
 
 
 %% Functions
