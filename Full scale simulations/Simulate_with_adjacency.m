@@ -37,7 +37,7 @@ optimopts = optimoptions('fsolve', 'Display','off', 'Algorithm', 'Levenberg-Marq
 
 %% 0. Perform a full scale simulation of a FULLY CONNECTED network:
 % The simple DOPRI integration: find initial conditions with fsolve
-fdpars = make_fixeddegreeparameters(pars, pars.N - 1);
+fdpars = make_fixeddegreeparameters(pars, pars.N);
 [t, thetas] = DOPRI_threshold(@thetaneurons, tnow, tend, IC, h, pars);
 z = orderparameter(thetas);
 disp('Small scale test done')
