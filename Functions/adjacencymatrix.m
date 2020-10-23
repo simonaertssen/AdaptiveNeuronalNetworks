@@ -63,8 +63,8 @@ function A = adjacencymatrix(degrees_in, degrees_out)
         else 
             A = sparse(xidx, yidx, ones(numnonzeros, 1, 'logical'));
         end
-        A(N,N) = 0; % Make it an N x N matrix
-        assert(sum(diag(A)) == 0);
+        A(N,N) = 1; % Make it an N x N matrix
+%         assert(sum(diag(A)) == 0);
         
         % Additional selfcoupling:
         A(1:N+1:N*N) = 1;
