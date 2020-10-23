@@ -30,7 +30,8 @@ pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 
 seed = 2; rng(seed);
 IC = wrapToPi(randn(pars.N, 1)*0.8);
-
+IC = wrapToPi(randn(pars.N, 1) + 1); 
+ 
 pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
 odeoptions = odeset('RelTol', 1.0e-12,'AbsTol', 1.0e-12);
 optimopts = optimoptions('fsolve', 'Display','off', 'Algorithm', 'Levenberg-Marquardt');
