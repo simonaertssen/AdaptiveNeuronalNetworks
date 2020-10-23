@@ -52,7 +52,7 @@ histogram(scalefreepars.degrees_i, 'Normalization', 'pdf');
 plot(x, scalefreepars.P(x)/pars.N);
 xline(scalefreepars.meandegree, 'k--')
 
-%% Test: a lognormal network - inspired by scale-free
+%% Test: a lognormal network - inspired by scale-free CORRECT
 lognormpars = make_lognormparameters(pars, 3, 1, 500);
 
 if round(sum(lognormpars.P(1:pars.N))) == pars.N; disp('Sum is correct'); end

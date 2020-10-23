@@ -14,7 +14,7 @@ export = true;
 tnow = 0; tend = 8;
 h = 0.01;
 
-pars.N = 5000;
+pars.N = 1000;
 pars.a_n = 0.666666666666666666667;
 pars.eta0 = 0.5; pars.delta = 0.7; pars.K = 2;
 seed = 2; rng(seed);
@@ -37,8 +37,8 @@ oapars = make_lognormparameters(pars, 3, 1, 500);
 figure; hold on
 
 % tic;
-% [tfull, thetasfull] = DOPRI_simulatenetwork(tnow,tend,IC,h,oapars);
-% zfull = orderparameter(thetasfull);
+[tfull, thetasfull] = DOPRI_simulatenetwork(tnow,tend,IC,h,oapars);
+zfull = orderparameter(thetasfull);
 plot(tfull, abs(zfull), 'b', 'LineWidth', 2)
 % toc;
 
