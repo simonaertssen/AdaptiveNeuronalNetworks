@@ -216,3 +216,61 @@ close(f_scalefree)
 
 disp('Made scale-free network figures')
 
+%% 4. Perform a full scale simulation of a log norm network:
+% The full scale simulation using the adjacency matrix:
+lnpars = make_lognormparameters(pars, 3, 1, round(pars.N/5));
+
+[tfull, thetasfull] = DOPRI_simulatenetwork(tnow,tend,IC,h,lnpars);
+zfull = orderparameter(thetasfull);
+disp('Full scale test done')
+
+% The OA mean field theory:
+lnpars = prepareOAparameters(lnpars);
+[TOA, ZOA] = OA_simulatenetwork(tnow, tend, IC, lnpars, odeoptions);
+disp('OA mean field test done')
+
+% Order parameter per quantile:
+zfull_lo = orderparameter(thetasfull(lowidx, :));
+zfull_hi = orderparameter(thetasfull(highidx, :));
+
+% Order parameter per degree:
+nbins = 4;
+[N,edges] = histcounts(lnpars.degrees_i, nbins);
+zdegrees = zeros(nbins, numel(tfull));  
+for i = 1:nbins
+    idx = lnpars.degrees_i > edges(i) & lnpars.degrees_i < edges(i+1);
+    zdegrees(i,:) = gather(orderparameter(thetasfull(idx,:)));
+end
+
+
+%% Plotting the results: per quantile
+f_lognorm = figure('Renderer', 'painters', 'Position', [50 800 800 400]); box on; hold on;
+
+xlim([tnow, tend]); ylim([0, 1])
+plot(tfull, abs(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
+plot(tfull, abs(zfull_lo), '-', 'LineWidth', 2, 'Color', '#D95319');
+plot(tfull, abs(zfull_hi), '-', 'LineWidth', 2, 'Color', '#EDB120');
+plot(TOA, abs(ZOA), '-', 'LineWidth', 2, 'Color', '#000000');
+
+title(sprintf('\\bf Scale-free network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f', pars.N, lnpars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex')
+legend('$$Z(t)_{A_{ij}}$$', '$$Z(t)_{\eta_{\rm  < 0.05}}$$', '$$Z(t)_{\eta_{\rm > 0.95}}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southeast', 'Orientation','horizontal')
+exportpdf(f_lognorm, '../Figures/SynchronyLogNormQuantiles.pdf', export);
+close(f_lognorm)
+
+%% Plotting the results: per quantile
+f_lognorm = figure('Renderer', 'painters', 'Position', [50 800 800 400]); box on; hold on;
+
+xlim([tnow, tend]); ylim([0, 1])
+for i = 1:nbins
+    plot(tfull, abs(zdegrees(i,:)), '-', 'LineWidth', 2, 'Color', [0, 1/nbins*i, 0])
+end
+plot(TOA, abs(ZOA), '-', 'LineWidth', 2, 'Color', '#000000');
+
+title(sprintf('\\bf Scale-free network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f', pars.N, lnpars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex')
+legend('$$Z(t)_{0 \leq k < 0.25}$$', '$$Z(t)_{0.25 \leq k < 0.5}$$', '$$Z(t)_{0.5 \leq k < 0.75}$$', '$$Z(t)_{0.75 \leq k < 1}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southeast', 'Orientation','horizontal')
+exportpdf(f_lognorm, '../Figures/SynchronyLogNormDegrees.pdf', export);
+close(f_lognorm)
+
+disp('Made lognorm network figures')
+
+
