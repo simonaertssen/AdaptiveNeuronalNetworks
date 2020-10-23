@@ -49,6 +49,7 @@ plot(tfull, abs(zfull), 'b', 'LineWidth', 2)
 tic;
 % Old version:
 sfpars = prepareOAparameters(sfpars);
+sfpars.meandegree = sum(sfpars.degrees_i)/pars.N;
 [TOA, ZOA] = OA_simulatenetwork(tnow, tend, IC, sfpars);
 plot(TOA, abs(ZOA), 'r', 'LineWidth', 2)
 toc;
