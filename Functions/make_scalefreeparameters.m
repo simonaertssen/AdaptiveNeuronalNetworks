@@ -4,7 +4,8 @@ function scalefreepars = make_scalefreeparameters(pars, degree, kmin, kmax)
     if nargin < 1; error('Not enough input arguments'); end
     if nargin < 2; degree = 3; end
     if nargin < 3; kmin = round(pars.N*3/20); end
-    if nargin < 4; kmax = round(pars.N*2/5); end
+    if nargin < 4; kmax = round(pars.N*1/5); end
+    assert(kmin < kmax);
    
     if degree < 2
         error('Scale free networks do not exist for degress less than 2');
