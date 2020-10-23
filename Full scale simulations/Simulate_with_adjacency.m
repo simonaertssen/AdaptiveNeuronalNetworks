@@ -32,7 +32,7 @@ seed = 2; rng(seed);
 IC = wrapToPi(randn(pars.N, 1));
 
 pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
-odeoptions = odeset('RelTol', 1.0e-8,'AbsTol', 1.0e-8);
+odeoptions = odeset('RelTol', 1.0e-12,'AbsTol', 1.0e-12);
 optimopts = optimoptions('fsolve', 'Display','off', 'Algorithm', 'Levenberg-Marquardt');
 
 %% 0. Perform a full scale simulation of a FULLY CONNECTED network:
@@ -53,7 +53,7 @@ disp('Mean field test done')
 
 % The OA mean field theory:
 fdpars = prepareOAparameters(fdpars);
-[TOA, ZOA, b] = OA_simulatenetwork(tnow, tend, gather(zfull(1)), fdpars, odeoptions);
+[TOA, ZOA, b] = OA_simulatenetwork(tnow, tend, IC, fdpars, odeoptions);
 disp('OA mean field test done')
 
 %% Plotting the results:
@@ -89,7 +89,7 @@ disp('Mean field test done')
 
 % The OA mean field theory:
 fdpars = prepareOAparameters(fdpars);
-[TOA, ZOA] = OA_simulatenetwork(tnow, tend, gather(zfull(1)), fdpars, odeoptions);
+[TOA, ZOA] = OA_simulatenetwork(tnow, tend, IC, fdpars, odeoptions);
 disp('OA mean field test done')
 
 %% Plotting the results:
@@ -120,7 +120,7 @@ disp('Full scale test done')
 
 % The OA mean field theory:
 rdpars = prepareOAparameters(rdpars);
-[TOA, ZOA] = OA_simulatenetwork(tnow, tend, gather(zfull(1)), rdpars, odeoptions);
+[TOA, ZOA] = OA_simulatenetwork(tnow, tend, IC, rdpars, odeoptions);
 disp('OA mean field test done')
 
 %% Plotting the results:
