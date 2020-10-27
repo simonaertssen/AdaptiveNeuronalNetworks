@@ -2,61 +2,85 @@ close all; clear all; clc;
 addpath('../Functions');
 addpath('../Mean Field Reductions/');
 
+%% Test fixpoint iteration of the logistic map
+logistic = @(x) 2.8*x.*(1-x);
+
+xold = 0; xnew = 0.1;
+times = 0;
+while norm(xnew - xold) > 1.0e-12 && times < 100
+    times = times + 1;
+    xold = xnew;
+    xnew = logistic(xnew);
+end
+
+logistic(xnew)
+plot(x, logistic(x))
+plot(x, x)
+scatter(xnew, logistic(xnew))
+
+
 %% Test how we can get the fixpoints of the system
 clc
-pars.N = 10000;
+pars.N = 1000;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
+pars.eta0 = 0.5; pars.delta = 0.7; pars.K = 2;
+% pars.eta0 = -0.9; pars.delta = 0.8; pars.K = -2;
+
 seed = 2; rng(seed);
 pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
 netp = 0.1;
-rdpars = prepareOAparameters(make_randomparameters(pars, netp));
+p = prepareOAparameters(make_randomparameters(pars, 0.2));
 
-hold on; box on; grid on; axis square;
+cla; hold on; box on; grid on; axis square;
 phasespaceplot();
-drawdiraclimitcycle();
+% drawdiraclimitcycle();
 
-IC = find_ICs([pars.N, 1], 0.01 + 1i*0.01);
-print(IC)
-% eqpts = findeqptsold(wrapToPi(rand(rdpars.l, 1)*2*pi - pi), rdpars.delta, rdpars.eta0, rdpars.K/rdpars.meandegree, rdpars.OA, rdpars.P(rdpars.k)/rdpars.N);
-eqpts = findeqptsold(IC, rdpars.delta, rdpars.eta0, rdpars.K/rdpars.meandegree, rdpars.OA, rdpars.P(rdpars.k)/rdpars.N);
-
-% eqpts = findeqpts(wrapToPi(rand(rdpars.l, 1)*2*pi - pi), rdpars)
-ZOA = eqpts'*rdpars.P(rdpars.k)/rdpars.N;
-
-scatter(real(ZOA), imag(ZOA), 'r');
-
-
-function bhat = findeqpts(b0, p)
-    ntimes = 0;
-    bhat = b0; bhatold = 2*ones(size(b0));
-    while norm(bhat - bhatold) > 0.01 && ntimes < 100
-        ntimes = ntimes + 1;
-        bhatold = bhat;
-        orderparameter(bhat)
-        
-        bhat = MFROA(0, bhat, p);
-        
-    end
-    disp(['Algorithm took ', num2str(ntimes), ' steps'])
+IC = ones(p.N,1)-randn(pars.N,1);
+OAIC = zeros(1,p.l);
+for i = 1:p.l
+    OAIC(i) = sum(exp(1i*IC(p.degrees_i == p.k(i)))) / (p.P(p.k(i))+1.0e-24);
 end
 
+scatter(real(orderparameter(IC)), imag(orderparameter(IC)), 150, '+')
+scatter(real(OAIC*p.P(p.k)/p.N), imag(OAIC*p.P(p.k)/p.N), 150, 'x')
 
+eqpts = findeqpts(OAIC', p);
+ZOA = eqpts'*p.P(p.k)/p.N;
+scatter(real(ZOA), imag(ZOA), 'xr');
 
-function bhat = findeqptsold(b0, delta, eta, Kmeank, Passort, v)
+[~, Z] = OA_simulatenetwork(0, 7, orderparameter(IC), p);
+plot(real(Z), imag(Z))
+
+function bhat = findeqpts(b0, p)
+    bs = [b0'*p.P(p.k)/p.N];
     ntimes = 0;
-    bhat = b0; bhatold = 2*ones(size(b0));
-    while norm(bhat - bhatold) > 0.000001 && ntimes < 100
+    bhat = b0; bhatold = -b0;
+    while norm(bhat - bhatold) > 1.0e-22 && ntimes < 200
         ntimes = ntimes + 1;
         bhatold = bhat;
         
-        Z = bhat'*v
-        plot(real(Z), imag(Z),'r');
+        bhatc = conj(bhat);
+        H = (1 + (bhat.*bhat + bhatc.*bhatc)/6 - 4.*real(bhat)/3);
+%         z = sqrt((-p.delta + 1i*p.eta0 + 1i*p.K*p.OA*H/p.meandegree)/1i);
+        z = sqrt((-p.delta + 1i*p.eta0 + 1i*p.K*p.OA*H)/1i);
+        bhat = (1 + z)./(1 - z);
         
-        z = sqrt(1i * (-delta + 1i*eta + 1i*Kmeank*Passort*bhat));
-        bhat = (1 - z)./(1 + z);
-        if norm(bhat) < 1; bhat = 1./bhat; end
+        disp('norm')
+        norm(bhat)
+        norm((1 - z)./(1 + z))
+        if norm(bhat) > 1
+            bhat = (1 - z)./(1 + z);
+        end
         
+%         bhat = MFROA(0, bhat, p);
+%         if norm(bhat) > 1
+%             bhat = 1./bhat;
+%         end
+
+        bs = [bs, bhat'*p.P(p.k)/p.N];
     end
     disp(['Algorithm took ', num2str(ntimes), ' steps'])
+    norm(bhat - bhatold)
+    plot(real(bs), imag(bs))
 end
 
