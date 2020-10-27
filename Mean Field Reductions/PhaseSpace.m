@@ -245,6 +245,14 @@ MRFIC = 0.34 + 1i*(-0.2);
 [~, z] = ode45(@(t,x) MFR2(t,x,pars), [0, 1.765], MRFIC, odeoptions);
 zplot = plot(real(z), imag(z), ':k', 'LineWidth', 1.5);
 
+% Arrows:
+ICs = X + 1i*Y; ICs = reshape(ICs, numel(ICs), 1)*ones(1, rdpars.l);
+OAIC = ICs*rdpars.P(rdpars.k)/rdpars.N;
+OAIC = reshape(OAIC, round(sqrt(numel(OAIC))), round(sqrt(numel(OAIC))));
+quiver(X, Y, real(OAIC), imag(OAIC), 'color', cm(2,:))
+
+%%
+
 % Random net:
 eqptIC = [0, -0.8 - 1i*0.6, -0.8 - 1i*0.8, -0.5 - 1i*0.8, -0.4 - 1i*0.8]; 
 col = [0.4060 0.7040 0.1280] - 0.1;
