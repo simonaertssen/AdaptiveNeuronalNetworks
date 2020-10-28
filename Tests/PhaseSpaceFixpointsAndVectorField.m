@@ -23,7 +23,7 @@ scatter(xnew, logistic(xnew))
 pars.N = 1000;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 pars.eta0 = 0.5; pars.delta = 0.7; pars.K = 2;
-% pars.eta0 = -0.9; pars.delta = 0.8; pars.K = -2;
+pars.eta0 = -0.9; pars.delta = 0.8; pars.K = -2;
 
 seed = 2; rng(seed);
 pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
@@ -160,7 +160,6 @@ scatter(real(ZOA), imag(ZOA), 150, 'xb');
 scatter(real(Z(1)), imag(Z(1)), 100, 'ob')
 plot(real(Z), imag(Z))
 
-%% Functions
 function x = NewtonRaphsonIteration(x0, p)
     xs = x0'*p.P(p.k)/p.N;
     
@@ -170,11 +169,11 @@ function x = NewtonRaphsonIteration(x0, p)
         H = (1 + (z.*z + zc.*zc)/6 - 4.*real(z)/3);
         I = -p.delta + 1i*p.eta0 + 1i*p.K*p.OA*H;
 %         dIdz = 1i*p.K*p.OA.*(z - 2)/3;
-        dIdz = 1i*p.K*p.OA.*(z - 2)/3;
+        dIdz = 1i*p.K*p.OA'.*(z - 2)/3;
 %         disp('dIdz')
 %         size(dIdz)
                 
-        dfdz = 1/2*(z+1).^2.*dIdz;
+        dfdz = 1/2*(z+1).*(z+1).*dIdz;
 %         disp('dfdz')
 %         size(dfdz)
         dfdz(1:p.l+1:end) = dfdz(1:p.l+1:end) + (-1i*(z-1) + (z+1).*I)';
@@ -188,16 +187,18 @@ function x = NewtonRaphsonIteration(x0, p)
 %     df(x0,p);
 %     return
     x = x0;
-    maxevals = 50;
+    maxevals = 100;
     for evaltime = 1:maxevals
         x0 = x;
-        x = x - (f(x,p)\df(x,p))';
+%         x = x - (f(x,p)\df(x,p))';
+        x = x - (f(x,p)'/df(x,p))';
+        x = x - (df(x,p)\f(x,p));
 %         size(x)
 %         if norm(x) > 1
 %             x = 1./x;
 %         end
         error = norm(x - x0);
-        if error < 1.0e-7
+        if error < 1.0e-24
             break
         end
         xs = [xs, x'*p.P(p.k)/p.N];
