@@ -4,6 +4,7 @@ function p = prepareOAparameters(p)
     p.k_o = unique(p.degrees_o, 'stable');
     p.OA = zeros(p.l, p.l);
     for i = 1:p.l
-        p.OA(i, :) = p.P(p.k).*assortativity(p.k, p.k_o, p.k(i), p.k_o(i), p.N, p.meandegree, 0)/p.meandegree;
+        p.OA(i, :) = p.P(p.k).*assortativity(p.k, p.k_o, p.k(i), p.k_o(i), p.N, p.meandegree, 0);
     end
+    p.OA = p.OA/p.meandegree
 end
