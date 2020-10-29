@@ -9,21 +9,95 @@ Simon Aertssen (s181603), \today \\
 
 \section{Writing out the whole system}
 When we assemble the whole expression for the Ott-Antonsen manifold as found in \cite{OttAntonsen2017} we obtain the following:
-\begin{align}
+\begin{equation}
+\begin{aligned}[b]
 \frac{\partial z(\k, t)}{\partial t} &= -\ic \frac{(z(\k, t)-1)^{2}}{2} + \frac{(z(\k, t)+1)^{2}}{2} \cdot I(\k) \\
 I(\k) &= -\Delta(\k) + \ic \eta_{0}(\k) + i d_{n} \kappa \cdot H_n(\k,t) \\
-H_n(\k,t) &= \frac{a_n}{\kmean} \sum_{\kacc} P\left(\kacc\right) a\left(\kacc \rightarrow \k\right) \cdot \left[A_{0}+\sum_{p=1}^{n} A_{p}\left(z\left(\kacc, t\right)^{p} + \bar{z}\left(\kacc, t\right)^{p}\right)\right]
-\end{align}
+H_n(\k,t) &= \frac{a_n}{\kmean} \sum_{\kacc} P\left(\kacc\right) a\left(\kacc \rightarrow \k\right) \cdot \left[A_{0}+\sum_{p=1}^{n} A_{p}\left(z\left(\kacc, t\right)^{p} + \overline{z}\left(\kacc, t\right)^{p}\right)\right] 
+\end{aligned}
+\label{eq:OttAntonsenSystemFull}
+\end{equation}
 
-Following \cite{Martens2020}, $H_2(\k,t)$ is computed as:
+Here $z(\k, t) \in \C^{M_{\k}}$. Following \cite{Martens2020}, $H_2(\k,t)$ is computed as:
 \begin{align}
-H_n(\k,t) &= \frac{a_n}{\kmean} \sum_{\kacc} P\left(\kacc\right) a\left(\kacc \rightarrow \k\right) \cdot \left( 1 + \frac{z(\kacc, t)^2 + \bar{z}(\kacc, t)}{6} - \frac{4}{3} \Re(z(\kacc, t)) \right)
+H_2(\k,t) &= \frac{1}{\kmean} \sum_{\kacc} P\left(\kacc\right) a\left(\kacc \rightarrow \k\right) \cdot \left( 1 + \frac{z(\kacc, t)^2 + \overline{z}(\kacc, t)^2}{6} - \frac{4}{3} \Re(z(\kacc, t)) \right) \label{eq:H2}
 \end{align}
-
 
 \section{Fixpoint iteration}
+In \cite{OttAntonsen2017} a fixpoint iteration is suggested to find attractive fixpoints of the system \eqref{eq:OttAntonsenSystemFull}. If we set $\frac{\partial z(\k, t)}{\partial t} = 0$ we can solve the following system:
+\begin{align}
+\ic \frac{(z(\k, t)-1)^{2}}{2} &= \frac{(z(\k, t)+1)^{2}}{2} \cdot I(\k) \nonumber \\
+\ic \left(\frac{z(\k, t)-1}{z(\k, t)+1}\right)^2 &= I(\k) \nonumber \\
+\frac{z(\k, t)-1}{z(\k, t)+1} &\equiv b(\k,t) \nonumber \\
+z(\k, t) - 1 &= b(\k,t) z(\k, t) + b(\k,t)  \nonumber \\
+z(\k, t) \cdot (1 - b(\k,t)) &= b(\k,t)  + 1\nonumber
+\end{align}
 
-\section{A Newton-Raphson}
+We can then obtain the stable equilibria from:
+\begin{align}
+\ic b(\k,t)^2 = I(\k) \hspace{10mm} z(\k, t)_{\pm} = \frac{1 \pm b(\k,t)}{1 \mp b(\k,t)} \label{eq:fixedpointiterations} 
+\end{align}
+where the signs are chosen so that $\vert z(\k, t) \vert \leq 1$.
+
+
+\section{A Newton-Raphson iteration for all fixpoints}
+\subsection{Theory behind the method}
+The fixpoint iteration only gives us the stable equilibria of the system \eqref{eq:OttAntonsenSystemFull}. We can obtain all equilibria and the Jacobian from a Newton-Raphson iteration. We define the equilibria $\boldsymbol{x^\ast} \in \R^n$ of a multivariate function $\boldsymbol{f}(\boldsymbol{x}) : \R^n \rightarrow \R^n$ with $\boldsymbol{f}(\boldsymbol{x}) = \boldsymbol{0}$. Expanding $\boldsymbol{f}$ as a Taylor series, we obtain:
+\begin{align}
+f_i(\boldsymbol{x} + \delta \boldsymbol{x}) =f_{i}(\boldsymbol{x}) + \sum_{j=1}^{n} \frac{\partial f_{i}(\boldsymbol{x})}{\partial x_{j}} \delta x_{j}+O\left(\delta \boldsymbol{x}^{2}\right) \approx f_{i}(\boldsymbol{x})+\sum_{j=1}^{n} \frac{\partial f_{i}(\boldsymbol{x})}{\partial x_{j}} \delta x_{j}, \quad(i=1, \cdots, n)
+\end{align}
+
+We can also write this in vector notation, by setting $\boldsymbol{J}(\boldsymbol{x}) = \nabla \boldsymbol{f}(\boldsymbol{x}) = \frac{d}{d\boldsymbol{x}} \boldsymbol{f}(\boldsymbol{x}) \in \R^{n \times n}$ 
+\begin{align}
+\boldsymbol{f}(\boldsymbol{x}+\delta \boldsymbol{x}) &\approx\left[\begin{array}{c}f_{1}(\boldsymbol{x}) \\ \vdots \\ f_{N}(\boldsymbol{x})\end{array}\right] 
++ \left[\begin{array}{ccc}\frac{\partial f_{1}}{\partial x_{1}} & \cdots & \frac{\partial f_{1}}{\partial x_{N}} \\ \vdots & \ddots & \vdots \\ \frac{\partial f_{N}}{\partial x_{1}} & \cdots & \frac{\partial f_{N}}{\partial x_{N}}\end{array}\right]
+\left[\begin{array}{c}\delta x_{1} \\ \vdots \\ \delta x_{N}\end{array}\right] 
+=\boldsymbol{f}(\boldsymbol{x})+\boldsymbol{J}(\boldsymbol{x}) \delta \boldsymbol{x} 
+\end{align}
+
+By assuming $\boldsymbol{f}(\boldsymbol{x}+\delta \boldsymbol{x}) = 0$ we can find that $\delta \boldsymbol{x} = -\boldsymbol{J}^{-1}( \boldsymbol{x}) \boldsymbol{f}(\boldsymbol{x})$ so that $\boldsymbol{x} + \delta \boldsymbol{x} =  \boldsymbol{x} - \boldsymbol{J}^{-1} (\boldsymbol{x}) \boldsymbol{f}(\boldsymbol{x})$. This expression converges to $\boldsymbol{x^\ast}$. When the equations are nonlinear, the equations converge to the real root as $\boldsymbol{x}_k =  \boldsymbol{x}_k - \boldsymbol{J}^{-1} ( \boldsymbol{x}_k)\boldsymbol{f}(\boldsymbol{x}_k)$. \\
+
+For \eqref{eq:OttAntonsenSystemFull}, we can compute the Jacobian for the diagonal and off-diagonal elements separately. But as $z(\k,t)$ is a complex function, first we need to understand what the derivative of a complex function is. 
+
+
+\subsection{Derivatives of complex functions}
+For $z = x + \ic y \in \C$ and $x,y \in R$ the conjugate is defined as $\overline{z} = x - \ic y$. That means that we can write the real and imaginary parts as:
+\begin{align*}
+x = \frac{z + \overline{z}}{2} \text{  and   }   y = -\ic \frac{z - \overline{z}}{2}
+\end{align*}
+Using the chain rule, we can write the partial derivative with respect to $z$ in function of $x$ and $y$ as $x$ and $y$ are functionally independent and find the first Wirtinger operator:
+\begin{align*}
+\frac{\partial}{\partial z} =\frac{\partial x}{\partial z} \frac{\partial}{\partial x}+\frac{\partial \bar{y}}{\partial z} \frac{\partial}{\partial \overline{y}} 
+\longrightarrow \frac{\partial x}{\partial z} = \frac{1}{2} \text{   and   } \frac{\partial y}{\partial z} =  - \frac{\ic}{2} 
+\longrightarrow \frac{\partial}{\partial z} = \frac{1}{2}\left(\frac{\partial}{\partial x} - \ic \frac{\partial}{\partial y}\right)
+\end{align*}
+We note the following properties:
+\begin{align*}
+\frac{\partial}{\partial z} z = 1 \hspace{10mm} \frac{\partial}{\partial z}\overline{z} = \frac{1}{2}\left(1 - \ic^2 \right) = 0
+\end{align*}
+
+
+\subsection{Derivatives of the complex mean field equations}
+We can now compute derivatives of the complex functions $z(\k,t)$. When setting $z(\k, t) = z_k$ the diagonal elements are found as
+\begin{equation}
+\begin{aligned}[b]
+\frac{\partial}{\partial z_k}\left(\frac{\partial z_k}{\partial t} \right) &= - \ic(z_k - 1) + (z_k + 1) \cdot I(z_k) +  \frac{(z_k+1)^{2}}{2} \cdot \frac{\partial I(z_k)}{\partial z_k} \\
+\frac{\partial I(z_k)}{\partial z_k} &= \ic \kappa \cdot \frac{\partial H_{2,k}}{\partial z_k} \\
+\frac{\partial H_{2,k}}{\partial z_k} &= \frac{1}{\kmean} P_k a_{kk} \cdot \left(\frac{2 z_k}{6} - \frac{4}{3} \cdot \frac{1}{2} \right) = \frac{1}{\kmean} P_k a_{kk} \cdot\frac{z_{k} - 2}{3}
+\end{aligned}
+\label{eq:OttAntonsenSystemJacobianDiagonal}
+\end{equation}
+
+When setting $z(\kacc, t) = z_{k'}$ the off-diagonal elements are found as
+\begin{equation}
+\begin{aligned}[b]
+\frac{\partial}{\partial z_{k'}}\left(\frac{\partial z_k}{\partial t} \right) &= \frac{(z_k + 1)^{2}}{2} \cdot \frac{\partial I(z_k)}{\partial z_{k'}} \\
+\frac{\partial I(z_k)}{\partial z_{k'}} &= \ic \kappa \cdot \frac{\partial H_{2,k}}{\partial z_{k'}} \\
+\frac{\partial H_{2,k}}{\partial z_{k'}} &= \frac{1}{\kmean} P_{k'} a_{k'k} \cdot \frac{z_{k'} - 2}{3}
+\end{aligned}
+\label{eq:OttAntonsenSystemJacobianDiagonal}
+\end{equation}
+
 
 \bibliographystyle{utphys}
 \small{\bibliography{references}}
