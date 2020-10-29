@@ -1,0 +1,33 @@
+\input{Setup.tex}
+\begin{document}
+
+\mainmatter
+
+Status meeting \today \\
+Msc Thesis - Dynamics of adaptive neuronal networks. \\
+Simon Aertssen (s181603), \today \\ 
+
+\section{Writing out the whole system}
+When we assemble the whole expression for the Ott-Antonsen manifold as found in \cite{OttAntonsen2017} we obtain the following:
+\begin{align}
+\frac{\partial z(\k, t)}{\partial t} &= -\ic \frac{(z(\k, t)-1)^{2}}{2} + \frac{(z(\k, t)+1)^{2}}{2} \cdot I(\k) \\
+I(\k) &= -\Delta(\k) + \ic \eta_{0}(\k) + i d_{n} \kappa \cdot H_n(\k,t) \\
+H_n(\k,t) &= \frac{a_n}{\kmean} \sum_{\kacc} P\left(\kacc\right) a\left(\kacc \rightarrow \k\right) \cdot \left[A_{0}+\sum_{p=1}^{n} A_{p}\left(z\left(\kacc, t\right)^{p} + \bar{z}\left(\kacc, t\right)^{p}\right)\right]
+\end{align}
+
+Following \cite{Martens2020}, $H_2(\k,t)$ is computed as:
+\begin{align}
+H_n(\k,t) &= \frac{a_n}{\kmean} \sum_{\kacc} P\left(\kacc\right) a\left(\kacc \rightarrow \k\right) \cdot \left( 1 + \frac{z(\kacc, t)^2 + \bar{z}(\kacc, t)}{6} - \frac{4}{3} \Re(z(\kacc, t)) \right)
+\end{align}
+
+
+\section{Fixpoint iteration}
+
+\section{A Newton-Raphson}
+
+\bibliographystyle{utphys}
+\small{\bibliography{references}}
+
+\label{LastPage}~
+
+\end{document}
