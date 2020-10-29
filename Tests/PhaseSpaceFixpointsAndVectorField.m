@@ -20,15 +20,38 @@ plot(x, x)
 scatter(xnew, logistic(xnew))
 
 %% Parameters
-pars.N = 1000;
+pars.N = 5000;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
-pars.eta0 = 0.4; pars.delta = 0.7; pars.K = 2;
+% pars.eta0 = 0.4; pars.delta = 0.7; pars.K = 2;
 % pars.eta0 = -0.9; pars.delta = 0.8; pars.K = -2;
 
-seed = 2; rng(seed);
+seed = 1; rng(seed);
 pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
-netp = 0.1;
-p = prepareOAparameters(make_randomparameters(pars, 0.44));
+p = prepareOAparameters(make_randomparameters(pars, 0.33));
+
+%% Test whether we can see the phase space of the system with vectors:
+figure; hold on; box on; grid on; axis square;
+
+startx = [0, -0.8, -0.6, 0, 0]; starty = [0, 0.2, 0.4, -1, -0.74];
+tlengths = [1.5, 0.5, 0.65, 2.6, 2.2];
+bw = -0.5;
+opts = odeset('RelTol', 1.0e-6,'AbsTol', 1.0e-6);
+
+for i = 1:length(startx)
+    IC = startx(i) + starty(i)*1i;
+    OAIC = ones(p.l,1)*IC;
+    OAIC = find_ICs(IC*ones(1, p.l), IC, p.P(p.k)/p.N);
+    [~, b_s] = ode45(@(t,x) MFROA(t,x,p), [0 bw], OAIC, opts);
+    [t, b_s] = ode45(@(t,x) MFROA(t,x,p), [bw, tlengths(i)], b_s(end,:), opts);
+    transients = find(t >= 0, 1, 'first');
+    Z = b_s * p.P(p.k)/p.N;
+%     [TOA, Z] = OA_simulatenetwork(0, tlengths(i), OAIC, p);
+%     transients = 1;
+    plot(real(Z(transients:end)), imag(Z(transients:end)), 'LineWidth', 2);
+    scatter(real(Z(transients)), imag(Z(transients)), 50, [0 0.3070 0.5010], 'filled', 'o', 'LineWidth',2);
+    disp('done')
+end
+phasespaceplot();
 
 %% Test how we can get the fixpoints of the system: this works!
 clc
