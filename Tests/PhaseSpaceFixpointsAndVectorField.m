@@ -22,8 +22,8 @@ scatter(xnew, logistic(xnew))
 %% Parameters
 pars.N = 1000;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
-pars.eta0 = 0.5; pars.delta = 0.7; pars.K = 2;
-pars.eta0 = -0.9; pars.delta = 0.8; pars.K = -2;
+pars.eta0 = 0.4; pars.delta = 0.7; pars.K = 2;
+% pars.eta0 = -0.9; pars.delta = 0.8; pars.K = -2;
 
 seed = 2; rng(seed);
 pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
@@ -108,7 +108,7 @@ scatter(real(ZOA), imag(ZOA), 150, 'or');
 scatter(real(Z(1)), imag(Z(1)), 100, 'ob', 'filled')
 plot(real(Z), imag(Z))
 
-%% Make a Newton-Raphson iteration
+%% Make a Newton-Raphson iteration on our system
 % The function is the following:
 % dz/dt = -1i/2*(z-1)^2 + 1/2*(z+1)^2*I
 % I = -delta + 1i*eta0 + 1i*K*OA*H/meandegree)
@@ -140,7 +140,7 @@ plot(real(Z), imag(Z))
 % dI/dz = 1i*K*OA*(dH/dz)/meandegree
 % dH/dz = 2/6*(z) - 4/3*1/2 = 1/3*z - 2/3
 
-clc; hold on
+figure; hold on
 phasespaceplot();
 
 z0 = 0.3 - 1i*0.5;
@@ -149,7 +149,7 @@ scatter(real(z0), imag(z0), 150, '+k')
 scatter(real(OAIC*p.P(p.k)/p.N), imag(OAIC*p.P(p.k)/p.N), 150, 'xb');
 
 eqpts = findeqpts(OAIC', p);
-ZOA = eqpts'*p.P(p.k)/p.N;
+ZOA = eqpts'*p.P(p.k)/p.N
 scatter(real(ZOA), imag(ZOA), 150, '+r');
 
 eqpts = NewtonRaphsonIteration(OAIC', p);
@@ -160,51 +160,100 @@ scatter(real(ZOA), imag(ZOA), 150, 'xb');
 scatter(real(Z(1)), imag(Z(1)), 100, 'ob')
 plot(real(Z), imag(Z))
 
-function x = NewtonRaphsonIteration(x0, p)
-    xs = x0'*p.P(p.k)/p.N;
-    
+
+function [x, xs] = NewtonRaphsonIteration(x0, p)
+
     f = @(z, p) MFROA(0,z,p);
     function dfdz = df(z, p)
         zc = conj(z);
         H = (1 + (z.*z + zc.*zc)/6 - 4.*real(z)/3);
         I = -p.delta + 1i*p.eta0 + 1i*p.K*p.OA*H;
-%         dIdz = 1i*p.K*p.OA.*(z - 2)/3;
-        dIdz = 1i*p.K*p.OA'.*(z - 2)/3;
-%         disp('dIdz')
-%         size(dIdz)
-                
-        dfdz = 1/2*(z+1).*(z+1).*dIdz;
-%         disp('dfdz')
-%         size(dfdz)
-        dfdz(1:p.l+1:end) = dfdz(1:p.l+1:end) + (-1i*(z-1) + (z+1).*I)';
-%         disp('diagonal elements')
-%         size(-1i*(z-1) + (z+1).*I)
-%         size(-1i*(z-1) + (z+1).*I + 1/2*(z+1).*(z'+1)*dIdz)
-%         size(dfdz(1:p.l+1:end))
-%         dfdz([1:p.l+1:end]') = -1i*(z-1) + (z+1).*I + diag(1/2*(z+1).*(z'+1)*dIdz);
+% %         dIdz = 1i*p.K*p.OA.*(z - 2)/3;
+%         dIdz = 1i*p.K*p.OA'.*(z - 2)/3;
+% %         disp('dIdz')
+% %         size(dIdz)
+%                 
+%         dfdz = 1/2*(z+1).*(z+1).*dIdz;
+% %         disp('dfdz')
+% %         size(dfdz)
+%         dfdz(1:p.l+1:end) = (-1i*(z-1) + (z+1).*I )';
+% %         disp('diagonal elements')
+% %         size(-1i*(z-1) + (z+1).*I)
+% %         size(-1i*(z-1) + (z+1).*I + 1/2*(z+1).*(z'+1)*dIdz)
+% %         size(dfdz(1:p.l+1:end))
+% %         dfdz([1:p.l+1:end]') = -1i*(z-1) + (z+1).*I + diag(1/2*(z+1).*(z'+1)*dIdz);
+        dfdz = zeros(p.l, p.l);
+        
+        for r = 1:p.l
+            for c = 1:p.l
+                dfdz(r,c) = 0.5*(z(r)+1)^2 * (1i*p.K*p.OA(r,c)*(z(c)-2)/3);
+                if r == c
+                    dfdz(r,c) = dfdz(r,c) - 1i*(z(r)-1) + (z(r)+1)*I(r);
+                end
+            end
+        end
     end
-
-%     df(x0,p);
-%     return
+    
     x = x0;
-    maxevals = 100;
+    maxevals = 500;
+    xs = x0'*p.P(p.k)/p.N;
     for evaltime = 1:maxevals
         x0 = x;
-%         x = x - (f(x,p)\df(x,p))';
-        x = x - (f(x,p)'/df(x,p))';
-        x = x - (df(x,p)\f(x,p));
-%         size(x)
-%         if norm(x) > 1
-%             x = 1./x;
-%         end
+        x = x - df(x,p)\f(x,p);
+
+        error = norm(x - x0);
+        if error < 1.0e-6
+            break
+        end
+        xs = [xs, x'*p.P(p.k)/p.N];
+    end
+    plot(real(xs), imag(xs), 'LineWidth', 2)
+    disp(['Algorithm took ', num2str(evaltime), ' steps'])
+    test = df(x0, p);
+    test(1:5,1:5)
+end
+
+
+
+%% Try a Newton-Raphson system iteration:
+% testNR([0.83;0.03])
+
+function x = testNR(x0)
+    function out = f(x)
+%         out = zeros(3,1);
+%         out(1) = 3*x(1) - cos(x(2)*x(3)) - 3/2;
+%         out(2) = 4*x(1)*x(1) - 625*x(2)*x(2) + 2*x(3) - 1;
+%         out(3) = x(3) + exp(-x(1)*x(2)) + 9;
+        out = zeros(2,1);
+        out(1) = -x(1)^3 + x(2);
+        out(2) = x(1)^2 + x(2)^2-1;
+    end
+
+    function out = J(x)
+%         out = zeros(3,3);
+%         out(1,1) = 3; out(1,2) = x(3)*sin(x(2)*x(3)); out(1,3) = x(2)*sin(x(2)*x(3));
+%         out(2,1) = 8*x(1); out(2,2) = -1250*x(2); out(1,3) = 2;
+%         out(3,1) = -x(2)*exp(-x(1)*x(2)); out(3,2) = -x(1)*exp(-x(1)*x(2)); out(3,3) = 20;
+%         out = [3, x(3)*sin(x(2)*x(3)), x(2)*sin(x(2)*x(3));
+%                8*x(1), -1250*x(2), 2;
+%                -x(2)*exp(-x(1)*x(2)), -x(1)*exp(-x(1)*x(2)), 20];
+        out(1,1) = -3*x(1)^2; 
+        out(1,2) = 1;
+        out(2,1) = 2*x(1);
+        out(2,2) = 2*x(2);
+    end
+    
+    x = x0;
+    maxevals = 1000;
+    for evaltime = 1:maxevals
+        x0 = x;
+       
+        x = x - J(x)\f(x);
         error = norm(x - x0);
         if error < 1.0e-24
             break
         end
-        xs = [xs, x'*p.P(p.k)/p.N];
-        plot(real(xs), imag(xs))
     end
-    disp(['Algorithm took ', num2str(evaltime), ' steps'])
 end
 
 function bhat = findeqpts(b0, p)
@@ -232,27 +281,3 @@ function bhat = findeqpts(b0, p)
     plot(real(bs), imag(bs))
 end
 
-function bhat = findeqptsreversed(b0, p)
-    bs = b0'*p.P(p.k)/p.N;
-    ntimes = 0;
-    bhat = b0; bhatold = -b0;
-
-    while norm(bhat - bhatold) > 1.0e-22 && ntimes < 400
-        ntimes = ntimes + 1;
-        bhatold = bhat;
-        
-        z = (1 + bhat)./(1 - bhat);
-        if norm(z) < 1
-            bhat = (1 - bhat)./(1 + bhat);
-        end
-        
-        zc = conj(z);
-        H = (1 + (z.*z + zc.*zc)/6 - 4.*real(z)/3);
-        bhat = sqrt(-1i*p.delta +    p.eta0 +    p.K*p.OA*H);        
-        
-        bs = [bs, bhat'*p.P(p.k)/p.N];
-        
-    end
-    disp(['Algorithm took ', num2str(ntimes), ' steps'])
-    plot(real(bs), imag(bs))
-end
