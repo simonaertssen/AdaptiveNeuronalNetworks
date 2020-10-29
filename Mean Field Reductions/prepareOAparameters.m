@@ -1,5 +1,7 @@
 function p = prepareOAparameters(p)
-    p.k = unique(p.degrees_i, 'stable');
+
+    [p.k, ~, ic] = unique(p.degrees_i, 'stable');
+    p.kcount = accumarray(ic, 1);
     p.l = numel(p.k);
     p.k_o = unique(p.degrees_o, 'stable');
     p.OA = zeros(p.l, p.l);
