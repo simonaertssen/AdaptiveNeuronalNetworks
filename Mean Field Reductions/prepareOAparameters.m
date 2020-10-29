@@ -6,5 +6,5 @@ function p = prepareOAparameters(p)
     for i = 1:p.l
         p.OA(i, :) = p.P(p.k).*assortativity(p.k, p.k_o, p.k(i), p.k_o(i), p.N, p.meandegree, 0);
     end
-    p.OA = p.OA/p.meandegree
+    p.OA = p.K*p.OA/p.meandegree;
 end

@@ -22,7 +22,7 @@ scatter(xnew, logistic(xnew))
 %% Parameters
 pars.N = 5000;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
-% pars.eta0 = 0.4; pars.delta = 0.7; pars.K = 2;
+pars.eta0 = 0.4; pars.delta = 0.7; pars.K = 2;
 % pars.eta0 = -0.9; pars.delta = 0.8; pars.K = -2;
 
 seed = 1; rng(seed);
@@ -218,7 +218,7 @@ function [x, xs] = NewtonRaphsonIteration(x0, p)
     end
     
     x = x0;
-    maxevals = 500;
+    maxevals = 10;
     xs = x0'*p.P(p.k)/p.N;
     for evaltime = 1:maxevals
         x0 = x;

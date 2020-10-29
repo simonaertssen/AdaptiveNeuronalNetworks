@@ -6,6 +6,6 @@ function dzdt = MFROA(t, z, p)
     zc = conj(z);
     H = (1 + (z.*z + zc.*zc)/6 - 4.*real(z)/3);
     HOA = p.OA*H;
-    dzdt = one + two.*(-p.delta + 1i*p.eta0 + 1i*p.K.*HOA)/2;
+    dzdt = one + two.*(-p.delta + 1i*p.eta0 + 1i*HOA)/2;
 end
 
