@@ -4,7 +4,7 @@ function scalefreepars = make_scalefreeparameters(pars, degree, kmin, kmax)
     if nargin < 1; error('Not enough input arguments'); end
     if nargin < 2; degree = 3; end
     if nargin < 3; kmin = round(pars.N*3/20); end
-    if nargin < 4; kmax = round(pars.N*1/5); end
+    if nargin < 4; kmax = round(pars.N*2/5); end
     assert(kmin < kmax);
    
     if degree < 2
@@ -24,9 +24,9 @@ function scalefreepars = make_scalefreeparameters(pars, degree, kmin, kmax)
     end
     scalefreepars.degrees_o = scalefreepars.degrees_i(randperm(pars.N));
  
-    fsolveoptions = optimset('Display','off');
+%     fsolveoptions = optimset('Display','off');
 %     scalefreepars.meandegree = fsolve(@(z) scalefreepars.P(z) - mean(scalefreepars.P(kmin:kmax)), kmin, fsolveoptions);
-%     scalefreepars.meandegree = fsolve(@(z) sum(scalefreepars.P(kmin:z)) - sum(scalefreepars.P(z+1:kmax)), 0.5*(kmin + kmax), fsolveoptions);
+%     scalefreepars.meandegree = fsolve(@(z) sum(scalefreepars.P(kmin:z)) - sum(scalefreepars.P(z+1:kmax)), kmin, fsolveoptions);
     scalefreepars.meandegree = mean(scalefreepars.degrees_i);
 end
 
