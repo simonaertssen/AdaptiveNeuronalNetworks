@@ -25,10 +25,20 @@ pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
 IC = - pi/2 * ones(pars.N, 1);
 
 %% 1. From a specific point in the plane Z0 to IC and OAIC:
-Z0 = 0.6 - 1i*0.4;
+Z0 = 0.01 - 1i*0.4;
 
-% fsolve would take too long. Take the ICs as from the formula exp(1i*x) = cos(x) + 1i*sin(x)
-findIC = @(length, z) ones(length,1) * (acos(real(z)) + 1i*asin(imag(z)));
-findIC(10, Z0)
-orderparameter(findIC(10, Z0))
+% fsolve would take too long. Take the ICs as from the formula 
+% Z0 = exp(1i*x) so x = -i*log(Z0)
+findIC = @(length, z) (-1i*log(z)) * ones(length,1);
+orderparameter(findIC(100, Z0))
+% This zorks for IC and OAIC
+
+%% 2. From IC to z0 and OAIC
+IC = randn(pars.N,1);
+
+% z0 is easy:
+z0 = orderparameter(IC)
+
+% We know this one, gather per degree and 
+
 

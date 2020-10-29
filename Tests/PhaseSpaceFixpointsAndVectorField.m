@@ -190,26 +190,12 @@ function [x, xs] = NewtonRaphsonIteration(x0, p)
     function dfdz = df(z, p)
         zc = conj(z);
         H = (1 + (z.*z + zc.*zc)/6 - 4.*real(z)/3);
-        I = -p.delta + 1i*p.eta0 + 1i*p.K*p.OA*H;
-% %         dIdz = 1i*p.K*p.OA.*(z - 2)/3;
-%         dIdz = 1i*p.K*p.OA'.*(z - 2)/3;
-% %         disp('dIdz')
-% %         size(dIdz)
-%                 
-%         dfdz = 1/2*(z+1).*(z+1).*dIdz;
-% %         disp('dfdz')
-% %         size(dfdz)
-%         dfdz(1:p.l+1:end) = (-1i*(z-1) + (z+1).*I )';
-% %         disp('diagonal elements')
-% %         size(-1i*(z-1) + (z+1).*I)
-% %         size(-1i*(z-1) + (z+1).*I + 1/2*(z+1).*(z'+1)*dIdz)
-% %         size(dfdz(1:p.l+1:end))
-% %         dfdz([1:p.l+1:end]') = -1i*(z-1) + (z+1).*I + diag(1/2*(z+1).*(z'+1)*dIdz);
+        I = -p.delta + 1i*p.eta0 + 1i*p.OA*H;
         dfdz = zeros(p.l, p.l);
         
         for r = 1:p.l
             for c = 1:p.l
-                dfdz(r,c) = 0.5*(z(r)+1)^2 * (1i*p.K*p.OA(r,c)*(z(c)-2)/3);
+                dfdz(r,c) = 0.5*(z(r)+1)^2 * (1i*p.OA(r,c)*(z(c)-2)/3);
                 if r == c
                     dfdz(r,c) = dfdz(r,c) - 1i*(z(r)-1) + (z(r)+1)*I(r);
                 end
@@ -218,14 +204,14 @@ function [x, xs] = NewtonRaphsonIteration(x0, p)
     end
     
     x = x0;
-    maxevals = 10;
+    maxevals = 100;
     xs = x0'*p.P(p.k)/p.N;
     for evaltime = 1:maxevals
         x0 = x;
         x = x - df(x,p)\f(x,p);
 
         error = norm(x - x0);
-        if error < 1.0e-6
+        if error < 1.0e-10
             break
         end
         xs = [xs, x'*p.P(p.k)/p.N];
@@ -290,8 +276,8 @@ function bhat = findeqpts(b0, p)
         
         bhatc = conj(bhat);
         H = (1 + (bhat.*bhat + bhatc.*bhatc)/6 - 4.*real(bhat)/3);
-        z = sqrt(-1i*p.delta +    p.eta0 +    p.K*p.OA*H);
-        z = sqrt(   (p.delta + 1i*p.eta0 + 1i*p.K*p.OA*H)/1i);
+        z = sqrt(-1i*p.delta +    p.eta0 +    p.OA*H);
+        z = sqrt(   (p.delta + 1i*p.eta0 + 1i*p.OA*H)/1i);
         bhat = (1 + z)./(1 - z);
         
         if norm(bhat) > 1
