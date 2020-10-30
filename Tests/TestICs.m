@@ -31,7 +31,7 @@ theta0 = - pi/2 * ones(pars.N, 1);
 p = prepareOAparameters(make_randomparameters(pars, 0.33));
 
 %% 1. From a specific point in the plane Z0 to theta0 and z0:
-Z0 = 0.156 - 1i*0.411;
+Z0 = 0.156 - 1i*0.411
 assert(numel(Z0) == 1)
 
 % fsolve would take too long. Take the theta0s as from the formula 
@@ -43,32 +43,52 @@ assert(numel(theta0fromZ0) == p.N)
 
 findz0 = @(counts, P, z) conj(z * counts ./ P);
 z0fromZ0 = findz0(p.kcount, p.P(p.k), Z0);
-Z0fromzo = z0fromZ0'*p.P(p.k)/p.N
+Z0fromz0 = z0fromZ0'*p.P(p.k)/p.N
 assert(numel(z0fromZ0) == p.Mk)
 
 %% 2. From theta0 to Z0 and z0
+rng(seed);
+
 theta0 = randn(p.N,1);
+assert(numel(theta0) == p.N)
 
-% z0 is easy:
+% Z0 is easy:
 Z0fromtheta0 = orderparameter(theta0)
+assert(numel(Z0fromtheta0) == 1)
 
-% We know this one, gather per degree and multiply per probability
-z0 = zeros(1,p.Mk);
+% We know how to find z0, gather per degree and multiply per probability
+z0fromtheta0 = zeros(1,p.Mk);
 for i = 1:p.Mk
-    z0(i) = sum(exp(1i*theta0(p.degrees_i == p.k(i)))) / (p.P(p.k(i))+1.0e-24);
+    z0fromtheta0(i) = sum(exp(1i*theta0(p.degrees_i == p.k(i)))) / (p.P(p.k(i))+1.0e-24);
 end
-z0fromtheta0 = z0*p.P(p.k)/p.N
+Z0fromz0 = z0fromtheta0*p.P(p.k)/p.N
+assert(numel(z0fromtheta0) == p.Mk)
 
-%% 3. From z0 to theta0 and z0
+%% 3. From z0 to Z0 and theta0 
+rng(seed);
+
 z0 = randn(p.Mk,1) + randn(p.Mk,1)*1i;
 
 % Z0 is easy:
 Z0fromz0 = z0'*p.P(p.k)/p.N
 
-% For theta0 we should repeat the z0 value per degree
+% For theta0 we should repeat the z0 value per degree, randomly distributed
 theta0 = zeros(pars.N, 1);
-for i = 1:pars.N
+randomindices = randperm(pars.N);
+startindex = 1;
+testsum = 0;
+for i = 1:p.Mk
+    indices = p.degrees_i == p.k(i);
+    numthetas = p.kcount(i);
+    assert(sum(indices) == numthetas)
+    testsum = testsum + numthetas; 
     
+    endindex = startindex + numthetas;
+%     numel(theta0(indices))
+%     numel(z0(i)*ones(numthetas,1))
+    theta0(indices) = (-1i*log(z0(i)))*ones(numthetas,1);
+    startindex = endindex;
 end
+assert(testsum == p.N)
 
-
+Z0fromtheta0 = orderparameter(theta0)

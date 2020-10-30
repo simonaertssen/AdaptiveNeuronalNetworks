@@ -10,14 +10,14 @@ Simon Aertssen (s181603), \today \\
 \section{Writing out the whole system}
 The network dynamics are described as follows:
 \begin{align}
-\frac{d \theta_i}{d t} &= (1 - \cos\theta_i) + (1 + \cos\theta_i)\cdot\left(\eta_i + I_i \right) \nonumber \\
+\frac{d \theta_i}{d t} &= (1 - \cos\theta_i) + (1 + \cos\theta_i)\cdot\left(\eta_i + I_i \right) \qquad \theta_i \in \R^N \nonumber \\
 I_{i} &= \frac{\kappa}{\langle k\rangle} \sum_{j=1}^{N} A_{i j} P_{n}\left(\theta_{j}\right) \label{eq:FullThetaNeuronNetwork} \\
 P_{n}\left(\theta_{j}\right) &= (1 - \cos\theta_j) \nonumber
 \end{align}
 
 We observe synchronization through the order parameter
 \begin{align}
-Z(t) = \frac{1}{N} \sum_{j=1}^N e^{\ic\theta(t)_j} \label{eq:orderparameter}
+Z(t) = \frac{1}{N} \sum_{j=1}^N e^{\ic\theta_j}  \qquad Z(t) \in \C \label{eq:orderparameter}
 \end{align}
 
 For a fixed degree network it has been proven that the order parameter follows:
@@ -28,7 +28,7 @@ For a fixed degree network it has been proven that the order parameter follows:
     
 For an arbitrary network the order parameter follows a trajectory per degree. When we assemble the whole expression for the Ott-Antonsen manifold as found in \cite{OttAntonsen2017} with $H_2(\k,t)$ as in \cite{Martens2020}, we obtain the following:
 \begin{align}
-\frac{\partial z(\k, t)}{\partial t} &= -\ic \frac{(z(\k, t)-1)^{2}}{2} + \frac{(z(\k, t)+1)^{2}}{2} \cdot I(\k) \nonumber \\
+\frac{\partial z(\k, t)}{\partial t} &= -\ic \frac{(z(\k, t)-1)^{2}}{2} + \frac{(z(\k, t)+1)^{2}}{2} \cdot I(\k) \qquad z(\k,t) \in \C^{M_\k} \nonumber \\
 I(\k) &= -\Delta(\k) + \ic \eta_{0}(\k) + i d_{n} \kappa \cdot H_n(\k,t) \label{eq:OttAntonsenSystemFull} \\
 %H_n(\k,t) &= \frac{a_n}{\kmean} \sum_{\kacc} P\left(\kacc\right) a\left(\kacc \rightarrow \k\right) \cdot \left[A_{0}+\sum_{p=1}^{n} A_{p}\left(z\left(\kacc, t\right)^{p} + \overline{z}\left(\kacc, t\right)^{p}\right)\right] 
 H_2(\k,t) &= \frac{1}{\kmean} \sum_{\kacc} P\left(\kacc\right) a\left(\kacc \rightarrow \k\right) \cdot \left( 1 + \frac{z(\kacc, t)^2 + \overline{z}(\kacc, t)^2}{6} - \frac{4}{3} \Re(z(\kacc, t)) \right) \nonumber
@@ -36,20 +36,36 @@ H_2(\k,t) &= \frac{1}{\kmean} \sum_{\kacc} P\left(\kacc\right) a\left(\kacc \rig
 
 We can then find the mean field dynamics through
 \begin{align}
-\overline{Z}(t) &= \frac{1}{N} \sum_{\k} P(\k) z(\k, t) \label{eq:OttAntonsenMeanField}
+\overline{Z}(t) &= \frac{1}{N} \sum_{\k} P(\k) z(\k, t) \qquad \overline{Z}(t) \in \C \label{eq:OttAntonsenMeanField}
 \end{align}
 
 It is important to notice that in \eqref{eq:OttAntonsenSystemFull} and \eqref{eq:OttAntonsenMeanField} we actually compute an inner vector product, which is non-commutative for complex numbers:
 \begin{align}
-a \cdot b = \overline{b \cdot a} \quad a, b \in \C^r
+a \cdot b = \overline{b \cdot a} \qquad a, b \in \C^r
 \end{align}
 This is the result of the \textsl{Conjugate} or \textsl{Hermitian} symmetry of the inner product.
 
 
 \section{Initial conditions}
-As the systems in \cref{eq:FullThetaNeuronNetwork,eq:orderparameter,eq:MeanField,eq:OttAntonsenSystemFull,eq:OttAntonsenMeanField} describe the same dynamics for fully connected networks, it is important to be able to transform initial conditions between systems.
+As the systems in \cref{eq:FullThetaNeuronNetwork,eq:orderparameter,eq:MeanField,eq:OttAntonsenSystemFull,eq:OttAntonsenMeanField} describe the same dynamics for fully connected networks, it is important to be able to transform initial conditions between systems. If we have the same initial conditions, then all systems will predict the same behaviour. We will only map everything to $\C$.\\
+The following maps can be used to transform the initial conditions, but as they do not give any qualitative information on the dynamics or distributions of the variables, they are not valid for transforming between dynamics. We discard $t=0$ for clarity.
+\begin{alignat*}{3}
+&f(Z \rightarrow \theta_i) \quad &&\C \rightarrow \R^N \qquad &&\theta_i = -\ic \cdot \log \left( Z \right) \: \forall i\\
+&f(z(\k) \rightarrow Z) \quad &&\C^{M_\k} \rightarrow \C \qquad &&Z = \frac{1}{N} \sum_{\k} P(\k) z(\k, t) \\
+&f(\theta_i \rightarrow z(\k)) \quad &&\R^N \rightarrow \C^{M_\k} \qquad &&z(\k) = \sum_k e^{\ic \vartheta_{k}} \quad \vartheta_{k} \in {\theta_i: \sum_j^N A_{ij} = \k}\\
+&f(\theta_i \rightarrow Z) \quad &&\R^N \rightarrow \C \qquad &&Z = \frac{1}{N} \sum_{j=1}^N e^{\ic\theta_j} \\
+&f(Z \rightarrow z(\k)) \quad &&\C^{M_\k} \rightarrow \C \qquad &&z(\k) = \overline{\frac{Z \cdot n(\k)}{P(\k)}} \\
+&f(z(\k) \rightarrow \theta_i) \quad &&\C^{M_\k} \rightarrow \R^N \qquad &&\theta_i = \overline{\frac{Z \cdot n(\k)}{P(\k)}}
+\end{alignat*}
+
 \begin{align}
+\overline{Z}(t) &= \frac{1}{N} \sum_{k} P(k) z(k, t) = \frac{1}{N} \sum_{k \in \boldsymbol{k}} P(k) \sum_{l \in \left\{\sum_j A_{ij} = k\right\}} e^{\mathrm{i}\theta(t)_l}
 \end{align}
+and then just take $\overline{Z}(0)$ from
+\begin{align}
+\overline{Z}(t) &= \frac{1}{N} \sum_{k \in \boldsymbol{k}} P(k) \frac{1}{P(k)}\sum_{l \in \left\{\sum_j A_{ij} = k\right\}} e^{\mathrm{i}\theta(t)_l}
+\end{align}
+    
 
 \section{Fixpoint iteration}
 In \cite{OttAntonsen2017} a fixpoint iteration is suggested to find attractive fixpoints of the system \eqref{eq:OttAntonsenSystemFull}. If we set $\frac{\partial z(\k, t)}{\partial t} = 0$ we can solve the following system:
@@ -72,7 +88,7 @@ where the signs are chosen so that $\vert z(\k, t) \vert \leq 1$.
 \subsection{Theory behind the method}
 The fixpoint iteration only gives us the stable equilibria of the system \eqref{eq:OttAntonsenSystemFull}. We can obtain all equilibria and the Jacobian from a Newton-Raphson iteration. We define the equilibria $\boldsymbol{x^\ast} \in \R^n$ of a multivariate function $\boldsymbol{f}(\boldsymbol{x}) : \R^n \rightarrow \R^n$ with $\boldsymbol{f}(\boldsymbol{x}) = \boldsymbol{0}$. Expanding $\boldsymbol{f}$ as a Taylor series, we obtain:
 \begin{align}
-f_i(\boldsymbol{x} + \delta \boldsymbol{x}) =f_{i}(\boldsymbol{x}) + \sum_{j=1}^{n} \frac{\partial f_{i}(\boldsymbol{x})}{\partial x_{j}} \delta x_{j}+O\left(\delta \boldsymbol{x}^{2}\right) \approx f_{i}(\boldsymbol{x})+\sum_{j=1}^{n} \frac{\partial f_{i}(\boldsymbol{x})}{\partial x_{j}} \delta x_{j}, \quad(i=1, \cdots, n)
+f_i(\boldsymbol{x} + \delta \boldsymbol{x}) =f_{i}(\boldsymbol{x}) + \sum_{j=1}^{n} \frac{\partial f_{i}(\boldsymbol{x})}{\partial x_{j}} \delta x_{j}+O\left(\delta \boldsymbol{x}^{2}\right) \approx f_{i}(\boldsymbol{x})+\sum_{j=1}^{n} \frac{\partial f_{i}(\boldsymbol{x})}{\partial x_{j}} \delta x_{j}, \qquad(i=1, \cdots, n)
 \end{align}
 
 We can also write this in vector notation, by setting $\boldsymbol{J}(\boldsymbol{x}) = \nabla \boldsymbol{f}(\boldsymbol{x}) = \frac{d}{d\boldsymbol{x}} \boldsymbol{f}(\boldsymbol{x}) \in \R^{n \times n}$ 
