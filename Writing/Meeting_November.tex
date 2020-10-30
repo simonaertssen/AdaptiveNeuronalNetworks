@@ -8,19 +8,47 @@ Msc Thesis - Dynamics of adaptive neuronal networks. \\
 Simon Aertssen (s181603), \today \\ 
 
 \section{Writing out the whole system}
-When we assemble the whole expression for the Ott-Antonsen manifold as found in \cite{OttAntonsen2017} we obtain the following:
-\begin{equation}
-\begin{aligned}[b]
-\frac{\partial z(\k, t)}{\partial t} &= -\ic \frac{(z(\k, t)-1)^{2}}{2} + \frac{(z(\k, t)+1)^{2}}{2} \cdot I(\k) \\
-I(\k) &= -\Delta(\k) + \ic \eta_{0}(\k) + i d_{n} \kappa \cdot H_n(\k,t) \\
-H_n(\k,t) &= \frac{a_n}{\kmean} \sum_{\kacc} P\left(\kacc\right) a\left(\kacc \rightarrow \k\right) \cdot \left[A_{0}+\sum_{p=1}^{n} A_{p}\left(z\left(\kacc, t\right)^{p} + \overline{z}\left(\kacc, t\right)^{p}\right)\right] 
-\end{aligned}
-\label{eq:OttAntonsenSystemFull}
-\end{equation}
-
-Here $z(\k, t) \in \C^{M_{\k}}$. Following \cite{Martens2020}, $H_2(\k,t)$ is computed as:
+The network dynamics are described as follows:
 \begin{align}
-H_2(\k,t) &= \frac{1}{\kmean} \sum_{\kacc} P\left(\kacc\right) a\left(\kacc \rightarrow \k\right) \cdot \left( 1 + \frac{z(\kacc, t)^2 + \overline{z}(\kacc, t)^2}{6} - \frac{4}{3} \Re(z(\kacc, t)) \right) \label{eq:H2}
+\frac{d \theta_i}{d t} &= (1 - \cos\theta_i) + (1 + \cos\theta_i)\cdot\left(\eta_i + I_i \right) \nonumber \\
+I_{i} &= \frac{\kappa}{\langle k\rangle} \sum_{j=1}^{N} A_{i j} P_{n}\left(\theta_{j}\right) \label{eq:FullThetaNeuronNetwork} \\
+P_{n}\left(\theta_{j}\right) &= (1 - \cos\theta_j) \nonumber
+\end{align}
+
+We observe synchronization through the order parameter
+\begin{align}
+Z(t) = \frac{1}{N} \sum_{j=1}^N e^{\ic\theta(t)_j} \label{eq:orderparameter}
+\end{align}
+
+For a fixed degree network it has been proven that the order parameter follows:
+\begin{align}
+\dot{Z}(t)= -\ic \frac{(Z-1)^2}{2}+\frac{(Z+1)^2}{2} \cdot \left(-\Delta+ \ic\eta_{0}
++ \ic \kappa \cdot \left(1+\frac{Z^{2} + \overline{Z}^{2} }{6} - \frac{4}{3} \Re(Z)\right)\right) \label{eq:MeanField}
+\end{align}
+    
+For an arbitrary network the order parameter follows a trajectory per degree. When we assemble the whole expression for the Ott-Antonsen manifold as found in \cite{OttAntonsen2017} with $H_2(\k,t)$ as in \cite{Martens2020}, we obtain the following:
+\begin{align}
+\frac{\partial z(\k, t)}{\partial t} &= -\ic \frac{(z(\k, t)-1)^{2}}{2} + \frac{(z(\k, t)+1)^{2}}{2} \cdot I(\k) \nonumber \\
+I(\k) &= -\Delta(\k) + \ic \eta_{0}(\k) + i d_{n} \kappa \cdot H_n(\k,t) \label{eq:OttAntonsenSystemFull} \\
+%H_n(\k,t) &= \frac{a_n}{\kmean} \sum_{\kacc} P\left(\kacc\right) a\left(\kacc \rightarrow \k\right) \cdot \left[A_{0}+\sum_{p=1}^{n} A_{p}\left(z\left(\kacc, t\right)^{p} + \overline{z}\left(\kacc, t\right)^{p}\right)\right] 
+H_2(\k,t) &= \frac{1}{\kmean} \sum_{\kacc} P\left(\kacc\right) a\left(\kacc \rightarrow \k\right) \cdot \left( 1 + \frac{z(\kacc, t)^2 + \overline{z}(\kacc, t)^2}{6} - \frac{4}{3} \Re(z(\kacc, t)) \right) \nonumber
+\end{align}
+
+We can then find the mean field dynamics through
+\begin{align}
+\overline{Z}(t) &= \frac{1}{N} \sum_{\k} P(\k) z(\k, t) \label{eq:OttAntonsenMeanField}
+\end{align}
+
+It is important to notice that in \eqref{eq:OttAntonsenSystemFull} and \eqref{eq:OttAntonsenMeanField} we actually compute an inner vector product, which is non-commutative for complex numbers:
+\begin{align}
+a \cdot b = \overline{b \cdot a} \quad a, b \in \C^r
+\end{align}
+This is the result of the \textsl{Conjugate} or \textsl{Hermitian} symmetry of the inner product.
+
+
+\section{Initial conditions}
+As the systems in \cref{eq:FullThetaNeuronNetwork,eq:orderparameter,eq:MeanField,eq:OttAntonsenSystemFull,eq:OttAntonsenMeanField} describe the same dynamics for fully connected networks, it is important to be able to transform initial conditions between systems.
+\begin{align}
 \end{align}
 
 \section{Fixpoint iteration}
