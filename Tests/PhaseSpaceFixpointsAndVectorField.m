@@ -184,6 +184,11 @@ scatter(real(Z(1)), imag(Z(1)), 100, 'ob')
 plot(real(Z), imag(Z))
 
 
+%% Interpolating the 2D vector field:
+
+
+%% Functions:
+
 function [x, xs] = NewtonRaphsonIteration(x0, p)
 
     f = @(z, p) MFROA(0,z,p);

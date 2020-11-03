@@ -50,7 +50,7 @@ z0fromZ0 = findz0(p.kcount, p.P(p.k), Z0);
 Z0fromz0 = z0fromZ0'*p.P(p.k)/p.N
 assert(numel(z0fromZ0) == p.Mk)
 
-map_Ztozoa(Z0, p.kcount, p.P(p.k))'*p.P(p.k)/p.N
+map_Ztozoa(Z0, p)'*p.P(p.k)/p.N
 
 %% 2. From theta0 to Z0 and z0
 clc; rng(seed);
