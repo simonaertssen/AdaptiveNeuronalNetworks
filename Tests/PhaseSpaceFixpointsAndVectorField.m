@@ -39,9 +39,9 @@ opts = odeset('RelTol', 1.0e-6,'AbsTol', 1.0e-6);
 
 for i = 1:length(startx)
     IC = startx(i) + starty(i)*1i;
-    OAIC = ones(p.l,1)*IC;
-    OAIC = find_ICs(IC*ones(1, p.l), IC, p.P(p.k)/p.N);
-    [~, b_s] = ode45(@(t,x) MFROA(t,x,p), [0 bw], OAIC, opts);
+    zoa = ones(p.Mk,1)*IC;
+    zoa = find_ICs(IC*ones(1, p.Mk), IC, p.P(p.k)/p.N);
+    [~, b_s] = ode45(@(t,x) MFROA(t,x,p), [0 bw], zoa, opts);
     [t, b_s] = ode45(@(t,x) MFROA(t,x,p), [bw, tlengths(i)], b_s(end,:), opts);
     transients = find(t >= 0, 1, 'first');
     Z = b_s * p.P(p.k)/p.N;
@@ -58,52 +58,39 @@ clc
 
 figure; hold on; box on; grid on; axis square;
 phasespaceplot();
-drawdiraclimitcycle();
-
-% One way:
-% IC = -0.8*ones(p.N,1);
-% OAIC = zeros(1,p.l);
-% for i = 1:p.l
-%     OAIC(i) = sum(exp(1i*IC(p.degrees_i == p.k(i)))) / (p.P(p.k(i))+1.0e-24);
-% end
-% scatter(real(orderparameter(IC)), imag(orderparameter(IC)), 150, '+')
-% scatter(real(OAIC*p.P(p.k)/p.N), imag(OAIC*p.P(p.k)/p.N), 150, 'x')
-% 
-% eqpts = findeqpts(OAIC', p);
-% ZOA = eqpts'*p.P(p.k)/p.N;
-% scatter(real(ZOA), imag(ZOA), 150, 'xr');
+drawfixeddegreelimitcycle();
 
 % The other way:
-z0 = -0.9 - 1i*0.2;
-OAIC = find_ICs(z0*ones(1, p.l), z0, p.P(p.k)/p.N);
-scatter(real(z0), imag(z0), 150, '+k')
-scatter(real(OAIC*p.P(p.k)/p.N), imag(OAIC*p.P(p.k)/p.N), 150, 'xg');
-eqpts = findeqpts(OAIC', p);
+Z0 = 0.7 - 1i*0.2;
+zoa = map_Ztozoa(Z0,p)';
+scatter(real(Z0), imag(Z0), 150, '+k')
+scatter(real(zoa*p.P(p.k)/p.N), imag(zoa*p.P(p.k)/p.N), 150, 'xg');
+eqpts = findeqpts(zoa', p);
 ZOA = eqpts'*p.P(p.k)/p.N;
 scatter(real(ZOA), imag(ZOA), 150, 'xr');
-[~, Z] = OA_simulatenetwork(0, 7, z0, p);
+[~, Z] = OA_simulatenetwork(0, 7, zoa, p);
 scatter(real(Z(1)), imag(Z(1)), 100, 'ob', 'filled')
 plot(real(Z), imag(Z))
 
-z0 = -0.6 - 1i*0.4;
-IC = find_ICs(z0*ones(1, p.l), z0, p.P(p.k)/p.N);
-scatter(real(z0), imag(z0), 150, '+')
-scatter(real(IC*p.P(p.k)/p.N), imag(IC*p.P(p.k)/p.N), 150, 'x');
-eqpts = findeqpts(IC', p);
+Z0 = -0.6 - 1i*0.4;
+zoa = map_Ztozoa(Z0,p)';
+scatter(real(Z0), imag(Z0), 150, '+')
+scatter(real(zoa*p.P(p.k)/p.N), imag(zoa*p.P(p.k)/p.N), 150, 'x');
+eqpts = findeqpts(zoa', p);
 ZOA = eqpts'*p.P(p.k)/p.N;
 scatter(real(ZOA), imag(ZOA), 150, 'xr');
-[~, Z] = OA_simulatenetwork(0, 7, z0, p);
+[~, Z] = OA_simulatenetwork(0, 7, zoa, p);
 scatter(real(Z(1)), imag(Z(1)), 100, 'ob', 'filled')
 plot(real(Z), imag(Z))
 
-z0 = -0.1 - 1i*0.1;
-IC = find_ICs(z0*ones(1, p.l), z0, p.P(p.k)/p.N);
-scatter(real(z0), imag(z0), 150, '+')
-scatter(real(IC*p.P(p.k)/p.N), imag(IC*p.P(p.k)/p.N), 150, 'x');
-eqpts = findeqpts(IC', p);
+Z0 = -0.1 - 1i*0.1;
+zoa = map_Ztozoa(Z0,p)';
+scatter(real(Z0), imag(Z0), 150, '+')
+scatter(real(zoa*p.P(p.k)/p.N), imag(zoa*p.P(p.k)/p.N), 150, 'x');
+eqpts = findeqpts(zoa', p);
 ZOA = eqpts'*p.P(p.k)/p.N;
 scatter(real(ZOA), imag(ZOA), 150, 'xr');
-[~, Z] = OA_simulatenetwork(0, 7, z0, p);
+[~, Z] = OA_simulatenetwork(0, 7, zoa, p);
 scatter(real(Z(1)), imag(Z(1)), 100, 'ob', 'filled')
 plot(real(Z), imag(Z))
 
@@ -111,23 +98,30 @@ plot(real(Z), imag(Z))
 
 figure; hold on; box on; grid on; axis square;
 phasespaceplot();
-drawdiraclimitcycle();
+drawfixeddegreelimitcycle();
 
-z0 = 0.8 - 1i*0.5;
-OAIC = find_ICs(z0*ones(1, p.l), z0, p.P(p.k)/p.N);
-scatter(real(z0), imag(z0), 150, '+k')
-scatter(real(OAIC*p.P(p.k)/p.N), imag(OAIC*p.P(p.k)/p.N), 150, 'x');
+Z0 = 0.8 - 1i*0.5;
+zoa = map_Ztozoa(Z0, p)';
+scatter(real(Z0), imag(Z0), 150, '+k')
+scatter(real(zoa*p.P(p.k)/p.N), imag(zoa*p.P(p.k)/p.N), 150, 'x');
 
-eqpts = findeqpts(OAIC', p);
+eqpts = findeqpts(zoa', p);
 ZOA = eqpts'*p.P(p.k)/p.N;
 scatter(real(ZOA), imag(ZOA), 150, 'xr');
 
 opts = optimset('Display','off', 'Algorithm', 'levenberg-marquardt');
-[eqpts,~,~,~,JACOB] = fsolve(@(x) MFROA(0,x,p), OAIC', opts);
-ZOA = eqpts'*p.P(p.k)/p.N;
-scatter(real(ZOA), imag(ZOA), 150, 'or');
+% [eqpts,~,~,~,JACOB] = fsolve(@(x) MFROA2D(0,x,p), [real(zoa'), imag(zoa')], opts);
+size(Z0)
+size(map_Ztozoa(Z0, p))
+size(MFROA(0,map_Ztozoa(Z0, p),p))
+size(map_zoatoZ(MFROA(0,map_Ztozoa(Z0, p),p)',p))
 
-[~, Z] = OA_simulatenetwork(0, 7, z0, p);
+[ZOA,~,~,~,JACOB] = fsolve(@(x) map_zoatoZ(MFROA(0,map_Ztozoa(Z0, p),p)',p), Z0, opts);
+
+% ZOA = eqpts*p.P(p.k)/p.N
+scatter(real(ZOA), imag(ZOA), 200, 'xk', 'LineWidth',2);
+
+[~, Z] = OA_simulatenetwork(0, 7, zoa, p);
 scatter(real(Z(1)), imag(Z(1)), 100, 'ob', 'filled')
 plot(real(Z), imag(Z))
 
@@ -166,28 +160,31 @@ plot(real(Z), imag(Z))
 figure; hold on
 phasespaceplot();
 
-z0 = 0.3 - 1i*0.5;
-OAIC = find_ICs(z0*ones(1, p.l), z0, p.P(p.k)/p.N);
-scatter(real(z0), imag(z0), 150, '+k')
-scatter(real(OAIC*p.P(p.k)/p.N), imag(OAIC*p.P(p.k)/p.N), 150, 'xb');
+Z0 = 0.3 - 1i*0.5;
+zoa = map_Ztozoa(Z0, p)';
+scatter(real(Z0), imag(Z0), 150, '+k')
+scatter(real(zoa*p.P(p.k)/p.N), imag(zoa*p.P(p.k)/p.N), 150, 'xb');
 
-eqpts = findeqpts(OAIC', p);
-ZOA = eqpts'*p.P(p.k)/p.N
+eqpts = findeqpts(zoa', p);
+ZOA = eqpts'*p.P(p.k)/p.N;
 scatter(real(ZOA), imag(ZOA), 150, '+r');
 
-eqpts = NewtonRaphsonIteration(OAIC', p);
-ZOA = eqpts'*p.P(p.k)/p.N
+eqpts = NewtonRaphsonIteration(zoa', p);
+ZOA = eqpts'*p.P(p.k)/p.N;
 scatter(real(ZOA), imag(ZOA), 150, 'xb');
 
-[~, Z] = OA_simulatenetwork(0, 10, z0, p);
-scatter(real(Z(1)), imag(Z(1)), 100, 'ob')
-plot(real(Z), imag(Z))
+[~, Z] = OA_simulatenetwork(0, 10, zoa, p);
+scatter(real(Z(1)), imag(Z(1)), 100, 'ob');
+plot(real(Z), imag(Z));
 
-
-%% Interpolating the 2D vector field:
 
 
 %% Functions:
+
+function dzdt = MFROA2D(t, z, p)
+    Z = MFROA(t, z, p);
+    dzdt = [real(Z), imag(Z)];
+end
 
 function [x, xs] = NewtonRaphsonIteration(x0, p)
 
@@ -196,10 +193,10 @@ function [x, xs] = NewtonRaphsonIteration(x0, p)
         zc = conj(z);
         H = (1 + (z.*z + zc.*zc)/6 - 4.*real(z)/3);
         I = -p.delta + 1i*p.eta0 + 1i*p.OA*H;
-        dfdz = zeros(p.l, p.l);
+        dfdz = zeros(p.Mk, p.Mk);
         
-        for r = 1:p.l
-            for c = 1:p.l
+        for r = 1:p.Mk
+            for c = 1:p.Mk
                 dfdz(r,c) = 0.5*(z(r)+1)^2 * (1i*p.OA(r,c)*(z(c)-2)/3);
                 if r == c
                     dfdz(r,c) = dfdz(r,c) - 1i*(z(r)-1) + (z(r)+1)*I(r);
@@ -226,7 +223,6 @@ function [x, xs] = NewtonRaphsonIteration(x0, p)
     test = df(x0, p);
     test(1:5,1:5)
 end
-
 
 
 %% Try a Newton-Raphson system iteration:
