@@ -47,7 +47,7 @@ Z0fromz0 = z0fromZ0'*p.P(p.k)/p.N
 assert(numel(z0fromZ0) == p.Mk)
 
 %% 2. From theta0 to Z0 and z0
-rng(seed);
+clc; rng(seed);
 
 theta0 = randn(p.N,1);
 assert(numel(theta0) == p.N)
@@ -65,7 +65,7 @@ Z0fromz0 = z0fromtheta0*p.P(p.k)/p.N
 assert(numel(z0fromtheta0) == p.Mk)
 
 %% 3. From z0 to Z0 and theta0 
-rng(seed);
+clc; rng(seed);
 
 z0 = randn(p.Mk,1) + randn(p.Mk,1)*1i;
 
@@ -84,9 +84,9 @@ for i = 1:p.Mk
     testsum = testsum + numthetas; 
     
     endindex = startindex + numthetas;
-%     numel(theta0(indices))
-%     numel(z0(i)*ones(numthetas,1))
-    theta0(indices) = (-1i*log(z0(i)))*ones(numthetas,1);
+%     theta0(startindex:endindex-1) = (-1i*log(z0(i)*p.P(p.k(i))/numthetas));
+    theta0(indices) = (-1i*log(conj(z0(i))*p.P(p.k(i))/numthetas));
+    assert(numel(startindex:endindex-1) == sum(indices))
     startindex = endindex;
 end
 assert(testsum == p.N)
