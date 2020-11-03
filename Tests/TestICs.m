@@ -31,6 +31,8 @@ theta0 = - pi/2 * ones(pars.N, 1);
 p = prepareOAparameters(make_randomparameters(pars, 0.33));
 
 %% 1. From a specific point in the plane Z0 to theta0 and z0:
+clc; rng(seed);
+
 Z0 = 0.156 - 1i*0.411
 assert(numel(Z0) == 1)
 
@@ -41,10 +43,14 @@ theta0fromZ0 = findtheta0(p.N, Z0);
 Z0fromtheta0 = orderparameter(theta0fromZ0)
 assert(numel(theta0fromZ0) == p.N)
 
+orderparameter(map_Ztotheta(Z0, p.N))
+
 findz0 = @(counts, P, z) conj(z * counts ./ P);
 z0fromZ0 = findz0(p.kcount, p.P(p.k), Z0);
 Z0fromz0 = z0fromZ0'*p.P(p.k)/p.N
 assert(numel(z0fromZ0) == p.Mk)
+
+map_Ztozoa(Z0, p.kcount, p.P(p.k))'*p.P(p.k)/p.N
 
 %% 2. From theta0 to Z0 and z0
 clc; rng(seed);
@@ -56,6 +62,8 @@ assert(numel(theta0) == p.N)
 Z0fromtheta0 = orderparameter(theta0)
 assert(numel(Z0fromtheta0) == 1)
 
+map_thetatoZ(theta0)
+
 % We know how to find z0, gather per degree and multiply per probability
 z0fromtheta0 = zeros(1,p.Mk);
 for i = 1:p.Mk
@@ -64,13 +72,17 @@ end
 Z0fromz0 = z0fromtheta0*p.P(p.k)/p.N
 assert(numel(z0fromtheta0) == p.Mk)
 
+map_thetatozoa(theta0, p)*p.P(p.k)/p.N
+
 %% 3. From z0 to Z0 and theta0 
 clc; rng(seed);
 
-z0 = randn(p.Mk,1) + randn(p.Mk,1)*1i;
+z0 = randn(1,p.Mk) + randn(1,p.Mk)*1i;
 
 % Z0 is easy:
-Z0fromz0 = z0'*p.P(p.k)/p.N
+Z0fromz0 = z0*p.P(p.k)/p.N
+
+map_zoatoZ(z0, p)
 
 % For theta0 we should repeat the z0 value per degree, randomly distributed
 theta0 = zeros(pars.N, 1);
@@ -85,10 +97,13 @@ for i = 1:p.Mk
     
     endindex = startindex + numthetas;
 %     theta0(startindex:endindex-1) = (-1i*log(z0(i)*p.P(p.k(i))/numthetas));
-    theta0(indices) = (-1i*log(conj(z0(i))*p.P(p.k(i))/numthetas));
+    theta0(indices) = (-1i*log(z0(i)*p.P(p.k(i))/numthetas));
     assert(numel(startindex:endindex-1) == sum(indices))
     startindex = endindex;
 end
 assert(testsum == p.N)
 
 Z0fromtheta0 = orderparameter(theta0)
+
+map_thetatoZ(map_zoatotheta(z0, p))
+
