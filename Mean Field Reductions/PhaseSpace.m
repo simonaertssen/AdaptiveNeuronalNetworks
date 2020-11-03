@@ -47,7 +47,7 @@ in(1, m) = 1; in(end, m) = 1; in(m, 1) = 1; in(m, end) = 1;
 % X1start = reshape(X1(in), 5, 5); Y1start = reshape(Y1(in), 5, 5);
 
 %% Theta neurons parameters:
-pars.N = 1000;
+pars.N = 10000;
 pars.a_n = 0.666666666666666666667;
 seed = 2; rng(seed);
 
@@ -231,6 +231,92 @@ print(f_MFRCPW, '../Figures/MFRCPW.png', '-dpng', '-r300')
 close(f_MFRCPW)
 
 
+%% 4. OA random phase space: PSR
+pars.eta0 = -0.9; pars.delta = 0.8; pars.K = -2;
+pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
+p = prepareOAparameters(make_randomparameters(pars, 0.3));
+
+close all
+f_OARPSR = figure('Renderer', 'painters', 'Position', rect); hold on; box on;
+
+% z0s = drawOAvectors(X + 1i*Y, in, p, cm(2,:));
+% Draw vectors:
+odeoptions = odeset('RelTol', 1.0e-6);
+
+ICs = X + 1i*Y;
+[xdim, ydim] = size(ICs);
+z0s = zeros(xdim, ydim);
+z0idx = 1;
+for i = 1:numel(ICs)
+    [r, c] = ind2sub([xdim, ydim], i);
+%     z0s(r, c) = -map_zoatoZ(MFROA(0, map_Ztozoa(ICs(i),p),p)',p);
+    z0s(r, c) = -map_zoatoZ(MFROA(0, find_ICs(map_Ztozoa(ICs(i),p)', ICs(i), p.P(p.k)/p.N)',p)',p);
+%     if in(r,c) == 1
+%         [~, sim] = OA_simulatenetwork(0, 0.001, map_Ztozoa(ICs(i),p), p, odeoptions, false);
+%         z0s(r, c) = sim(1);
+%     else 
+%         z0s(r, c) = 0;
+%     end
+    z0idx = z0idx + 1;
+end
+q = quiver(real(ICs), imag(ICs), real(z0s), imag(z0s), 0.5, 'color', cm(2,:));
+
+col = [0.4060 0.7040 0.1280] - 0.1;
+startx = 0.8*cos( -pi/5:pi/5:pi); starty = 0.8*sin(-pi/5:pi/5:pi);
+startx(2) = []; starty(2) = [];
+tlengths = [0.92, 1.15, 1.2, 1.1, 0.85, 0.55];
+for i = 1:length(startx)
+    OAIC = ones(p.Mk,1)*(startx(i) + starty(i)*1i);
+    [~, ZOA] = OA_simulatenetwork(0, tlengths(i), OAIC, p, true);
+
+    scatter(startx(i), starty(i), 50, col, 'filled', 'o', 'LineWidth',2);% 'color', col);
+
+    Zplot = plot(real(ZOA), imag(ZOA), 'LineWidth', 2, 'color', col);
+    endline = ZOA(end-3) - ZOA(end);
+    endpoint = ZOA(end) + 0.02*endline/abs(endline);
+    plot_arrow(real(endpoint), imag(endpoint), real(ZOA(end)), imag(ZOA(end)),'linewidth', 2, ...
+    'color', col,'facecolor', col,'edgecolor', col, 'headwidth',0.7,'headheight',3);   
+end
+
+phasespaceplot();
+
+
+% End figure:
+hold off; set(gcf,'color','w'); set(gca,'FontSize',14); xlim([-1,1]); ylim([-1,1]); axis square;
+xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', 20)
+ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', 20)
+print(f_OARPSR, '../Figures/MFOARPSR.png', '-dpng', '-r300')
+% close(f_OARCPW)
+
+%% 5. OA random phase space: PSS
+pars.eta0 = 0.5; pars.delta = 0.7; pars.K = 2;
+pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
+p = prepareOAparameters(make_randomparameters(pars, 0.3));
+
+close all
+f_OARPSS = figure('Renderer', 'painters', 'Position', rect); hold on; box on;
+col = [0.4060 0.7040 0.1280] - 0.1;
+
+z0s = drawOAvectors(X + 1i*Y, in, p, cm(2,:));
+
+startx = 1; starty = 0; tlength = 3.4;
+[~, ZOA] = OA_simulatenetwork(0, tlength, ones(p.Mk,1)*(startx + starty*1i), p, true);
+scatter(startx, starty, 50, col, 'filled', 'o', 'LineWidth',2);% 'color', col);
+Zplot = plot(real(ZOA), imag(ZOA), 'LineWidth', 2, 'color', col);
+endline = ZOA(end-3) - ZOA(end);
+endpoint = ZOA(end) + 0.02*endline/abs(endline);
+plot_arrow(real(endpoint), imag(endpoint), real(ZOA(end)), imag(ZOA(end)),'linewidth', 2, ...
+'color', col,'facecolor', col,'edgecolor', col, 'headwidth',0.7,'headheight',3); 
+
+phasespaceplot();
+
+% End figure:
+hold off; set(gcf,'color','w'); set(gca,'FontSize',14); xlim([-1,1]); ylim([-1,1]); axis square;
+xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', 20)
+ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', 20)
+print(f_OARPSS, '../Figures/MFOARPSS.png', '-dpng', '-r300')
+% close(f_OARPSS)
+
 %% 4. OA random phase space: CPW
 pars.N = 10000;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
@@ -240,15 +326,18 @@ p = prepareOAparameters(make_randomparameters(pars, 0.3));
 close all
 f_OARCPW = figure('Renderer', 'painters', 'Position', rect); hold on; box on;
 drawfixeddegreelimitcycle();
-z0s = drawOAvectors(X(in) + 1i*Y(in), p, cm(2,:));
+z0s = drawOAvectors(X + 1i*Y, in, p, cm(2,:));
 
-%% Investigate the centre
-[Xq,Yq] = meshgrid(-0.2:0.01:0, -0.2:0.01:0);
-z0stight = interp2(X(in), Y(in), z0s, reshape(Xq, numel(Xq), 1), reshape(Yq, numel(Yq), 1));
+% %% Investigate the centre
+% [Xq,Yq] = meshgrid(-0.1:0.001:0, 0:0.001:0.2);
+% z0stight = interp2(X,Y,z0s,Xq,Yq);
+% figure
+% q = quiver(Xq, Yq, real(z0stight), imag(z0stight),  'color', cm(2,:));
+% [r,c] = find(z0stight==min(min(z0stight)));
+% 
+% % s = streamline(Xq,Yq,-real(z0stight),-imag(z0stight), -0.06, 0.1, [0.05,1000]);
 
-%%
 % Random net:
-eqptIC = [0, -0.8 - 1i*0.6, -0.8 - 1i*0.8, -0.5 - 1i*0.8, -0.4 - 1i*0.8]; 
 col = [0.4060 0.7040 0.1280] - 0.1;
 startx = [0, -0.8, -0.6, 0, 0]; starty = [-0.4, 0.2, 0.4, -1, -0.8];
 tlengths = [1.6, 0.5, 0.65, 2.6, 2.15];
@@ -287,14 +376,18 @@ ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', 20)
 % close(f_OARCPW)
 
 %% Functions:
-function z0s = drawOAvectors(ICs, p, col)
+function z0s = drawOAvectors(ICs, cond, p, col)
     % Can be better but that is not necessary.
     % Possible i,provement is the accuracy of the vector field.
-    z0s = zeros(numel(ICs),1);
+    [xdim, ydim] = size(ICs)
+    z0s = zeros(xdim, ydim);
     z0idx = 1;
     for i = 1:numel(ICs)
-        z0s(z0idx) = -map_zoatoZ(MFROA(0, map_Ztozoa(ICs(i),p),p)',p);
-        z0idx = z0idx + 1; 
+        [r, c] = ind2sub([xdim, ydim], i);
+        if true
+            z0s(r, c) = -map_zoatoZ(MFROA(0, map_Ztozoa(ICs(i),p),p)',p);
+            z0idx = z0idx + 1; 
+        end
     end
     q = quiver(real(ICs), imag(ICs), real(z0s), imag(z0s), 0.5, 'color', col);
 end
