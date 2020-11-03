@@ -27,7 +27,7 @@ unitcircle = [cos(th); sin(th)];
 drawcircle = round(unitcircle);
 
 % Main grid:
-l = 1; stp = 2*l/40; interval = -l:stp:l;
+l = 1; stp = 8*l/40; interval = -l:stp:l;
 [X,Y] = meshgrid(interval,interval);
 
 [in, ~] = inpolygon(X, Y, cos(th), sin(th));
@@ -250,13 +250,13 @@ z0idx = 1;
 for i = 1:numel(ICs)
     [r, c] = ind2sub([xdim, ydim], i);
 %     z0s(r, c) = -map_zoatoZ(MFROA(0, map_Ztozoa(ICs(i),p),p)',p);
-    z0s(r, c) = -map_zoatoZ(MFROA(0, find_ICs(map_Ztozoa(ICs(i),p)', ICs(i), p.P(p.k)/p.N)',p)',p);
-%     if in(r,c) == 1
-%         [~, sim] = OA_simulatenetwork(0, 0.001, map_Ztozoa(ICs(i),p), p, odeoptions, false);
-%         z0s(r, c) = sim(1);
-%     else 
-%         z0s(r, c) = 0;
-%     end
+%     z0s(r, c) = -map_zoatoZ(MFROA(0, find_ICs(map_Ztozoa(ICs(i),p)', ICs(i), p.P(p.k)/p.N)',p)',p);
+    if in(r,c) == 1
+        [~, sim] = OA_simulatenetwork(0, 0.001, map_Ztozoa(ICs(i),p), p, odeoptions, true);
+        z0s(r, c) = sim(end);
+    else 
+        z0s(r, c) = 0;
+    end
     z0idx = z0idx + 1;
 end
 q = quiver(real(ICs), imag(ICs), real(z0s), imag(z0s), 0.5, 'color', cm(2,:));
