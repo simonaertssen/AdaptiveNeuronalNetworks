@@ -8,7 +8,7 @@ function [TOA, ZOA, b] = OA_simulatenetwork(tnow, tend, OAIC, p, odeoptions)
     end
     
     if isfield(odeoptions,'backwards') && odeoptions.backwards == true
-        tback = -0.5;
+        tback = -1;
         [~, b] = ode45(@(t,x) MFROA(t,x,p), [tnow, tback], gather(OAIC), odeoptions);
         tnow = tback;
         OAIC = b(end,:);

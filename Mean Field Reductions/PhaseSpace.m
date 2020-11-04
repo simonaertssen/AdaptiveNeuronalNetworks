@@ -459,7 +459,7 @@ close(f_OARPSS)
 %% 9. OA scalefree phase space: CPW
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
-p = prepareOAparameters(make_scalefreeparameters(pars, 3));
+p = prepareOAparameters(make_scalefreeparameters(pars, 3))
 
 close all
 f_OARCPW = figure('Renderer', 'painters', 'Position', rect); hold on; box on;
@@ -470,13 +470,15 @@ odeoptions = odeset('RelTol', 1.0e-6); odeoptions.backwards = false;
 col = [0 0.3070 0.5010];
 
 startx = [0, -0.8, 0, 0]; starty = [-0.4, 0.4, -1, -0.8];
-tlengths = [1.6, 0.5, 0.65, 2.6, 2.15];
+tlengths = [1.6, 0.5, 0.65, 3, 2];
 bw = -0.5;
 for i = 1:length(startx)
     OAIC = ones(p.Mk,1)*(startx(i) + starty(i)*1i);
-    OAIC = find_ICs(OAIC, startx(i) + starty(i), );
+%     OAIC = find_ICs(OAIC, startx(i) + starty(i), startx(i) + starty(i));
 %     OAIC = map_Ztozoa(startx(i) - starty(i)*1i,p);
+    scatter(real(OAIC), imag(OAIC))
     [~, ZOA] = OA_simulatenetwork(0, tlengths(i), OAIC, p, odeoptions);
+%     plot(b)
 
     scatter(startx(i), starty(i), 50, col, 'filled', 'o', 'LineWidth',2);% 'color', col);
 
