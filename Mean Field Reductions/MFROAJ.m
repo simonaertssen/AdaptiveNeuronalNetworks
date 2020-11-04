@@ -7,11 +7,11 @@ function J = MFROAJ(z, p)
     for r = 1:p.Mk
         for c = 1:p.Mk
             J(r,c) = 0.5*(z(r)+1)^2 * (1i*p.OA(r,c)*(z(c)-2)/3);
-            if r == c
-                J(r,c) = J(r,c) - 1i*(z(r)-1) + (z(r)+1)*I(r);
-            end
+%             if r == c
+%                 J(r,c) = J(r,c) - 1i*(z(r)-1) + (z(r)+1)*I(r);
+%             end
         end
     end
     
-%     J(1:p.Mk+1:end) = J(1:p.Mk+1:end) + (-1i*(z-1) + (z+1).*I)';
+    J(1:p.Mk+1:end) = J(1:p.Mk+1:end) + (-1i*(z-1) + (z+1).*I)';
 end
