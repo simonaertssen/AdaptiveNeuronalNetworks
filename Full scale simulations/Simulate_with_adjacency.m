@@ -24,7 +24,7 @@ initarray = make_GPUhandle();
 tnow = 0; tend = 10;
 h = 0.001;
 
-pars.N = 10000;
+pars.N = 15000;
 pars.a_n = 0.666666666666666666667;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 
@@ -53,8 +53,8 @@ disp('Mean field test done')
 
 % The OA mean field theory:
 fdpars = prepareOAparameters(fdpars);
-z0 = map_thetatozoa(gather(thetasfull(:,1)), fdpars);
-[TOA, ZOA] = OA_simulatenetwork(tnow, tend, z0, fdpars, odeoptions);
+z0 = map_thetatozoa(thetasfull(:,1), fdpars);
+[TOA, ZOA] = OA_simulatenetwork(tnow, tend, gather(z0), fdpars, odeoptions);
 disp('OA mean field test done')
 
 %% Plotting the results:
@@ -62,7 +62,7 @@ f_fullyconnected = figure('Renderer', 'painters', 'Position', [50 800 800 400]);
 
 xlim([tnow, tend]); ylim([0, 1])
 plot(t, abs(z), '-', 'LineWidth', 5, 'Color', '#EDB120');
-plot(tfull, abs(zfull), '-', 'LineWidth', 4, 'Color', '#0072BD');
+plot(tfull, abs(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
 plot(T, abs(Z), '-', 'LineWidth', 3, 'Color', '#D95319');
 plot(TOA, abs(ZOA), '-', 'LineWidth', 2, 'Color', '#000000');
 xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
