@@ -47,7 +47,7 @@ in(1, m-l:m+l) = 1; in(end, m-l:m+l) = 1; in(m-l:m+l, 1) = 1; in(m-l:m+l, end) =
 % X1start = reshape(X1(in), 5, 5); Y1start = reshape(Y1(in), 5, 5);
 
 %% Theta neurons parameters:
-pars.N = 10000;
+pars.N = 1000;
 pars.a_n = 0.666666666666666666667;
 seed = 2; rng(seed);
 
@@ -241,15 +241,15 @@ f_OARPSR = figure('Renderer', 'painters', 'Position', rect); hold on; box on;
 
 drawOAvectors(X + 1i*Y, in, p, cm(2,:));
 
-odeoptions = odeset('RelTol', 1.0e-6);
-odeoptions.backwards = true;
+odeoptions = odeset('RelTol', 1.0e-12);
+odeoptions.backwards = false;
 col = [0.4060 0.7040 0.1280] - 0.1;
 startx = 0.8*cos( -pi/5:pi/5:pi); starty = 0.8*sin(-pi/5:pi/5:pi);
 startx(2) = []; starty(2) = [];
 tlengths = [0.92, 1.15, 1.2, 1.1, 0.85, 0.55];
 for i = 1:length(startx)
     OAIC = ones(p.Mk,1)*(startx(i) + starty(i)*1i);
-    [~, ZOA] = OA_simulatenetwork(0, tlengths(i), OAIC, p, true);
+    [~, ZOA] = OA_simulatenetwork(0, tlengths(i), OAIC, p, odeoptions);
 
     scatter(startx(i), starty(i), 50, col, 'filled', 'o', 'LineWidth',2);% 'color', col);
 
@@ -274,7 +274,7 @@ hold off; set(gcf,'color','w'); set(gca,'FontSize',14); xlim([-1,1]); ylim([-1,1
 xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', 20)
 ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', 20)
 print(f_OARPSR, '../Figures/MFOARPSR_random.png', '-dpng', '-r300')
-% close(f_OARCPW)
+close(f_OARPSR)
 
 %% 5. OA random phase space: PSS
 pars.eta0 = 0.5; pars.delta = 0.7; pars.K = 2;
@@ -288,7 +288,7 @@ col = [0.4060 0.7040 0.1280] - 0.1;
 z0s = drawOAvectors(X + 1i*Y, in, p, cm(2,:));
 
 startx = 1; starty = 0; tlength = 3.4;
-odeoptions = odeset('RelTol', 1.0e-6); odeoptions.backwards = true;
+odeoptions = odeset('RelTol', 1.0e-12); odeoptions.backwards = true;
 
 [~, ZOA] = OA_simulatenetwork(0, tlength, ones(p.Mk,1)*(startx + starty*1i), p, odeoptions);
 scatter(startx, starty, 50, col, 'filled', 'o', 'LineWidth',2);% 'color', col);
@@ -313,7 +313,6 @@ print(f_OARPSS, '../Figures/MFOARPSS_random.png', '-dpng', '-r300')
 close(f_OARPSS)
 
 %% 6. OA random phase space: CPW
-pars.N = 10000;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
 p = prepareOAparameters(make_randomparameters(pars, 0.3));
@@ -332,7 +331,7 @@ z0s = drawOAvectors(X + 1i*Y, in, p, cm(2,:));
 % 
 % % s = streamline(Xq,Yq,-real(z0stight),-imag(z0stight), -0.06, 0.1, [0.05,1000]);
 
-odeoptions = odeset('RelTol', 1.0e-6); odeoptions.backwards = true;
+odeoptions = odeset('RelTol', 1.0e-12); odeoptions.backwards = true;
 col = [0.4060 0.7040 0.1280] - 0.1;
 startx = [0, -0.8, -0.6, 0, 0]; starty = [-0.4, 0.2, 0.4, -1, -0.8];
 tlengths = [1.6, 0.5, 0.65, 2.6, 2.15];
@@ -359,6 +358,143 @@ idx = pksloc(1):pksloc(2);
 plot(real(ZOA(idx)), imag(ZOA(idx)), '-', 'LineWidth', 2, 'Color', col);
 plot_arrow(real(ZOA(end)), imag(ZOA(end)), real(ZOA(end-2)), imag(ZOA(end-2)),'linewidth', 2, ...
     'color', col,'facecolor', col,'edgecolor', col, 'headwidth',0.7,'headheight',3);
+
+phasespaceplot();
+
+% Stable quilibrium:
+eqptb = OA_fixedpointiteration(ones(p.Mk,1), p);
+eqptZ = eqptb'*p.P(p.k)/p.N;
+scatter(real(eqptZ), imag(eqptZ), 150, 'or', 'filled')
+
+% End figure:
+hold off; set(gcf,'color','w'); set(gca,'FontSize',14); xlim([-1,1]); ylim([-1,1]); axis square;
+xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', 20)
+ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', 20)
+print(f_OARCPW, '../Figures/MFOARCPW_random.png', '-dpng', '-r300')
+close(f_OARCPW)
+
+
+%% 7. OA scalefree phase space: PSR
+pars.eta0 = -0.9; pars.delta = 0.8; pars.K = -2;
+pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
+p = prepareOAparameters(make_scalefreeparameters(pars, 3, 750, 1000));
+
+close all
+f_OARPSR = figure('Renderer', 'painters', 'Position', rect); hold on; box on;
+
+drawOAvectors(X + 1i*Y, in, p, cm(2,:));
+
+odeoptions = odeset('RelTol', 1.0e-12);
+odeoptions.backwards = false;
+col = [0 0.3070 0.5010];
+startx = 0.8*cos( -pi/5:pi/5:pi); starty = 0.8*sin(-pi/5:pi/5:pi);
+startx(2) = []; starty(2) = [];
+tlengths = [0.92, 1.15, 1.2, 1.1, 0.85, 0.55];
+for i = 1:length(startx)
+    OAIC = ones(p.Mk,1)*(startx(i) + starty(i)*1i);
+    [~, ZOA] = OA_simulatenetwork(0, tlengths(i), OAIC, p, odeoptions);
+
+    scatter(startx(i), starty(i), 50, col, 'filled', 'o', 'LineWidth',2);% 'color', col);
+
+    Zplot = plot(real(ZOA), imag(ZOA), 'LineWidth', 2, 'color', col);
+    endline = ZOA(end-3) - ZOA(end);
+    endpoint = ZOA(end) + 0.02*endline/abs(endline);
+    plot_arrow(real(endpoint), imag(endpoint), real(ZOA(end)), imag(ZOA(end)),'linewidth', 2, ...
+    'color', col,'facecolor', col,'edgecolor', col, 'headwidth',0.7,'headheight',3);   
+end
+ 
+% Equilibrium:
+eqptb = OA_fixedpointiteration(ones(p.Mk,1), p);
+eqptZ = eqptb'*p.P(p.k)/p.N;
+scatter(real(eqptZ), imag(eqptZ), 150, 'or', 'filled')
+
+J = MFROAJ(eqptb, p);
+
+phasespaceplot();
+
+% End figure:
+hold off; set(gcf,'color','w'); set(gca,'FontSize',14); xlim([-1,1]); ylim([-1,1]); axis square;
+xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', 20)
+ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', 20)
+print(f_OARPSR, '../Figures/MFOARPSR_scalefree.png', '-dpng', '-r300')
+close(f_OARPSR)
+
+%% 8. OA scalefree phase space: PSS
+pars.eta0 = 0.5; pars.delta = 0.7; pars.K = 2;
+pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
+p = prepareOAparameters(make_scalefreeparameters(pars, 3, 750, 1000));
+
+close all
+f_OARPSS = figure('Renderer', 'painters', 'Position', rect); hold on; box on;
+col = [0 0.3070 0.5010];
+
+z0s = drawOAvectors(X + 1i*Y, in, p, cm(2,:));
+
+startx = 1; starty = 0; tlength = 3.4;
+odeoptions = odeset('RelTol', 1.0e-12); odeoptions.backwards = true;
+
+[~, ZOA] = OA_simulatenetwork(0, tlength, ones(p.Mk,1)*(startx + starty*1i), p, odeoptions);
+scatter(startx, starty, 50, col, 'filled', 'o', 'LineWidth',2);% 'color', col);
+Zplot = plot(real(ZOA), imag(ZOA), 'LineWidth', 2, 'color', col);
+endline = ZOA(end-3) - ZOA(end);
+endpoint = ZOA(end) + 0.02*endline/abs(endline);
+plot_arrow(real(endpoint), imag(endpoint), real(ZOA(end)), imag(ZOA(end)),'linewidth', 2, ...
+'color', col,'facecolor', col,'edgecolor', col, 'headwidth',0.7,'headheight',3); 
+
+phasespaceplot();
+
+% Equilibrium:
+eqptb = OA_fixedpointiteration(ones(p.Mk,1), p);
+eqptZ = eqptb'*p.P(p.k)/p.N;
+scatter(real(eqptZ), imag(eqptZ), 150, 'or', 'filled')
+
+% End figure:
+hold off; set(gcf,'color','w'); set(gca,'FontSize',14); xlim([-1,1]); ylim([-1,1]); axis square;
+xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', 20)
+ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', 20)
+print(f_OARPSS, '../Figures/MFOARPSS_scalefree.png', '-dpng', '-r300')
+close(f_OARPSS)
+
+
+%% 9. OA scalefree phase space: CPW
+pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
+pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
+p = prepareOAparameters(make_scalefreeparameters(pars, 3));
+
+close all
+f_OARCPW = figure('Renderer', 'painters', 'Position', rect); hold on; box on;
+drawfixeddegreelimitcycle();
+z0s = drawOAvectors(X + 1i*Y, in, p, cm(2,:));
+
+odeoptions = odeset('RelTol', 1.0e-6); odeoptions.backwards = true;
+col = [0 0.3070 0.5010];
+
+startx = [0, -0.8, -0.6, 0, 0]; starty = [-0.4, 0.2, 0.4, -1, -0.8];
+tlengths = [1.6, 0.5, 0.65, 2.6, 2.15];
+bw = -0.5;
+for i = 1:length(startx)
+    OAIC = ones(p.Mk,1)*(startx(i) + starty(i)*1i) + 0.1*randn(p.Mk,1);
+%     OAIC = map_Ztozoa(startx(i) + starty(i)*1i,p);
+    [~, ZOA] = OA_simulatenetwork(0, tlengths(i), OAIC, p, odeoptions);
+
+    scatter(startx(i), starty(i), 50, col, 'filled', 'o', 'LineWidth',2);% 'color', col);
+
+    Zplot = plot(real(ZOA), imag(ZOA), 'LineWidth', 2, 'color', col);
+    endline = ZOA(end-3) - ZOA(end);
+    endpoint = ZOA(end) + 0.02*endline/abs(endline);
+    plot_arrow(real(endpoint), imag(endpoint), real(ZOA(end)), imag(ZOA(end)),'linewidth', 2, ...
+    'color', col,'facecolor', col,'edgecolor', col, 'headwidth',0.7,'headheight',3);   
+end
+
+% % Limit cycle:
+% odeoptions = odeset('RelTol', 1.0e-6); 
+% [T, ZOA] = OA_simulatenetwork(0, 100, ones(p.Mk,1)*(-0.73*1i), p, odeoptions);
+% ZOA = flip(ZOA(round(numel(T)*0.9):end,:));
+% [~, pksloc] = findpeaks(abs(ZOA),'MinPeakDistance',100);
+% idx = pksloc(1):pksloc(2);
+% plot(real(ZOA(idx)), imag(ZOA(idx)), '-', 'LineWidth', 2, 'Color', col);
+% plot_arrow(real(ZOA(end)), imag(ZOA(end)), real(ZOA(end-2)), imag(ZOA(end-2)),'linewidth', 2, ...
+%     'color', col,'facecolor', col,'edgecolor', col, 'headwidth',0.7,'headheight',3);
 
 phasespaceplot();
 
