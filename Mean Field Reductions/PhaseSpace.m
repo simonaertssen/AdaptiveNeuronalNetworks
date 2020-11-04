@@ -260,7 +260,12 @@ for i = 1:length(startx)
     'color', col,'facecolor', col,'edgecolor', col, 'headwidth',0.7,'headheight',3);   
 end
 
-drawOAequilibria([0], in, p, cm(2,:));
+% Equilibrium:
+eqptb = OA_fixedpointiteration(ones(p.Mk,1), p);
+eqptZ = eqptb'*p.P(p.k)/p.N;
+scatter(real(eqptZ), imag(eqptZ), 150, 'or', 'filled')
+
+J = MFROAJ(eqptb, p);
 
 phasespaceplot();
 
