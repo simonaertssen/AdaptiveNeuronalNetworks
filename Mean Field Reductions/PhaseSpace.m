@@ -242,6 +242,7 @@ f_OARPSR = figure('Renderer', 'painters', 'Position', rect); hold on; box on;
 % z0s = drawOAvectors(X + 1i*Y, in, p, cm(2,:));
 % Draw vectors:
 odeoptions = odeset('RelTol', 1.0e-6);
+odeoptions.backwards = true;
 
 ICs = X + 1i*Y;
 [xdim, ydim] = size(ICs);
@@ -252,7 +253,7 @@ for i = 1:numel(ICs)
 %     z0s(r, c) = -map_zoatoZ(MFROA(0, map_Ztozoa(ICs(i),p),p)',p);
 %     z0s(r, c) = -map_zoatoZ(MFROA(0, find_ICs(map_Ztozoa(ICs(i),p)', ICs(i), p.P(p.k)/p.N)',p)',p);
     if in(r,c) == 1
-        [~, sim] = OA_simulatenetwork(0, 0.001, map_Ztozoa(ICs(i),p), p, odeoptions, true);
+        [~, sim] = OA_simulatenetwork(0, 0.001, map_Ztozoa(ICs(i),p), p, odeoptions);
         z0s(r, c) = sim(end);
     else 
         z0s(r, c) = 0;
@@ -317,7 +318,7 @@ ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', 20)
 print(f_OARPSS, '../Figures/MFOARPSS.png', '-dpng', '-r300')
 % close(f_OARPSS)
 
-%% 4. OA random phase space: CPW
+%% 6. OA random phase space: CPW
 pars.N = 10000;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
