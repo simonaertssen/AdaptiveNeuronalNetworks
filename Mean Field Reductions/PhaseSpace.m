@@ -184,8 +184,8 @@ Z = flip(Z(round(numel(T)*0.97):end,:));
 [~, pksloc] = findpeaks(abs(Z),'MinPeakDistance',100);
 idx = pksloc(1):pksloc(3);
 plot(real(Z(idx)), imag(Z(idx)), '-', 'LineWidth', 2, 'Color', cm(3,:));
-plot_arrow(real(Z(end)), imag(Z(end)), real(Z(end-3)), imag(Z(end-3)),'linewidth', 2, ...
-    'color', cm(3,:),'facecolor', cm(3,:),'edgecolor', cm(3,:), 'headwidth',0.7,'headheight',3);
+plot_arrow(real(Z(end)), imag(Z(end)), real(Z(end-2)), imag(Z(end-2)),'linewidth', 2, ...
+    'color', cm(3,:),'facecolor', cm(3,:),'edgecolor', cm(3,:), 'headwidth',0.4,'headheight',1);
 
 phasespaceplot();
 
@@ -273,7 +273,7 @@ phasespaceplot();
 hold off; set(gcf,'color','w'); set(gca,'FontSize',14); xlim([-1,1]); ylim([-1,1]); axis square;
 xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', 20)
 ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', 20)
-print(f_OARPSR, '../Figures/MFOARPSR.png', '-dpng', '-r300')
+print(f_OARPSR, '../Figures/MFOARPSR_random.png', '-dpng', '-r300')
 % close(f_OARCPW)
 
 %% 5. OA random phase space: PSS
@@ -288,8 +288,7 @@ col = [0.4060 0.7040 0.1280] - 0.1;
 z0s = drawOAvectors(X + 1i*Y, in, p, cm(2,:));
 
 startx = 1; starty = 0; tlength = 3.4;
-odeoptions = odeset('RelTol', 1.0e-6);
-odeoptions.backwards = true;
+odeoptions = odeset('RelTol', 1.0e-6); odeoptions.backwards = true;
 
 [~, ZOA] = OA_simulatenetwork(0, tlength, ones(p.Mk,1)*(startx + starty*1i), p, odeoptions);
 scatter(startx, starty, 50, col, 'filled', 'o', 'LineWidth',2);% 'color', col);
@@ -301,12 +300,17 @@ plot_arrow(real(endpoint), imag(endpoint), real(ZOA(end)), imag(ZOA(end)),'linew
 
 phasespaceplot();
 
+% Equilibrium:
+eqptb = OA_fixedpointiteration(ones(p.Mk,1), p);
+eqptZ = eqptb'*p.P(p.k)/p.N;
+scatter(real(eqptZ), imag(eqptZ), 150, 'or', 'filled')
+
 % End figure:
 hold off; set(gcf,'color','w'); set(gca,'FontSize',14); xlim([-1,1]); ylim([-1,1]); axis square;
 xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', 20)
 ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', 20)
-print(f_OARPSS, '../Figures/MFOARPSS.png', '-dpng', '-r300')
-% close(f_OARPSS)
+print(f_OARPSS, '../Figures/MFOARPSS_random.png', '-dpng', '-r300')
+close(f_OARPSS)
 
 %% 6. OA random phase space: CPW
 pars.N = 10000;
@@ -328,14 +332,14 @@ z0s = drawOAvectors(X + 1i*Y, in, p, cm(2,:));
 % 
 % % s = streamline(Xq,Yq,-real(z0stight),-imag(z0stight), -0.06, 0.1, [0.05,1000]);
 
-% Random net:
+odeoptions = odeset('RelTol', 1.0e-6); odeoptions.backwards = true;
 col = [0.4060 0.7040 0.1280] - 0.1;
 startx = [0, -0.8, -0.6, 0, 0]; starty = [-0.4, 0.2, 0.4, -1, -0.8];
 tlengths = [1.6, 0.5, 0.65, 2.6, 2.15];
 bw = -0.5;
 for i = 2:length(startx)-1
     OAIC = ones(p.Mk,1)*(startx(i) + starty(i)*1i);
-    [~, ZOA] = OA_simulatenetwork(0, tlengths(i), OAIC, p, true);
+    [~, ZOA] = OA_simulatenetwork(0, tlengths(i), OAIC, p, odeoptions);
 
     scatter(startx(i), starty(i), 50, col, 'filled', 'o', 'LineWidth',2);% 'color', col);
 
@@ -347,8 +351,8 @@ for i = 2:length(startx)-1
 end
 
 % Limit cycle:
-odeoptions = odeset('RelTol', 1.0e-6);
-[T, ZOA] = OA_simulatenetwork(0, 100, ones(p.Mk,1)*(-0.73*1i), p, odeoptions, false);
+odeoptions = odeset('RelTol', 1.0e-6); 
+[T, ZOA] = OA_simulatenetwork(0, 100, ones(p.Mk,1)*(-0.73*1i), p, odeoptions);
 ZOA = flip(ZOA(round(numel(T)*0.9):end,:));
 [~, pksloc] = findpeaks(abs(ZOA),'MinPeakDistance',100);
 idx = pksloc(1):pksloc(2);
@@ -358,12 +362,16 @@ plot_arrow(real(ZOA(end)), imag(ZOA(end)), real(ZOA(end-2)), imag(ZOA(end-2)),'l
 
 phasespaceplot();
 
+% Stable quilibrium:
+eqptb = OA_fixedpointiteration(ones(p.Mk,1), p);
+eqptZ = eqptb'*p.P(p.k)/p.N;
+scatter(real(eqptZ), imag(eqptZ), 150, 'or', 'filled')
 
 % End figure:
 hold off; set(gcf,'color','w'); set(gca,'FontSize',14); xlim([-1,1]); ylim([-1,1]); axis square;
 xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', 20)
 ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', 20)
-% print(f_OARCPW, '../Figures/MFOARCPW.png', '-dpng', '-r300')
+print(f_OARCPW, '../Figures/MFOARCPW_random.png', '-dpng', '-r300')
 % close(f_OARCPW)
 
 %% Functions:
