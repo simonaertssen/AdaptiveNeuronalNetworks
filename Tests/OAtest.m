@@ -25,16 +25,17 @@ IC = - pi/2 * ones(pars.N, 1);
 %% Testing initial conditions:
 oapars = prepareOAparameters(make_lognormparameters(pars, 3, 1, 500));
 
-OAIC = zeros(1,oapars.l);
-for i = 1:oapars.l
+OAIC = zeros(1,oapars.Mk);
+for i = 1:oapars.Mk
     OAIC(i) = sum(exp(1i*IC(oapars.degrees_i == oapars.k(i)))) / (oapars.P(oapars.k(i))+1.0e-24);
 end
 ZOA = OAIC*oapars.P(oapars.k)/oapars.N
 
 %% Testing the OA approach:
-oapars = make_lognormparameters(pars, 3, 1, 500);
+oapars = make_scalefreeparameters(pars, 3, 1, 500);
 
 figure; hold on
+%%
 
 % tic;
 [tfull, thetasfull] = DOPRI_simulatenetwork(tnow,tend,IC,h,oapars);
@@ -42,6 +43,7 @@ zfull = orderparameter(thetasfull);
 plot(tfull, abs(zfull), 'b', 'LineWidth', 2)
 % toc;
 
+%%
 tic;
 % Old version:
 oapars = prepareOAparameters(oapars);
@@ -50,12 +52,12 @@ plot(TOA, abs(ZOA), 'r', 'LineWidth', 2)
 toc;
 
 %%
-% tic;
-% % New version: a simulation per (k_in, k_out)
-% sfpars = prepareOAparameters2(make_scalefreeparameters(pars, 2.1));
-% [TOA, ZOA] = OA_simulatenetwork2(tnow, 4, IC, sfpars);
-% plot(TOA, abs(ZOA), 'r')
-% toc;
+tic;
+% New version: a simulation per (k_in, k_out)
+sfpars = prepareOAparameters2(make_scalefreeparameters(pars, 2.1));
+[TOA, ZOA] = OA_simulatenetwork2(tnow, tend, IC, sfpars);
+plot(TOA, abs(ZOA), 'r')
+toc;
 
 
 %% Functions
@@ -63,17 +65,17 @@ function p = prepareOAparameters2(p)
 %     [d_i, d_o] = meshgrid(unique(p.degrees_i), unique(p.degrees_o));
 %     p.k = [reshape(d_i, numel(d_i), 1), reshape(d_o, numel(d_o), 1)];
     p.k = unique([p.degrees_i, p.degrees_o], 'rows');
-    p.l = numel(p.k)/2
+    p.Mk = numel(p.k)/2
 %     p.P = @(x) p.P(x)*sum(p.P(p.k(:,1)))/p.N;
     
 %     p.k = unique(p.degrees_i);
-%     p.l = numel(p.k);
-%     pkperm = p.k(randperm(p.l));
-    p.OA = zeros(p.l, p.l);
-    for i = 1:p.l
-        a = p.P(p.k(:,1)).*p.P(p.k(:,2)).*assortativity2(p.k, p.k(i,:).*ones(p.l,2), p.N*p.meandegree, 0)/p.meandegree*p.N;
+%     p.Mk = numel(p.k);
+%     pkperm = p.k(randperm(p.Mk));
+    p.OA = zeros(p.Mk, p.Mk);
+    for i = 1:p.Mk
+        a = p.P(p.k(:,1)).*p.P(p.k(:,2)).*assortativity2(p.k, p.k(i,:).*ones(p.Mk,2), p.N*p.meandegree, 0)/p.meandegree*p.N;
         p.OA(i,:) = a;
-%         ks = p.k(i,1)*ones(p.l,1);
+%         ks = p.k(i,1)*ones(p.Mk,1);
 %         p.OA(i, :) = p.P(p.k(:,1)).*assortativity(p.k(:,1), p.k(:,1), ks, ks, p.N, p.meandegree, 0)/p.meandegree;
     end
 end
@@ -86,13 +88,13 @@ function [TOA, ZOA, b] = OA_simulatenetwork2(tnow, tend, IC, p, odeoptions)
         
     Ps = p.P(p.k(:,1)) .* p.P(p.k(:,2));
     if numel(IC) > 1
-        OAIC = zeros(p.l,1);
-        for i = 1:p.l
+        OAIC = zeros(p.Mk,1);
+        for i = 1:p.Mk
             idx = (p.degrees_i == p.k(i, 1) & p.degrees_o == p.k(i, 2));
             OAIC(i) = sum(exp(1i*IC(idx)) / Ps(i))*p.N;
         end
     elseif numel(IC) == 1
-        OAIC = IC*ones(p.l,1);
+        OAIC = IC*ones(p.Mk,1);
     else
         error('IC might be wrong?')
     end

@@ -11,7 +11,7 @@ function randompars = make_randomparameters(pars, netp)
     randompars.meandegree = netp*(pars.N - 1);
     
     stddev = sqrt(randompars.meandegree);
-    base = round(randompars.meandegree + [-1.966*stddev:1.966*stddev]);
+    base = round(randompars.meandegree + -1.966*stddev:1.966*stddev);
     
     idx = randperm(pars.N); n = numel(base);
     randompars.degrees_i = zeros(pars.N,1);

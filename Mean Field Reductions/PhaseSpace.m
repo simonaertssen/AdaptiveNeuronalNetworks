@@ -47,7 +47,7 @@ in(1, m-l:m+l) = 1; in(end, m-l:m+l) = 1; in(m-l:m+l, 1) = 1; in(m-l:m+l, end) =
 % X1start = reshape(X1(in), 5, 5); Y1start = reshape(Y1(in), 5, 5);
 
 %% Theta neurons parameters:
-pars.N = 1000;
+pars.N = 5000;
 pars.a_n = 0.666666666666666666667;
 seed = 2; rng(seed);
 
@@ -274,7 +274,7 @@ hold off; set(gcf,'color','w'); set(gca,'FontSize',14); xlim([-1,1]); ylim([-1,1
 xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', 20)
 ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', 20)
 print(f_OARPSR, '../Figures/MFOARPSR_random.png', '-dpng', '-r300')
-% close(f_OARPSR)
+close(f_OARPSR)
 
 %% 5. OA random phase space: PSS
 pars.eta0 = 0.5; pars.delta = 0.7; pars.K = 2;
@@ -334,14 +334,14 @@ drawOAvectors(X + 1i*Y, in, p, cm(2,:));
 col = [0.4060 0.7040 0.1280] - 0.1;
 startx = [0, -0.8, -0.6, 0, 0]; starty = [-0.4, 0.2, 0.4, -1, -0.8];
 tlengths = [1.6, 0.5, 0.65, 2.6, 2.15];
-bw = -0.5;
-for i = 2:length(startx)-1
+
+for i = 1:length(startx)-1
     OAIC = ones(p.Mk,1)*(startx(i) + starty(i)*1i);
-    [~, ZOA] = OA_simulatenetwork(0, tlengths(i), OAIC, p, odeoptions);
+    [~, ZOA] = OA_simulatenetwork(0, tlengths(i), OAIC, p);
 
     scatter(startx(i), starty(i), 50, col, 'filled', 'o', 'LineWidth',2);% 'color', col);
 
-    Zplot = plot(real(ZOA), imag(ZOA), 'LineWidth', 2, 'color', col);
+    plot(real(ZOA), imag(ZOA), 'LineWidth', 2, 'color', col);
     endline = ZOA(end-3) - ZOA(end);
     endpoint = ZOA(end) + 0.02*endline/abs(endline);
     plot_arrow(real(endpoint), imag(endpoint), real(ZOA(end)), imag(ZOA(end)),'linewidth', 2, ...
@@ -349,15 +349,14 @@ for i = 2:length(startx)-1
 end
 
 % Limit cycle:
-odeoptions = odeset('RelTol', 1.0e-6); 
-[T, ZOA] = OA_simulatenetwork(0, 100, ones(p.Mk,1)*(-0.73*1i), p, odeoptions);
-plot(real(ZOA), imag(ZOA), 'LineWidth', 2, 'color', col);
-% ZOA = flip(ZOA(round(numel(T)*0.9):end,:));
-% [~, pksloc] = findpeaks(abs(ZOA),'MinPeakDistance',100);
-% idx = pksloc(1):pksloc(3);
-% plot(real(ZOA(idx)), imag(ZOA(idx)), '-', 'LineWidth', 2, 'Color', col);
-% plot_arrow(real(ZOA(end)), imag(ZOA(end)), real(ZOA(end-2)), imag(ZOA(end-2)),'linewidth', 2, ...
-%     'color', col,'facecolor', col,'edgecolor', col, 'headwidth',0.7,'headheight',3);
+[T, ZOA] = OA_simulatenetwork(0, 100, ones(p.Mk,1)*(-0.73*1i), p);
+% plot(real(ZOA), imag(ZOA), 'LineWidth', 2, 'color', col);
+ZOA = flip(ZOA(round(numel(T)*0.9):end,:));
+[~, pksloc] = findpeaks(abs(ZOA),'MinPeakDistance',100);
+idx = pksloc(1):pksloc(3);
+plot(real(ZOA(idx)), imag(ZOA(idx)), '-', 'LineWidth', 2, 'Color', col);
+plot_arrow(real(ZOA(end)), imag(ZOA(end)), real(ZOA(end-2)), imag(ZOA(end-2)),'linewidth', 2, ...
+    'color', col,'facecolor', col,'edgecolor', col, 'headwidth',0.7,'headheight',3);
 
 phasespaceplot();
 
@@ -486,12 +485,11 @@ for i = 1:length(startx)
 end
 
 % Limit cycle:
-odeoptions = odeset('RelTol', 1.0e-6); odeoptions.backwards = false;
 [T, ZOA] = OA_simulatenetwork(0, 100, ones(p.Mk,1)*(-0.2*1i), p, odeoptions);
 % Zplot = plot(real(ZOA), imag(ZOA), 'LineWidth', 2, 'color', col);
 ZOA = flip(ZOA(round(numel(T)*0.9):end,:));
 [~, pksloc] = findpeaks(abs(ZOA),'MinPeakDistance',100);
-idx = pksloc(1):pksloc(2);
+idx = pksloc(1):pksloc(3);
 plot(real(ZOA(idx)), imag(ZOA(idx)), '-', 'LineWidth', 2, 'Color', col);
 plot_arrow(real(ZOA(end)), imag(ZOA(end)), real(ZOA(end-2)), imag(ZOA(end-2)),'linewidth', 2, ...
     'color', col,'facecolor', col,'edgecolor', col, 'headwidth',0.7,'headheight',3);
