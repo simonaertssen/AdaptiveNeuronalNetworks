@@ -27,13 +27,13 @@ unitcircle = [cos(th); sin(th)];
 drawcircle = round(unitcircle);
 
 % Main grid:
-l = 1; stp = 8*l/40; interval = -l:stp:l;
+l = 1; stp = 2*l/40; interval = -l:stp:l;
 [X,Y] = meshgrid(interval,interval);
 
 [in, ~] = inpolygon(X, Y, cos(th), sin(th));
-[sz, ~] = size(in); m = ceil(sz/2);
+[sz, ~] = size(in); m = ceil(sz/2); l = round(m*0.25);
 in(1, :) = 0; in(end, :) = 0; in(:, 1) = 0; in(:, end) = 0;
-in(1, m) = 1; in(end, m) = 1; in(m, 1) = 1; in(m, end) = 1;
+in(1, m-l:m+l) = 1; in(end, m-l:m+l) = 1; in(m-l:m+l, 1) = 1; in(m-l:m+l, end) = 1;
 
 % Draw grid
 % l = 1; stp = 2*l/6; interval = -l:stp:l;
@@ -248,20 +248,25 @@ ICs = X + 1i*Y;
 [xdim, ydim] = size(ICs);
 z0s = zeros(xdim, ydim);
 z0idx = 1;
+tic
 for i = 1:numel(ICs)
     [r, c] = ind2sub([xdim, ydim], i);
 %     z0s(r, c) = -map_zoatoZ(MFROA(0, map_Ztozoa(ICs(i),p),p)',p);
 %     z0s(r, c) = -map_zoatoZ(MFROA(0, find_ICs(map_Ztozoa(ICs(i),p)', ICs(i), p.P(p.k)/p.N)',p)',p);
     if in(r,c) == 1
-        [~, sim] = OA_simulatenetwork(0, 0.001, map_Ztozoa(ICs(i),p), p, odeoptions);
-        z0s(r, c) = sim(end);
-    else 
-        z0s(r, c) = 0;
+%         [~, sim] = OA_simulatenetwork(0, 0.001, map_Ztozoa(ICs(i),p), p, odeoptions);
+        zoa0 = ones(p.Mk,1)*ICs(i);
+%         zoa0 = map_Ztozoa(ICs(i),p);
+        sim1 = DOPRIstep(@(t,x) MFROA(t,x,p),0,zoa0,0.01);
+%         sim2 = DOPRIstep(@(t,x) MFROA(t,x,p),0,sim1,0.01);
+        z0s(r, c) = map_zoatoZ(conj((sim1 - zoa0)'),p);
+%     else 
+%         z0s(r, c) = 0;
     end
     z0idx = z0idx + 1;
 end
-q = quiver(real(ICs), imag(ICs), real(z0s), imag(z0s), 0.5, 'color', cm(2,:));
-
+q = quiver(real(ICs), imag(ICs), real(z0s), imag(z0s), 0.8, 'color', cm(2,:));
+toc
 col = [0.4060 0.7040 0.1280] - 0.1;
 startx = 0.8*cos( -pi/5:pi/5:pi); starty = 0.8*sin(-pi/5:pi/5:pi);
 startx(2) = []; starty(2) = [];
@@ -279,7 +284,7 @@ for i = 1:length(startx)
     'color', col,'facecolor', col,'edgecolor', col, 'headwidth',0.7,'headheight',3);   
 end
 
-phasespaceplot();
+% phasespaceplot();
 
 
 % End figure:
@@ -301,7 +306,10 @@ col = [0.4060 0.7040 0.1280] - 0.1;
 z0s = drawOAvectors(X + 1i*Y, in, p, cm(2,:));
 
 startx = 1; starty = 0; tlength = 3.4;
-[~, ZOA] = OA_simulatenetwork(0, tlength, ones(p.Mk,1)*(startx + starty*1i), p, true);
+odeoptions = odeset('RelTol', 1.0e-6);
+odeoptions.backwards = true;
+
+[~, ZOA] = OA_simulatenetwork(0, tlength, ones(p.Mk,1)*(startx + starty*1i), p, odeoptions);
 scatter(startx, starty, 50, col, 'filled', 'o', 'LineWidth',2);% 'color', col);
 Zplot = plot(real(ZOA), imag(ZOA), 'LineWidth', 2, 'color', col);
 endline = ZOA(end-3) - ZOA(end);
