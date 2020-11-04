@@ -11,7 +11,7 @@ function [tout,xout] = DOPRI_threshold(originalfunc,ta,tb,x0,h,p)
     xout = initarray(zeros(dim(1),npts)); xout(:,1) = x0;
     
     % Make new function handle to improve speed of function evaluation!
-    func = @(t, x) originalfunc(t, x, p.e, p.K/p.N, p.a_n);
+    func = @(t, x) originalfunc(t, x, p.e, p.a_n*p.K/p.N);
     
     K7 = h*func(ta, x0);
     for i = 1:(npts-1)
