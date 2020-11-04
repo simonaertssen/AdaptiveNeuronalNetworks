@@ -466,15 +466,16 @@ f_OARCPW = figure('Renderer', 'painters', 'Position', rect); hold on; box on;
 drawfixeddegreelimitcycle();
 z0s = drawOAvectors(X + 1i*Y, in, p, cm(2,:));
 
-odeoptions = odeset('RelTol', 1.0e-6); odeoptions.backwards = true;
+odeoptions = odeset('RelTol', 1.0e-6); odeoptions.backwards = false;
 col = [0 0.3070 0.5010];
 
-startx = [0, -0.8, -0.6, 0, 0]; starty = [-0.4, 0.2, 0.4, -1, -0.8];
+startx = [0, -0.8, 0, 0]; starty = [-0.4, 0.4, -1, -0.8];
 tlengths = [1.6, 0.5, 0.65, 2.6, 2.15];
 bw = -0.5;
 for i = 1:length(startx)
-    OAIC = ones(p.Mk,1)*(startx(i) + starty(i)*1i) + 0.1*randn(p.Mk,1);
-%     OAIC = map_Ztozoa(startx(i) + starty(i)*1i,p);
+    OAIC = ones(p.Mk,1)*(startx(i) + starty(i)*1i);
+    OAIC = find_ICs(OAIC, startx(i) + starty(i), );
+%     OAIC = map_Ztozoa(startx(i) - starty(i)*1i,p);
     [~, ZOA] = OA_simulatenetwork(0, tlengths(i), OAIC, p, odeoptions);
 
     scatter(startx(i), starty(i), 50, col, 'filled', 'o', 'LineWidth',2);% 'color', col);
@@ -499,9 +500,9 @@ end
 phasespaceplot();
 
 % Stable quilibrium:
-eqptb = OA_fixedpointiteration(ones(p.Mk,1), p);
-eqptZ = eqptb'*p.P(p.k)/p.N;
-scatter(real(eqptZ), imag(eqptZ), 150, 'or', 'filled')
+% eqptb = OA_fixedpointiteration(ones(p.Mk,1), p);
+% eqptZ = eqptb'*p.P(p.k)/p.N;
+% scatter(real(eqptZ), imag(eqptZ), 150, 'or', 'filled')
 
 % End figure:
 hold off; set(gcf,'color','w'); set(gca,'FontSize',14); xlim([-1,1]); ylim([-1,1]); axis square;
