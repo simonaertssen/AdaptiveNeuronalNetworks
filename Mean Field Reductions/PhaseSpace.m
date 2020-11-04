@@ -239,34 +239,10 @@ p = prepareOAparameters(make_randomparameters(pars, 0.3));
 close all
 f_OARPSR = figure('Renderer', 'painters', 'Position', rect); hold on; box on;
 
-% z0s = drawOAvectors(X + 1i*Y, in, p, cm(2,:));
-% Draw vectors:
+drawOAvectors(X + 1i*Y, in, p, cm(2,:));
+
 odeoptions = odeset('RelTol', 1.0e-6);
 odeoptions.backwards = true;
-
-ICs = X + 1i*Y;
-[xdim, ydim] = size(ICs);
-z0s = zeros(xdim, ydim);
-z0idx = 1;
-tic
-for i = 1:numel(ICs)
-    [r, c] = ind2sub([xdim, ydim], i);
-%     z0s(r, c) = -map_zoatoZ(MFROA(0, map_Ztozoa(ICs(i),p),p)',p);
-%     z0s(r, c) = -map_zoatoZ(MFROA(0, find_ICs(map_Ztozoa(ICs(i),p)', ICs(i), p.P(p.k)/p.N)',p)',p);
-    if in(r,c) == 1
-%         [~, sim] = OA_simulatenetwork(0, 0.001, map_Ztozoa(ICs(i),p), p, odeoptions);
-        zoa0 = ones(p.Mk,1)*ICs(i);
-%         zoa0 = map_Ztozoa(ICs(i),p);
-        sim1 = DOPRIstep(@(t,x) MFROA(t,x,p),0,zoa0,0.01);
-%         sim2 = DOPRIstep(@(t,x) MFROA(t,x,p),0,sim1,0.01);
-        z0s(r, c) = map_zoatoZ(conj((sim1 - zoa0)'),p);
-%     else 
-%         z0s(r, c) = 0;
-    end
-    z0idx = z0idx + 1;
-end
-q = quiver(real(ICs), imag(ICs), real(z0s), imag(z0s), 0.8, 'color', cm(2,:));
-toc
 col = [0.4060 0.7040 0.1280] - 0.1;
 startx = 0.8*cos( -pi/5:pi/5:pi); starty = 0.8*sin(-pi/5:pi/5:pi);
 startx(2) = []; starty(2) = [];
@@ -284,8 +260,9 @@ for i = 1:length(startx)
     'color', col,'facecolor', col,'edgecolor', col, 'headwidth',0.7,'headheight',3);   
 end
 
-% phasespaceplot();
+drawOAequilibria([0], in, p, cm(2,:));
 
+phasespaceplot();
 
 % End figure:
 hold off; set(gcf,'color','w'); set(gca,'FontSize',14); xlim([-1,1]); ylim([-1,1]); axis square;
@@ -386,17 +363,16 @@ ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', 20)
 
 %% Functions:
 function z0s = drawOAvectors(ICs, cond, p, col)
-    % Can be better but that is not necessary.
-    % Possible i,provement is the accuracy of the vector field.
-    [xdim, ydim] = size(ICs)
+    [xdim, ydim] = size(ICs);
     z0s = zeros(xdim, ydim);
-    z0idx = 1;
+    tic
     for i = 1:numel(ICs)
         [r, c] = ind2sub([xdim, ydim], i);
-        if true
-            z0s(r, c) = -map_zoatoZ(MFROA(0, map_Ztozoa(ICs(i),p),p)',p);
-            z0idx = z0idx + 1; 
+        if cond(r,c) == 1
+            zoa0 = ones(p.Mk,1)*ICs(i);
+            sim1 = DOPRIstep(@(t,x) MFROA(t,x,p),0,zoa0,0.01);
+            z0s(r, c) = map_zoatoZ(conj((sim1 - zoa0)'),p);
         end
     end
-    q = quiver(real(ICs), imag(ICs), real(z0s), imag(z0s), 0.5, 'color', col);
+    q = quiver(real(ICs), imag(ICs), real(z0s), imag(z0s), 0.8, 'color', col);
 end
