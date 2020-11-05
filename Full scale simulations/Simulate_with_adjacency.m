@@ -149,8 +149,8 @@ degree = 3;
 sfpars = make_scalefreeparameters(pars, degree);
 sfpars = prepareOAparameters(sfpars);
 
-z0 = ones(sfpars.Mk,1)*(-0.2*1i);
-IC = map_zoatotheta(ones(sfpars.Mk,1)*(-0.2*1i),sfpars);
+z0 = ones(sfpars.Mk,1)*(-0.2);
+IC = map_Ztotheta(-0.2,pars.N);
 
 % The full scale simulation using the adjacency matrix:
 [tfull, thetasfull] = DOPRI_simulatenetwork(tnow,tend,IC,h,sfpars);
