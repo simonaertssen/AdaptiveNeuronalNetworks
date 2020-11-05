@@ -22,9 +22,9 @@ initarray = make_GPUhandle();
 
 %% Theta model parameters:
 tnow = 0; tend = 10;
-h = 0.005;
+h = 0.001;
 
-pars.N = 10000;
+pars.N = 15000;
 pars.a_n = 0.666666666666666666667;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 
@@ -76,7 +76,7 @@ close(f_fullyconnected)
 disp('Made fully connected network figure')
 
 %% 1. Perform a full scale simulation of a fixed degree network:
-netdegree = round(pars.N*0.3);
+netdegree = round(pars.N*0.5);
 
 % The full scale simulation using the adjacency matrix:
 fdpars = make_fixeddegreeparameters(pars, netdegree);
