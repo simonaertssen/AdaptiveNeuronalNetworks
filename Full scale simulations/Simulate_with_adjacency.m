@@ -144,20 +144,17 @@ optimopts = optimoptions('fsolve', 'Display','off', 'Algorithm', 'Levenberg-Marq
 
 %% 3. Perform a full scale simulation of a scale-free network:
 degree = 3;
-% IC = wrapToPi(randn(pars.N,1)*2 + pi);
-
-sfpars = make_scalefreeparameters(pars, degree);
-sfpars = prepareOAparameters(sfpars);
-
-z0 = ones(sfpars.Mk,1)*(-0.2);
-IC = map_Ztotheta(-0.2,pars.N);
+IC = wrapToPi(randn(pars.N,1)*1.8 + pi);
 
 % The full scale simulation using the adjacency matrix:
+sfpars = make_scalefreeparameters(pars, degree);
 [tfull, thetasfull] = DOPRI_simulatenetwork(tnow,tend,IC,h,sfpars);
 zfull = orderparameter(thetasfull);
 disp('Full scale test done')
 
 % The OA mean field theory:
+sfpars = prepareOAparameters(sfpars);
+z0 = map_thetatozoa(gather(thetasfull(:,1)), rdpars);
 [TOA, ZOA] = OA_simulatenetwork(tnow, tend, z0, sfpars, odeoptions);
 disp('OA mean field test done')
 
