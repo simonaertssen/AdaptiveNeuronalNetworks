@@ -29,22 +29,24 @@ For a fixed degree network it has been proven that the order parameter follows:
 For an arbitrary network the order parameter follows a trajectory per degree. When we assemble the whole expression for the Ott-Antonsen manifold as found in \cite{OttAntonsen2017} with $H_2(\k,t)$ as in \cite{Martens2020}, we obtain the following:
 \begin{align}
 \frac{\partial z(\k, t)}{\partial t} &= -\ic \frac{(z(\k, t)-1)^{2}}{2} + \frac{(z(\k, t)+1)^{2}}{2} \cdot I(\k) \qquad z(\k,t) \in \C^{M_\k} \nonumber \\
-I(\k) &= -\Delta(\k) + \ic \eta_{0}(\k) + i d_{n} \kappa \cdot H_n(\k,t) \label{eq:OttAntonsenSystemFull} \\
+%I(\k) &= -\Delta(\k) + \ic \eta_{0}(\k) + i d_{n} \kappa \cdot H_n(\k,t) \label{eq:OttAntonsenSystemFull} \\
 %H_n(\k,t) &= \frac{a_n}{\kmean} \sum_{\kacc} P\left(\kacc\right) a\left(\kacc \rightarrow \k\right) \cdot \left[A_{0}+\sum_{p=1}^{n} A_{p}\left(z\left(\kacc, t\right)^{p} + \overline{z}\left(\kacc, t\right)^{p}\right)\right] 
+I(\k) &= -\Delta(\k) + \ic \eta_{0}(\k) + i \kappa \cdot H_2(\k,t) \label{eq:OttAntonsenSystemFull} \\
 H_2(\k,t) &= \frac{1}{\kmean} \sum_{\kacc} P\left(\kacc\right) a\left(\kacc \rightarrow \k\right) \cdot \left( 1 + \frac{z(\kacc, t)^2 + \overline{z}(\kacc, t)^2}{6} - \frac{4}{3} \Re(z(\kacc, t)) \right) \nonumber
 \end{align}
+
+$\k$ represents a two-dimensional vector of the in- an out degree as $\k = ( \kin, \kout)$ and has unique entries as it forms the support of the vector of degrees of \eqref{eq:FullThetaNeuronNetwork} as $\degree(\theta_i)$. So $z(\k,t)$ is really a vector in the complex plane that represents the mean-field dynamics on any node with degree $\k$, so we could also index as $z(t)_{\k}$. $\kacc$ represents $\k$ when $\k$ is already in use.\\
 
 We can then find the mean field dynamics through
 \begin{align}
 \overline{Z}(t) &= \frac{1}{N} \sum_{\k} P(\k) z(\k, t) \qquad \overline{Z}(t) \in \C \label{eq:OttAntonsenMeanField}
 \end{align}
-We will use $\degree(\theta_i)$ to denote the degree $\k = ( \kin, \kout)$.
 
 It is important to notice that in \eqref{eq:OttAntonsenSystemFull} and \eqref{eq:OttAntonsenMeanField} we actually compute an inner vector product, which is non-commutative for complex numbers:
 \begin{align}
 a \cdot b = \overline{b \cdot a} \qquad a, b \in \C^r
 \end{align}
-This is the result of the \textsl{Conjugate} or \textsl{Hermitian} symmetry of the inner product.
+This is the result of the \textsl{Conjugate} or \textsl{Hermitian} symmetry of the inner product. This is especially important in the \matlab implementation.
 
 
 \section{Initial conditions}
@@ -132,22 +134,31 @@ Interesting for is the result of the following:
 
 
 \subsection{Derivatives of the complex mean field equations}
-We can now compute derivatives of the complex functions $z(\k,t)$. When setting $z(\k, t) = z_k$ the diagonal elements are found as
+We can now compute derivatives of the complex functions $z(\k,t)$. We will set $z(\k, t) = z_{\k}$ and rewrite system \eqref{eq:OttAntonsenSystemFull} to help the reader:
+\begin{align}
+\frac{\partial z_{\k}}{\partial t} &= -\ic \frac{(z_{\k}-1)^{2}}{2} + \frac{(z_{\k}+1)^{2}}{2} \cdot I_{\k} \qquad z_{\k} \in \C^{M_\k} \nonumber \\
+%I(\k) &= -\Delta(\k) + \ic \eta_{0}(\k) + i d_{n} \kappa \cdot H_n(\k,t) \label{eq:OttAntonsenSystemFull} \\
+%H_n(\k,t) &= \frac{a_n}{\kmean} \sum_{\kacc} P\left(\kacc\right) a\left(\kacc \rightarrow \k\right) \cdot \left[A_{0}+\sum_{p=1}^{n} A_{p}\left(z\left(\kacc, t\right)^{p} + \overline{z}\left(\kacc, t\right)^{p}\right)\right] 
+I_{\k} &= -\Delta_{\k} + \ic \eta_{0_{\k}} + i \kappa \cdot H_{2_{\k}} \label{eq:OttAntonsenSystemFull_k} \\
+H_{2_{\k}} &= \frac{1}{\kmean} \sum_{\kacc} P\left(\kacc\right) a\left(\kacc \rightarrow \k\right) \cdot \left( 1 + \frac{z_{\kacc}^2 + \overline{z}_{\kacc}^2}{6} - \frac{4}{3} \Re(z_{\kacc}) \right) \nonumber
+\end{align}
+
+The diagonal elements are found as:
 \begin{equation}
 \begin{aligned}[b]
-\frac{\partial}{\partial z_k}\left(\frac{\partial z_k}{\partial t} \right) &= - \ic(z_k - 1) + (z_k + 1) \cdot I(z_k) +  \frac{(z_k+1)^{2}}{2} \cdot \frac{\partial I(z_k)}{\partial z_k} \\
-\frac{\partial I(z_k)}{\partial z_k} &= \ic \kappa \cdot \frac{\partial H_{2,k}}{\partial z_k} \\
-\frac{\partial H_{2,k}}{\partial z_k} &= \frac{1}{\kmean} P_k a_{kk} \cdot \left(\frac{2 z_k}{6} - \frac{4}{3} \cdot \frac{1}{2} \right) = \frac{1}{\kmean} P_k a_{kk} \cdot\frac{z_{k} - 2}{3}
+\frac{\partial}{\partial z_{\k}}\left(\frac{\partial z_{\k}}{\partial t} \right) &= - \ic(z_{\k} - 1) + (z_{\k} + 1) \cdot I_{\k} +  \frac{(z_{\k}+1)^{2}}{2} \cdot \frac{\partial I(z_{\k})}{\partial z_{\k}} \\
+\frac{\partial I_{\k}}{\partial z_{\k}} &= \ic \kappa \cdot \frac{\partial H_{2_{\k}}}{\partial z_{\k}} \\
+\frac{\partial H_{2_{\k}}}{\partial z_{\k}} &= \frac{1}{\kmean} P_{\k} a_{\k \k} \cdot \left(\frac{2 z_{\k}}{6} - \frac{4}{3} \cdot \frac{1}{2} \right) = \frac{1}{\kmean} P_{\k} a_{\k \k} \cdot\frac{z_{\k} - 2}{3}
 \end{aligned}
 \label{eq:OttAntonsenSystemJacobianDiagonal}
 \end{equation}
 
-When setting $z(\kacc, t) = z_{k'}$ the off-diagonal elements are found as
+The off-diagonal elements are found as
 \begin{equation}
 \begin{aligned}[b]
-\frac{\partial}{\partial z_{k'}}\left(\frac{\partial z_k}{\partial t} \right) &= \frac{(z_k + 1)^{2}}{2} \cdot \frac{\partial I(z_k)}{\partial z_{k'}} \\
-\frac{\partial I(z_k)}{\partial z_{k'}} &= \ic \kappa \cdot \frac{\partial H_{2,k}}{\partial z_{k'}} \\
-\frac{\partial H_{2,k}}{\partial z_{k'}} &= \frac{1}{\kmean} P_{k'} a_{k'k} \cdot \frac{z_{k'} - 2}{3}
+\frac{\partial}{\partial z_{\kacc}}\left(\frac{\partial z_{\k}}{\partial t} \right) &= \frac{(z_{\k} + 1)^{2}}{2} \cdot \frac{\partial I_{\k}}{\partial z_{\kacc}} \\
+\frac{\partial I_{\k}}{\partial z_{\kacc}} &= \ic \kappa \cdot \frac{\partial H_{2_{\k}}}{\partial z_{\kacc}} \\
+\frac{\partial H_{2_{\k}}}{\partial z_{\kacc}} &= \frac{1}{\kmean} P_{\kacc} a_{\kacc \k} \cdot \frac{z_{\kacc} - 2}{3}
 \end{aligned}
 \label{eq:OttAntonsenSystemJacobianDiagonal}
 \end{equation}
