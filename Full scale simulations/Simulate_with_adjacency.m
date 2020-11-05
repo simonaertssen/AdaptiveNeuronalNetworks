@@ -24,7 +24,7 @@ initarray = make_GPUhandle();
 tnow = 0; tend = 10;
 h = 0.001;
 
-pars.N = 15000;
+pars.N = 10000;
 pars.a_n = 0.666666666666666666667;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 
@@ -158,21 +158,34 @@ z0 = map_thetatozoa(gather(thetasfull(:,1)), sfpars);
 [TOA, ZOA] = OA_simulatenetwork(tnow, tend, z0, sfpars, odeoptions);
 disp('OA mean field test done')
 
-%% Plotting the results:
-f_scalefree = figure('Renderer', 'painters', 'Position', [50 800 800 400]); box on; hold on;
+close all
+f_scalefree = figure('Renderer', 'painters'); hold on; box on; axis square;
+drawfixeddegreelimitcycle();
+phasespaceplot();
+plot(real(zfull), imag(zfull), 'LineWidth', 3, 'Color', '#0072BD');
+scatter(real(zfull(1)), imag(zfull(1)), 50, 'filled', 'o');
 
-xlim([tnow, tend]); ylim([0, 1])
-plot(tfull, abs(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
-plot(TOA, abs(ZOA), '-k', 'LineWidth', 2, 'Color', '#000000');
-xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
-ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
+plot(real(ZOA), imag(ZOA), '-k','LineWidth', 3);
+scatter(real(ZOA(1)), imag(ZOA(1)), 50, 'filled', 'o');
 
-title(sprintf('\\bf Scale-free network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f, $$\\gamma$$ = %0.1f', pars.N, sfpars.meandegree, sfpars.degree), 'FontSize', titlefont, 'Interpreter', 'latex')
-legend('$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southwest', 'Orientation','horizontal')
-exportpdf(f_scalefree, '../Figures/InspectMeanFieldScaleFree.pdf', export);
+print(f_scalefree, '../Figures/testScaleFree.png', '-dpng', '-r300')
 close(f_scalefree)
 
-disp('Made scale-free network figure')
+% %% Plotting the results:
+% f_scalefree = figure('Renderer', 'painters', 'Position', [50 800 800 400]); box on; hold on;
+% 
+% xlim([tnow, tend]); ylim([0, 1])
+% plot(tfull, abs(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
+% plot(TOA, abs(ZOA), '-k', 'LineWidth', 2, 'Color', '#000000');
+% xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
+% ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
+% 
+% title(sprintf('\\bf Scale-free network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f, $$\\gamma$$ = %0.1f', pars.N, sfpars.meandegree, sfpars.degree), 'FontSize', titlefont, 'Interpreter', 'latex')
+% legend('$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southwest', 'Orientation','horizontal')
+% exportpdf(f_scalefree, '../Figures/InspectMeanFieldScaleFree.pdf', export);
+% close(f_scalefree)
+% 
+% disp('Made scale-free network figure')
 
 % %% 4. Perform a full scale simulation of a lognorm network:
 % % The full scale simulation using the adjacency matrix:
