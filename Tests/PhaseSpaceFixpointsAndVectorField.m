@@ -196,17 +196,20 @@ function [x, xs] = NewtonRaphsonIteration(x0, p)
         dfdz = zeros(p.Mk, p.Mk);
         
         for r = 1:p.Mk
+            zr = z(r);
             for c = 1:p.Mk
                 dfdz(r,c) = 0.5*(z(r)+1)^2 * (1i*p.OA(r,c)*(z(c)-2)/3);
+%                 Itmp = 1i*p.K/p.meandegree*(p.P(p.k(c))*assortativity(p.k(c), p.k_o(c), p.k(r), p.k_o(r), p.N, p.meandegree, 0)*(z(c)-2)/3);
+%                 dfdz(r,c) = 0.5*(zr+1)^2 * Itmp;
                 if r == c
-                    dfdz(r,c) = dfdz(r,c) - 1i*(z(r)-1) + (z(r)+1)*I(r);
+                    dfdz(r,c) = dfdz(r,c) - 1i*(zr-1) + (zr+1)*I(r);
                 end
             end
         end
     end
     
     x = x0;
-    maxevals = 100;
+    maxevals = 50;
     xs = x0'*p.P(p.k)/p.N;
     for evaltime = 1:maxevals
         x0 = x;
