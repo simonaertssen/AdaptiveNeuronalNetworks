@@ -22,9 +22,9 @@ seed = 2; rng(seed);
 pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
 IC = - pi/2 * ones(pars.N, 1);
 
-%% A 2D scalefree pdf:
+%% A 2D scalefree pdf: this is too difficult
 kmin = 750; kmax = 2000; degree = 3; 
-vec = linspace(kmin, kmax, kmax-kmin);
+vec = linspace(kmin, kmax, kmax-kmin+1);
 [x,y] = meshgrid(vec, vec);
 
 xy = cat(3,x,y);
@@ -38,10 +38,39 @@ surf(x(idx,idx),y(idx,idx),P(idx,idx));
 xlabel('x'); ylabel('y'); zlabel('P');
 xlim([kmin-100, kmax+100]); ylim([kmin-100, kmax-100]);
 
-samples = rand(pars.N, 3).*[kmax-kmin, kmax-kmin, max(P,[], 'all')] + [kmin, kmin, 0];
+samples = [randi([kmin,kmax],pars.N,1), randi([kmin,kmax],pars.N,1), max(P,[], 'all')*rand(pars.N,1)];
+
+% scatter3(samples(:,1), samples(:,2), samples(:,3))
+
+%%
+deletemeidx = zeros(pars.N, 1);
+idx = 1;
+for i = 1:pars.N
+    if samples(i,3) > P(samples(i,1)-kmin+1, samples(i,2)-kmin+1)
+%         acceptedsamples(i,:) = [];
+        deletemeidx(idx) = i;
+        idx = idx + 1;
+    end
+end
+deletemeidx(idx:end) = [];
+samples(deletemeidx,:) = [];
 scatter3(samples(:,1), samples(:,2), samples(:,3))
 
-acceptedsamples = samples(:,3) < P(samples(:,1), samples(:,2));
+%% Test the 'slicesample' function
+% Define a function proportional to a multi-modal density
+mu = [0,0]; sigma = [1, 0.1; 0.1, 1];
+f = @(x) mvnpdf(x,mu,sigma);
+
+% Generate a sample based on this density
+x = slicesample([2,2],pars.N,'pdf',f,'burnin',1000);
+
+hist3(x, [20,20])
+
+%% Test slicesample on the 2D scalefree pdf:
+f = @(x) scalefreepdfmultivariate(x, pars.N, degree, kmin, kmax);
+x = slicesample(kmax*[1,1],100000,'pdf',f,'burnin',10000);
+
+hist3(x, [20,20])
 
 %% Testing the OA approach:
 oapars = make_scalefreeparameters(pars, 3, 1, 500);
@@ -73,6 +102,11 @@ toc;
 
 
 %% Functions
+
+function P = scalefreepdfmultivariate(x, N, exponent, kmin, kmax)
+    P = x(1).^(-exponent) + x(2).^(-exponent);
+end
+
 function p = prepareOAparameters2D(p)
 %     [d_i, d_o] = meshgrid(unique(p.degrees_i), unique(p.degrees_o));
 %     p.k = [reshape(d_i, numel(d_i), 1), reshape(d_o, numel(d_o), 1)];
