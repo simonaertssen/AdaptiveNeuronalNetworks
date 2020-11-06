@@ -25,7 +25,7 @@ initarray = make_GPUhandle();
 tnow = 0; tend = 50;
 h = 0.001;
 
-pars.N = 10000;
+pars.N = 10;
 pars.a_n = 0.666666666666666666667;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 
@@ -165,9 +165,8 @@ sfpars = prepareOAparameters(sfpars);
 ZOA = flip(ZOA(round(numel(T)*0.9):end,:));
 [~, pksloc] = findpeaks(abs(ZOA),'MinPeakDistance',100);
 idx = pksloc(1):pksloc(3);
-plot(real(ZOA(idx)), imag(ZOA(idx)), '-', 'LineWidth', 2, 'Color', col);
-plot_arrow(real(ZOA(end)), imag(ZOA(end)), real(ZOA(end-2)), imag(ZOA(end-2)),'linewidth', 2, ...
-    'color', col,'facecolor', col,'edgecolor', col, 'headwidth',0.7,'headheight',3);
+plot(real(ZOA(idx)), imag(ZOA(idx)), '-', 'LineWidth', 2);
+plot_arrow(real(ZOA(end)), imag(ZOA(end)), real(ZOA(end-2)), imag(ZOA(end-2)),'linewidth', 2, 'headwidth',0.7,'headheight',3);
 
 % disp('OA mean field test done')
 
