@@ -369,7 +369,7 @@ scatter(real(eqptZ), imag(eqptZ), 150, 'or', 'filled')
 hold off; set(gcf,'color','w'); set(gca,'FontSize',14); xlim([-1,1]); ylim([-1,1]); axis square;
 xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', 20)
 ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', 20)
-print(f_OARCPW, '../Figures/MFOARCPW_random.png', '-dpng', '-r300')
+% print(f_OARCPW, '../Figures/MFOARCPW_random.png', '-dpng', '-r300')
 % close(f_OARCPW)
 
 
