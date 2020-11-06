@@ -157,7 +157,7 @@ disp('Full scale test done')
 sfpars = prepareOAparameters(sfpars);
 z0 = map_thetatozoa(gather(thetasfull(:,1)), sfpars);
 z0 = orderparameter(IC)*ones(sfpars.Mk,1);
-z0 = ones(p.Mk,1)*(-0.73*1i);
+z0 = ones(sfpars.Mk,1)*(-0.73*1i);
 [TOA, ZOA] = OA_simulatenetwork(tnow, tend, z0, sfpars, odeoptions);
 disp('OA mean field test done')
 
