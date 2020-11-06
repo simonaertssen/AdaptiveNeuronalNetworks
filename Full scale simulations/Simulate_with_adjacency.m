@@ -145,10 +145,10 @@ optimopts = optimoptions('fsolve', 'Display','off', 'Algorithm', 'Levenberg-Marq
 
 %% 3. Perform a full scale simulation of a scale-free network:
 degree = 3;
-IC = wrapToPi(randn(pars.N,1)*1.8 + pi);
+IC = wrapToPi(randn(pars.N, 1)*1.4);
 
 % The full scale simulation using the adjacency matrix:
-sfpars = make_scalefreeparameters(pars, degree);
+sfpars = make_randomparameters(pars, degree);
 [tfull, thetasfull] = DOPRI_simulatenetwork(tnow,tend,IC,h,sfpars);
 zfull = orderparameter(thetasfull);
 disp('Full scale test done')
