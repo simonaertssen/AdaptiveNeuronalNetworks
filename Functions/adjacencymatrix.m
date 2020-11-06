@@ -42,7 +42,7 @@ function A = adjacencymatrix(degrees_in, degrees_out)
             % Don't just sample the first maximum elements
             probsperm = randperm(N);
             % [~, probsperminv] = sort(probsperm); % Inverse not necessary?
-            [~, chosenidx] = maxk(probs(probsperm), numelements-1);
+            [~, chosenidx] = maxk(probs(probsperm), numelements);
             chosenidx = [probsperm(chosenidx), rowindex];
             
             indices = idxidx(rowindex):idxidx(rowindex+1)-1;
@@ -63,11 +63,11 @@ function A = adjacencymatrix(degrees_in, degrees_out)
         else 
             A = sparse(xidx, yidx, ones(numnonzeros, 1, 'logical'));
         end
-        A(N,N) = 1; % Make it an N x N matrix
+        A(N,N) = 0; % Make it an N x N matrix
         
         % Additional selfcoupling:
-        A(1:N+1:N*N) = 1;
-        assert(sum(diag(A)) == N);
+%         A(1:N+1:N*N) = 0;
+        assert(sum(diag(A)) == 0);
 
         diffrows = degrees_in' - full(sum(A,2))';
         diffcols = degrees_out' - full(sum(A,1));
