@@ -154,7 +154,7 @@ zfull = orderparameter(thetasfull);
 disp('Full scale test done')
 
 % The OA mean field theory:
-% sfpars = prepareOAparameters(sfpars);
+sfpars = prepareOAparameters(sfpars);
 % z0 = map_thetatozoa(gather(thetasfull(:,1)), sfpars);
 % z0 = orderparameter(IC)*ones(sfpars.Mk,1);
 % z0 = ones(sfpars.Mk,1)*(-0.73*1i);
