@@ -154,12 +154,22 @@ zfull = orderparameter(thetasfull);
 disp('Full scale test done')
 
 % The OA mean field theory:
-sfpars = prepareOAparameters(sfpars);
-z0 = map_thetatozoa(gather(thetasfull(:,1)), sfpars);
-z0 = orderparameter(IC)*ones(sfpars.Mk,1);
-z0 = ones(sfpars.Mk,1)*(-0.73*1i);
-[TOA, ZOA] = OA_simulatenetwork(tnow, tend, z0, sfpars, odeoptions);
-disp('OA mean field test done')
+% sfpars = prepareOAparameters(sfpars);
+% z0 = map_thetatozoa(gather(thetasfull(:,1)), sfpars);
+% z0 = orderparameter(IC)*ones(sfpars.Mk,1);
+% z0 = ones(sfpars.Mk,1)*(-0.73*1i);
+% [TOA, ZOA] = OA_simulatenetwork(tnow, tend, z0, sfpars, odeoptions);
+% Limit cycle:
+[T, ZOA] = OA_simulatenetwork(0, 100, ones(sfpars.Mk,1)*(-0.73*1i), sfpars);
+% plot(real(ZOA), imag(ZOA), 'LineWidth', 2, 'color', col);
+ZOA = flip(ZOA(round(numel(T)*0.9):end,:));
+[~, pksloc] = findpeaks(abs(ZOA),'MinPeakDistance',100);
+idx = pksloc(1):pksloc(3);
+plot(real(ZOA(idx)), imag(ZOA(idx)), '-', 'LineWidth', 2, 'Color', col);
+plot_arrow(real(ZOA(end)), imag(ZOA(end)), real(ZOA(end-2)), imag(ZOA(end-2)),'linewidth', 2, ...
+    'color', col,'facecolor', col,'edgecolor', col, 'headwidth',0.7,'headheight',3);
+
+% disp('OA mean field test done')
 
 close all
 f_scalefree = figure('Renderer', 'painters'); hold on; box on; axis square;
