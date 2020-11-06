@@ -22,15 +22,7 @@ seed = 2; rng(seed);
 pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
 IC = - pi/2 * ones(pars.N, 1);
 
-%% Testing initial conditions:
-oapars = prepareOAparameters(make_lognormparameters(pars, 3, 1, 500));
-
-OAIC = zeros(1,oapars.Mk);
-for i = 1:oapars.Mk
-    OAIC(i) = sum(exp(1i*IC(oapars.degrees_i == oapars.k(i)))) / (oapars.P(oapars.k(i))+1.0e-24);
-end
-ZOA = OAIC*oapars.P(oapars.k)/oapars.N
-
+%% A 2D
 %% Testing the OA approach:
 oapars = make_scalefreeparameters(pars, 3, 1, 500);
 
@@ -54,14 +46,14 @@ toc;
 %%
 tic;
 % New version: a simulation per (k_in, k_out)
-sfpars = prepareOAparameters2(make_scalefreeparameters(pars, 2.1));
-[TOA, ZOA] = OA_simulatenetwork2(tnow, tend, IC, sfpars);
+sfpars = prepareOAparameters2D(make_scalefreeparameters(pars, 2.1));
+[TOA, ZOA] = OA_simulatenetwork2D(tnow, tend, IC, sfpars);
 plot(TOA, abs(ZOA), 'r')
 toc;
 
 
 %% Functions
-function p = prepareOAparameters2(p)
+function p = prepareOAparameters2D(p)
 %     [d_i, d_o] = meshgrid(unique(p.degrees_i), unique(p.degrees_o));
 %     p.k = [reshape(d_i, numel(d_i), 1), reshape(d_o, numel(d_o), 1)];
     p.k = unique([p.degrees_i, p.degrees_o], 'rows');
@@ -81,7 +73,7 @@ function p = prepareOAparameters2(p)
 end
 
 
-function [TOA, ZOA, b] = OA_simulatenetwork2(tnow, tend, IC, p, odeoptions)
+function [TOA, ZOA, b] = OA_simulatenetwork2D(tnow, tend, IC, p, odeoptions)
     if nargin < 5
         odeoptions = odeset('RelTol', 1.0e-6,'AbsTol', 1.0e-6);
     end
