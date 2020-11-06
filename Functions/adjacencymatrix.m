@@ -43,7 +43,7 @@ function A = adjacencymatrix(degrees_in, degrees_out)
             probsperm = randperm(N);
             % [~, probsperminv] = sort(probsperm); % Inverse not necessary?
             [~, chosenidx] = maxk(probs(probsperm), numelements);
-            chosenidx = [probsperm(chosenidx), rowindex];
+            chosenidx = probsperm(chosenidx);
             
             indices = idxidx(rowindex):idxidx(rowindex+1)-1;
             xidx(indices) = rowindex;
