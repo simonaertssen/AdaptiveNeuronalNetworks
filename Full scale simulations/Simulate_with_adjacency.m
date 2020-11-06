@@ -156,7 +156,7 @@ disp('Full scale test done')
 % The OA mean field theory:
 sfpars = prepareOAparameters(sfpars);
 z0 = map_thetatozoa(gather(thetasfull(:,1)), sfpars);
-[TOA, ZOA] = OA_simulatenetwork(tnow, tend, z0, sfpars, odeoptions);
+[TOA, ZOA] = OA_simulatenetwork(tnow, tend, ones(sfpars.Mk,1)*(-0.73*1i), sfpars, odeoptions);
 disp('OA mean field test done')
 
 close all
