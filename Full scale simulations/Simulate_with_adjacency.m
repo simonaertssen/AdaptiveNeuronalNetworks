@@ -22,7 +22,7 @@ end
 initarray = make_GPUhandle();
 
 %% Theta model parameters:
-tnow = 0; tend = 30;
+tnow = 0; tend = 100;
 h = 0.001;
 
 pars.N = 5000;
@@ -163,11 +163,11 @@ close all
 f_scalefree = figure('Renderer', 'painters'); hold on; box on; axis square;
 drawfixeddegreelimitcycle();
 phasespaceplot();
-plot(real(zfull), imag(zfull), 'LineWidth', 3, 'Color', '#0072BD');
-scatter(real(zfull(1)), imag(zfull(1)), 50, 'filled', 'o');
+plot(real(zfull), imag(zfull), 'LineWidth', 1, 'Color', '#0072BD');
+scatter(real(zfull(1)), imag(zfull(1)), 50, 'x');
 
-plot(real(ZOA), imag(ZOA), '-k','LineWidth', 3);
-scatter(real(ZOA(1)), imag(ZOA(1)), 50, 'filled', 'o');
+plot(real(ZOA), imag(ZOA), '-k','LineWidth', 1);
+scatter(real(ZOA(1)), imag(ZOA(1)), 50, '+');
 
 print(f_scalefree, '../Figures/testScaleFree.png', '-dpng', '-r300')
 close(f_scalefree)
