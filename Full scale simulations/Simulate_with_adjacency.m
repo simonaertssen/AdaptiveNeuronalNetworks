@@ -22,7 +22,7 @@ end
 initarray = make_GPUhandle();
 
 %% Theta model parameters:
-tnow = 0; tend = 100;
+tnow = 0; tend = 50;
 h = 0.001;
 
 pars.N = 10000;
@@ -156,7 +156,7 @@ disp('Full scale test done')
 % The OA mean field theory:
 sfpars = prepareOAparameters(sfpars);
 z0 = map_thetatozoa(gather(thetasfull(:,1)), sfpars);
-z0 = gather(thetasfull(:,1))*one(sfpars.Mk,1);
+z0 = gather(thetasfull(:,1))*ones(sfpars.Mk,1);
 [TOA, ZOA] = OA_simulatenetwork(tnow, tend, z0, sfpars, odeoptions);
 disp('OA mean field test done')
 
