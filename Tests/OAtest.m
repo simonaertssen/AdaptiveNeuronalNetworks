@@ -22,7 +22,27 @@ seed = 2; rng(seed);
 pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
 IC = - pi/2 * ones(pars.N, 1);
 
-%% A 2D
+%% A 2D scalefree pdf:
+kmin = 750; kmax = 2000; degree = 3; 
+vec = linspace(kmin, kmax, kmax-kmin);
+[x,y] = meshgrid(vec, vec);
+
+xy = cat(3,x,y);
+
+P = x.^(-degree) + y.^(-degree);
+P = P/sum(P, 'all')*pars.N;
+
+idx = 1:50:numel(vec);
+figure; hold on;
+surf(x(idx,idx),y(idx,idx),P(idx,idx));
+xlabel('x'); ylabel('y'); zlabel('P');
+xlim([kmin-100, kmax+100]); ylim([kmin-100, kmax-100]);
+
+samples = rand(pars.N, 3).*[kmax-kmin, kmax-kmin, max(P,[], 'all')] + [kmin, kmin, 0];
+scatter3(samples(:,1), samples(:,2), samples(:,3))
+
+acceptedsamples = samples(:,3) < P(samples(:,1), samples(:,2));
+
 %% Testing the OA approach:
 oapars = make_scalefreeparameters(pars, 3, 1, 500);
 
