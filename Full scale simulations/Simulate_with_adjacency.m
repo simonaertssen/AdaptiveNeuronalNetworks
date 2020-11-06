@@ -144,7 +144,7 @@ optimopts = optimoptions('fsolve', 'Display','off', 'Algorithm', 'Levenberg-Marq
 % disp('Made random network figure')
 
 %% 3. Perform a full scale simulation of a scale-free network:
-degree = 3;
+degree = 0.3;
 IC = wrapToPi(randn(pars.N, 1)*1.4);
 
 % The full scale simulation using the adjacency matrix:
