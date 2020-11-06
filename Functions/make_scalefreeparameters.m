@@ -18,11 +18,11 @@ function scalefreepars = make_scalefreeparameters(pars, degree, kmin, kmax)
     scalefreepars.P = @(x) scalefreepdf(x, pars.N, degree, kmin, kmax);
 
     % Improve the support of P for de unique degree vector k: take kmin:kmax
-%     idx = randperm(pars.N); kminmax = kmin:kmax; n = numel(kminmax);
-%     scalefreepars.degrees_i = zeros(pars.N,1);
-%     scalefreepars.degrees_i(idx(1:n)) = kmin:kmax;
-%     scalefreepars.degrees_i(idx(n+1:end)) = randsample(kmin:kmax, pars.N-n, true, scalefreepars.P(kmin:kmax))';
-    scalefreepars.degrees_i = randsample(kmin:kmax, pars.N, true, scalefreepars.P(kmin:kmax))';
+    idx = randperm(pars.N); kminmax = kmin:kmax; n = numel(kminmax);
+    scalefreepars.degrees_i = zeros(pars.N,1);
+    scalefreepars.degrees_i(idx(1:n)) = kmin:kmax;
+    scalefreepars.degrees_i(idx(n+1:end)) = randsample(kmin:kmax, pars.N-n, true, scalefreepars.P(kmin:kmax))';
+%     scalefreepars.degrees_i = randsample(kmin:kmax, pars.N, true, scalefreepars.P(kmin:kmax))';
 
     if max(scalefreepars.degrees_i) > pars.N - 1
         disp(['Setting higher in-degrees to ', num2str(pars.N-1)]);
