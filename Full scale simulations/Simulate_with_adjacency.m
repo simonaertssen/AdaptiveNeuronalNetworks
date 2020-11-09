@@ -25,7 +25,7 @@ initarray = make_GPUhandle();
 tnow = 0; tend = 50;
 h = 0.001;
 
-pars.N = 1000;
+pars.N = 10000;
 pars.a_n = 0.666666666666666666667;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 
@@ -148,19 +148,21 @@ degree = 0.3;
 IC = wrapToPi(randn(pars.N, 1)*1.2);
 
 % The full scale simulation using the adjacency matrix:
-sfpars = make_randomparameters(pars, degree);
+sfpars = make_scalefreepars(pars, degree);
 [tfull, thetasfull] = DOPRI_simulatenetwork(tnow,tend,IC,h,sfpars);
 zfull = orderparameter(thetasfull);
 disp('Full scale test done')
 
 % The OA mean field theory:
+pars.N = 1000; pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
+sfpars = make_scalefreepars(pars, degree);
 sfpars = prepareOAparameters(sfpars);
 % z0 = map_thetatozoa(gather(thetasfull(:,1)), sfpars);
 % z0 = orderparameter(IC)*ones(sfpars.Mk,1);
 % z0 = ones(sfpars.Mk,1)*(-0.73*1i);
 % [TOA, ZOA] = OA_simulatenetwork(tnow, tend, z0, sfpars, odeoptions);
 % Limit cycle:
-[T, ZOA] = OA_simulatenetwork(0, 100, ones(sfpars.Mk,1)*(-0.73*1i), sfpars);
+[T, ZOA] = OA_simulatenetwork(0, 100, ones(sfpars.Mk,1)*(-0.2*1i), sfpars);
 % plot(real(ZOA), imag(ZOA), 'LineWidth', 2, 'color', col);
 ZOA = flip(ZOA(round(numel(T)*0.9):end,:));
 [~, pksloc] = findpeaks(abs(ZOA),'MinPeakDistance',100);
