@@ -148,14 +148,14 @@ degree = 0.3;
 IC = wrapToPi(randn(pars.N, 1)*1.2);
 
 % The full scale simulation using the adjacency matrix:
-sfpars = make_scalefreepars(pars, degree);
+sfpars = make_scalefreeparameters(pars, degree);
 [tfull, thetasfull] = DOPRI_simulatenetwork(tnow,tend,IC,h,sfpars);
 zfull = orderparameter(thetasfull);
 disp('Full scale test done')
 
 % The OA mean field theory:
 pars.N = 1000; pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
-sfpars = make_scalefreepars(pars, degree);
+sfpars = make_scalefreeparameters(pars, degree);
 sfpars = prepareOAparameters(sfpars);
 % z0 = map_thetatozoa(gather(thetasfull(:,1)), sfpars);
 % z0 = orderparameter(IC)*ones(sfpars.Mk,1);
