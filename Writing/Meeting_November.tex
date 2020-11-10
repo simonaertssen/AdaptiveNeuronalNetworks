@@ -172,6 +172,26 @@ I cannot seem to converge close enough.
 \end{figure}
 
 
+\section{Spike Timing Dependant Plasticity}
+When $\theta(t)_j > \pi$ we say that the neuron $\theta_j$ spikes at time $t$. With spike timing dependant plasticity we want to study how two neurons change their synaptic strength based on the time delay between spikes. 
+Let us say that $\theta_i$ spikes at time $t_i$ and $\theta_j$ spikes at $t_j$. If $t_j - t_i > 0$ we can say that the spikes are correlated, and we can model an increase in synaptic strength of the connection $K_{ij}$ from $\theta_i$ to $\theta_j$. If $t_i - t_j > 0$ we expect $K_{ji}$ to increase in strength.\\
+The learning windows used here are triphasic, which can account for delays between spikes that are neither too short nor too long. Taking the time difference $\Delta t_{ij}$ as $t_j - t_i$ we can define a few learning windows.
+
+\subsection{Kempter 1999}
+\begin{align*}
+W_K(\Delta t) = \eta
+\begin{cases}
+\left[A_{p}\left(1-\frac{\Delta t}{\tilde{\tau}_{p}}\right)+A_{n}\left(1-\frac{\Delta t}{\tilde{\tau}_{n}}\right)\right] \cdot e^{\frac{s}{\tau_{\rm syn}}} & \text{for } \Delta t \leq 0 \\
+A_{p} \cdot e^{-\frac{\Delta t}{\tau_{p}}} + A_{n} \cdot e^{-\frac{\Delta t}{\tau_{n}}} & \text{for } \Delta t > 0
+\end{cases}
+\end{align*}
+Here $\Delta t$ is the delay between presynaptic spike arrival and postsynaptic firing, $\eta$ is a small learning parameter and all $\tau$ are time constants. Numerical values are usually  $\eta = 10^{-5}$, $\tau_{\rm syn} = 5$ ms, $\tau_{p} = 1$ms, $\tau_{n} = 20$ms and $A_p = 1$ and $A_{n} = -1$. $\tilde{\tau}_{p} \equiv \tau_{\rm syn} \tau_{p} / (\tau_{\rm syn} + \tau_{p})$ and $\tilde{\tau}_{n} \equiv \tau_{\rm syn} \tau_{n} / (\tau_{\rm syn} + \tau_{n})$.
+
+\subsection{Waddington 2014}
+
+\subsection{Chrol-Cannon 2012}
+
+
 
 \bibliographystyle{utphys}
 \small{\bibliography{references}}
