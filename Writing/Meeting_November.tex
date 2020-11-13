@@ -177,40 +177,67 @@ When $\theta(t)_j > \pi$ we say that the neuron $\theta_j$ spikes at time $t$. W
 Let us say that $\theta_i$ spikes at time $t_i$ and $\theta_j$ spikes at $t_j$. If $t_j - t_i > 0$ we can say that the spikes are correlated, and we can model an increase in synaptic strength of the connection $K_{ij}$ from $\theta_i$ to $\theta_j$. If $t_j - t_i > 0$ we expect $K_{ij}$ to increase in strength, and when $t_j - t_i < 0$ we expect a decrease in strength. Because the learning windows are generally not symmetrical we can also expect an asymmetrical adjacency matrix.\\
 The learning windows used here are triphasic, which can account for delays between spikes that are neither too short nor too long. Taking the time difference $\Delta t_{ij}$ as $t_j - t_i$ we can define a few learning windows.
 
-\subsection{Kempter 1999}
-\begin{align}
-\Delta W(s)_K = \eta
-\begin{cases}
-\left[A_{p}\left(1-\frac{s}{\tilde{\tau}_{p}}\right)+A_{n}\left(1-\frac{s}{\tilde{\tau}_{n}}\right)\right] \cdot \exp \left( \frac{s}{\tau_{\rm syn}} \right) & \text{for } s \leq 0 \\
-A_{p} \cdot \exp \left(-\frac{s}{\tau_{p}}\right) + A_{n} \cdot \exp \left(-\frac{s}{\tau_{n}} \right) & \text{for } s > 0
-\end{cases} \label{eq:learningwindowKempter1999}
-\end{align}
-Here $s$ is the delay between presynaptic spike arrival and postsynaptic firing, $\eta$ is a small learning parameter and all $\tau$ are time constants. Numerical values are usually  $\eta = 10^{-5}$, $\tau_{\rm syn} = 5$ ms, $\tau_{p} = 1$ms, $\tau_{n} = 20$ms and $A_p = 1$ and $A_{n} = -1$. $\tilde{\tau}_{p} \equiv \tau_{\rm syn} \tau_{p} / (\tau_{\rm syn} + \tau_{p})$ and $\tilde{\tau}_{n} \equiv \tau_{\rm syn} \tau_{n} / (\tau_{\rm syn} + \tau_{n})$. \\
-$\int W(s) \mathrm{d}s$ = 
+%\subsection{Kempter 1999}
+%\begin{align}
+%\Delta W(s)_K = \eta
+%\begin{cases}
+%\left[A_{p}\left(1-\frac{s}{\tilde{\tau}_{p}}\right)+A_{n}\left(1-\frac{s}{\tilde{\tau}_{n}}\right)\right] \cdot \exp \left( \frac{s}{\tau_{\rm syn}} \right) & \text{for } s \leq 0 \\
+%A_{p} \cdot \exp \left(-\frac{s}{\tau_{p}}\right) + A_{n} \cdot \exp \left(-\frac{s}{\tau_{n}} \right) & \text{for } s > 0
+%\end{cases} \label{eq:learningwindowKempter1999}
+%\end{align}
+%Here $s$ is the delay between presynaptic spike arrival and postsynaptic firing, $\eta$ is a small learning parameter and all $\tau$ are time constants. Numerical values are usually  $\eta = 10^{-5}$, $\tau_{\rm syn} = 5$ ms, $\tau_{p} = 1$ms, $\tau_{n} = 20$ms and $A_p = 1$ and $A_{n} = -1$. $\tilde{\tau}_{p} \equiv \tau_{\rm syn} \tau_{p} / (\tau_{\rm syn} + \tau_{p})$ and $\tilde{\tau}_{n} \equiv \tau_{\rm syn} \tau_{n} / (\tau_{\rm syn} + \tau_{n})$. \\
+%$\int W(s) \mathrm{d}s$ = 
+
+\subsection{Learning windows}
+
+\begin{tikzpicture}
+\begin{axis}[
+	xmin=-3,   xmax=3,
+	ymin=-3,   ymax=3,
+	extra x ticks={-1,1},
+	extra y ticks={-2,2},
+	extra tick style={grid=major},
+]
+	\draw[red] \pgfextra{
+	  \pgfpathellipse{\pgfplotspointaxisxy{0}{0}}
+		{\pgfplotspointaxisdirectionxy{1}{0}}
+		{\pgfplotspointaxisdirectionxy{0}{2}}
+	  % see also the documentation of 
+	  % 'axis direction cs' which
+	  % allows a simpler way to draw this ellipse
+	};
+	\draw[blue] \pgfextra{
+	  \pgfpathellipse{\pgfplotspointaxisxy{0}{0}}
+		{\pgfplotspointaxisdirectionxy{1}{1}}
+		{\pgfplotspointaxisdirectionxy{0}{2}}
+	};
+	\addplot [only marks,mark=*] coordinates { (0,0) };
+\end{axis}
+\end{tikzpicture}
 
 
 \subsection{Song 2000}
 \begin{align}
-\Delta W(s)_S =
+\Delta W(t)_S =
 \begin{cases}
-\: \: \: A_{p} \cdot \exp \left(\frac{s}{\tau_p}\right) & \text{for } s \leq 0 \\
--A_{n} \cdot \exp \left(\frac{-s}{\tau_n}\right)  & \text{for } s > 0
+A_{p} \cdot \exp \left(\frac{-t}{\tau_p}\right) & \text{for } s > 0 \\
+A_{n} \cdot \exp \left(\frac{t}{\tau_n}\right)  & \text{for } s \leq 0
 \end{cases} \label{eq:learningwindowKempter1999}
 \end{align}
-where $\tau_p = \tau_n = 20$ ms.
-
-
-\subsection{Waddington 2014}
-\begin{align}
-\Delta W(s)_W =  \eta \left[1-\frac{\left(s-\alpha\right)^{2}}{\alpha^{2}}\right] \cdot \exp \left(\frac{-\left|s - \alpha\right|}{\alpha}\right) \label{eq:learningwindowWaddington2014}
-\end{align}
-We will use $\eta = 0.1$ and $\alpha = 4.0$ ms and $A_p = 0.005$ and $A_n = 0.00525$. This brings the integral 
-
+where we will use the values as proposed in \cite{ChrolCannon2012}: $A_p = 0.1$, $A_n = -0.12$ and $\tau_p = \tau_n = 20.0$.
+%where $\tau_p = \tau_n = 20$ ms and $A_p = 0.005$ and $A_n = -0.00525$. 
 
 \subsection{Chrol-Cannon 2012}
 \begin{align}
-\Delta W(s)_W = A_{p} \cdot \exp \left(\frac{-\left(s - 15 \right)^{2}}{200}\right) - A_{n} \cdot \exp \left(\frac{-\left(s - 15\right)^{2}}{2000}\right)  \label{eq:learningwindowChrolCannon2012}
+\Delta W(t)_W = A_{p} \cdot \exp \left(\frac{-\left(t - 15 \right)^{2}}{ \tau_{p}}\right) - A_{n} \cdot \exp \left(\frac{-\left(t - 20\right)^{2}}{ \tau_{n}}\right)  \label{eq:learningwindowChrolCannon2012}
 \end{align}
+where $A_{p}=0.23$, $A_{n}=0.15$, $\tau_{p}=200$ and $\tau_n = 2000$.
+
+\subsection{Waddington 2014}
+\begin{align}
+\Delta W(t)_W =  A \left[1-\frac{\left(t-\alpha\right)^{2}}{\alpha^{2}}\right] \cdot \exp \left(\frac{-\left|t - \alpha\right|}{\alpha}\right) \label{eq:learningwindowWaddington2014}
+\end{align}
+We will use $A = 0.1$ and $\alpha = 4.0$ ms . This brings the integral 
 
 
 \bibliographystyle{utphys}
