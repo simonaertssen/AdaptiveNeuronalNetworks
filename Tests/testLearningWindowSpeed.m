@@ -13,29 +13,41 @@ titlefont = 15;
 labelfont = 13;
 export = true;
 
-%% Observe function shape
+%% Observe function shapes: biphasic windows
 dt = linspace(-0.08, 0.1, tpts);
 
-f_windows = figure('Renderer', 'painters', 'Position', [50 800 800 400]); box on; hold on;
+f_windows = figure('Renderer', 'painters', 'Position', [50 800 600 200]); box on; hold on;
 ylim([-0.14, 0.12]);
 
-plot(dt, Kempter1999Window(dt), 'LineWidth', 2, 'Color', '#77AC30')
+plot(dt, Kempter1999Window(dt), 'LineWidth', 2, 'Color', '#0072BD')
 
 yleft = Song2000Window(dt(dt<=0)); yright = Song2000Window(dt(dt>0));
-plot(dt(dt<=0), yleft, 'LineWidth', 2, 'Color', '#0072BD'); 
-plot(dt(dt>0), yright, 'LineWidth', 2, 'Color', '#0072BD', 'HandleVisibility', 'off')
+plot(dt(dt<=0), yleft, 'LineWidth', 2, 'Color', '#D95319'); 
+plot(dt(dt>0), yright, 'LineWidth', 2, 'Color', '#D95319', 'HandleVisibility', 'off')
 line([0, 0],[min(yleft), max(yright)],'Color','k','LineStyle','--', 'LineWidth', 1, 'HandleVisibility', 'off')
 
-y = ChrolCannon2012Window(dt);
-plot(dt, y, 'LineWidth', 2, 'Color', '#D95319')
-
-plot(dt, Waddington2014Window(dt), 'LineWidth', 2, 'Color', '#77AC30')
-
-legend("$$W(t)_S$$", "$$W(t)_C$$", "$$W(t)_W$$", 'Interpreter', 'latex', 'FontSize', labelfont)
+legend("$$W(t)_K$$", "$$W(t)_S$$", 'Interpreter', 'latex', 'FontSize', labelfont, 'Orientation','horizontal')
 xlabel("$t$ [s]", 'Interpreter', 'latex', 'FontSize', labelfont); 
 ylabel("$W$", 'Interpreter', 'latex', 'FontSize', labelfont);
-% exportpdf(f_windows, '../Figures/LearningWindows.pdf', export);
-% close(f_windows)
+
+exportpdf(f_windows, '../Figures/LearningWindowsBiphasic.pdf', export);
+close(f_windows)
+
+%% Observe function shapes: triphasic windows
+
+f_windows = figure('Renderer', 'painters', 'Position', [50 800 600 200]); box on; hold on;
+ylim([-0.14, 0.12]);
+
+y = ChrolCannon2012Window(dt);
+plot(dt, y, 'LineWidth', 2, 'Color', '#77AC30')
+
+plot(dt, Waddington2014Window(dt), 'LineWidth', 2, 'Color', '#A2142F')
+
+legend("$$W(t)_C$$", "$$W(t)_W$$", 'Interpreter', 'latex', 'FontSize', labelfont, 'Orientation','horizontal')
+xlabel("$t$ [s]", 'Interpreter', 'latex', 'FontSize', labelfont); 
+ylabel("$W$", 'Interpreter', 'latex', 'FontSize', labelfont);
+exportpdf(f_windows, '../Figures/LearningWindowsTriphasic.pdf', export);
+close(f_windows)
 
 %% Function properties
 clc
