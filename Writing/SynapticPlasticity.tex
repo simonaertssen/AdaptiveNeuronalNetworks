@@ -1,0 +1,255 @@
+\input{Setup.tex}
+\begin{document}
+
+\mainmatter
+
+Synaptic Plasticity \today \\
+Msc Thesis - Dynamics of adaptive neuronal networks. \\
+Simon Aertssen (s181603), \today \\ 
+
+\section{Writing out the whole system}
+The network dynamics are described as follows:
+\begin{align}
+\frac{d \theta_i}{d t} &= (1 - \cos\theta_i) + (1 + \cos\theta_i)\cdot\left(\eta_i + I_i \right) \qquad \theta_i \in \R^N \nonumber \\
+I_{i} &= \frac{\kappa}{\langle k\rangle} \sum_{j=1}^{N} A_{i j} P_{n}\left(\theta_{j}\right) \label{eq:FullThetaNeuronNetwork} \\
+P_{n}\left(\theta_{j}\right) &= (1 - \cos\theta_j) \nonumber
+\end{align}
+
+We observe synchronization through the order parameter
+\begin{align}
+Z(t) = \frac{1}{N} \sum_{j=1}^N e^{\ic\theta_j}  \qquad Z(t) \in \C \label{eq:orderparameter}
+\end{align}
+
+For a fixed degree network it has been proven that the order parameter follows:
+\begin{align}
+\dot{Z}(t)= -\ic \frac{(Z-1)^2}{2}+\frac{(Z+1)^2}{2} \cdot \left(-\Delta+ \ic\eta_{0}
++ \ic \kappa \cdot \left(1+\frac{Z^{2} + \overline{Z}^{2} }{6} - \frac{4}{3} \Re(Z)\right)\right) \label{eq:MeanField}
+\end{align}
+    
+For an arbitrary network the order parameter follows a trajectory per degree. When we assemble the whole expression for the Ott-Antonsen manifold as found in \cite{OttAntonsen2017} with $H_2(\k,t)$ as in \cite{Martens2020}, we obtain the following:
+\begin{align}
+\frac{\partial z(\k, t)}{\partial t} &= -\ic \frac{(z(\k, t)-1)^{2}}{2} + \frac{(z(\k, t)+1)^{2}}{2} \cdot I(\k) \qquad z(\k,t) \in \C^{M_\k} \nonumber \\
+%I(\k) &= -\Delta(\k) + \ic \eta_{0}(\k) + i d_{n} \kappa \cdot H_n(\k,t) \label{eq:OttAntonsenSystemFull} \\
+%H_n(\k,t) &= \frac{a_n}{\kmean} \sum_{\kacc} P\left(\kacc\right) a\left(\kacc \rightarrow \k\right) \cdot \left[A_{0}+\sum_{p=1}^{n} A_{p}\left(z\left(\kacc, t\right)^{p} + \overline{z}\left(\kacc, t\right)^{p}\right)\right] 
+I(\k) &= -\Delta(\k) + \ic \eta_{0}(\k) + i \kappa \cdot H_2(\k,t) \label{eq:OttAntonsenSystemFull} \\
+H_2(\k,t) &= \frac{1}{\kmean} \sum_{\kacc} P\left(\kacc\right) a\left(\kacc \rightarrow \k\right) \cdot \left( 1 + \frac{z(\kacc, t)^2 + \overline{z}(\kacc, t)^2}{6} - \frac{4}{3} \Re(z(\kacc, t)) \right) \nonumber
+\end{align}
+
+$\k$ represents a two-dimensional vector of the in- an out degree as $\k = ( \kin, \kout)$ and has unique entries as it forms the support of the vector of degrees of \eqref{eq:FullThetaNeuronNetwork} as $\degree(\theta_i)$. So $z(\k,t)$ is really a vector in the complex plane that represents the mean-field dynamics on any node with degree $\k$, so we could also index as $z(t)_{\k}$. $\kacc$ represents $\k$ when $\k$ is already in use.\\
+
+We can then find the mean field dynamics through
+\begin{align}
+\overline{Z}(t) &= \frac{1}{N} \sum_{\k} P(\k) z(\k, t) \qquad \overline{Z}(t) \in \C \label{eq:OttAntonsenMeanField}
+\end{align}
+
+It is important to notice that in \eqref{eq:OttAntonsenSystemFull} and \eqref{eq:OttAntonsenMeanField} we actually compute an inner vector product, which is non-commutative for complex numbers:
+\begin{align}
+a \cdot b = \overline{b \cdot a} \qquad a, b \in \C^r
+\end{align}
+This is the result of the \textsl{Conjugate} or \textsl{Hermitian} symmetry of the inner product. This is especially important in the \matlab implementation.
+
+
+\section{Initial conditions}
+As the systems in \cref{eq:FullThetaNeuronNetwork,eq:orderparameter,eq:MeanField,eq:OttAntonsenSystemFull,eq:OttAntonsenMeanField} describe the same dynamics for fully connected networks, it is important to be able to transform initial conditions between systems. When transforming from $\theta_i(t) \rightarrow z(\k,t) \rightarrow Z(t)$ we go from $\R^N \rightarrow \C^{M_\k}$ to $\C^{M_\k} \rightarrow \C$. If we have the same initial conditions, then all systems will predict the same behaviour. We will only map everything to $\C$.\\
+The following maps can be used to transform the initial conditions, but as they do not give any qualitative information on the dynamics or distributions of the variables, they are not valid for transforming between dynamics. We discard $t=0$ for clarity. \\
+Mapping operations onto the order parameter in the complex plane is straightforward:
+\begin{align*}
+\theta_i \xrightarrow{\hspace*{8mm}} Z &= \frac{1}{N} \sum_{j=1}^N e^{\ic\theta_j} \\
+z(\k) \longrightarrow Z &= \frac{1}{N} \sum_{\k} P(\k) z(\k, t)
+\end{align*}
+
+Taking the inverse maps, we can make use of the fact that the average of a set of identical values is the value itself. For $z(\k)$ we have a weighed average which we need to undo, making sure that the whole sums up to $N$.
+\begin{align*}
+Z \xrightarrow{\hspace*{9mm}} \theta_{i} &= -\ic \cdot \log \left( Z \right) \\
+Z \longrightarrow z(\k) &= \overline{\frac{Z \cdot n(\k)}{P(\k)}}
+\end{align*}
+
+Then, transferring between $\theta_i$ and $z(\k)$, we need to filter $\theta_i$ per degree:
+\begin{align*}
+z(\k) \longrightarrow \theta_i &= -\ic \cdot \log \left( \frac{z(\k)\cdot P(\k)}{n(\k)} \right) \qquad \text{ if } \degree(\theta_i) = \k \\
+\theta_i \longrightarrow z(\k) &= \sum_{\k} e^{\ic \vartheta_{\k}} \qquad \qquad \vartheta_{\k} = \sum_{i = 1}^{n(\k)} \theta_i \in 
+\left\{ \theta_i \vert \degree(\theta_i) = \k, \forall i \leq N \right\}
+\end{align*}
+Or also $\sum_i^N A_{ij} = k^{\rm in} \cup \sum_j^N A_{ij} = \kout$. We can see how $\lim_{N \rightarrow +\infty} n(\k) = P(\k)$, which makes these maps exact for any network size. 
+    
+
+\section{Fixpoint iteration}
+In \cite{OttAntonsen2017} a fixpoint iteration is suggested to find attractive fixpoints of the system \eqref{eq:OttAntonsenSystemFull}. If we set $\frac{\partial z(\k, t)}{\partial t} = 0$ we can solve the following system:
+\begin{align}
+\ic \frac{(z(\k, t)-1)^{2}}{2} &= \frac{(z(\k, t)+1)^{2}}{2} \cdot I(\k) \nonumber \\
+\ic \left(\frac{z(\k, t)-1}{z(\k, t)+1}\right)^2 &= I(\k) \nonumber \\
+\frac{z(\k, t)-1}{z(\k, t)+1} &\equiv b(\k,t) \nonumber \\
+z(\k, t) - 1 &= b(\k,t) z(\k, t) + b(\k,t)  \nonumber \\
+z(\k, t) \cdot (1 - b(\k,t)) &= b(\k,t)  + 1\nonumber
+\end{align}
+
+We can then obtain the stable equilibria from:
+\begin{align}
+\ic b(\k,t)^2 = I(\k) \hspace{10mm} z(\k, t)_{\pm} = \frac{1 \pm b(\k,t)}{1 \mp b(\k,t)} \label{eq:fixedpointiterations} 
+\end{align}
+where the signs are chosen so that $\vert z(\k, t) \vert \leq 1$.
+
+
+\section{A Newton-Raphson iteration for all fixpoints}
+\subsection{Theory behind the method}
+The fixpoint iteration only gives us the stable equilibria of the system \eqref{eq:OttAntonsenSystemFull}. We can obtain all equilibria and the Jacobian from a Newton-Raphson iteration. We define the equilibria $\boldsymbol{x^\ast} \in \R^n$ of a multivariate function $\boldsymbol{f}(\boldsymbol{x}) : \R^n \rightarrow \R^n$ with $\boldsymbol{f}(\boldsymbol{x}) = \boldsymbol{0}$. Expanding $\boldsymbol{f}$ as a Taylor series, we obtain:
+\begin{align}
+f_i(\boldsymbol{x} + \delta \boldsymbol{x}) =f_{i}(\boldsymbol{x}) + \sum_{j=1}^{n} \frac{\partial f_{i}(\boldsymbol{x})}{\partial x_{j}} \delta x_{j}+O\left(\delta \boldsymbol{x}^{2}\right) \approx f_{i}(\boldsymbol{x})+\sum_{j=1}^{n} \frac{\partial f_{i}(\boldsymbol{x})}{\partial x_{j}} \delta x_{j}, \qquad (i=1, \cdots, n)
+\end{align}
+
+We can also write this in vector notation, by setting $\boldsymbol{J}(\boldsymbol{x}) = \nabla \boldsymbol{f}(\boldsymbol{x}) = \frac{d}{d\boldsymbol{x}} \boldsymbol{f}(\boldsymbol{x}) \in \R^{n \times n}$ 
+\begin{align}
+\boldsymbol{f}(\boldsymbol{x}+\delta \boldsymbol{x}) &\approx\left[\begin{array}{c}f_{1}(\boldsymbol{x}) \\ \vdots \\ f_{N}(\boldsymbol{x})\end{array}\right] 
++ \left[\begin{array}{ccc}\frac{\partial f_{1}}{\partial x_{1}} & \cdots & \frac{\partial f_{1}}{\partial x_{N}} \\ \vdots & \ddots & \vdots \\ \frac{\partial f_{N}}{\partial x_{1}} & \cdots & \frac{\partial f_{N}}{\partial x_{N}}\end{array}\right]
+\left[\begin{array}{c}\delta x_{1} \\ \vdots \\ \delta x_{N}\end{array}\right] 
+=\boldsymbol{f}(\boldsymbol{x})+\boldsymbol{J}(\boldsymbol{x}) \delta \boldsymbol{x} 
+\end{align}
+
+By assuming $\boldsymbol{f}(\boldsymbol{x}+\delta \boldsymbol{x}) = 0$ we can find that $\delta \boldsymbol{x} = -\boldsymbol{J}^{-1}( \boldsymbol{x}) \boldsymbol{f}(\boldsymbol{x})$ so that $\boldsymbol{x} + \delta \boldsymbol{x} =  \boldsymbol{x} - \boldsymbol{J}^{-1} (\boldsymbol{x}) \boldsymbol{f}(\boldsymbol{x})$. This expression converges to $\boldsymbol{x^\ast}$. When the equations are nonlinear, the equations converge to the real root as $\boldsymbol{x}_k =  \boldsymbol{x}_k - \boldsymbol{J}^{-1} ( \boldsymbol{x}_k)\boldsymbol{f}(\boldsymbol{x}_k)$. \\
+
+For \eqref{eq:OttAntonsenSystemFull}, we can compute the Jacobian for the diagonal and off-diagonal elements separately. But as $z(\k,t)$ is a complex function, first we need to understand what the derivative of a complex function is. 
+
+
+\subsection{Derivatives of complex functions}
+For $z = x + \ic y \in \C$ and $x,y \in R$ the conjugate is defined as $\overline{z} = x - \ic y$. That means that we can write the real and imaginary parts as:
+\begin{align*}
+x = \frac{z + \overline{z}}{2} \text{  and   }   y = -\ic \frac{z - \overline{z}}{2}
+\end{align*}
+Using the chain rule, we can write the partial derivative with respect to $z$ in function of $x$ and $y$ as $x$ and $y$ are functionally independent and find the first Wirtinger operator:
+\begin{align*}
+\frac{\partial}{\partial z} =\frac{\partial x}{\partial z} \frac{\partial}{\partial x}+\frac{\partial \bar{y}}{\partial z} \frac{\partial}{\partial \overline{y}} 
+\longrightarrow \frac{\partial x}{\partial z} = \frac{1}{2} \text{   and   } \frac{\partial y}{\partial z} =  - \frac{\ic}{2} 
+\longrightarrow \frac{\partial}{\partial z} = \frac{1}{2}\left(\frac{\partial}{\partial x} - \ic \frac{\partial}{\partial y}\right)
+\end{align*}
+We note the following properties:
+\begin{align*}
+\frac{\partial}{\partial z} z = 1 \hspace{10mm} \frac{\partial}{\partial z}\overline{z} = \frac{1}{2}\left(1 - \ic^2 \right) = 0
+\end{align*}
+Interesting for is the result of the following: 
+\begin{align*}
+\overline{z}^2 &= (x - \ic y)^2 = x^2 - y^2 - \ic 2xy \\
+\frac{\partial}{\partial z} \overline{z}^2 &=  \frac{1}{2}\cdot(2x -\ic 2y - \ic\cdot(-2y -\ic 2x)) = x -\ic y + \ic y -\ic x = 0
+\end{align*}
+
+
+
+\subsection{Derivatives of the complex mean field equations}
+We can now compute derivatives of the complex functions $z(\k,t)$. We will set $z(\k, t) = z_{\k}$ and rewrite system \eqref{eq:OttAntonsenSystemFull} to help the reader:
+\begin{align}
+\frac{\partial z_{\k}}{\partial t} &= -\ic \frac{(z_{\k}-1)^{2}}{2} + \frac{(z_{\k}+1)^{2}}{2} \cdot I_{\k} \qquad z_{\k} \in \C^{M_\k} \nonumber \\
+%I(\k) &= -\Delta(\k) + \ic \eta_{0}(\k) + i d_{n} \kappa \cdot H_n(\k,t) \label{eq:OttAntonsenSystemFull} \\
+%H_n(\k,t) &= \frac{a_n}{\kmean} \sum_{\kacc} P\left(\kacc\right) a\left(\kacc \rightarrow \k\right) \cdot \left[A_{0}+\sum_{p=1}^{n} A_{p}\left(z\left(\kacc, t\right)^{p} + \overline{z}\left(\kacc, t\right)^{p}\right)\right] 
+I_{\k} &= -\Delta_{\k} + \ic \eta_{0_{\k}} + i \kappa \cdot H_{2_{\k}} \label{eq:OttAntonsenSystemFull_k} \\
+H_{2_{\k}} &= \frac{1}{\kmean} \sum_{\kacc} P_{\k} a_{\kacc \k} \cdot \left( 1 + \frac{z_{\kacc}^2 + \overline{z}_{\kacc}^2}{6} - \frac{4}{3} \Re(z_{\kacc}) \right) \nonumber
+\end{align}
+
+The diagonal elements are found as:
+\begin{equation}
+\begin{aligned}[b]
+\frac{\partial}{\partial z_{\k}}\left(\frac{\partial z_{\k}}{\partial t} \right) &= - \ic(z_{\k} - 1) + (z_{\k} + 1) \cdot I_{\k} +  \frac{(z_{\k}+1)^{2}}{2} \cdot \frac{\partial I(z_{\k})}{\partial z_{\k}} \\
+\frac{\partial I_{\k}}{\partial z_{\k}} &= \ic \kappa \cdot \frac{\partial H_{2_{\k}}}{\partial z_{\k}} \\
+\frac{\partial H_{2_{\k}}}{\partial z_{\k}} &= \frac{1}{\kmean} P_{\k} a_{\k \k} \cdot \left(\frac{2 z_{\k}}{6} - \frac{4}{3} \cdot \frac{1}{2} \right) = \frac{1}{\kmean} P_{\k} a_{\k \k} \cdot\frac{z_{\k} - 2}{3}
+\end{aligned}
+\label{eq:OttAntonsenSystemJacobianDiagonal}
+\end{equation}
+
+The off-diagonal elements are found as
+\begin{equation}
+\begin{aligned}[b]
+\frac{\partial}{\partial z_{\kacc}}\left(\frac{\partial z_{\k}}{\partial t} \right) &= \frac{(z_{\k} + 1)^{2}}{2} \cdot \frac{\partial I_{\k}}{\partial z_{\kacc}} \\
+\frac{\partial I_{\k}}{\partial z_{\kacc}} &= \ic \kappa \cdot \frac{\partial H_{2_{\k}}}{\partial z_{\kacc}} \\
+\frac{\partial H_{2_{\k}}}{\partial z_{\kacc}} &= \frac{1}{\kmean} P_{\kacc} a_{\kacc \k} \cdot \frac{z_{\kacc} - 2}{3}
+\end{aligned}
+\label{eq:OttAntonsenSystemJacobianOffDiagonal}
+\end{equation}
+
+
+\subsection{Results}
+I cannot seem to converge close enough.
+\begin{figure}[H]
+\centering
+\includegraphics[width = \textwidth]{../Figures/ProblemsWithNewtonRaphson.png}
+\end{figure}
+
+
+\section{Spike Timing Dependant Plasticity}
+Write about STDP, see the 'Postulates.pdf'. \\
+
+With spike timing dependant plasticity we want to study how two neurons change their synaptic strength based on the time delay between spikes. When $\theta(t)_j > \pi$ we say that the neuron $\theta_j$ spikes at time $t$. 
+Let us say that $\theta_i$ spikes at time $t_i$ and $\theta_j$ spikes at $t_j$. Taking the time difference $\Delta t_{ij}$ as $t_j - t_i$, we can say that when $\Delta t_{ij} > 0$ the spikes are correlated (there exists a temporally causal relation), and we can model an increase in synaptic strength of the connection $K_{ij}$ from $\theta_i$ to $\theta_j$. In the same fashion we can decrease $K_{ji}$ when $\Delta t_{ij} < 0$ as there is no causal relation. \\
+The functions $W(t)$ that relate $\Delta t_{ij}$ to $\Delta K_{ij}$ are called \textsl{learning windows},  as they define a range in which $K_{ij}$ is able to adapt. When signals between neurons show a very large time difference (negative or positive) we do not expect them to be correlated. Because the learning windows are generally not symmetrical we can also expect an asymmetrical adjacency matrix.\\
+Another characteristic is the integral over the learning window. A window with a negative integral directs synaptic strengths mostly towards inhibitory behaviour, and vice versa with a positive integral. An integral of zero would mean that both inhibitory and excitatory synapses are stimulated equally.\\
+
+Depending on the type of cell, different behaviour in time is 
+
+\subsection{Biphasic Learning windows}
+
+\subsubsection{Kempter 1999}
+\begin{align}
+W(t)_K = \eta
+\begin{cases}
+\left[A_{p}\left(1-\frac{t}{\tilde{\tau}_{p}}\right)+A_{n}\left(1-\frac{t}{\tilde{\tau}_{n}}\right)\right] \cdot \exp \left( \frac{t}{\tau_{\rm syn}} \right) & \text{for } t \leq 0 \\
+A_{p} \cdot \exp \left(-\frac{t}{\tau_{p}}\right) + A_{n} \cdot \exp \left(-\frac{t}{\tau_{n}} \right) & \text{for } t > 0
+\end{cases} \label{eq:learningwindowKempter1999}
+\end{align}
+Here $t$ is the delay between presynaptic spike arrival and postsynaptic firing, $\eta$ is a small learning parameter and all $\tau$ are time constants. Numerical values are usually  $\eta = 0.05$, $\tau_{\rm syn} = 5$ ms, $\tau_{p} = 1$ ms, $\tau_{n} = 20$ ms and $A_p = 1$ and $A_{n} = -1$. $\tilde{\tau}_{p} \equiv \tau_{\rm syn} \tau_{p} / (\tau_{\rm syn} + \tau_{p})$ and $\tilde{\tau}_{n} \equiv \tau_{\rm syn} \tau_{n} / (\tau_{\rm syn} + \tau_{n})$. \\
+$\int W(s) \mathrm{d}s$ = 
+
+
+\subsubsection{Song 2000}
+The first formulation of \STDP as a mathematical model was in \cite{Song2000}. 
+\begin{align}
+W(t)_S =
+\begin{cases}
+A_{p} \cdot \exp \left(\frac{-t}{\tau_p}\right) & \text{for } s > 0 \\
+A_{n} \cdot \exp \left(\frac{t}{\tau_n}\right)  & \text{for } s \leq 0
+\end{cases} \label{eq:learningwindowKempter1999}
+\end{align}
+where we will use the values as proposed in \cite{ChrolCannon2012}: $A_p = 0.1$, $A_n = -0.12$ and $\tau_p = \tau_n = 20$.
+%where $\tau_p = \tau_n = 20$ ms and $A_p = 0.005$ and $A_n = -0.00525$. 
+
+\begin{figure}[H]
+\centering
+\includegraphics[width = \textwidth]{../Figures/LearningWindowsBiphasic.pdf}
+\caption{Two different biphasic learning windows. We can see how in $W(t)_s$ a larger weight is put on the anti-Hebbian learning.}
+\label{fig:LearningWindowsBiphasic}
+\end{figure}
+
+
+\subsection{Triphasic Learning windows}
+
+\subsubsection{Chrol-Cannon 2012}
+\begin{align}
+W(t)_C = A_{p} \cdot \exp \left(\frac{-\left(t - 15 \right)^{2}}{ \tau_{p}}\right) - A_{n} \cdot \exp \left(\frac{-\left(t - 20\right)^{2}}{ \tau_{n}}\right)  \label{eq:learningwindowChrolCannon2012}
+\end{align}
+where $A_{p}=0.23$, $A_{n}=0.15$, $\tau_{p}=200$ and $\tau_n = 2000$.
+
+\subsubsection{Waddington 2014}
+\begin{align}
+W(t)_W =  A \left[1-\frac{\left(t-\alpha\right)^{2}}{\alpha^{2}}\right] \cdot \exp \left(\frac{-\left|t - \alpha\right|}{\alpha}\right) \label{eq:learningwindowWaddington2014}
+\end{align}
+We will use $A = 0.1$ and $\alpha = 4.0$ ms . This brings the integral 
+
+\begin{figure}[H]
+\centering
+\includegraphics[width = \textwidth]{../Figures/LearningWindowsTriphasic.pdf}
+\caption{Two different triphasic learning windows. We can see how in $W(t)_C$  a much higher penalty is given to signals that arrive too early or too late. The moments at which signals should peak also differ by about 10 ms.}
+\label{fig:LearningWindowsTriphasic.pdf}
+\end{figure}
+
+
+\subsection{Custom learning windows}
+Some of the behaviour we want to observe is currently not accounted for: synaptic strengths are unbounded and are generally nonzero. How can we model the behaviour where synaptic strengths can also settle on being zero? Perhaps a better idea than updating the synaptic strength by adding a new value, we can scale it.
+\begin{itemize}
+\item When $\Delta t_{ij}$ is very large (both positive and negative) we expect no change in the synaptic strength: $W(-\infty) = W(-\infty) = 0$. 
+\item We expect a specific positive time delay to yield the most amount of synaptic strengthening: $\Delta t_{\rm best} =\underset{x}{\arg \max} W(t)$
+\end{itemize}
+
+
+
+\bibliographystyle{utphys}
+\small{\bibliography{references}}
+
+\label{LastPage}~
+
+\end{document}
