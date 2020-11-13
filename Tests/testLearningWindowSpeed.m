@@ -25,6 +25,7 @@ yleft = Song2000Window(dt(dt<=0)); yright = Song2000Window(dt(dt>0));
 plot(dt(dt<=0), yleft, 'LineWidth', 2, 'Color', '#D95319'); 
 plot(dt(dt>0), yright, 'LineWidth', 2, 'Color', '#D95319', 'HandleVisibility', 'off')
 line([0, 0],[min(yleft), max(yright)],'Color','k','LineStyle','--', 'LineWidth', 1, 'HandleVisibility', 'off')
+scatter(0, Song2000Window(0), 30, [0.8500 0.3250 0.0980], 'filled', 'o')
 
 legend("$$W(t)_K$$", "$$W(t)_S$$", 'Interpreter', 'latex', 'FontSize', labelfont, 'Orientation','horizontal')
 xlabel("$t$ [s]", 'Interpreter', 'latex', 'FontSize', labelfont); 
@@ -51,23 +52,28 @@ close(f_windows)
 
 %% Function properties
 clc
-% integral(@Kempter1999Window, -100, 100)
+integral(@Kempter1999Window, -0.08, 0.1)
 integral(@Song2000Window, -0.08, 0.1)
 integral(@ChrolCannon2012Window, -0.08, 0.1)
 integral(@Waddington2014Window, -0.08, 0.1)
 
 %% Evaluate multiple time:
 clc
+
 tic;
-timeme(N, tpts, @Waddington2014Window);
+timeme(N, 1000, @Kempter1999Window);
 toc;
 
 tic;
-timeme(N, tpts, @ChrolCannon2012Window);
+timeme(N, 1000, @Song2000Window);
 toc;
 
 tic;
-timeme(N, tpts, @Kempter1999Window);
+timeme(N, 1000, @ChrolCannon2012Window);
+toc;
+
+tic;
+timeme(N, 1000, @Waddington2014Window);
 toc;
 
 % Turns out Waddington is quicker
@@ -79,6 +85,25 @@ function out = timeme(N, tpts, handle)
         out = handle(dt);
     end
 end
+
+function dW = Kempter1999Window(dt)
+    t_syn = 5;
+    t_pos = 1;
+    t_neg = 20;
+    A_p = 1;
+    A_n = -1;
+    learning_rate = 5.0e-2;
+    eps = 1.0e-9;
+    dt = -dt * 1.0e3; % Convert to seconds
+    
+    dW = zeros(size(dt));
+    t_neg_idx = dt <= 0;
+    t_pos_idx = 0 < dt;
+    dW(t_neg_idx) = exp(dt(t_neg_idx)/t_syn + eps).*(A_p*(1-dt(t_neg_idx)/t_pos) + A_n*(1-dt(t_neg_idx)/t_neg));
+    dW(t_pos_idx) = A_p*exp(-dt(t_pos_idx)/t_pos + eps) + A_n*exp(-dt(t_pos_idx)/t_neg + eps);
+    dW = learning_rate * dW;
+end
+
 
 function dW = Song2000Window(dt)
     t_pos = 20;
@@ -115,23 +140,4 @@ function dW = ChrolCannon2012Window(dt)
     t_neg = 2000;
     dt = dt * 1.0e3; % Convert to seconds
     dW = Ap*exp(-((dt - 15).^2/t_pos)) - Am*exp(-((dt - 20).^2/t_neg));
-end
-
-
-function dW = Kempter1999Window(dt)
-    t_syn = 5;
-    t_pos = 1;
-    t_neg = 20;
-    A_p = 1;
-    A_n = -1;
-    learning_rate = 5.0e-2;
-    eps = 1.0e-9;
-    dt = -dt * 1.0e3; % Convert to seconds
-    
-    dW = zeros(size(dt));
-    t_neg_idx = dt <= 0;
-    t_pos_idx = 0 < dt;
-    dW(t_neg_idx) = exp(dt(t_neg_idx)/t_syn + eps).*(A_p*(1-dt(t_neg_idx)/t_pos) + A_n*(1-dt(t_neg_idx)/t_neg));
-    dW(t_pos_idx) = A_p*exp(-dt(t_pos_idx)/t_pos + eps) + A_n*exp(-dt(t_pos_idx)/t_neg + eps);
-    dW = learning_rate * dW;
 end
