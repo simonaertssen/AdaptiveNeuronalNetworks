@@ -1,5 +1,4 @@
-function dxdt = thetaneurons_full_adaptive(t, x, K, e, ameankinverted)  
-    dxdt = gather((1 - cos(x)) + (1 + cos(x)).*(e + ameankinverted * (K * pulse(x))));
-    
+function dxdt = thetaneurons_full_adaptive(t, x, K, e, a, Kmean)  
+    dxdt = gather((1 - cos(x)) + (1 + cos(x)).*(e + a * (K * pulse(x)))/Kmean);
 end
 
