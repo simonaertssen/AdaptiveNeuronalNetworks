@@ -173,26 +173,33 @@ I cannot seem to converge close enough.
 
 
 \section{Spike Timing Dependant Plasticity}
-When $\theta(t)_j > \pi$ we say that the neuron $\theta_j$ spikes at time $t$. With spike timing dependant plasticity we want to study how two neurons change their synaptic strength based on the time delay between spikes. 
-Let us say that $\theta_i$ spikes at time $t_i$ and $\theta_j$ spikes at $t_j$. If $t_j - t_i > 0$ we can say that the spikes are correlated, and we can model an increase in synaptic strength of the connection $K_{ij}$ from $\theta_i$ to $\theta_j$. If $t_j - t_i > 0$ we expect $K_{ij}$ to increase in strength, and when $t_j - t_i < 0$ we expect a decrease in strength. Because the learning windows are generally not symmetrical we can also expect an asymmetrical adjacency matrix.\\
-The learning windows used here are triphasic, which can account for delays between spikes that are neither too short nor too long. Taking the time difference $\Delta t_{ij}$ as $t_j - t_i$ we can define a few learning windows.
+Write about STDP, see the 'Postulates.pdf'. \\
 
-%\subsection{Kempter 1999}
-%\begin{align}
-%\Delta W(s)_K = \eta
-%\begin{cases}
-%\left[A_{p}\left(1-\frac{s}{\tilde{\tau}_{p}}\right)+A_{n}\left(1-\frac{s}{\tilde{\tau}_{n}}\right)\right] \cdot \exp \left( \frac{s}{\tau_{\rm syn}} \right) & \text{for } s \leq 0 \\
-%A_{p} \cdot \exp \left(-\frac{s}{\tau_{p}}\right) + A_{n} \cdot \exp \left(-\frac{s}{\tau_{n}} \right) & \text{for } s > 0
-%\end{cases} \label{eq:learningwindowKempter1999}
-%\end{align}
-%Here $s$ is the delay between presynaptic spike arrival and postsynaptic firing, $\eta$ is a small learning parameter and all $\tau$ are time constants. Numerical values are usually  $\eta = 10^{-5}$, $\tau_{\rm syn} = 5$ ms, $\tau_{p} = 1$ms, $\tau_{n} = 20$ms and $A_p = 1$ and $A_{n} = -1$. $\tilde{\tau}_{p} \equiv \tau_{\rm syn} \tau_{p} / (\tau_{\rm syn} + \tau_{p})$ and $\tilde{\tau}_{n} \equiv \tau_{\rm syn} \tau_{n} / (\tau_{\rm syn} + \tau_{n})$. \\
-%$\int W(s) \mathrm{d}s$ = 
+With spike timing dependant plasticity we want to study how two neurons change their synaptic strength based on the time delay between spikes. When $\theta(t)_j > \pi$ we say that the neuron $\theta_j$ spikes at time $t$. 
+Let us say that $\theta_i$ spikes at time $t_i$ and $\theta_j$ spikes at $t_j$. Taking the time difference $\Delta t_{ij}$ as $t_j - t_i$, we can say that when $\Delta t_{ij} > 0$ the spikes are correlated (there exists a temporally causal relation), and we can model an increase in synaptic strength of the connection $K_{ij}$ from $\theta_i$ to $\theta_j$. In the same fashion we can decrease $K_{ji}$ when $\Delta t_{ij} < 0$ as there is no causal relation. \\
+The functions $W(t)$ that relate $\Delta t_{ij}$ to $\Delta K_{ij}$ are called \textsl{learning windows},  as they define a range in which $K_{ij}$ is able to adapt. When signals between neurons show a very large time difference (negative or positive) we do not expect them to be correlated. Because the learning windows are generally not symmetrical we can also expect an asymmetrical adjacency matrix.\\
+Another characteristic is the integral over the learning window. A window with a negative integral directs synaptic strengths mostly towards inhibitory behaviour, and vice versa with a positive integral. An integral of zero would mean that both inhibitory and excitatory synapses are stimulated equally.\\
 
-\subsection{Learning windows}
+Depending on the type of cell, different behaviour in time is 
 
-\subsection{Song 2000}
+\subsection{Biphasic Learning windows}
+
+\subsubsection{Kempter 1999}
 \begin{align}
-\Delta W(t)_S =
+W(t)_K = \eta
+\begin{cases}
+\left[A_{p}\left(1-\frac{t}{\tilde{\tau}_{p}}\right)+A_{n}\left(1-\frac{t}{\tilde{\tau}_{n}}\right)\right] \cdot \exp \left( \frac{t}{\tau_{\rm syn}} \right) & \text{for } t \leq 0 \\
+A_{p} \cdot \exp \left(-\frac{t}{\tau_{p}}\right) + A_{n} \cdot \exp \left(-\frac{t}{\tau_{n}} \right) & \text{for } t > 0
+\end{cases} \label{eq:learningwindowKempter1999}
+\end{align}
+Here $t$ is the delay between presynaptic spike arrival and postsynaptic firing, $\eta$ is a small learning parameter and all $\tau$ are time constants. Numerical values are usually  $\eta = 0.05$, $\tau_{\rm syn} = 5$ ms, $\tau_{p} = 1$ ms, $\tau_{n} = 20$ ms and $A_p = 1$ and $A_{n} = -1$. $\tilde{\tau}_{p} \equiv \tau_{\rm syn} \tau_{p} / (\tau_{\rm syn} + \tau_{p})$ and $\tilde{\tau}_{n} \equiv \tau_{\rm syn} \tau_{n} / (\tau_{\rm syn} + \tau_{n})$. \\
+$\int W(s) \mathrm{d}s$ = 
+
+
+\subsubsection{Song 2000}
+
+\begin{align}
+W(t)_S =
 \begin{cases}
 A_{p} \cdot \exp \left(\frac{-t}{\tau_p}\right) & \text{for } s > 0 \\
 A_{n} \cdot \exp \left(\frac{t}{\tau_n}\right)  & \text{for } s \leq 0
@@ -201,17 +208,43 @@ A_{n} \cdot \exp \left(\frac{t}{\tau_n}\right)  & \text{for } s \leq 0
 where we will use the values as proposed in \cite{ChrolCannon2012}: $A_p = 0.1$, $A_n = -0.12$ and $\tau_p = \tau_n = 20$.
 %where $\tau_p = \tau_n = 20$ ms and $A_p = 0.005$ and $A_n = -0.00525$. 
 
-\subsection{Chrol-Cannon 2012}
+\begin{figure}[H]
+\centering
+\includegraphics[width = \textwidth]{../Figures/LearningWindowsBiphasic.pdf}
+\caption{Two different biphasic learning windows. We can see how in $W(t)_s$ a larger weight is put on the anti-Hebbian learning.}
+\label{fig:LearningWindowsBiphasic}
+\end{figure}
+
+
+\subsection{Triphasic Learning windows}
+
+\subsubsection{Chrol-Cannon 2012}
 \begin{align}
-\Delta W(t)_W = A_{p} \cdot \exp \left(\frac{-\left(t - 15 \right)^{2}}{ \tau_{p}}\right) - A_{n} \cdot \exp \left(\frac{-\left(t - 20\right)^{2}}{ \tau_{n}}\right)  \label{eq:learningwindowChrolCannon2012}
+W(t)_C = A_{p} \cdot \exp \left(\frac{-\left(t - 15 \right)^{2}}{ \tau_{p}}\right) - A_{n} \cdot \exp \left(\frac{-\left(t - 20\right)^{2}}{ \tau_{n}}\right)  \label{eq:learningwindowChrolCannon2012}
 \end{align}
 where $A_{p}=0.23$, $A_{n}=0.15$, $\tau_{p}=200$ and $\tau_n = 2000$.
 
-\subsection{Waddington 2014}
+\subsubsection{Waddington 2014}
 \begin{align}
-\Delta W(t)_W =  A \left[1-\frac{\left(t-\alpha\right)^{2}}{\alpha^{2}}\right] \cdot \exp \left(\frac{-\left|t - \alpha\right|}{\alpha}\right) \label{eq:learningwindowWaddington2014}
+W(t)_W =  A \left[1-\frac{\left(t-\alpha\right)^{2}}{\alpha^{2}}\right] \cdot \exp \left(\frac{-\left|t - \alpha\right|}{\alpha}\right) \label{eq:learningwindowWaddington2014}
 \end{align}
 We will use $A = 0.1$ and $\alpha = 4.0$ ms . This brings the integral 
+
+\begin{figure}[H]
+\centering
+\includegraphics[width = \textwidth]{../Figures/LearningWindowsTriphasic.pdf}
+\caption{Two different triphasic learning windows. We can see how in $W(t)_C$  a much higher penalty is given to signals that arrive too early or too late. The moments at which signals should peak also differ by about 10 ms.}
+\label{fig:LearningWindowsTriphasic.pdf}
+\end{figure}
+
+
+\subsection{Custom learning windows}
+Some of the behaviour we want to observe is currently not accounted for: synaptic strengths are unbounded and are generally nonzero. How can we model the behaviour where synaptic strengths can also settle on being zero? Perhaps a better idea than updating the synaptic strength by adding a new value, we can scale it. 
+\begin{itemize}
+\item When $\Delta t_{ij}$ is very large (both positive and negative) we expect no change in the synaptic strength: $W(-\infty) = W(-\infty) = 0$. 
+\item We expect a specific positive time delay to yield the most amount of synaptic 
+\end{itemize}
+
 
 
 \bibliographystyle{utphys}
