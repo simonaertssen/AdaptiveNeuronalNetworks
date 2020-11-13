@@ -43,6 +43,7 @@ Icon
 *.synctex.gz
 *.bbl
 *.blg
+*.synctex(busy)
 
 # And no maple code:
 *.bak
