@@ -41,7 +41,7 @@ colors = ["#0072BD", "#D95319", "#77AC30", "#A2142F"];
 for i = 1:4
     name = winnames(i);
     plastopts = struct('SP', true, 'window', str2func(name), 'SS', false, 'IP', false);
-    [t, thetas_full, K, Kmeans] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
+    [t, thetas_full, ~, Kmeans] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
     drawthetas = spikesNaN(thetas_full);
     
     imrow(i) = subplot(2,2,i);
@@ -67,7 +67,21 @@ print(f_noSS, '../Figures/LearningWithoutScaling.png', '-dpng', '-r300')
 close(f_noSS)
 
 
+%% Adding synaptic scaling:
+plastopts = struct('SP', true, 'window', @Kempter1999Window, 'SS', true, 'IP', false);
+[t, thetas_full, K, Kmeans] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
+drawthetas = spikesNaN(thetas_full);
 
+figure; hold on; box on;
+yyaxis left
+plot(t, drawthetas, '-', 'LineWidth', 1.5, 'Color', [0, 0, 1, 0.01], 'HandleVisibility', 'off')
+ylabel('$\theta_i$','Interpreter','latex', 'FontSize', labelfont)
+ylim([-pi, pi]);
 
+yyaxis right
+plot(t, Kmeans, 'LineWidth', 2, 'Color', colors(i))
+ylabel('$\langle k \rangle$','Interpreter','latex', 'FontSize', labelfont)
 
+ax = gca; ax.YAxis(1).Color = [0, 0, 1]; ax.YAxis(2).Color = 'k';
+xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
 

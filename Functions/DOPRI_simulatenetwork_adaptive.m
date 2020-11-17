@@ -50,7 +50,7 @@ function [tout, xout, K, Kmeans, info] = DOPRI_simulatenetwork_adaptive(ta,tb,x0
             idx = sub2ind(size(dW),combos(1,:),combos(2,:));
             K(idx) = K(idx) + dW(idx);
             if synaptic_scaling
-                toimplement = 0;
+                K = K * N * Kmeans(i) ./ sum(K,1);
             end
         end
         
