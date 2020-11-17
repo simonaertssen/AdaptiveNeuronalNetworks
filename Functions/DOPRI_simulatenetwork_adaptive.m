@@ -17,10 +17,9 @@ function [tout, xout, K, Kmeans, info] = DOPRI_simulatenetwork_adaptive(ta,tb,x0
     if h > maxh
         error("Window size too small, we're going to miss the 50ms resolutions")
     end
-    timestepsback = round(maxh*(1/h));
     
     % Network parameters and handles:
-    K = initarray(ones(N, N) - eye(N, N));
+    K = initarray(0.1*ones(N, N));
     Kmeans = initarray(zeros(npts,1)); Kmeans(1) = sum(K, 'all')/N + 1.0e-15;
     info = initarray(zeros(npts,1));
     func = @(t, x, K, Kmean) thetaneurons_full_adaptive(t, x, K, p.e, p.a_n, Kmean);
@@ -41,40 +40,15 @@ function [tout, xout, K, Kmeans, info] = DOPRI_simulatenetwork_adaptive(ta,tb,x0
         tmp = x + 35*K1/384 + 500*K3/1113 + 125*K4/192 - 2187*K5/6784 + 11*K6/84;
         xout(:,i+1) = wrapToPi(tmp);
         
-%         mintimeindex = min(i, timestepsback); 
-%         
         pulse = xout(:,i) - xout(:,i+1) > 2*pi - 0.1;
-        info(i) = any(pulse);
-%         
-%         spiketimes(xout(:,i) - xout(:,i+1) > 2*pi - 0.1, end) = t;
-%         
-%         for tf = 1:N
-%             for tn = 1:N
-%                 K(tn,tf) = K(tn,tf) + sum(window(spiketimes(tf,1:mintimeindex) - spiketimes(tn,1:mintimeindex)), 'all');
-%             end
-%         end
-% %         K = K + dW;
-% %         dW(:,:) = 0;
-% %         if sum(dW, 'all') > 0
-% %             warning('above 0')
-% %         end
-%         Kmeans(i+1) = sum(K, 'all')/N + 1.0e-15;
-%         
-%         spiketimes = circshift(spiketimes,-1,2); % Shift circularly to the left
-%         spiketimes(:, end) = 0; % Clear for the following loop
-%         
-%         This worked
         if synaptic_plasticity && any(pulse == 1)
             lastspiketimes(pulse) = t;
-            W = lastspiketimes - lastspiketimes';
-            dW = window(W);
+            dW = window(lastspiketimes - lastspiketimes');
             % Filter out all zeros that do not contriubute to the learning:
             % that is where lastspiketimes == 0
-%             nonzeroW = find(W);
             nonzerotimes = find(lastspiketimes)';
             combos = combvec(nonzerotimes,nonzerotimes);
             idx = sub2ind(size(dW),combos(1,:),combos(2,:));
-%             idx = sort([nonzeroW; foundidx]);
             K(idx) = K(idx) + dW(idx);
         end
         
