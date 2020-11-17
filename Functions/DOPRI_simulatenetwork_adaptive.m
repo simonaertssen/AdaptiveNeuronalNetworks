@@ -1,13 +1,6 @@
-function [tout, xout, K, Kmeans, info] = DOPRI_simulatenetwork_adaptive(ta,tb,x0,h,p,window) 
-    synaptic_plasticity = true;
-    intrnsic_plasticity = true;
-    if nargin < 6
-        synaptic_plasticity = false;
-    end
-
+function [tout, xout, K, Kmeans, info] = DOPRI_simulatenetwork_adaptive(ta,tb,x0,h,p,plastopts) 
     initarray = make_GPUhandle();
     disp("Start simulation.")
-    
     
     % ODE solver parameters:
     N = p.N;
@@ -18,15 +11,21 @@ function [tout, xout, K, Kmeans, info] = DOPRI_simulatenetwork_adaptive(ta,tb,x0
         error("Window size too small, we're going to miss the 50ms resolutions")
     end
     
+    % Standard integration arrays:
+    tout = initarray(linspace(ta,tb,npts));
+    xout = initarray(zeros(N,npts)); xout(:,1) = x0;
+    func = @(t, x, K, Kmean) thetaneurons_full_adaptive(t, x, K, p.e, p.a_n, Kmean);
+    window = plastopts.window;
+    
     % Network parameters and handles:
     K = initarray(0.1*ones(N, N));
     Kmeans = initarray(zeros(npts,1)); Kmeans(1) = sum(K, 'all')/N + 1.0e-15;
-    info = initarray(zeros(npts,1));
-    func = @(t, x, K, Kmean) thetaneurons_full_adaptive(t, x, K, p.e, p.a_n, Kmean);
-    
-    tout = initarray(linspace(ta,tb,npts));
-    xout = initarray(zeros(N,npts)); xout(:,1) = x0;
     lastspiketimes = initarray(zeros(N,1));
+    
+    % Pasticity options:
+    synaptic_plasticity = plastopts.SP;
+    synaptic_scaling = plastopts.SS;
+    intrnsic_plasticity = plastopts.IP;
     
     K7 = h*func(ta, x0, K, Kmeans(1));
     for i = 1:(npts-1)
@@ -50,6 +49,13 @@ function [tout, xout, K, Kmeans, info] = DOPRI_simulatenetwork_adaptive(ta,tb,x0
             combos = combvec(nonzerotimes,nonzerotimes);
             idx = sub2ind(size(dW),combos(1,:),combos(2,:));
             K(idx) = K(idx) + dW(idx);
+            if synaptic_scaling
+                toimplement = 0;
+            end
+        end
+        
+        if intrnsic_plasticity
+            toimplement = 0;
         end
         
         Kmeans(i+1) = sum(K, 'all')/N + 1.0e-15;
