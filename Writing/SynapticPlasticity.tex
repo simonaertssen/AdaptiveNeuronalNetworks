@@ -22,7 +22,7 @@ Now that we have a feeling of how \STDP works, we need to formulate the behaviou
 \Delta K_{ij} &= \int_{t}^{t+\mathcal{T}} w^{\rm{out}} S_i^{\rm out}(\tau) + w^{\rm{in}} S_{j}^{\rm {in}}(\tau) \mathrm{d}\tau
 + \iint_{t}^{t+\mathcal{T}} W( \tau^\prime - \tau) S_{i}^{\rm out}(\tau) S_{j}^{\rm in}( \tau^\prime) \mathrm{d} \tau \mathrm{d} \tau^\prime
 \label{eq:KempterFormulation1} \\
-&= \sum_{t_i^{n}\in \mathcal{T}} w^{\mathrm{out}} + \sum_{t_{j}^{f} \in \mathcal{T}} w^{\mathrm{in}} + \sum_{t_{j}^{f}, t_i^{n} \in \mathcal{T}} W\left(t_{i}^{f}-t_i^{n}\right) \label{eq:KempterFormulation2}
+&= \sum_{t_i^{n}\in \mathcal{T}} w^{\mathrm{out}} + \sum_{t_{j}^{f} \in \mathcal{T}} w^{\mathrm{in}} + \sum_{t_{j}^{f}, t_i^{n} \in \mathcal{T}} W\left(t_{j}^{f}-t_i^{n}\right) \label{eq:KempterFormulation2}
 \end{align}
 \eqref{eq:KempterFormulation1} is the most general formulation of \STDP and includes a small change in weights when a signal is merely received. Whether this is a process that influences \STDP is still under investigation, but we will neglect the contribution.
 
