@@ -11,14 +11,14 @@ set(groot,'DefaultAxesYGrid','on')
 %% Theta model parameters:
 F = @thetaneurons;
 tnow = 0; tend = 5;
-h = 0.01;
+h = 0.001;
 
-pars.N = 1000;
+pars.N = 10;
 pars.a_n = 0.666667;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 seed = 1; rng(seed);
-IC = randn(pars.N, 1) + 1;
-pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
+IC = wrapToPi(randn(pars.N, 1));
+pars.e = 0.1;%randcauchy(seed, pars.eta0, pars.delta, pars.N);
 
 %% Running the model: theta and QIF models
 [t, thetas] = DOPRI_threshold(F, tnow, tend, IC, h, pars);
