@@ -52,6 +52,8 @@ hold off
 
 %% To the frequency domain:
 filtered = fitsine(func, t, 0.01);
+
+cla
 hold on;
 plot(t, func)
 plot(t, filtered)
@@ -60,7 +62,7 @@ hold off
 
 function ts = findlimitcycle(vector)
     vector = detrend(vector, 1);
-    ts = [nan, nan]
+    ts = [nan, nan];
     t_fmean = find(diff(sign(vector))); 
     dvector = diff(vector);
 
@@ -84,20 +86,30 @@ p1(2:end-1) = 2*p1(2:end-1);
 freq = (1/mean(diff(t)))*(0:ceil(l/2))/l;
 
 % Find maximum amplitude and frequency
-maxPeak = p1 == max(p1(2:end)); % disregard 0 frequency!
-maxAmplitude = p1(maxPeak);     % find maximum amplitude
-maxFrequency = freq(maxPeak);   % find maximum frequency
+maxPeak1 = p1 == max(p1(2:end)); % disregard 0 frequency!
+maxAmplitude1 = p1(maxPeak1);     % find maximum amplitude
+maxFrequency1 = freq(maxPeak1);   % find maximum frequency
+
+p1(maxPeak1) = [];
+maxPeak2 = p1 == max(p1(2:end)); % disregard 0 frequency!
+maxAmplitude2 = p1(maxPeak2);     % find maximum amplitude
+maxFrequency2 = freq(maxPeak2);   % find maximum frequency
 
 % Initialize guesses
 p = [];
+% Sine 1:
 p(1) = mean(y);         % vertical shift
-p(2) = maxAmplitude;    % amplitude estimate
-p(3) = maxFrequency;    % phase estimate
+p(2) = maxAmplitude1;    % amplitude estimate
+p(3) = maxFrequency1;    % phase estimate
 p(4) = 0;               % phase shift (no guess)
 p(5) = 0;               % trend (no guess)
+% Sine 2:
+p(6) = maxAmplitude2;    % amplitude estimate
+p(7) = maxFrequency2;    % phase estimate
+p(8) = pi/2;            % phase shift (no guess)
 
 % Create model
-f = @(p) p(1) + p(2)*sin( p(3)*2*pi*t+p(4) ) + p(5)*t;
+f = @(p) p(1) + p(2)*sin(p(3)*2*pi*t+p(4)) + p(6)*sin(p(7)*2*pi*t+p(8)); % + p(5)*t;
 ferror = @(p) sum((f(p) - y).^2);
 % Nonlinear least squares
 % If you have the Optimization toolbox, use [lsqcurvefit] instead!
@@ -105,7 +117,7 @@ options = optimset('MaxFunEvals',50000,'MaxIter',50000,'TolFun',1e-25);
 [param,fval,exitflag,output] = fminsearch(ferror,p,options);
 
 % Calculate result
-result = f(param);
+result = f(p);
 
 % Find peaks
 peaks = abs(sin(param(3)*2*pi*t+param(4)) - 1) < eps;
