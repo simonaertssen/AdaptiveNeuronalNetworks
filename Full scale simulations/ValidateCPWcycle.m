@@ -21,7 +21,7 @@ end
 initarray = make_GPUhandle();
 
 %% Theta model parameters:
-tnow = 0; tend = 750;
+tnow = 0; tend = 1000;
 h = 0.01;
 
 pars.N = 4000;
@@ -63,13 +63,13 @@ f_fullyconnected = figure('Renderer', 'painters', 'Position', [50 800 500 500]);
 cycle = drawfixeddegreelimitcycle();
 cycle.HandleVisibility = 'off';
 
-scatter(real(zfull(1)), imag(zfull(1)), 50, 'x', 'MarkerEdgeColor', '#0072BD', 'LineWidth', 2, 'HandleVisibility', 'off');
-plot(real(zfull), imag(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
+scatter(real(zfull(1)), imag(zfull(1)), 50, 'x', 'MarkerEdgeColor', '#0072BD', 'LineWidth', 1, 'HandleVisibility', 'off');
+plot(real(zfull), imag(zfull), '-', 'LineWidth', 2, 'Color', '#0072BD');
 
-scatter(real(Z(1)), imag(Z(1)), 50, '+', 'MarkerEdgeColor', '#D95319', 'LineWidth', 2, 'HandleVisibility', 'off');
-plot(real(Z), imag(Z), '-', 'LineWidth', 3, 'Color', '#D95319');
+scatter(real(Z(1)), imag(Z(1)), 50, '+', 'MarkerEdgeColor', '#D95319', 'LineWidth', 1, 'HandleVisibility', 'off');
+plot(real(Z), imag(Z), '-', 'LineWidth', 2, 'Color', '#D95319');
 
-scatter(real(ZOA(1)), imag(ZOA(1)), 50, 'o', 'MarkerEdgeColor', '#000000', 'LineWidth', 2, 'HandleVisibility', 'off');
+scatter(real(ZOA(1)), imag(ZOA(1)), 50, 'o', 'MarkerEdgeColor', '#000000', 'LineWidth', 1, 'HandleVisibility', 'off');
 plot(real(ZOA), imag(ZOA), '-', 'LineWidth', 2, 'Color', '#000000');
 
 xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
@@ -117,13 +117,13 @@ f_fixeddegree = figure('Renderer', 'painters', 'Position', [50 800 500 500]); bo
 cycle = drawfixeddegreelimitcycle();
 cycle.HandleVisibility = 'off';
 
-scatter(real(zfull(1)), imag(zfull(1)), 50, 'x', 'MarkerEdgeColor', '#0072BD', 'LineWidth', 2, 'HandleVisibility', 'off');
-plot(real(zfull), imag(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
+scatter(real(zfull(1)), imag(zfull(1)), 50, 'x', 'MarkerEdgeColor', '#0072BD', 'LineWidth', 1, 'HandleVisibility', 'off');
+plot(real(zfull), imag(zfull), '-', 'LineWidth', 2, 'Color', '#0072BD');
 
-scatter(real(Z(1)), imag(Z(1)), 50, '+', 'MarkerEdgeColor', '#D95319', 'LineWidth', 2, 'HandleVisibility', 'off');
-plot(real(Z), imag(Z), '-', 'LineWidth', 3, 'Color', '#D95319');
+scatter(real(Z(1)), imag(Z(1)), 50, '+', 'MarkerEdgeColor', '#D95319', 'LineWidth', 1, 'HandleVisibility', 'off');
+plot(real(Z), imag(Z), '-', 'LineWidth', 2, 'Color', '#D95319');
 
-scatter(real(ZOA(1)), imag(ZOA(1)), 50, 'o', 'MarkerEdgeColor', '#000000', 'LineWidth', 2, 'HandleVisibility', 'off');
+scatter(real(ZOA(1)), imag(ZOA(1)), 50, 'o', 'MarkerEdgeColor', '#000000', 'LineWidth', 1, 'HandleVisibility', 'off');
 plot(real(ZOA), imag(ZOA), '-', 'LineWidth', 2, 'Color', '#000000');
 
 xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
@@ -165,10 +165,10 @@ f_random = figure('Renderer', 'painters', 'Position', [50 800 500 500]); box on;
 cycle = drawfixeddegreelimitcycle();
 cycle.HandleVisibility = 'off';
 
-scatter(real(zfull(1)), imag(zfull(1)), 50, 'x', 'MarkerEdgeColor', '#0072BD', 'LineWidth', 2, 'HandleVisibility', 'off');
-plot(real(zfull), imag(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
+scatter(real(zfull(1)), imag(zfull(1)), 50, 'x', 'MarkerEdgeColor', '#0072BD', 'LineWidth', 1, 'HandleVisibility', 'off');
+plot(real(zfull), imag(zfull), '-', 'LineWidth', 2, 'Color', '#0072BD');
 
-scatter(real(ZOA(1)), imag(ZOA(1)), 50, 'o', 'MarkerEdgeColor', '#000000', 'LineWidth', 2, 'HandleVisibility', 'off');
+scatter(real(ZOA(1)), imag(ZOA(1)), 50, 'o', 'MarkerEdgeColor', '#000000', 'LineWidth', 1, 'HandleVisibility', 'off');
 plot(real(ZOA), imag(ZOA), '-', 'LineWidth', 2, 'Color', '#000000');
 
 xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
@@ -211,10 +211,10 @@ f_scalefree = figure('Renderer', 'painters', 'Position', [50 800 500 500]); box 
 cycle = drawfixeddegreelimitcycle();
 cycle.HandleVisibility = 'off';
 
-scatter(real(zfull(1)), imag(zfull(1)), 50, 'x', 'MarkerEdgeColor', '#0072BD', 'LineWidth', 2, 'HandleVisibility', 'off');
-plot(real(zfull), imag(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
+scatter(real(zfull(1)), imag(zfull(1)), 50, 'x', 'MarkerEdgeColor', '#0072BD', 'LineWidth', 1, 'HandleVisibility', 'off');
+plot(real(zfull), imag(zfull), '-', 'LineWidth', 2, 'Color', '#0072BD');
 
-scatter(real(ZOA(1)), imag(ZOA(1)), 50, 'o', 'MarkerEdgeColor', '#000000', 'LineWidth', 2, 'HandleVisibility', 'off');
+scatter(real(ZOA(1)), imag(ZOA(1)), 50, 'o', 'MarkerEdgeColor', '#000000', 'LineWidth', 1, 'HandleVisibility', 'off');
 plot(real(ZOA), imag(ZOA), '-', 'LineWidth', 2, 'Color', '#000000');
 
 xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
@@ -255,10 +255,10 @@ f_lognorm = figure('Renderer', 'painters', 'Position', [50 800 500 500]); box on
 cycle = drawfixeddegreelimitcycle();
 cycle.HandleVisibility = 'off';
 
-scatter(real(zfull(1)), imag(zfull(1)), 50, 'x', 'MarkerEdgeColor', '#0072BD', 'LineWidth', 2, 'HandleVisibility', 'off');
-plot(real(zfull), imag(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
+scatter(real(zfull(1)), imag(zfull(1)), 50, 'x', 'MarkerEdgeColor', '#0072BD', 'LineWidth', 1, 'HandleVisibility', 'off');
+plot(real(zfull), imag(zfull), '-', 'LineWidth', 2, 'Color', '#0072BD');
 
-scatter(real(ZOA(1)), imag(ZOA(1)), 50, 'o', 'MarkerEdgeColor', '#000000', 'LineWidth', 2, 'HandleVisibility', 'off');
+scatter(real(ZOA(1)), imag(ZOA(1)), 50, 'o', 'MarkerEdgeColor', '#000000', 'LineWidth', 1, 'HandleVisibility', 'off');
 plot(real(ZOA), imag(ZOA), '-', 'LineWidth', 2, 'Color', '#000000');
 
 xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
