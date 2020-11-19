@@ -156,7 +156,6 @@ disp('OA mean field test done')
 
 
 zfull = zfull(ts(1):ts(2));
-Z = Z(Ts(1):Ts(2));
 ZOA = ZOA(TOAs(1):TOAs(2));
 
 %% Plotting the results:
@@ -202,7 +201,6 @@ disp('OA mean field test done')
 
 
 zfull = zfull(ts(1):ts(2));
-Z = Z(Ts(1):Ts(2));
 ZOA = ZOA(TOAs(1):TOAs(2));
 
 %% Plotting the results:
@@ -244,9 +242,7 @@ z0 = map_thetatozoa(gather(thetasfull(:,1)), lnpars);
 TOAs = findlimitcycle(abs(ZOA));
 disp('OA mean field test done')
 
-
 zfull = zfull(ts(1):ts(2));
-Z = Z(Ts(1):Ts(2));
 ZOA = ZOA(TOAs(1):TOAs(2));
 
 %% Plotting the results:
