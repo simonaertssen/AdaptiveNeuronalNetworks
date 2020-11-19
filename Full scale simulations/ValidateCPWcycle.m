@@ -189,7 +189,7 @@ IC = wrapToPi(randn(pars.N, 1)*0.9);
 sfpars = make_scalefreeparameters(pars, degree, 2000, 3000);
 [~, thetasfull] = DOPRI_simulatenetwork(tnow,tend,IC,h,sfpars);
 zfull = orderparameter(thetasfull);
-ts = findlimitcycle(abs(zfull));
+% ts = findlimitcycle(abs(zfull));
 disp('Full scale test done')
 
 % The OA mean field theory:
@@ -197,7 +197,7 @@ sfpars = prepareOAparameters(sfpars);
 z0 = map_thetatozoa(gather(thetasfull(:,1)), sfpars);
 z0 = orderparameter(IC)*ones(sfpars.Mk,1);
 [~, ZOA] = OA_simulatenetwork(tnow, tend, z0, sfpars, odeoptions);
-TOAs = findlimitcycle(abs(ZOA));
+% TOAs = findlimitcycle(abs(ZOA));
 disp('OA mean field test done')
 
 
