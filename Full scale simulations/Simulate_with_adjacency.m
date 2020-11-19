@@ -70,7 +70,7 @@ optimopts = optimoptions('fsolve', 'Display','off', 'Algorithm', 'Levenberg-Marq
 % ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
 % 
 % title(sprintf('\\bf Fully connected network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f', pars.N, fdpars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex')
-% legend('$$Z(t)_{simple}$$', '$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southwest', 'Orientation','horizontal')
+% legend('$$Z(t)_{\rm simple}$$', '$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southwest', 'Orientation','horizontal')
 % exportpdf(f_fullyconnected, '../Figures/InspectMeanFieldFullyConnected.pdf', export);
 % close(f_fullyconnected)
 % 
