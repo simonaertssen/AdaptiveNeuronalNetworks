@@ -10,6 +10,11 @@ function A = adjacencymatrix(degrees_in, degrees_out)
         disp('Found exact A after 1 try');
         return
     end
+    if all(degrees_in == N) && all(degrees_in == N)
+        A = ones(N);
+        disp('Found exact A after 1 try');
+        return
+    end
     numnonzeros = sum(degrees_in);
     
     % Test for laptop version or other:
@@ -41,9 +46,8 @@ function A = adjacencymatrix(degrees_in, degrees_out)
             % Permutation makes the implementation quite robust:
             % Don't just sample the first maximum elements
             probsperm = randperm(N);
-            % [~, probsperminv] = sort(probsperm); % Inverse not necessary?
-            [~, chosenidx] = maxk(probs(probsperm), numelements);
-            chosenidx = probsperm(chosenidx);
+            [~, chosenidx] = maxk(probs(probsperm), numelements-1);
+            chosenidx = [probsperm(chosenidx), rowindex];
             
             indices = idxidx(rowindex):idxidx(rowindex+1)-1;
             xidx(indices) = rowindex;
@@ -63,11 +67,12 @@ function A = adjacencymatrix(degrees_in, degrees_out)
         else 
             A = sparse(xidx, yidx, ones(numnonzeros, 1, 'logical'));
         end
-        A(N,N) = 0; % Make it an N x N matrix
+        A(N,N) = 1; % Make it an N x N matrix
+        full(A)
         
         % Additional selfcoupling:
 %         A(1:N+1:N*N) = 0;
-        assert(sum(diag(A)) == 0);
+        assert(sum(diag(A)) == N);
 
         diffrows = degrees_in' - full(sum(A,2))';
         diffcols = degrees_out' - full(sum(A,1));
