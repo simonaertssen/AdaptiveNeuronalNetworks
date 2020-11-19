@@ -11,7 +11,7 @@ set(groot,'DefaultAxesYGrid','on')
 
 titlefont = 15;
 labelfont = 15;
-export = false;
+export = true;
 
 %% Make a GPU init handle:
 if gpuDeviceCount > 0
@@ -21,10 +21,10 @@ end
 initarray = make_GPUhandle();
 
 %% Theta model parameters:
-tnow = 0; tend = 1;
+tnow = 0; tend = 20;
 h = 0.001;
 
-pars.N = 50;
+pars.N = 10000;
 pars.a_n = 0.666666666666666666667;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 
@@ -73,7 +73,7 @@ phasespaceplot();
 
 title(sprintf('\\bf Fully connected network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f', pars.N, fdpars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex')
 legend('$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southoutside', 'Orientation','horizontal')
-exportpdf(f_fullyconnected, '../Figures/InspectMeanFieldFullyConnected.pdf', export);
+exportpdf(f_fullyconnected, '../Figures/InspectMeanFieldFullyConnectedPhaseSpace.pdf', export);
 close(f_fullyconnected)
 
 disp('Made fully connected network figure')
@@ -119,7 +119,7 @@ phasespaceplot();
 
 title(sprintf('\\bf Fixed degree network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f', pars.N, fdpars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex')
 legend('$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southoutside', 'Orientation','horizontal')
-exportpdf(f_fixeddegree, '../Figures/InspectMeanFieldFixedDegree.pdf', export);
+exportpdf(f_fixeddegree, '../Figures/InspectMeanFieldFixedDegreePhaseSpace.pdf', export);
 close(f_fixeddegree)
 
 disp('Made fixed degree network figure')
@@ -157,7 +157,7 @@ phasespaceplot();
 
 title(sprintf('\\bf Random network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f, $$p$$ = %0.1f', pars.N, rdpars.meandegree, rdpars.netp), 'FontSize', titlefont, 'Interpreter', 'latex')
 legend('$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southoutside', 'Orientation','horizontal')
-exportpdf(f_random, '../Figures/InspectMeanFieldRandom.pdf', export);
+exportpdf(f_random, '../Figures/InspectMeanFieldRandomPhaseSpace.pdf', export);
 close(f_random)
 
 disp('Made random network figure')
@@ -197,7 +197,7 @@ phasespaceplot();
 
 title(sprintf('\\bf Scale-free network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f, $$\\gamma$$ = %0.1f', pars.N, sfpars.meandegree, sfpars.degree), 'FontSize', titlefont, 'Interpreter', 'latex')
 legend('$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southoutside', 'Orientation','horizontal')
-exportpdf(f_scalefree, '../Figures/InspectMeanFieldScaleFree.pdf', export);
+exportpdf(f_scalefree, '../Figures/InspectMeanFieldScaleFreePhaseSpace.pdf', export);
 close(f_scalefree)
 
 disp('Made scale-free network figure')
