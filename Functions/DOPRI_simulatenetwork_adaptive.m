@@ -18,9 +18,10 @@ function [tout, xout, K, Kmeans, info] = DOPRI_simulatenetwork_adaptive(ta,tb,x0
     window = plastopts.window;
     
     % Network parameters and handles:
-    K = initarray(0.1*ones(N, N));
+    K = initarray(ones(N, N));
     Kmeans = initarray(zeros(npts,1)); Kmeans(1) = sum(K, 'all')/N + 1.0e-15;
     lastspiketimes = initarray(zeros(N,1));
+    eps = 1.0e-15;
     
     % Pasticity options:
     synaptic_plasticity = plastopts.SP;
@@ -50,15 +51,17 @@ function [tout, xout, K, Kmeans, info] = DOPRI_simulatenetwork_adaptive(ta,tb,x0
             idx = sub2ind(size(dW),combos(1,:),combos(2,:));
             K(idx) = K(idx) + dW(idx);
             if synaptic_scaling
-                K = K * N * Kmeans(i) ./ sum(K,1);
+                K = K * Kmeans(i) ./ (sum(K,1) + eps);
+%                 dW(idx) = dW(idx) * Kmeans(i) ./ (sum(K(idx),1) + eps);
             end
+%             K(idx) = K(idx) + dW(idx);
         end
         
         if intrnsic_plasticity
             toimplement = 0;
         end
         
-        Kmeans(i+1) = sum(K, 'all')/N + 1.0e-15;
+        Kmeans(i+1) = sum(K, 'all')/N + eps;
 
         K7 = h*func(t, xout(:,i+1), K, Kmeans(i+1));
     end
