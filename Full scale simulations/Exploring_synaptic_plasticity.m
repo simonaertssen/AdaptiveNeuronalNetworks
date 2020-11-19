@@ -22,7 +22,7 @@ end
 initarray = make_GPUhandle();
 
 %% Theta model parameters:
-h = 0.005; tnow = h; tend = 100;
+h = 0.005; tnow = h; tend = 200;
 
 pars.N = 100;
 pars.a_n = 0.666666666666666666667;
@@ -43,23 +43,28 @@ for i = 1:4
     plastopts = struct('SP', true, 'window', str2func(name), 'SS', false, 'IP', false);
     [t, thetas_full, ~, Kmeans] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
     drawthetas = spikesNaN(thetas_full);
-    
+    z = orderparameter(thetas_full);
+
     imrow(i) = subplot(2,2,i);
     xlim([tnow, tend]); 
     
     yyaxis left
-    plot(t, drawthetas, '-', 'LineWidth', 1.5, 'Color', [0, 0, 1, 0.01], 'HandleVisibility', 'off')
-    ylabel('$\theta_i$','Interpreter','latex', 'FontSize', labelfont)
     ylim([-pi, pi]); 
+    plot(t, drawthetas, '-', 'LineWidth', 1.5, 'Color', [0, 0, 1, 0.01], 'HandleVisibility', 'off')
+    plot(t, abs(z), '-k', 'LineWidth', 2)
+    ylabel('$\theta_i$','Interpreter','latex', 'FontSize', labelfont)
+    set(gca,'YTick',-pi:pi/2:pi) 
+    set(gca,'YTickLabel',{'-\pi','-\pi/2','0','\pi/2','\pi'})
 
     yyaxis right
     plot(t, Kmeans, 'LineWidth', 2, 'Color', colors(i))
     ylabel('$\langle k \rangle$','Interpreter','latex', 'FontSize', labelfont)
     
     name = char(name);
-    legend(sprintf('$$W(t)_%s$$', name(1)), 'Location', 'southwest', 'Interpreter', 'latex', 'FontSize', labelfont)
+    title(sprintf('$$W(t)_%s$$', name(1)), 'Interpreter', 'latex', 'FontSize', titlefont)
+    %legend(sprintf('$$W(t)_%s$$', name(1)), 'Location', 'southwest', 'Interpreter', 'latex', 'FontSize', labelfont)
 
-    ax = gca; ax.YAxis(1).Color = [0, 0, 1]; ax.YAxis(2).Color = 'k';
+    ax = gca; ax.YAxis(1).Color = [0, 0, 1]; ax.YAxis(2).Color = colors(i);
     xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
 end
 
@@ -71,17 +76,27 @@ close(f_noSS)
 plastopts = struct('SP', true, 'window', @Kempter1999Window, 'SS', true, 'IP', false);
 [t, thetas_full, K, Kmeans] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
 drawthetas = spikesNaN(thetas_full);
+z = orderparameter(thetas_full);
 
 figure; hold on; box on;
 yyaxis left
-plot(t, drawthetas, '-', 'LineWidth', 1.5, 'Color', [0, 0, 1, 0.01], 'HandleVisibility', 'off')
+plot(t, drawthetas, '-', 'LineWidth', 0.1, 'Color', [0, 0, 1, 1/pars.N], 'HandleVisibility', 'off')
+plot(t, abs(z), '-k', 'LineWidth', 2)
 ylabel('$\theta_i$','Interpreter','latex', 'FontSize', labelfont)
 ylim([-pi, pi]);
 
 yyaxis right
-plot(t, Kmeans, 'LineWidth', 2, 'Color', colors(i))
+plot(t, Kmeans, 'LineWidth', 2, 'Color', "#0072BD")
 ylabel('$\langle k \rangle$','Interpreter','latex', 'FontSize', labelfont)
 
-ax = gca; ax.YAxis(1).Color = [0, 0, 1]; ax.YAxis(2).Color = 'k';
+ax = gca; ax.YAxis(1).Color = [0, 0, 1]; ax.YAxis(2).Color = "#0072BD";
 xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
 
+%%
+degrees_in = sum(K,2);
+degrees_out = sum(K,1);
+
+figure; hold on; box on;
+histogram(degrees_in, 50);
+histogram(degrees_out, 50);
+legend("$$k_i^{\rm in}$$", "$$k_j^{\rm out}$$", 'Interpreter','latex', 'FontSize', labelfont)

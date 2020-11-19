@@ -22,10 +22,10 @@ end
 initarray = make_GPUhandle();
 
 %% Theta model parameters:
-tnow = 0; tend = 50;
+tnow = 0; tend = 1;
 h = 0.001;
 
-pars.N = 10000;
+pars.N = 50;
 pars.a_n = 0.666666666666666666667;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 
@@ -36,47 +36,50 @@ pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
 odeoptions = odeset('RelTol', 1.0e-12,'AbsTol', 1.0e-12);
 optimopts = optimoptions('fsolve', 'Display','off', 'Algorithm', 'Levenberg-Marquardt');
 
-% %% 0. Perform a full scale simulation of a FULLY CONNECTED network:
-% % The simple DOPRI integration: 
-% fdpars = make_fixeddegreeparameters(pars, pars.N);
-% [t, thetas] = DOPRI_threshold(@thetaneurons, tnow, tend, IC, h, pars);
-% z = orderparameter(thetas);
-% disp('Small scale test done')
-% 
-% % The full scale simulation using the adjacency matrix:
-% [tfull, thetasfull] = DOPRI_simulatenetwork(tnow,tend,IC,h,fdpars);
-% zfull = orderparameter(thetasfull);
-% disp('Full scale test done')
-% 
-% % The mean field theory for fixed degree networks:
-% [T, Z] = ode45(@(t,x) MFR2(t,x,pars), [tnow, tend], gather(zfull(1)), odeoptions);
-% disp('Mean field test done')
-% 
-% % The OA mean field theory:
-% fdpars = prepareOAparameters(fdpars);
-% z0 = map_thetatozoa(gather(thetasfull(:,1)), fdpars);
-% [TOA, ZOA] = OA_simulatenetwork(tnow, tend, gather(z0), fdpars, odeoptions);
-% disp('OA mean field test done')
-% 
-% %% Plotting the results:
-% f_fullyconnected = figure('Renderer', 'painters', 'Position', [50 800 800 400]); box on; hold on;
-% 
-% xlim([tnow, tend]); ylim([0, 1])
-% plot(t, abs(z), '-', 'LineWidth', 5, 'Color', '#EDB120');
-% plot(tfull, abs(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
-% plot(T, abs(Z), '-', 'LineWidth', 3, 'Color', '#D95319');
-% plot(TOA, abs(ZOA), '-', 'LineWidth', 2, 'Color', '#000000');
-% xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
-% ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
-% 
-% title(sprintf('\\bf Fully connected network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f', pars.N, fdpars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex')
-% legend('$$Z(t)_{simple}$$', '$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southwest', 'Orientation','horizontal')
+%% 0. Perform a full scale simulation of a FULLY CONNECTED network:
+% The simple DOPRI integration: 
+fdpars = make_fixeddegreeparameters(pars, pars.N);
+[t, thetas] = DOPRI_threshold(@thetaneurons, tnow, tend, IC, h, pars);
+z = orderparameter(thetas);
+disp('Small scale test done')
+
+% The full scale simulation using the adjacency matrix:
+[tfull, thetasfull] = DOPRI_simulatenetwork(tnow,tend,IC,h,fdpars);
+zfull = orderparameter(thetasfull);
+disp('Full scale test done')
+
+% The mean field theory for fixed degree networks:
+[T, Z] = ode45(@(t,x) MFR2(t,x,pars), [tnow, tend], gather(zfull(1)), odeoptions);
+disp('Mean field test done')
+
+% The OA mean field theory:
+fdpars = prepareOAparameters(fdpars);
+z0 = map_thetatozoa(gather(thetasfull(:,1)), fdpars);
+[TOA, ZOA] = OA_simulatenetwork(tnow, tend, gather(z0), fdpars, odeoptions);
+disp('OA mean field test done')
+
+%% Plotting the results:
+f_fullyconnected = figure('Renderer', 'painters', 'Position', [50 800 400 400]); box on; hold on; axis square;
+cycle = drawfixeddegreelimitcycle();
+cycle.HandleVisibility = 'off';
+
+plot(real(z), imag(z), '-', 'LineWidth', 5, 'Color', '#EDB120');
+plot(real(zfull), imag(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
+plot(real(Z), imag(Z), '-', 'LineWidth', 3, 'Color', '#D95319');
+plot(real(ZOA), imag(ZOA), '-', 'LineWidth', 2, 'Color', '#000000');
+xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
+ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
+
+phasespaceplot();
+
+title(sprintf('\\bf Fully connected network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f', pars.N, fdpars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex')
+legend('$$Z(t)_{simple}$$', '$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southwestoutside', 'Orientation','horizontal')
 % exportpdf(f_fullyconnected, '../Figures/InspectMeanFieldFullyConnected.pdf', export);
 % close(f_fullyconnected)
-% 
-% disp('Made fully connected network figure')
-% 
-% %% 1. Perform a full scale simulation of a fixed degree network:
+
+disp('Made fully connected network figure')
+
+%% 1. Perform a full scale simulation of a fixed degree network:
 % netdegree = round(pars.N*0.5);
 % 
 % % The full scale simulation using the adjacency matrix:
