@@ -186,7 +186,7 @@ odeoptions = odeset('RelTol', 1.0e-9,'AbsTol', 1.0e-9);
 % The full scale simulation using the adjacency matrix:
 degree = 3;
 IC = wrapToPi(randn(pars.N, 1)*1.2);
-sfpars = make_scalefreeparameters(pars, degree);
+sfpars = make_scalefreeparameters(pars, degree, 10, 1.0e3);
 [~, thetasfull] = DOPRI_simulatenetwork(tnow,tend,IC,h,sfpars);
 zfull = orderparameter(thetasfull);
 ts = findlimitcycle(abs(zfull));
@@ -195,6 +195,7 @@ disp('Full scale test done')
 % The OA mean field theory:
 sfpars = prepareOAparameters(sfpars);
 z0 = map_thetatozoa(gather(thetasfull(:,1)), sfpars);
+z0 = orderparameter(IC)*ones(sfpars.Mk,1);
 [~, ZOA] = OA_simulatenetwork(tnow, tend, z0, sfpars, odeoptions);
 TOAs = findlimitcycle(abs(ZOA));
 disp('OA mean field test done')
