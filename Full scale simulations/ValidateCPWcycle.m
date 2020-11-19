@@ -21,10 +21,10 @@ end
 initarray = make_GPUhandle();
 
 %% Theta model parameters:
-tnow = 0; tend = 10;
+tnow = 0; tend = 500;
 h = 0.001;
 
-pars.N = 10000;
+pars.N = 5000;
 pars.a_n = 0.666666666666666666667;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 
@@ -33,24 +33,30 @@ IC = wrapToPi(randn(pars.N, 1)*1.4);
 
 pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
 odeoptions = odeset('RelTol', 1.0e-12,'AbsTol', 1.0e-12);
-% optimopts = optimoptions('fsolve', 'Display','off', 'Algorithm', 'Levenberg-Marquardt');
 
 %% 0. Perform a full scale simulation of a FULLY CONNECTED network:
 % The full scale simulation using the adjacency matrix:
 fdpars = make_fixeddegreeparameters(pars, pars.N);
 [~, thetasfull] = DOPRI_simulatenetwork(tnow,tend,IC,h,fdpars);
 zfull = orderparameter(thetasfull);
+ts = findlimitcycle(abs(zfull));
 disp('Full scale test done')
 
 % The mean field theory for fixed degree networks:
 [~, Z] = ode45(@(t,x) MFR2(t,x,pars), [tnow, tend], gather(zfull(1)), odeoptions);
+Ts = findlimitcycle(abs(Z));
 disp('Mean field test done')
 
 % The OA mean field theory:
 fdpars = prepareOAparameters(fdpars);
 z0 = map_thetatozoa(gather(thetasfull(:,1)), fdpars);
 [~, ZOA] = OA_simulatenetwork(tnow, tend, gather(z0), fdpars, odeoptions);
+TOAs = findlimitcycle(abs(ZOA));
 disp('OA mean field test done')
+
+zfull = zfull(ts(1):ts(2));
+Z = Z(Ts(1):Ts(2));
+ZOA = ZOA(TOAs(1):TOAs(2));
 
 %% Plotting the results:
 f_fullyconnected = figure('Renderer', 'painters', 'Position', [50 800 500 500]); box on; hold on; axis square;
@@ -85,17 +91,25 @@ netdegree = round(pars.N*0.5);
 fdpars = make_fixeddegreeparameters(pars, netdegree);
 [~, thetasfull] = DOPRI_simulatenetwork(tnow,tend,IC,h,fdpars);
 zfull = orderparameter(thetasfull);
+ts = findlimitcycle(abs(zfull));
 disp('Full scale test done')
 
 % The mean field theory for fixed degree networks:
-[T, Z] = ode45(@(t,x) MFR(t,x,pars), [tnow, tend], gather(zfull(1)), odeoptions);
+[~, Z] = ode45(@(t,x) MFR(t,x,pars), [tnow, tend], gather(zfull(1)), odeoptions);
+Ts = findlimitcycle(abs(Z));
 disp('Mean field test done')
 
 % The OA mean field theory:
 fdpars = prepareOAparameters(fdpars);
 z0 = map_thetatozoa(gather(thetasfull(:,1)), fdpars);
 [~, ZOA] = OA_simulatenetwork(tnow, tend, z0, fdpars, odeoptions);
+TOAs = findlimitcycle(abs(ZOA));
 disp('OA mean field test done')
+
+
+zfull = zfull(ts(1):ts(2));
+Z = Z(Ts(1):Ts(2));
+ZOA = ZOA(TOAs(1):TOAs(2));
 
 %% Plotting the results:
 f_fixeddegree = figure('Renderer', 'painters', 'Position', [50 800 500 500]); box on; hold on; axis square;
@@ -130,13 +144,20 @@ netp = 0.3;
 rdpars = make_randomparameters(pars, netp);
 [~, thetasfull] = DOPRI_simulatenetwork(tnow,tend,IC,h,rdpars);
 zfull = orderparameter(thetasfull);
+ts = findlimitcycle(abs(zfull));
 disp('Full scale test done')
 
 % The OA mean field theory:
 rdpars = prepareOAparameters(rdpars);
 z0 = map_thetatozoa(gather(thetasfull(:,1)), rdpars);
 [~, ZOA] = OA_simulatenetwork(tnow, tend, z0, rdpars, odeoptions);
+TOAs = findlimitcycle(abs(ZOA));
 disp('OA mean field test done')
+
+
+zfull = zfull(ts(1):ts(2));
+Z = Z(Ts(1):Ts(2));
+ZOA = ZOA(TOAs(1):TOAs(2));
 
 %% Plotting the results:
 f_random = figure('Renderer', 'painters', 'Position', [50 800 500 500]); box on; hold on; axis square;
@@ -169,14 +190,20 @@ IC = wrapToPi(randn(pars.N, 1)*1.2);
 sfpars = make_scalefreeparameters(pars, degree);
 [~, thetasfull] = DOPRI_simulatenetwork(tnow,tend,IC,h,sfpars);
 zfull = orderparameter(thetasfull);
+ts = findlimitcycle(abs(zfull));
 disp('Full scale test done')
 
 % The OA mean field theory:
 sfpars = prepareOAparameters(sfpars);
 z0 = map_thetatozoa(gather(thetasfull(:,1)), sfpars);
-% z0 = orderparameter(IC)*ones(sfpars.Mk,1);
 [~, ZOA] = OA_simulatenetwork(tnow, tend, z0, sfpars, odeoptions);
+TOAs = findlimitcycle(abs(ZOA));
 disp('OA mean field test done')
+
+
+zfull = zfull(ts(1):ts(2));
+Z = Z(Ts(1):Ts(2));
+ZOA = ZOA(TOAs(1):TOAs(2));
 
 %% Plotting the results:
 f_scalefree = figure('Renderer', 'painters', 'Position', [50 800 500 500]); box on; hold on; axis square;
@@ -205,15 +232,22 @@ disp('Made scale-free network figure')
 %% 4. Perform a full scale simulation of a lognorm network:
 % The full scale simulation using the adjacency matrix:
 lnpars = make_lognormparameters(pars, 3, 1, round(pars.N/5));
-[tfull, thetasfull] = DOPRI_simulatenetwork(tnow,tend,IC,h,lnpars);
+[~, thetasfull] = DOPRI_simulatenetwork(tnow,tend,IC,h,lnpars);
 zfull = orderparameter(thetasfull);
+ts = findlimitcycle(abs(zfull));
 disp('Full scale test done')
 
 % The OA mean field theory:
 lnpars = prepareOAparameters(lnpars);
 z0 = map_thetatozoa(gather(thetasfull(:,1)), lnpars);
-[TOA, ZOA] = OA_simulatenetwork(tnow, tend, z0, lnpars, odeoptions);
+[~, ZOA] = OA_simulatenetwork(tnow, tend, z0, lnpars, odeoptions);
+TOAs = findlimitcycle(abs(ZOA));
 disp('OA mean field test done')
+
+
+zfull = zfull(ts(1):ts(2));
+Z = Z(Ts(1):Ts(2));
+ZOA = ZOA(TOAs(1):TOAs(2));
 
 %% Plotting the results:
 f_lognorm = figure('Renderer', 'painters', 'Position', [50 800 500 500]); box on; hold on; axis square;
@@ -234,7 +268,7 @@ phasespaceplot();
 
 title(sprintf('\\bf Lognorm network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f', pars.N, lnpars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex')
 legend('$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southoutside', 'Orientation','horizontal')
-exportpdf(f_lognorm, '../Figures/InspectMeanFieldLogNorm.pdf', export);
+exportpdf(f_lognorm, '../Figures/InspectMeanFieldLogNormPhaseSpace.pdf', export);
 close(f_lognorm)
 
 disp('Made lognorm network figure')
