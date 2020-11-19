@@ -12,8 +12,8 @@ n = 1000;
 t = linspace(1,200,n);
 
 inverse = 1./(t.^(0.2));
-oscillation1 = sin(2*pi*t/11);
-oscillation2 = 0.1*sin(2*pi*t/5);
+oscillation1 = sin(2*pi*t/7);
+oscillation2 = 0.5*sin(2*pi*t/14);
 oscillation3 = 0.01*sin(2*pi*t/111);
 
 func = inverse + oscillation1 + oscillation2;
@@ -34,41 +34,28 @@ dfdetr = diff(fdetr);
 
 tend = t_fmean(end);
 tstart = nan;
-for i = 1:2
+for i = 3:4
     if sign(dfdetr(t_fmean(end))) == sign(dfdetr(t_fmean(end-i)))
-        tstart = t_fmean(end-i)
+        tstart = t_fmean(end-i);
     end  
 end
 
 % Test:
 ts = findlimitcycle(func)
+tstart = ts(1); tend = ts(2);
+
+cla
 hold on;
 plot(t, func)
-plot(t(ts(1):ts(2)), func(ts(1):ts(2)))
+plot(t(tstart:tend), func(tstart:tend))
 hold off
 
 %% To the frequency domain:
-Fs = 1000;            % Sampling frequency                    
-T = 1/Fs;             % Sampling period       
-L = 1500;             % Length of signal
-t = (0:n-1)*T;      
-Y = fft(func);
-
-P2 = abs(Y/n);
-P1 = P2(1:n/2+1);
-P1(2:end-1) = 2*P1(2:end-1);
-f = Fs*(0:(n/2))/n;
-
-plot(f,P1) 
-title('Single-Sided Amplitude Spectrum of X(t)')
-xlabel('f (Hz)')
-ylabel('|P1(f)|')
-
-%% Get the highest waves out:
-clc
-[peakvals, indices] = findpeaks(P1,f, 'NPeaks', 5)
-%[peakvals, indices] = maxk(P1,5)
-1./f(indices)
+filtered = fitsine(func, t, 0.01);
+hold on;
+plot(t, func)
+plot(t, filtered)
+hold off
 
 
 function ts = findlimitcycle(vector)
@@ -78,10 +65,52 @@ function ts = findlimitcycle(vector)
     dvector = diff(vector);
 
     tstart = nan;
-    for i = 1:2
+    for i = 3:4
         if sign(dvector(t_fmean(end))) == sign(dvector(t_fmean(end-i)))
             tstart = t_fmean(end-i);
         end  
     end
     ts = [tstart, t_fmean(end)];
+end
+
+
+function [result, peaks, troughs] = fitsine(y, t, eps)
+% Fast fourier-transform
+f = fft(y);
+l = length(y);
+p2 = abs(f/l);
+p1 = p2(1:ceil(l/2+1));
+p1(2:end-1) = 2*p1(2:end-1);
+freq = (1/mean(diff(t)))*(0:ceil(l/2))/l;
+
+% Find maximum amplitude and frequency
+maxPeak = p1 == max(p1(2:end)); % disregard 0 frequency!
+maxAmplitude = p1(maxPeak);     % find maximum amplitude
+maxFrequency = freq(maxPeak);   % find maximum frequency
+
+% Initialize guesses
+p = [];
+p(1) = mean(y);         % vertical shift
+p(2) = maxAmplitude;    % amplitude estimate
+p(3) = maxFrequency;    % phase estimate
+p(4) = 0;               % phase shift (no guess)
+p(5) = 0;               % trend (no guess)
+
+% Create model
+f = @(p) p(1) + p(2)*sin( p(3)*2*pi*t+p(4) ) + p(5)*t;
+ferror = @(p) sum((f(p) - y).^2);
+% Nonlinear least squares
+% If you have the Optimization toolbox, use [lsqcurvefit] instead!
+options = optimset('MaxFunEvals',50000,'MaxIter',50000,'TolFun',1e-25);
+[param,fval,exitflag,output] = fminsearch(ferror,p,options);
+
+% Calculate result
+result = f(param);
+
+% Find peaks
+peaks = abs(sin(param(3)*2*pi*t+param(4)) - 1) < eps;
+
+% Find troughs
+troughs = abs(sin(param(3)*2*pi*t+param(4)) + 1) < eps;
+
 end
