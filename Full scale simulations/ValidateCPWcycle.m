@@ -223,7 +223,7 @@ phasespaceplot();
 title(sprintf('\\bf Scale-free network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f, $$\\gamma$$ = %0.1f', pars.N, sfpars.meandegree, sfpars.degree), 'FontSize', titlefont, 'Interpreter', 'latex')
 legend('$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southoutside', 'Orientation','horizontal')
 % exportpdf(f_scalefree, '../Figures/InspectMeanFieldScaleFreePhaseSpace.pdf', export);
-print(f_MFRPSR, '../Figures/testScaleFree.png', '-dpng', '-r300')
+print(f_scalefree, '../Figures/testScaleFree.png', '-dpng', '-r300')
 close(f_scalefree)
 
 disp('Made scale-free network figure')
