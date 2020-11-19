@@ -68,10 +68,8 @@ function A = adjacencymatrix(degrees_in, degrees_out)
             A = sparse(xidx, yidx, ones(numnonzeros, 1, 'logical'));
         end
         A(N,N) = 1; % Make it an N x N matrix
-        full(A)
         
         % Additional selfcoupling:
-%         A(1:N+1:N*N) = 0;
         assert(sum(diag(A)) == N);
 
         diffrows = degrees_in' - full(sum(A,2))';
