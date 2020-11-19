@@ -28,12 +28,12 @@ pars.N = 100;
 pars.a_n = 0.666666666666666666667;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 
-seed = 1; rng(seed);
+seed = 2; rng(seed);
 IC = randn(pars.N,1);
 
 pars.e = 0; %randcauchy(seed, pars.eta0, pars.delta, pars.N);
 
-%% Results without synaptic scaling:
+ %% Results without synaptic scaling:
 f_noSS = figure('Renderer', 'painters', 'Position', [50, 50, 800, 300]); hold on; box on;
 
 winnames = ["Kempter1999Window", "Song2000Window", "ChrolCannon2012Window", "Waddington2014Window"];
@@ -49,10 +49,10 @@ for i = 1:4
     xlim([tnow, tend]); 
     
     yyaxis left
-    ylim([-pi, pi]); 
     plot(t, drawthetas, '-', 'LineWidth', 1.5, 'Color', [0, 0, 1, 0.01], 'HandleVisibility', 'off')
     plot(t, abs(z), '-k', 'LineWidth', 2)
     ylabel('$\theta_i$','Interpreter','latex', 'FontSize', labelfont)
+    ylim([-pi, pi]); 
     set(gca,'YTick',-pi:pi/2:pi) 
     set(gca,'YTickLabel',{'-\pi','-\pi/2','0','\pi/2','\pi'})
 
