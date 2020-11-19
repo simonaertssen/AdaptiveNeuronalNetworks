@@ -11,7 +11,7 @@ set(groot,'DefaultAxesYGrid','on')
 
 titlefont = 15;
 labelfont = 13;
-export = true;
+export = false;
 
 %% Make a GPU init handle:
 if gpuDeviceCount > 0
@@ -21,10 +21,10 @@ end
 initarray = make_GPUhandle();
 
 %% Theta model parameters:
-tnow = 0; tend = 50;
+tnow = 0; tend = 0.01;
 h = 0.001;
 
-pars.N = 10000;
+pars.N = 100;
 pars.a_n = 0.666666666666666666667;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 
@@ -147,8 +147,7 @@ degree = 3;
 IC = wrapToPi(randn(pars.N, 1)*1.2);
 
 % The full scale simulation using the adjacency matrix:
-netp = 0.3;
-sfpars = make_randomparameters(pars, netp);
+sfpars = make_scalefreeparameters(pars, degree);
 [tfull, thetasfull] = DOPRI_simulatenetwork(tnow,tend,IC,h,sfpars);
 zfull = orderparameter(thetasfull);
 disp('Full scale test done')
