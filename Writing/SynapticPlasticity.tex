@@ -81,11 +81,25 @@ We will use $A = 0.1$ and $\alpha = 4.0$ ms . $\int W(s)_W \mathrm{d}s = -8.0 \t
 \end{figure}
 
 
+\subsection{Interpretation}
+The learning windows generally have $W(t^{\ast}) = 0$ for $t^{\ast} > 0$. This means that no learning will take place when the delay between neuron spikes is exactly $t^{\ast} > 0$. The triphasic windows show two of those points.
+
+
+\subsection{Synaptic scaling}
+There is no upper or lower bound on the synapse strength. Also generally, connection strengths are nonzero. This means that the notion of a \textsl{network} is lost.\\
+One technique we can apply to keep the strengths within a definitive range is to scale homeostatically - a method where increases in synaptic strength will balance out any decreases by scaling:
+\begin{align}
+K_{ij}^s = K_{ij} \frac{\frac{1}{N} \sum_{i,j} K_{ij}}{\sum_{i} K_{ij}}
+\end{align}
+
+
 \subsection{Custom learning windows}
 Some of the behaviour we want to observe is currently not accounted for: synaptic strengths are unbounded and are generally nonzero. How can we model the behaviour where synaptic strengths can also settle on being zero? Perhaps a better idea than updating the synaptic strength by adding a new value, we can scale it.
 \begin{itemize}
 \item When $\Delta t_{ij}$ is very large (both positive and negative) we expect no change in the synaptic strength: $W(-\infty) = W(-\infty) = 0$. 
-\item We expect a specific positive time delay to yield the most amount of synaptic strengthening: $\Delta t_{\rm best} =\underset{x}{\arg \max} W(t)$
+\item We expect a specific positive time delay to yield the most amount of synaptic strengthening: $\Delta t_{\rm best} = \underset{x}{\arg \max}  W(t)$
+\item We expect small connections that have been reducing in size to quickly become zero, 
+\item A better scaling system would be that not the out- or in-degree is constant, but 
 \end{itemize}
 
 
