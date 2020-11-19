@@ -24,7 +24,7 @@ initarray = make_GPUhandle();
 tnow = 0; tend = 1000;
 h = 0.01;
 
-pars.N = 4000;
+pars.N = 5000;
 pars.a_n = 0.666666666666666666667;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 
