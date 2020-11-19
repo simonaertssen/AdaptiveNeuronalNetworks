@@ -186,7 +186,7 @@ odeoptions = odeset('RelTol', 1.0e-9,'AbsTol', 1.0e-9);
 % The full scale simulation using the adjacency matrix:
 degree = 3;
 IC = wrapToPi(randn(pars.N, 1)*1.2);
-sfpars = make_scalefreeparameters(pars, degree, 2000, 5000);
+sfpars = make_scalefreeparameters(pars, degree, 2000, 3000);
 [~, thetasfull] = DOPRI_simulatenetwork(tnow,tend,IC,h,sfpars);
 zfull = orderparameter(thetasfull);
 ts = findlimitcycle(abs(zfull));
