@@ -32,7 +32,7 @@ seed = 2; rng(seed);
 IC = wrapToPi(randn(pars.N, 1)*1.4);
 
 pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
-odeoptions = odeset('RelTol', 1.0e-12,'AbsTol', 1.0e-12);
+odeoptions = odeset('RelTol', 1.0e-9,'AbsTol', 1.0e-9);
 
 %% 0. Perform a full scale simulation of a FULLY CONNECTED network:
 % The full scale simulation using the adjacency matrix:

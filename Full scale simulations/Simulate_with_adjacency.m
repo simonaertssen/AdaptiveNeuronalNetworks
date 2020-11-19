@@ -11,7 +11,7 @@ set(groot,'DefaultAxesYGrid','on')
 
 titlefont = 15;
 labelfont = 13;
-export = false;
+export = true;
 
 %% Make a GPU init handle:
 if gpuDeviceCount > 0
@@ -21,10 +21,10 @@ end
 initarray = make_GPUhandle();
 
 %% Theta model parameters:
-tnow = 0; tend = 0.01;
+tnow = 0; tend = 10;
 h = 0.001;
 
-pars.N = 100;
+pars.N = 10000;
 pars.a_n = 0.666666666666666666667;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 
@@ -32,7 +32,7 @@ seed = 2; rng(seed);
 IC = wrapToPi(randn(pars.N, 1)*1.4);
 
 pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
-odeoptions = odeset('RelTol', 1.0e-12,'AbsTol', 1.0e-12);
+odeoptions = odeset('RelTol', 1.0e-9,'AbsTol', 1.0e-9);
 optimopts = optimoptions('fsolve', 'Display','off', 'Algorithm', 'Levenberg-Marquardt');
 
 %% 0. Perform a full scale simulation of a FULLY CONNECTED network:
@@ -184,8 +184,8 @@ disp('Full scale test done')
 
 % The OA mean field theory:
 lnpars = prepareOAparameters(lnpars);
-odeoptions = odeset('RelTol', 1.0e-9,'AbsTol', 1.0e-9);
-[TOA, ZOA] = OA_simulatenetwork(tnow, tend, IC, lnpars, odeoptions);
+z0 = map_thetatozoa(gather(thetasfull(:,1)), lnpars);
+[TOA, ZOA] = OA_simulatenetwork(tnow, tend, z0, lnpars, odeoptions);
 disp('OA mean field test done')
 
 %% Plotting the results:
