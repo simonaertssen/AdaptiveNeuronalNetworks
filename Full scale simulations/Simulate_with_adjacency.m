@@ -54,6 +54,7 @@ disp('Mean field test done')
 % The OA mean field theory:
 fdpars = prepareOAparameters(fdpars);
 z0 = map_thetatozoa(gather(thetasfull(:,1)), fdpars);
+z0 = orderparameter(IC)*ones(fdpars.Mk,1);
 [TOA, ZOA] = OA_simulatenetwork(tnow, tend, gather(z0), fdpars, odeoptions);
 disp('OA mean field test done')
 
@@ -91,6 +92,7 @@ disp('Mean field test done')
 % The OA mean field theory:
 fdpars = prepareOAparameters(fdpars);
 z0 = map_thetatozoa(gather(thetasfull(:,1)), fdpars);
+z0 = orderparameter(IC)*ones(fdpars.Mk,1);
 [TOA, ZOA] = OA_simulatenetwork(tnow, tend, z0, fdpars, odeoptions);
 disp('OA mean field test done')
 
@@ -123,6 +125,7 @@ disp('Full scale test done')
 % The OA mean field theory:
 rdpars = prepareOAparameters(rdpars);
 z0 = map_thetatozoa(gather(thetasfull(:,1)), rdpars);
+z0 = orderparameter(IC)*ones(rdpars.Mk,1);
 [TOA, ZOA] = OA_simulatenetwork(tnow, tend, z0, rdpars, odeoptions);
 disp('OA mean field test done')
 
@@ -185,6 +188,7 @@ disp('Full scale test done')
 % The OA mean field theory:
 lnpars = prepareOAparameters(lnpars);
 z0 = map_thetatozoa(gather(thetasfull(:,1)), lnpars);
+z0 = orderparameter(IC)*ones(lnpars.Mk,1);
 [TOA, ZOA] = OA_simulatenetwork(tnow, tend, z0, lnpars, odeoptions);
 disp('OA mean field test done')
 
