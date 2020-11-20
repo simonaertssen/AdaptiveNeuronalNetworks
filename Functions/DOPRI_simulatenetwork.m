@@ -11,7 +11,7 @@ function [tout, xout, A] = DOPRI_simulatenetwork(ta,tb,x0,h,p)
     A = initarray(adjacencymatrix(p.degrees_i, p.degrees_o));
     func = @(t, x) thetaneurons_full(t, x, p.K, A, p.e, p.a_n/p.meandegree);
     
-    tout = initarray(linspace(ta,tb,npts));
+    tout = linspace(ta,tb,npts);
     xout = initarray(zeros(dim(1),npts)); xout(:,1) = x0;
 
     K7 = h*func(ta, x0);

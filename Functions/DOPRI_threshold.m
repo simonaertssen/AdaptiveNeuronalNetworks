@@ -7,7 +7,7 @@ function [tout,xout] = DOPRI_threshold(originalfunc,ta,tb,x0,h,p)
     h = (tb - ta)/(npts-1);
     dim = size(x0);
     
-    tout = initarray(linspace(ta,tb,npts));
+    tout = linspace(ta,tb,npts);
     xout = initarray(zeros(dim(1),npts)); xout(:,1) = x0;
     
     % Make new function handle to improve speed of function evaluation!

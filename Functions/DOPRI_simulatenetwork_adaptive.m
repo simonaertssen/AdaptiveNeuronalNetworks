@@ -12,7 +12,7 @@ function [tout, xout, K, Kmeans, info] = DOPRI_simulatenetwork_adaptive(ta,tb,x0
     end
     
     % Standard integration arrays:
-    tout = initarray(linspace(ta,tb,npts));
+    tout = linspace(ta,tb,npts);
     xout = initarray(zeros(N,npts)); xout(:,1) = x0;
     func = @(t, x, K, Kmean) thetaneurons_full_adaptive(t, x, K, p.e, p.a_n, Kmean);
     window = plastopts.window;
