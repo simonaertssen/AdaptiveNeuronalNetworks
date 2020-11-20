@@ -12,7 +12,7 @@ clear all; close al; clc;
 addpath('../Functions');
 addpath('../Mean Field Reductions');
 
-p.N = 10;
+p.N = 5;
 sfpars = make_scalefreeparameters(p, 3);
 A = full(adjacencymatrix(sfpars.degrees_i, sfpars.degrees_o))
 
@@ -22,6 +22,22 @@ A = full(adjacencymatrix(sfpars.degrees_i, sfpars.degrees_o))
 assert(all(sum(A,1) ~= 0))
 assert(all(sum(A,2) ~= 0))
 
-% Now we can take the OR operation:
+%% The Symmetric normalized Laplacian:
+D = diag(sfpars.degrees_i);
+Lsn = eye(size(A)) - D^(-1/2) * A * D^(-1/2)
 
+%% Now we can take the OR operation:
+% a = [0 0 1 1]; b = [0 1 0 1]; truth = a | b; % truth = [0   1   1   1]
+clc
+A
+idxtriu = itriu(size(A), 0);
+idxtril = itril(size(A), 0);
+A(idxtriu)'
+A(idxtril)'
+(A(idxtriu) | A(idxtril))'
 
+test = zeros(size(A), 'logical')
+test(idxtriu) = A(idxtriu) | A(idxtril)
+test(itril(size(A), -1)) = A(itriu(size(A), 1))'
+
+L = diag(sum(A, 1)) - A

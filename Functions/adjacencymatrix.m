@@ -71,6 +71,10 @@ function A = adjacencymatrix(degrees_in, degrees_out)
         
         % Additional selfcoupling:
         assert(sum(diag(A)) == N);
+        
+        % Assert none are disconnected:
+        assert(all(sum(A,1) ~= 0))
+        assert(all(sum(A,2) ~= 0))
 
         diffrows = degrees_in' - full(sum(A,2))';
         diffcols = degrees_out' - full(sum(A,1));
