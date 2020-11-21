@@ -24,7 +24,7 @@ initarray = make_GPUhandle();
 tnow = 0; tend = 100;
 h = 0.01;
 
-pars.N = 5000;
+pars.N = 39000;
 pars.a_n = 0.666666666666666666667;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 
@@ -186,7 +186,7 @@ odeoptions = odeset('RelTol', 1.0e-9,'AbsTol', 1.0e-9);
 % The full scale simulation using the adjacency matrix:
 degree = 3;
 IC = wrapToPi(randn(pars.N, 1)*2.0);
-sfpars = make_scalefreeparameters(pars, degree, 2000, 3000);
+sfpars = make_scalefreeparameters(pars, degree);
 [~, thetasfull] = DOPRI_simulatenetwork(tnow,tend,IC,h,sfpars);
 zfull = orderparameter(thetasfull);
 % ts = findlimitcycle(abs(zfull));

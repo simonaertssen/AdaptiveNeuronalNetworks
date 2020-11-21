@@ -11,7 +11,7 @@ set(groot,'DefaultAxesYGrid','on')
 
 titlefont = 15;
 labelfont = 13;
-export = true;
+export = false;
 
 %% Make a GPU init handle:
 if gpuDeviceCount > 0
@@ -24,55 +24,74 @@ initarray = make_GPUhandle();
 tnow = 0; tend = 10;
 h = 0.001;
 
-pars.N = 15000;
-pars.a_n = 0.666666666666666666667;
-pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
+p.N = 100;
+p.a_n = 0.666666666666666666667;
 
 seed = 2; rng(seed);
-IC = wrapToPi(randn(pars.N, 1)*1.4);
 
-pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
+PSRp = p; PSRp.IC = pi*ones(p.N, 1) - pi; 
+PSRp.eta0 = -0.9; PSRp.delta = 0.8; PSRp.K = -2;
+PSRp.e = randcauchy(seed, PSRp.eta0, PSRp.delta, PSRp.N);
+
+PSSp = p; PSSp.IC = wrapToPi(2*pi*rand(p.N, 1)-pi);
+PSSp.eta0 = 0.5; PSSp.delta = 0.7; PSSp.K = 2;
+PSSp.e = randcauchy(seed, PSSp.eta0, PSSp.delta, PSSp.N);
+
+CPWp = p; CPWp.IC = wrapToPi(randn(p.N, 1)*1.4);
+CPWp.eta0 = 10.75; CPWp.delta = 0.5; CPWp.K = -9;
+CPWp.e = randcauchy(seed, CPWp.eta0, CPWp.delta, CPWp.N);
+
 odeoptions = odeset('RelTol', 1.0e-9,'AbsTol', 1.0e-9);
-optimopts = optimoptions('fsolve', 'Display','off', 'Algorithm', 'Levenberg-Marquardt');
 
 %% 0. Perform a full scale simulation of a FULLY CONNECTED network:
-% The simple DOPRI integration: 
-fdpars = make_fixeddegreeparameters(pars, pars.N);
-[t, thetas] = DOPRI_threshold(@thetaneurons, tnow, tend, IC, h, pars);
-z = orderparameter(thetas);
-disp('Small scale test done')
-
-% The full scale simulation using the adjacency matrix:
-[tfull, thetasfull] = DOPRI_simulatenetwork(tnow,tend,IC,h,fdpars);
-zfull = orderparameter(thetasfull);
-disp('Full scale test done')
-
-% The mean field theory for fixed degree networks:
-[T, Z] = ode45(@(t,x) MFR2(t,x,pars), [tnow, tend], gather(zfull(1)), odeoptions);
-disp('Mean field test done')
-
-% The OA mean field theory:
-fdpars = prepareOAparameters(fdpars);
-z0 = map_thetatozoa(gather(thetasfull(:,1)), fdpars);
-z0 = orderparameter(IC)*ones(fdpars.Mk,1);
-[TOA, ZOA] = OA_simulatenetwork(tnow, tend, gather(z0), fdpars, odeoptions);
-disp('OA mean field test done')
-
-%% Plotting the results:
 f_fullyconnected = figure('Renderer', 'painters', 'Position', [50 800 800 400]); box on; hold on;
-
 xlim([tnow, tend]); ylim([0, 1])
-plot(t, abs(z), '-', 'LineWidth', 5, 'Color', '#EDB120');
-plot(tfull, abs(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
-plot(T, abs(Z), '-', 'LineWidth', 3, 'Color', '#D95319');
-plot(TOA, abs(ZOA), '-', 'LineWidth', 2, 'Color', '#000000');
+for i = 1:3
+    if i == 1
+        pars = PSRp;
+    elseif i == 2
+        pars = PSSp;
+    elseif i == 3
+        pars = CPWp;
+    else
+        warning('no pars?')
+    end
+    
+    % The simple DOPRI integration:
+    fdpars = make_fixeddegreeparameters(pars, pars.N);
+%     [t, thetas] = DOPRI_threshold(@thetaneurons, tnow, tend, IC, h, pars);
+%     z = orderparameter(thetas);
+%     disp('Small scale test done')
+
+    % The full scale simulation using the adjacency matrix:
+    [tfull, thetasfull] = DOPRI_simulatenetwork(tnow,tend,pars.IC,h,fdpars);
+    zfull = orderparameter(thetasfull);
+    disp('Full scale test done')
+
+    % The mean field theory for fixed degree networks:
+    [T, Z] = ode45(@(t,x) MFR2(t,x,pars), [tnow, tend], gather(zfull(1)), odeoptions);
+    disp('Mean field test done')
+
+    % The OA mean field theory:
+    fdpars = prepareOAparameters(fdpars);
+    z0 = map_thetatozoa(gather(thetasfull(:,1)), fdpars);
+    [TOA, ZOA] = OA_simulatenetwork(tnow, tend, gather(z0), fdpars, odeoptions);
+    disp('OA mean field test done')
+    
+    % Plotting the results:
+%     plot(t, abs(z), '-', 'LineWidth', 5, 'Color', '#EDB120');
+    plot(tfull, abs(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
+    plot(T, abs(Z), '-', 'LineWidth', 3, 'Color', '#D95319');
+    plot(TOA, abs(ZOA), ':', 'LineWidth', 2, 'Color', '#000000');
+end
+
 xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
 ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
-
 title(sprintf('\\bf Fully connected network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f', pars.N, fdpars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex')
-legend('$$Z(t)_{\rm simple}$$', '$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southwest', 'Orientation','horizontal')
-exportpdf(f_fullyconnected, '../Figures/InspectMeanFieldFullyConnected.pdf', export);
-close(f_fullyconnected)
+
+legend('$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southwest', 'Orientation','horizontal')
+% exportpdf(f_fullyconnected, '../Figures/InspectMeanFieldFullyConnected.pdf', export);
+% close(f_fullyconnected)
 
 disp('Made fully connected network figure')
 
