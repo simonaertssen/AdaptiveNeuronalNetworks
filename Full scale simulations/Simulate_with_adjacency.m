@@ -11,7 +11,7 @@ set(groot,'DefaultAxesYGrid','on')
 
 titlefont = 15;
 labelfont = 13;
-export = false;
+export = true;
 
 %% Make a GPU init handle:
 if gpuDeviceCount > 0
@@ -24,7 +24,7 @@ initarray = make_GPUhandle();
 tnow = 0; tend = 10;
 h = 0.001;
 
-p.N = 100;
+p.N = 15000;
 p.a_n = 0.666666666666666666667;
 
 seed = 2; rng(seed);
@@ -34,7 +34,7 @@ PSRp.eta0 = -0.9; PSRp.delta = 0.8; PSRp.K = -2;
 PSRp.e = randcauchy(seed, PSRp.eta0, PSRp.delta, PSRp.N);
 
 PSSp = p; PSSp.IC = wrapToPi(2*pi*rand(p.N, 1)-pi);
-PSSp.eta0 = 0.5; PSSp.delta = 0.7; PSSp.K = 2;
+PSSp.eta0 = 0.5; PSSp.delta = 0.5; PSSp.K = 1;
 PSSp.e = randcauchy(seed, PSSp.eta0, PSSp.delta, PSSp.N);
 
 CPWp = p; CPWp.IC = wrapToPi(randn(p.N, 1)*1.4);
@@ -81,147 +81,192 @@ for i = 1:3
     % Plotting the results:
 %     plot(t, abs(z), '-', 'LineWidth', 5, 'Color', '#EDB120');
     plot(tfull, abs(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
-    plot(T, abs(Z), '-', 'LineWidth', 3, 'Color', '#D95319');
-    plot(TOA, abs(ZOA), ':', 'LineWidth', 2, 'Color', '#000000');
+    plot(T, abs(Z), '-', 'LineWidth', 2, 'Color', '#D95319');
+    plot(TOA, abs(ZOA), ':', 'LineWidth', 1, 'Color', '#000000');
 end
 
 xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
 ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
 title(sprintf('\\bf Fully connected network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f', pars.N, fdpars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex')
 
-legend('$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southwest', 'Orientation','horizontal')
-% exportpdf(f_fullyconnected, '../Figures/InspectMeanFieldFullyConnected.pdf', export);
-% close(f_fullyconnected)
+legend('$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southeast', 'Orientation','horizontal')
+exportpdf(f_fullyconnected, '../Figures/InspectMeanFieldFullyConnected.pdf', export);
+close(f_fullyconnected)
 
 disp('Made fully connected network figure')
 
 %% 1. Perform a full scale simulation of a fixed degree network:
 netdegree = round(pars.N*0.5);
 
-% The full scale simulation using the adjacency matrix:
-fdpars = make_fixeddegreeparameters(pars, netdegree);
-[tfull, thetasfull] = DOPRI_simulatenetwork(tnow,tend,IC,h,fdpars);
-zfull = orderparameter(thetasfull);
-disp('Full scale test done')
-
-% The mean field theory for fixed degree networks:
-[T, Z] = ode45(@(t,x) MFR(t,x,pars), [tnow, tend], gather(zfull(1)), odeoptions);
-disp('Mean field test done')
-
-% The OA mean field theory:
-fdpars = prepareOAparameters(fdpars);
-z0 = map_thetatozoa(gather(thetasfull(:,1)), fdpars);
-z0 = orderparameter(IC)*ones(fdpars.Mk,1);
-[TOA, ZOA] = OA_simulatenetwork(tnow, tend, z0, fdpars, odeoptions);
-disp('OA mean field test done')
-
-%% Plotting the results:
 f_fixeddegree = figure('Renderer', 'painters', 'Position', [50 800 800 400]); box on; hold on;
-
 xlim([tnow, tend]); ylim([0, 1])
-plot(tfull, abs(zfull), '-', 'LineWidth', 4, 'Color', '#0072BD');
-plot(T, abs(Z), '-', 'LineWidth', 3, 'Color', '#D95319');
-plot(TOA, abs(ZOA), '-', 'LineWidth', 2, 'Color', '#000000');
+for i = 1:3
+    if i == 1
+        pars = PSRp;
+    elseif i == 2
+        pars = PSSp;
+    elseif i == 3
+        pars = CPWp;
+    else
+        warning('no pars?')
+    end
+
+    % The full scale simulation using the adjacency matrix:
+    fdpars = make_fixeddegreeparameters(pars, netdegree);
+    [tfull, thetasfull] = DOPRI_simulatenetwork(tnow,tend,pars.IC,h,fdpars);
+    zfull = orderparameter(thetasfull);
+    disp('Full scale test done')
+
+    % The mean field theory for fixed degree networks:
+    [T, Z] = ode45(@(t,x) MFR(t,x,pars), [tnow, tend], gather(zfull(1)), odeoptions);
+    disp('Mean field test done')
+
+    % The OA mean field theory:
+    fdpars = prepareOAparameters(fdpars);
+    z0 = map_thetatozoa(gather(thetasfull(:,1)), fdpars);
+    [TOA, ZOA] = OA_simulatenetwork(tnow, tend, z0, fdpars, odeoptions);
+    disp('OA mean field test done')
+
+    % Plotting the results:
+    plot(tfull, abs(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
+    plot(T, abs(Z), '-', 'LineWidth', 2, 'Color', '#D95319');
+    plot(TOA, abs(ZOA), '-', 'LineWidth', 1, 'Color', '#000000');
+end
+
 xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
 ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
 
 title(sprintf('\\bf Fixed degree network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f', pars.N, fdpars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex')
 
-legend('$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southwest', 'Orientation','horizontal')
+legend('$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southeast', 'Orientation','horizontal')
 exportpdf(f_fixeddegree, '../Figures/InspectMeanFieldFixedDegree.pdf', export);
 close(f_fixeddegree)
 
 disp('Made fixed degree network figure')
 
 %% 2. Perform a full scale simulation of a random network:
-% The full scale simulation using the adjacency matrix:
 netp = 0.3;
-rdpars = make_randomparameters(pars, netp);
-[tfull, thetasfull] = DOPRI_simulatenetwork(tnow,tend,IC,h,rdpars);
-zfull = orderparameter(thetasfull);
-disp('Full scale test done')
 
-% The OA mean field theory:
-rdpars = prepareOAparameters(rdpars);
-z0 = map_thetatozoa(gather(thetasfull(:,1)), rdpars);
-z0 = orderparameter(IC)*ones(rdpars.Mk,1);
-[TOA, ZOA] = OA_simulatenetwork(tnow, tend, z0, rdpars, odeoptions);
-disp('OA mean field test done')
-
-%% Plotting the results:
 f_random = figure('Renderer', 'painters', 'Position', [50 800 800 400]); box on; hold on;
-
 xlim([tnow, tend]); ylim([0, 1])
-plot(tfull, abs(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
-plot(TOA, abs(ZOA), '-', 'LineWidth', 2, 'Color', '#000000');
+for i = 1:3
+    if i == 1
+        pars = PSRp;
+    elseif i == 2
+        pars = PSSp;
+    elseif i == 3
+        pars = CPWp;
+    else
+        warning('no pars?')
+    end
+
+    % The full scale simulation using the adjacency matrix:
+    rdpars = make_randomparameters(pars, netp);
+    [tfull, thetasfull] = DOPRI_simulatenetwork(tnow,tend,pars.IC,h,rdpars);
+    zfull = orderparameter(thetasfull);
+    disp('Full scale test done')
+
+    % The OA mean field theory:
+    rdpars = prepareOAparameters(rdpars);
+    z0 = map_thetatozoa(gather(thetasfull(:,1)), rdpars);
+    [TOA, ZOA] = OA_simulatenetwork(tnow, tend, z0, rdpars, odeoptions);
+    disp('OA mean field test done')
+
+    % Plotting the results:
+    plot(tfull, abs(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
+    plot(TOA, abs(ZOA), '-', 'LineWidth', 2, 'Color', '#000000');
+end
+
 xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
 ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
 
 title(sprintf('\\bf Random network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f, $$p$$ = %0.1f', pars.N, rdpars.meandegree, rdpars.netp), 'FontSize', titlefont, 'Interpreter', 'latex')
-legend('$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southwest', 'Orientation','horizontal')
+legend('$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southeast', 'Orientation','horizontal')
 exportpdf(f_random, '../Figures/InspectMeanFieldRandom.pdf', export);
 close(f_random)
 
 disp('Made random network figure')
 
 %% 3. Perform a full scale simulation of a scale-free network:
-degree = 3;
-IC = wrapToPi(randn(pars.N, 1)*1.2);
+degree = 2.04;
+% IC = wrapToPi(randn(pars.N, 1)*1.2);
 
-% The full scale simulation using the adjacency matrix:
-sfpars = make_scalefreeparameters(pars, degree);
-[tfull, thetasfull] = DOPRI_simulatenetwork(tnow,tend,IC,h,sfpars);
-zfull = orderparameter(thetasfull);
-disp('Full scale test done')
-
-% The OA mean field theory:
-sfpars = prepareOAparameters(sfpars);
-z0 = map_thetatozoa(gather(thetasfull(:,1)), sfpars);
-z0 = orderparameter(IC)*ones(sfpars.Mk,1);
-[TOA, ZOA] = OA_simulatenetwork(tnow, tend, z0, sfpars, odeoptions);
-disp('OA mean field test done')
-
-%% Plotting the results:
 f_scalefree = figure('Renderer', 'painters', 'Position', [50 800 800 400]); box on; hold on;
-
 xlim([tnow, tend]); ylim([0, 1])
-plot(tfull, abs(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
-plot(TOA, abs(ZOA), '-k', 'LineWidth', 2, 'Color', '#000000');
+for i = 1:3
+    if i == 1
+        pars = PSRp;
+    elseif i == 2
+        pars = PSSp;
+    elseif i == 3
+        pars = CPWp;
+    else
+        warning('no pars?')
+    end
+
+    % The full scale simulation using the adjacency matrix:
+    sfpars = make_scalefreeparameters(pars, degree);
+    [tfull, thetasfull] = DOPRI_simulatenetwork(tnow,tend,pars.IC,h,sfpars);
+    zfull = orderparameter(thetasfull);
+    disp('Full scale test done')
+
+    % The OA mean field theory:
+    sfpars = prepareOAparameters(sfpars);
+    z0 = map_thetatozoa(gather(thetasfull(:,1)), sfpars);
+    [TOA, ZOA] = OA_simulatenetwork(tnow, tend, z0, sfpars, odeoptions);
+    disp('OA mean field test done')
+
+    % Plotting the results:
+    plot(tfull, abs(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
+    plot(TOA, abs(ZOA), '-k', 'LineWidth', 2, 'Color', '#000000');
+end
+
 xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
 ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
 
-title(sprintf('\\bf Scale-free network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f, $$\\gamma$$ = %0.1f', pars.N, sfpars.meandegree, sfpars.degree), 'FontSize', titlefont, 'Interpreter', 'latex')
-legend('$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southwest', 'Orientation','horizontal')
+title(sprintf('\\bf Scale-free network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f, $$\\gamma$$ = %0.2f', pars.N, sfpars.meandegree, sfpars.degree), 'FontSize', titlefont, 'Interpreter', 'latex')
+legend('$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southeast', 'Orientation','horizontal')
 exportpdf(f_scalefree, '../Figures/InspectMeanFieldScaleFree.pdf', export);
 close(f_scalefree)
 
 disp('Made scale-free network figure')
 
 %% 4. Perform a full scale simulation of a lognorm network:
-% The full scale simulation using the adjacency matrix:
-lnpars = make_lognormparameters(pars, 3, 1, round(pars.N/5));
-[tfull, thetasfull] = DOPRI_simulatenetwork(tnow,tend,IC,h,lnpars);
-zfull = orderparameter(thetasfull);
-disp('Full scale test done')
-
-% The OA mean field theory:
-lnpars = prepareOAparameters(lnpars);
-z0 = map_thetatozoa(gather(thetasfull(:,1)), lnpars);
-z0 = orderparameter(IC)*ones(lnpars.Mk,1);
-[TOA, ZOA] = OA_simulatenetwork(tnow, tend, z0, lnpars, odeoptions);
-disp('OA mean field test done')
-
-%% Plotting the results:
 f_lognorm = figure('Renderer', 'painters', 'Position', [50 800 800 400]); box on; hold on;
-
 xlim([tnow, tend]); ylim([0, 1])
-plot(tfull, abs(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
-plot(TOA, abs(ZOA), '-k', 'LineWidth', 2, 'Color', '#000000');
+for i = 1:3
+    if i == 1
+        pars = PSRp;
+    elseif i == 2
+        pars = PSSp;
+    elseif i == 3
+        pars = CPWp;
+    else
+        warning('no pars?')
+    end
+
+    % The full scale simulation using the adjacency matrix:
+    lnpars = make_lognormparameters(pars, 3, 1, round(pars.N/5));
+    [tfull, thetasfull] = DOPRI_simulatenetwork(tnow,tend,pars.IC,h,lnpars);
+    zfull = orderparameter(thetasfull);
+    disp('Full scale test done')
+
+    % The OA mean field theory:
+    lnpars = prepareOAparameters(lnpars);
+    z0 = map_thetatozoa(gather(thetasfull(:,1)), lnpars);
+    [TOA, ZOA] = OA_simulatenetwork(tnow, tend, z0, lnpars, odeoptions);
+    disp('OA mean field test done')
+
+    % Plotting the results:
+    plot(tfull, abs(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
+    plot(TOA, abs(ZOA), '-k', 'LineWidth', 2, 'Color', '#000000');
+end
+
 xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
 ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
 
 title(sprintf('\\bf Lognorm network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f', pars.N, lnpars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex')
-legend('$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southwest', 'Orientation','horizontal')
+legend('$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southeast', 'Orientation','horizontal')
 exportpdf(f_lognorm, '../Figures/InspectMeanFieldLogNorm.pdf', export);
 close(f_lognorm)
 
