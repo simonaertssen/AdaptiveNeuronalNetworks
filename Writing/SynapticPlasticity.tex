@@ -9,37 +9,6 @@
 \textsl{When an axon of cell A is near enough to excite a cell B and repeatedly or persistently takes part in firing it, some growth process or metabolic change takes places in one or both cells such that A's efficiency, as one of the cells firing B, is increased.}\cite{Hebb1949}
 \end{quote}
 
-%This famous quote from Canadian psychologist Donald Hebb has inspired research 
-
-In this section, we will construct a framework in which we can formulate rules to make networks of neurons adaptive. We model the strength of the synapse between $\theta_i$ and $\theta_j$ as $K_{ij}$ and in that sense we will mostly speak of $\theta_i$ as the \textsl{presynaptic} neuron and of $\theta_j$ as the \textsl{postsynaptic} neuron.
-
-\subsection{Modelling spike-based Hebbian learning}
-\subsubsection{Locality}
-Changes to $K_{ij}$ only depend on the membrane potential $u$ of $\theta_i$ and $\theta_j$. Therefore we can write:
-\begin{align}
-\frac{\mathrm{d}K_{i j}(t) }{\mathrm{d} t} = F \left( K_{i j}(t) , u_{i}^{\rm pre} (\tp), u_{j}^{\rm post} (\tpp)\right) \label{eq:localityfunctional}
-\end{align}
-$F$ is thus a functional of the time course of the neuron membrane potentials at the synapse. The timescales $\tp$ and $\tpp$ signify that changes in the synaptic strength depend on the current membrane potentials and their history ($\tp, \tpp < t$). $F$ could in fact also depend on other intrinsic properties of the neuron, though we assume those already have an effect on the membrane potential and are therefore left out \cite{Gerstner2002}.
-
-\subsubsection{Cooperativity}
-Activity from both the pre- and postsynaptic neuron is required to induce changes of $K_{ij}$ and response to the activity is causal. This requires the activity to be almost simultaneous, and we can implement this into \eqref{eq:localityfunctional} by making a Volterra expansion of $F$ about the rest state $u_i^{\rm pre} = u_j^{\rm post} = u_{\rm rest}$ where $u_{\rm rest}$ is set to 0 for simplicity.
-\begin{align}
-\frac{\mathrm{d} K_{i j}}{\mathrm{dt}} = c_{0}\left(K_{ij}\right) &+\int_{0}^{\infty} I_{1}^{\rm{pre}} (K_{ij}, s) \cdot u_{i}^{\rm{pre}}(t-s) \mathrm{d} s 
-+\int_{0}^{\infty} I_{1}^{\rm{post}}(K_{i j}, s) \cdot u_{i}^{\rm{post}}(t-s) \mathrm{d} s \\ 
-&+\int_{0}^{\infty} \int_{0}^{\infty} I_{2}^{\rm{corr}}(K_{ij}, s, s^{\prime}) \cdot u_{i}^{\rm{pre}}(t-s) \cdot u_{j}^{\rm{post}}(t-s^{\prime}) \mathrm{d} s^{\prime} \mathrm{d} s +\ldots
-\end{align}
-Here $I_1^{\rm pre}$ and $I_1^{\rm post}$ are currents evoked at the pre- and the postsynaptic neuron, while $I_2^{\rm corr}$...
-
-\subsubsection{Synaptic depression}
-The original formulation of Hebbian learning only accounts for \LTP, and makes no mention of \LTD. It does not make sense for a system to only be able to increase the strength of its connections. The ability to include \LTD in the learning process is therefore crucial. This can be easily achieved b
-
-\subsubsection{Boundedness}
-
-\subsubsection{Competition}
-
-\subsubsection{Long term stability}
-
-
 \section{Spike Timing Dependant Plasticity}
 Write about STDP, see the 'Postulates.pdf'. \\
 
