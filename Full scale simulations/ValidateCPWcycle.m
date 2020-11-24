@@ -11,7 +11,7 @@ set(groot,'DefaultAxesYGrid','on')
 
 titlefont = 15;
 labelfont = 15;
-export = true;
+export = false;
 
 %% Make a GPU init handle:
 if gpuDeviceCount > 0
@@ -21,10 +21,10 @@ end
 initarray = make_GPUhandle();
 
 %% Theta model parameters:
-tnow = 0; tend = 100;
-h = 0.01;
+tnow = 0; tend = 10;
+h = 0.0005;
 
-pars.N = 39000;
+pars.N = 5000;
 pars.a_n = 0.666666666666666666667;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 
