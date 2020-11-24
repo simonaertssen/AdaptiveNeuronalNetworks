@@ -294,7 +294,7 @@ text(tend*0.99, 0.70, CPWp.text, 'FontSize', labelfont, 'HorizontalAlignment', '
 xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
 ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
 
-title(sprintf('\\bf Lognorm network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f, $$\\mu$$ = %0.1f, $$\\sigma$$ = %0.1f, $$k_{\rm min}$$ = %d', pars.N, lnpars.meandegree, mu, sigma, kmin), 'FontSize', titlefont, 'Interpreter', 'latex')
+title(sprintf('\\bf Lognorm network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f, $$\\mu$$ = %0.1f, $$\\sigma$$ = %0.1f, $$k_{\\rm min}$$ = %d', pars.N, lnpars.meandegree, mu, sigma, kmin), 'FontSize', titlefont, 'Interpreter', 'latex')
 legend('$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southeast', 'Orientation','horizontal')
 exportpdf(f_lognorm, '../Figures/InspectMeanFieldLogNorm.pdf', export);
 close(f_lognorm)
