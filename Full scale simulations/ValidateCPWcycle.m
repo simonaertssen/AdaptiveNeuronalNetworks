@@ -15,14 +15,13 @@ export = false;
 
 %% Make a GPU init handle:
 if gpuDeviceCount > 0
-    d = gpuDevice(2);
-    disp(d)
+    d = gpuDevice(4);
 end
 initarray = make_GPUhandle();
 
 %% Theta model parameters:
-tnow = 0; tend = 100;
-h = 0.001;
+tnow = 0; tend = 50;
+h = 0.01;
 
 pars.N = 20000;
 pars.a_n = 0.666666666666666666667;

@@ -16,7 +16,6 @@ export = true;
 %% Make a GPU init handle:
 if gpuDeviceCount > 0
     d = gpuDevice(gpuDeviceCount-2);
-    disp(d)
 end
 initarray = make_GPUhandle();
 
@@ -86,9 +85,9 @@ for i = 1:3
     plot(TOA, abs(ZOA), '-', 'LineWidth', 1, 'Color', '#000000');
 end
 
-text(tend, 0.99, PSRp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'top')
-text(tend, 0.70, PSSp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'bottom')
-text(tend, abs(ZOA(end)), CPWp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'bottom')
+text(tend*0.99, 0.99, PSRp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'top')
+text(tend*0.99, 0.20, PSSp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'middle')
+text(tend*0.99, 0.70, CPWp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'middle')
 
 xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
 ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
@@ -130,7 +129,6 @@ for i = 1:3
 
     % The OA mean field theory:
     fdpars = prepareOAparameters(fdpars);
-%     z0 = map_thetatozoa(gather(thetasfull(:,1)), fdpars);
     z0 = orderparameter(pars.IC)*ones(fdpars.Mk,1);
     [TOA, ZOA] = OA_simulatenetwork(tnow, tend, z0, fdpars, odeoptions);
     disp('OA mean field test done')
@@ -139,12 +137,11 @@ for i = 1:3
     plot(tfull, abs(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
     plot(T, abs(Z), '-', 'LineWidth', 2, 'Color', '#D95319');
     plot(TOA, abs(ZOA), '-', 'LineWidth', 1, 'Color', '#000000');
-    
-    tidx = tfull == tend - 100*h; textxpos = tfull(tidx); 
-    ZOAval = interp1(TOA,abs(ZOA),tend*0.95,'pchip');
-    textypos = gather(max([ZOAval, abs(zfull(tidx))])) + 0.01;
-    text(textxpos, textypos, pars.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right')
 end
+
+text(tend*0.99, 0.99, PSRp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'top')
+text(tend*0.99, 0.20, PSSp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'middle')
+text(tend*0.99, 0.70, CPWp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'middle')
 
 xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
 ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
@@ -183,7 +180,6 @@ for i = 1:3
 
     % The OA mean field theory:
     rdpars = prepareOAparameters(rdpars);
-%     z0 = map_thetatozoa(gather(thetasfull(:,1)), rdpars);
     z0 = orderparameter(pars.IC)*ones(rdpars.Mk,1);
     [TOA, ZOA] = OA_simulatenetwork(tnow, tend, z0, rdpars, odeoptions);
     disp('OA mean field test done')
@@ -191,12 +187,11 @@ for i = 1:3
     % Plotting the results:
     plot(tfull, abs(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
     plot(TOA, abs(ZOA), '-', 'LineWidth', 2, 'Color', '#000000');
-    
-    tidx = tfull == tend - 100*h; textxpos = tfull(tidx); 
-    ZOAval = interp1(TOA,abs(ZOA),tend*0.95,'pchip');
-    textypos = gather(max([ZOAval, abs(zfull(tidx))])) + 0.01;
-    text(textxpos, textypos, pars.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right')
 end
+
+text(tend*0.99, 0.99, PSRp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'top')
+text(tend*0.99, 0.20, PSSp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'middle')
+text(tend*0.99, 0.70, CPWp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'middle')
 
 xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
 ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
@@ -235,7 +230,6 @@ for i = 1:3
 
     % The OA mean field theory:
     sfpars = prepareOAparameters(sfpars);
-%     z0 = map_thetatozoa(gather(thetasfull(:,1)), sfpars);
     z0 = orderparameter(pars.IC)*ones(sfpars.Mk,1);
     [TOA, ZOA] = OA_simulatenetwork(tnow, tend, z0, sfpars, odeoptions);
     disp('OA mean field test done')
@@ -243,12 +237,11 @@ for i = 1:3
     % Plotting the results:
     plot(tfull, abs(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
     plot(TOA, abs(ZOA), '-k', 'LineWidth', 2, 'Color', '#000000');
-    
-    tidx = tfull == tend - 100*h; textxpos = tfull(tidx); 
-    ZOAval = interp1(TOA,abs(ZOA),tend*0.95,'pchip');
-    textypos = gather(max([ZOAval, abs(zfull(tidx))])) + 0.01;
-    text(textxpos, textypos, pars.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right')
 end
+
+text(tend*0.99, 0.99, PSRp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'top')
+text(tend*0.99, 0.20, PSSp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'middle')
+text(tend*0.99, 0.70, CPWp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'middle')
 
 xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
 ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
@@ -285,7 +278,6 @@ for i = 1:3
 
     % The OA mean field theory:
     lnpars = prepareOAparameters(lnpars);
-%     z0 = map_thetatozoa(gather(thetasfull(:,1)), lnpars);
     z0 = orderparameter(pars.IC)*ones(lnpars.Mk,1);
     [TOA, ZOA] = OA_simulatenetwork(tnow, tend, z0, lnpars, odeoptions);
     disp('OA mean field test done')
@@ -293,12 +285,11 @@ for i = 1:3
     % Plotting the results:
     plot(tfull, abs(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
     plot(TOA, abs(ZOA), '-k', 'LineWidth', 2, 'Color', '#000000');
-    
-    tidx = tfull == tend - 100*h; textxpos = tfull(tidx); 
-    ZOAval = interp1(TOA,abs(ZOA),tend*0.95,'pchip');
-    textypos = gather(max([ZOAval, abs(zfull(tidx))])) + 0.01;
-    text(textxpos, textypos, pars.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right')
 end
+
+text(tend*0.99, 0.99, PSRp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'top')
+text(tend*0.99, 0.20, PSSp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'middle')
+text(tend*0.99, 0.70, CPWp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'middle')
 
 xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
 ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
