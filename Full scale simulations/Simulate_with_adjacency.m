@@ -33,7 +33,7 @@ PSRp = p; PSRp.IC = pi*ones(p.N, 1) - pi;
 PSRp.eta0 = -0.9; PSRp.delta = 0.8; PSRp.K = -2;
 PSRp.e = randcauchy(seed, PSRp.eta0, PSRp.delta, PSRp.N);
 
-PSSp = p; PSSp.IC = wrapToPi(2*pi*rand(p.N, 1)-pi);
+PSSp = p; PSSp.IC = pi*ones(p.N, 1) - pi; % wrapToPi(2*pi*rand(p.N, 1)-pi);
 PSSp.eta0 = 0.5; PSSp.delta = 0.5; PSSp.K = 1;
 PSSp.e = randcauchy(seed, PSSp.eta0, PSSp.delta, PSSp.N);
 
@@ -74,7 +74,8 @@ for i = 1:3
 
     % The OA mean field theory:
     fdpars = prepareOAparameters(fdpars);
-    z0 = map_thetatozoa(gather(thetasfull(:,1)), fdpars);
+%     z0 = map_thetatozoa(gather(thetasfull(:,1)), fdpars);
+    z0 = orderparameter(pars.IC)*ones(fdpars.Mk,1);
     [TOA, ZOA] = OA_simulatenetwork(tnow, tend, gather(z0), fdpars, odeoptions);
     disp('OA mean field test done')
     
@@ -82,7 +83,7 @@ for i = 1:3
 %     plot(t, abs(z), '-', 'LineWidth', 5, 'Color', '#EDB120');
     plot(tfull, abs(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
     plot(T, abs(Z), '-', 'LineWidth', 2, 'Color', '#D95319');
-    plot(TOA, abs(ZOA), ':', 'LineWidth', 1, 'Color', '#000000');
+    plot(TOA, abs(ZOA), '-', 'LineWidth', 1, 'Color', '#000000');
 end
 
 xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
@@ -123,7 +124,8 @@ for i = 1:3
 
     % The OA mean field theory:
     fdpars = prepareOAparameters(fdpars);
-    z0 = map_thetatozoa(gather(thetasfull(:,1)), fdpars);
+%     z0 = map_thetatozoa(gather(thetasfull(:,1)), fdpars);
+    z0 = orderparameter(pars.IC)*ones(fdpars.Mk,1);
     [TOA, ZOA] = OA_simulatenetwork(tnow, tend, z0, fdpars, odeoptions);
     disp('OA mean field test done')
 
@@ -168,7 +170,8 @@ for i = 1:3
 
     % The OA mean field theory:
     rdpars = prepareOAparameters(rdpars);
-    z0 = map_thetatozoa(gather(thetasfull(:,1)), rdpars);
+%     z0 = map_thetatozoa(gather(thetasfull(:,1)), rdpars);
+    z0 = orderparameter(pars.IC)*ones(rdpars.Mk,1);
     [TOA, ZOA] = OA_simulatenetwork(tnow, tend, z0, rdpars, odeoptions);
     disp('OA mean field test done')
 
@@ -212,7 +215,8 @@ for i = 1:3
 
     % The OA mean field theory:
     sfpars = prepareOAparameters(sfpars);
-    z0 = map_thetatozoa(gather(thetasfull(:,1)), sfpars);
+%     z0 = map_thetatozoa(gather(thetasfull(:,1)), sfpars);
+    z0 = orderparameter(pars.IC)*ones(sfpars.Mk,1);
     [TOA, ZOA] = OA_simulatenetwork(tnow, tend, z0, sfpars, odeoptions);
     disp('OA mean field test done')
 
@@ -253,7 +257,8 @@ for i = 1:3
 
     % The OA mean field theory:
     lnpars = prepareOAparameters(lnpars);
-    z0 = map_thetatozoa(gather(thetasfull(:,1)), lnpars);
+%     z0 = map_thetatozoa(gather(thetasfull(:,1)), lnpars);
+    z0 = orderparameter(pars.IC)*ones(lnpars.Mk,1);
     [TOA, ZOA] = OA_simulatenetwork(tnow, tend, z0, lnpars, odeoptions);
     disp('OA mean field test done')
 
