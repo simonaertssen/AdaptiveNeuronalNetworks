@@ -34,6 +34,7 @@ function scalefreepars = make_scalefreeparameters(pars, degree, kmin, kmax)
     fsolveoptions = optimset('Display','off');
     scalefreepars.meandegree = fsolve(@(z) scalefreepars.P(z) - mean(scalefreepars.P(kmin:kmax)), kmin, fsolveoptions);
 %     scalefreepars.meandegree = fsolve(@(z) sum(scalefreepars.P(kmin:z)) - sum(scalefreepars.P(z+1:kmax)), kmin, fsolveoptions);
-%     scalefreepars.meandegree = mean(scalefreepars.degrees_i);
+    scalefreepars.meandegree = mean(scalefreepars.degrees_i);
+    
 end
 

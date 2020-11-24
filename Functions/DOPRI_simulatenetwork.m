@@ -1,4 +1,4 @@
-function [tout, xout, A] = DOPRI_simulatenetwork(ta,tb,x0,h,p) 
+function [tout, xout, A] = DOPRI_simulatenetwork(ta,tb,x0,h,p,A) 
     initarray = make_GPUhandle();
     disp("Start simulation.")
     
@@ -8,7 +8,9 @@ function [tout, xout, A] = DOPRI_simulatenetwork(ta,tb,x0,h,p)
     dim = size(x0);
     
     % Network parameters and handles:
-    A = initarray(adjacencymatrix(p.degrees_i, p.degrees_o));
+    if nargin < 6 || numel(A) > 1
+        A = initarray(adjacencymatrix(p.degrees_i, p.degrees_o));
+    end
     func = @(t, x) thetaneurons_full(t, x, p.K, A, p.e, p.a_n/p.meandegree);
     
     tout = linspace(ta,tb,npts);

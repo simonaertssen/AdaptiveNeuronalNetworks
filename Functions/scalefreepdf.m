@@ -1,4 +1,4 @@
-function x = scalefreepdf(x, N, exponent, kmin, kmax)
+function [x, A] = scalefreepdf(x, N, exponent, kmin, kmax)
     xposidx = (x >= kmin & x <= kmax);
     xpos = x(xposidx);
     pdfxpos = xpos.^(-exponent);
