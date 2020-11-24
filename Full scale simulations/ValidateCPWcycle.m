@@ -30,7 +30,6 @@ pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 
 seed = 2; rng(seed);
 IC = wrapToPi(randn(pars.N, 1)*1.4);
-IC = pi*ones(p.N, 1) - pi;
 
 pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
 odeoptions = odeset('RelTol', 1.0e-9,'AbsTol', 1.0e-9);
@@ -187,7 +186,7 @@ odeoptions = odeset('RelTol', 1.0e-9,'AbsTol', 1.0e-9);
 % The full scale simulation using the adjacency matrix:
 degree = 3;
 IC = wrapToPi(randn(pars.N, 1)*2.0);
-IC = pi*ones(p.N, 1) - pi;
+IC = pi*ones(pars.N, 1) - pi;
 
 sfpars = make_scalefreeparameters(pars, degree);
 [~, thetasfull, A] = DOPRI_simulatenetwork(tnow,tend,IC,h,sfpars);
