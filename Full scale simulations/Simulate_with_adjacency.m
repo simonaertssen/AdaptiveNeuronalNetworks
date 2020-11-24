@@ -15,7 +15,7 @@ export = true;
 
 %% Make a GPU init handle:
 if gpuDeviceCount > 0
-    d = gpuDevice(gpuDeviceCount-1);
+    d = gpuDevice(gpuDeviceCount-2);
     disp(d)
 end
 initarray = make_GPUhandle();
@@ -87,7 +87,7 @@ for i = 1:3
     plot(tfull, abs(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
     plot(T, abs(Z), '-', 'LineWidth', 2, 'Color', '#D95319');
     plot(TOA, abs(ZOA), '-', 'LineWidth', 1, 'Color', '#000000');
-    textxpos = tend*0.95; textypos = max([abs(ZOA(end)), abs(zfull(end))]) + 0.01;
+    textxpos = tend*0.95; textypos = gather(max([abs(ZOA(end)), abs(zfull(end))])) + 0.01;
     text(textxpos, textypos, pars.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'bottom')
 end
 
@@ -138,7 +138,7 @@ for i = 1:3
     plot(tfull, abs(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
     plot(T, abs(Z), '-', 'LineWidth', 2, 'Color', '#D95319');
     plot(TOA, abs(ZOA), '-', 'LineWidth', 1, 'Color', '#000000');
-    textxpos = 9.5; textypos = max([abs(ZOA(end)), abs(ZOA(zfull))]) + 0.1;
+    textxpos = 9.5; textypos = gather(max([abs(ZOA(end)), abs(ZOA(zfull))])) + 0.1;
     text(textxpos, textypos, pars.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right')
 end
 
@@ -185,7 +185,7 @@ for i = 1:3
     % Plotting the results:
     plot(tfull, abs(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
     plot(TOA, abs(ZOA), '-', 'LineWidth', 2, 'Color', '#000000');
-    textxpos = 9.5; textypos = max([abs(ZOA(end)), abs(ZOA(zfull))]) + 0.1;
+    textxpos = 9.5; textypos = gather(max([abs(ZOA(end)), abs(ZOA(zfull))])) + 0.1;
     text(textxpos, textypos, pars.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right')
 end
 
@@ -232,7 +232,7 @@ for i = 1:3
     % Plotting the results:
     plot(tfull, abs(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
     plot(TOA, abs(ZOA), '-k', 'LineWidth', 2, 'Color', '#000000');
-    textxpos = 9.5; textypos = max([abs(ZOA(end)), abs(ZOA(zfull))]) + 0.1;
+    textxpos = 9.5; textypos = gather(max([abs(ZOA(end)), abs(ZOA(zfull))])) + 0.1;
     text(textxpos, textypos, pars.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right')
 end
 
@@ -277,7 +277,7 @@ for i = 1:3
     % Plotting the results:
     plot(tfull, abs(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
     plot(TOA, abs(ZOA), '-k', 'LineWidth', 2, 'Color', '#000000');
-    textxpos = 9.5; textypos = max([abs(ZOA(end)), abs(ZOA(zfull))]) + 0.1;
+    textxpos = 9.5; textypos = gather(max([abs(ZOA(end)), abs(ZOA(zfull))])) + 0.1;
     text(textxpos, textypos, pars.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right')
 end
 
