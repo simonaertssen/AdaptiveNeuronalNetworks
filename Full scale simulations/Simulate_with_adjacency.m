@@ -22,7 +22,7 @@ initarray = make_GPUhandle();
 
 %% Theta model parameters:
 tnow = 0; tend = 10;
-h = 0.0005;
+h = 0.001;
 
 p.N = 15000;
 p.a_n = 0.666666666666666666667;
@@ -64,9 +64,6 @@ for i = 1:3
     
     % The simple DOPRI integration:
     fdpars = make_fixeddegreeparameters(pars, pars.N);
-%     [t, thetas] = DOPRI_threshold(@thetaneurons, tnow, tend, IC, h, pars);
-%     z = orderparameter(thetas);
-%     disp('Small scale test done')
 
     % The full scale simulation using the adjacency matrix:
     [tfull, thetasfull, A] = DOPRI_simulatenetwork(tnow,tend,pars.IC,h,fdpars,A);
@@ -79,22 +76,19 @@ for i = 1:3
 
     % The OA mean field theory:
     fdpars = prepareOAparameters(fdpars);
-%     z0 = map_thetatozoa(gather(thetasfull(:,1)), fdpars);
     z0 = orderparameter(pars.IC)*ones(fdpars.Mk,1);
     [TOA, ZOA] = OA_simulatenetwork(tnow, tend, gather(z0), fdpars, odeoptions);
     disp('OA mean field test done')
     
     % Plotting the results:
-%     plot(t, abs(z), '-', 'LineWidth', 5, 'Color', '#EDB120');
     plot(tfull, abs(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
     plot(T, abs(Z), '-', 'LineWidth', 2, 'Color', '#D95319');
     plot(TOA, abs(ZOA), '-', 'LineWidth', 1, 'Color', '#000000');
-    
-    tidx = tfull == tend*0.95; textxpos = tfull(tidx); 
-    ZOAval = interp1(TOA,abs(ZOA),tend*0.95,'pchip');
-    textypos = gather(max([ZOAval, abs(zfull(tidx))])) + 0.01;
-    text(textxpos, textypos, pars.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'bottom')
 end
+
+text(tend, 0.99, PSRp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'top')
+text(tend, 0.70, PSSp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'bottom')
+text(tend, abs(ZOA(end)), CPWp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'bottom')
 
 xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
 ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
@@ -146,7 +140,7 @@ for i = 1:3
     plot(T, abs(Z), '-', 'LineWidth', 2, 'Color', '#D95319');
     plot(TOA, abs(ZOA), '-', 'LineWidth', 1, 'Color', '#000000');
     
-    tidx = tfull == tend*0.95; textxpos = tfull(tidx); 
+    tidx = tfull == tend - 100*h; textxpos = tfull(tidx); 
     ZOAval = interp1(TOA,abs(ZOA),tend*0.95,'pchip');
     textypos = gather(max([ZOAval, abs(zfull(tidx))])) + 0.01;
     text(textxpos, textypos, pars.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right')
@@ -198,7 +192,7 @@ for i = 1:3
     plot(tfull, abs(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
     plot(TOA, abs(ZOA), '-', 'LineWidth', 2, 'Color', '#000000');
     
-    tidx = tfull == tend*0.95; textxpos = tfull(tidx); 
+    tidx = tfull == tend - 100*h; textxpos = tfull(tidx); 
     ZOAval = interp1(TOA,abs(ZOA),tend*0.95,'pchip');
     textypos = gather(max([ZOAval, abs(zfull(tidx))])) + 0.01;
     text(textxpos, textypos, pars.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right')
@@ -250,7 +244,7 @@ for i = 1:3
     plot(tfull, abs(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
     plot(TOA, abs(ZOA), '-k', 'LineWidth', 2, 'Color', '#000000');
     
-    tidx = tfull == tend*0.95; textxpos = tfull(tidx); 
+    tidx = tfull == tend - 100*h; textxpos = tfull(tidx); 
     ZOAval = interp1(TOA,abs(ZOA),tend*0.95,'pchip');
     textypos = gather(max([ZOAval, abs(zfull(tidx))])) + 0.01;
     text(textxpos, textypos, pars.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right')
@@ -300,7 +294,7 @@ for i = 1:3
     plot(tfull, abs(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
     plot(TOA, abs(ZOA), '-k', 'LineWidth', 2, 'Color', '#000000');
     
-    tidx = tfull == tend*0.95; textxpos = tfull(tidx); 
+    tidx = tfull == tend - 100*h; textxpos = tfull(tidx); 
     ZOAval = interp1(TOA,abs(ZOA),tend*0.95,'pchip');
     textypos = gather(max([ZOAval, abs(zfull(tidx))])) + 0.01;
     text(textxpos, textypos, pars.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right')
