@@ -11,7 +11,7 @@ set(groot,'DefaultAxesYGrid','on')
 
 titlefont = 16;
 labelfont = 15;
-export = false;
+export = true;
 
 %% Make a GPU init handle:
 if gpuDeviceCount > 0
@@ -21,10 +21,10 @@ end
 initarray = make_GPUhandle();
 
 %% Theta model parameters:
-tnow = 0; tend = 1;
-h = 0.05;
+tnow = 0; tend = 10;
+h = 0.0005;
 
-p.N = 100;
+p.N = 15000;
 p.a_n = 0.666666666666666666667;
 
 seed = 2; rng(seed);
@@ -96,8 +96,8 @@ ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
 title(sprintf('\\bf Fully connected network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f', pars.N, fdpars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex')
 
 legend('$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southeast', 'Orientation','horizontal')
-% exportpdf(f_fullyconnected, '../Figures/InspectMeanFieldFullyConnected.pdf', export);
-% close(f_fullyconnected)
+exportpdf(f_fullyconnected, '../Figures/InspectMeanFieldFullyConnected.pdf', export);
+close(f_fullyconnected)
 
 disp('Made fully connected network figure')
 
