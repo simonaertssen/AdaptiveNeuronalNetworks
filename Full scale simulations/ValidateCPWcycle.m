@@ -21,15 +21,16 @@ end
 initarray = make_GPUhandle();
 
 %% Theta model parameters:
-tnow = 0; tend = 10;
-h = 0.0005;
+tnow = 0; tend = 100;
+h = 0.001;
 
-pars.N = 5000;
+pars.N = 20000;
 pars.a_n = 0.666666666666666666667;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 
 seed = 2; rng(seed);
 IC = wrapToPi(randn(pars.N, 1)*1.4);
+IC = pi*ones(p.N, 1) - pi;
 
 pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
 odeoptions = odeset('RelTol', 1.0e-9,'AbsTol', 1.0e-9);
@@ -186,8 +187,10 @@ odeoptions = odeset('RelTol', 1.0e-9,'AbsTol', 1.0e-9);
 % The full scale simulation using the adjacency matrix:
 degree = 3;
 IC = wrapToPi(randn(pars.N, 1)*2.0);
+IC = pi*ones(p.N, 1) - pi;
+
 sfpars = make_scalefreeparameters(pars, degree);
-[~, thetasfull] = DOPRI_simulatenetwork(tnow,tend,IC,h,sfpars);
+[~, thetasfull, A] = DOPRI_simulatenetwork(tnow,tend,IC,h,sfpars);
 zfull = orderparameter(thetasfull);
 % ts = findlimitcycle(abs(zfull));
 disp('Full scale test done')
@@ -225,7 +228,7 @@ title(sprintf('\\bf Scale-free network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0
 legend('$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southoutside', 'Orientation','horizontal')
 % exportpdf(f_scalefree, '../Figures/InspectMeanFieldScaleFreePhaseSpace.pdf', export);
 print(f_scalefree, '../Figures/testScaleFree.png', '-dpng', '-r300')
-close(f_scalefree)
+% close(f_scalefree)
 
 disp('Made scale-free network figure')
 

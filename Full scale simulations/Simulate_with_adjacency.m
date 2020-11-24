@@ -48,7 +48,9 @@ odeoptions = odeset('RelTol', 1.0e-9,'AbsTol', 1.0e-9);
 
 %% 0. Perform a full scale simulation of a FULLY CONNECTED network:
 f_fullyconnected = figure('Renderer', 'painters', 'Position', [50 800 800 400]); box on; hold on;
-xlim([tnow, tend]); ylim([0, 1])
+xlim([tnow, tend]); ylim([0, 1]);
+A = 0;
+
 for i = 1:3
     if i == 1
         pars = PSRp;
@@ -67,7 +69,7 @@ for i = 1:3
 %     disp('Small scale test done')
 
     % The full scale simulation using the adjacency matrix:
-    [tfull, thetasfull] = DOPRI_simulatenetwork(tnow,tend,pars.IC,h,fdpars);
+    [tfull, thetasfull, A] = DOPRI_simulatenetwork(tnow,tend,pars.IC,h,fdpars,A);
     zfull = orderparameter(thetasfull);
     disp('Full scale test done')
 
@@ -87,13 +89,16 @@ for i = 1:3
     plot(tfull, abs(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
     plot(T, abs(Z), '-', 'LineWidth', 2, 'Color', '#D95319');
     plot(TOA, abs(ZOA), '-', 'LineWidth', 1, 'Color', '#000000');
-    textxpos = tend*0.95; textypos = gather(max([abs(ZOA(end)), abs(zfull(end))])) + 0.01;
+    
+    tidx = tfull == tend*0.95; textxpos = tfull(tidx); 
+    ZOAval = interp1(TOA,abs(ZOA),tend*0.95,'pchip');
+    textypos = gather(max([ZOAval, abs(zfull(tidx))])) + 0.01;
     text(textxpos, textypos, pars.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'bottom')
 end
 
 xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
 ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
-title(sprintf('\\bf Fully connected network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f', pars.N, fdpars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex')
+title(sprintf('\\bf Fully connected network: $$N$$ = %d, $$\\langle k \\rangle$$ = %d', pars.N, fdpars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex')
 
 legend('$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southeast', 'Orientation','horizontal')
 exportpdf(f_fullyconnected, '../Figures/InspectMeanFieldFullyConnected.pdf', export);
@@ -105,7 +110,9 @@ disp('Made fully connected network figure')
 netdegree = round(pars.N*0.5);
 
 f_fixeddegree = figure('Renderer', 'painters', 'Position', [50 800 800 400]); box on; hold on;
-xlim([tnow, tend]); ylim([0, 1])
+xlim([tnow, tend]); ylim([0, 1]);
+A = 0;
+
 for i = 1:3
     if i == 1
         pars = PSRp;
@@ -119,7 +126,7 @@ for i = 1:3
 
     % The full scale simulation using the adjacency matrix:
     fdpars = make_fixeddegreeparameters(pars, netdegree);
-    [tfull, thetasfull] = DOPRI_simulatenetwork(tnow,tend,pars.IC,h,fdpars);
+    [tfull, thetasfull, A] = DOPRI_simulatenetwork(tnow,tend,pars.IC,h,fdpars,A);
     zfull = orderparameter(thetasfull);
     disp('Full scale test done')
 
@@ -138,14 +145,17 @@ for i = 1:3
     plot(tfull, abs(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
     plot(T, abs(Z), '-', 'LineWidth', 2, 'Color', '#D95319');
     plot(TOA, abs(ZOA), '-', 'LineWidth', 1, 'Color', '#000000');
-    textxpos = 9.5; textypos = gather(max([abs(ZOA(end)), abs(ZOA(zfull))])) + 0.1;
+    
+    tidx = tfull == tend*0.95; textxpos = tfull(tidx); 
+    ZOAval = interp1(TOA,abs(ZOA),tend*0.95,'pchip');
+    textypos = gather(max([ZOAval, abs(zfull(tidx))])) + 0.01;
     text(textxpos, textypos, pars.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right')
 end
 
 xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
 ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
 
-title(sprintf('\\bf Fixed degree network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f', pars.N, fdpars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex')
+title(sprintf('\\bf Fixed degree network: $$N$$ = %d, $$\\langle k \\rangle$$ = %d', pars.N, fdpars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex')
 
 legend('$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southeast', 'Orientation','horizontal')
 exportpdf(f_fixeddegree, '../Figures/InspectMeanFieldFixedDegree.pdf', export);
@@ -157,7 +167,9 @@ disp('Made fixed degree network figure')
 netp = 0.3;
 
 f_random = figure('Renderer', 'painters', 'Position', [50 800 800 400]); box on; hold on;
-xlim([tnow, tend]); ylim([0, 1])
+xlim([tnow, tend]); ylim([0, 1]);
+A = 0;
+
 for i = 1:3
     if i == 1
         pars = PSRp;
@@ -171,7 +183,7 @@ for i = 1:3
 
     % The full scale simulation using the adjacency matrix:
     rdpars = make_randomparameters(pars, netp);
-    [tfull, thetasfull] = DOPRI_simulatenetwork(tnow,tend,pars.IC,h,rdpars);
+    [tfull, thetasfull, A] = DOPRI_simulatenetwork(tnow,tend,pars.IC,h,rdpars,A);
     zfull = orderparameter(thetasfull);
     disp('Full scale test done')
 
@@ -185,7 +197,10 @@ for i = 1:3
     % Plotting the results:
     plot(tfull, abs(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
     plot(TOA, abs(ZOA), '-', 'LineWidth', 2, 'Color', '#000000');
-    textxpos = 9.5; textypos = gather(max([abs(ZOA(end)), abs(ZOA(zfull))])) + 0.1;
+    
+    tidx = tfull == tend*0.95; textxpos = tfull(tidx); 
+    ZOAval = interp1(TOA,abs(ZOA),tend*0.95,'pchip');
+    textypos = gather(max([ZOAval, abs(zfull(tidx))])) + 0.01;
     text(textxpos, textypos, pars.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right')
 end
 
@@ -204,7 +219,9 @@ degree = 2.04;
 % IC = wrapToPi(randn(pars.N, 1)*1.2);
 
 f_scalefree = figure('Renderer', 'painters', 'Position', [50 800 800 400]); box on; hold on;
-xlim([tnow, tend]); ylim([0, 1])
+xlim([tnow, tend]); ylim([0, 1]);
+A = 0;
+
 for i = 1:3
     if i == 1
         pars = PSRp;
@@ -218,7 +235,7 @@ for i = 1:3
 
     % The full scale simulation using the adjacency matrix:
     sfpars = make_scalefreeparameters(pars, degree);
-    [tfull, thetasfull] = DOPRI_simulatenetwork(tnow,tend,pars.IC,h,sfpars);
+    [tfull, thetasfull, A] = DOPRI_simulatenetwork(tnow,tend,pars.IC,h,sfpars,A);
     zfull = orderparameter(thetasfull);
     disp('Full scale test done')
 
@@ -232,7 +249,10 @@ for i = 1:3
     % Plotting the results:
     plot(tfull, abs(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
     plot(TOA, abs(ZOA), '-k', 'LineWidth', 2, 'Color', '#000000');
-    textxpos = 9.5; textypos = gather(max([abs(ZOA(end)), abs(ZOA(zfull))])) + 0.1;
+    
+    tidx = tfull == tend*0.95; textxpos = tfull(tidx); 
+    ZOAval = interp1(TOA,abs(ZOA),tend*0.95,'pchip');
+    textypos = gather(max([ZOAval, abs(zfull(tidx))])) + 0.01;
     text(textxpos, textypos, pars.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right')
 end
 
@@ -248,7 +268,9 @@ disp('Made scale-free network figure')
 
 %% 4. Perform a full scale simulation of a lognorm network:
 f_lognorm = figure('Renderer', 'painters', 'Position', [50 800 800 400]); box on; hold on;
-xlim([tnow, tend]); ylim([0, 1])
+xlim([tnow, tend]); ylim([0, 1]);
+A = 0;
+
 for i = 1:3
     if i == 1
         pars = PSRp;
@@ -263,7 +285,7 @@ for i = 1:3
     % The full scale simulation using the adjacency matrix:
     mu = 3; sigma = 1; kmin = round(pars.N/5);
     lnpars = make_lognormparameters(pars, mu, sigma, kmin);
-    [tfull, thetasfull] = DOPRI_simulatenetwork(tnow,tend,pars.IC,h,lnpars);
+    [tfull, thetasfull, A] = DOPRI_simulatenetwork(tnow,tend,pars.IC,h,lnpars,A);
     zfull = orderparameter(thetasfull);
     disp('Full scale test done')
 
@@ -277,7 +299,10 @@ for i = 1:3
     % Plotting the results:
     plot(tfull, abs(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
     plot(TOA, abs(ZOA), '-k', 'LineWidth', 2, 'Color', '#000000');
-    textxpos = 9.5; textypos = gather(max([abs(ZOA(end)), abs(ZOA(zfull))])) + 0.1;
+    
+    tidx = tfull == tend*0.95; textxpos = tfull(tidx); 
+    ZOAval = interp1(TOA,abs(ZOA),tend*0.95,'pchip');
+    textypos = gather(max([ZOAval, abs(zfull(tidx))])) + 0.01;
     text(textxpos, textypos, pars.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right')
 end
 
