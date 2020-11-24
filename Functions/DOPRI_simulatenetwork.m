@@ -8,7 +8,7 @@ function [tout, xout, A] = DOPRI_simulatenetwork(ta,tb,x0,h,p,A)
     dim = size(x0);
     
     % Network parameters and handles:
-    if nargin < 6 || numel(A) > 1
+    if nargin < 6 || numel(A) > 2
         A = initarray(adjacencymatrix(p.degrees_i, p.degrees_o));
     end
     func = @(t, x) thetaneurons_full(t, x, p.K, A, p.e, p.a_n/p.meandegree);
