@@ -9,8 +9,8 @@ addpath('../Mean Field Reductions');
 set(groot,'DefaultAxesXGrid','on')
 set(groot,'DefaultAxesYGrid','on')
 
-titlefont = 15;
-labelfont = 13;
+titlefont = 16;
+labelfont = 15;
 export = true;
 
 %% Make a GPU init handle:
@@ -22,22 +22,25 @@ initarray = make_GPUhandle();
 
 %% Theta model parameters:
 tnow = 0; tend = 10;
-h = 0.001;
+h = 0.0005;
 
 p.N = 15000;
 p.a_n = 0.666666666666666666667;
 
 seed = 2; rng(seed);
 
-PSRp = p; PSRp.IC = pi*ones(p.N, 1) - pi; 
+PSRp = p; PSRp.text = '\it PSR';
+PSRp.IC = pi*ones(p.N, 1) - pi; 
 PSRp.eta0 = -0.9; PSRp.delta = 0.8; PSRp.K = -2;
 PSRp.e = randcauchy(seed, PSRp.eta0, PSRp.delta, PSRp.N);
 
-PSSp = p; PSSp.IC = pi*ones(p.N, 1) - pi; % wrapToPi(2*pi*rand(p.N, 1)-pi);
+PSSp = p; PSSp.text = '\it PSSp';
+PSSp.IC = wrapToPi(randn(p.N, 1)*1.6); %pi*ones(p.N, 1) - pi; % wrapToPi(2*pi*rand(p.N, 1)-pi);
 PSSp.eta0 = 0.5; PSSp.delta = 0.5; PSSp.K = 1;
 PSSp.e = randcauchy(seed, PSSp.eta0, PSSp.delta, PSSp.N);
 
-CPWp = p; CPWp.IC = wrapToPi(randn(p.N, 1)*1.4);
+CPWp = p; CPWp.text = '\it CPWp';
+CPWp.IC = wrapToPi(randn(p.N, 1)*1.4);
 CPWp.eta0 = 10.75; CPWp.delta = 0.5; CPWp.K = -9;
 CPWp.e = randcauchy(seed, CPWp.eta0, CPWp.delta, CPWp.N);
 
@@ -84,6 +87,8 @@ for i = 1:3
     plot(tfull, abs(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
     plot(T, abs(Z), '-', 'LineWidth', 2, 'Color', '#D95319');
     plot(TOA, abs(ZOA), '-', 'LineWidth', 1, 'Color', '#000000');
+    textxpos = 9.5; textypos = max([abs(ZOA(end)), abs(ZOA(zfull))]) + 0.1;
+    text(textxpos, textypos, pars.text, 'FontName','PT Sans Caption', 'FontSize', labelfont, 'HorizontalAlignment', 'right')
 end
 
 xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
@@ -133,6 +138,8 @@ for i = 1:3
     plot(tfull, abs(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
     plot(T, abs(Z), '-', 'LineWidth', 2, 'Color', '#D95319');
     plot(TOA, abs(ZOA), '-', 'LineWidth', 1, 'Color', '#000000');
+    textxpos = 9.5; textypos = max([abs(ZOA(end)), abs(ZOA(zfull))]) + 0.1;
+    text(textxpos, textypos, pars.text, 'FontName','PT Sans Caption', 'FontSize', labelfont, 'HorizontalAlignment', 'right')
 end
 
 xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
@@ -178,6 +185,8 @@ for i = 1:3
     % Plotting the results:
     plot(tfull, abs(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
     plot(TOA, abs(ZOA), '-', 'LineWidth', 2, 'Color', '#000000');
+    textxpos = 9.5; textypos = max([abs(ZOA(end)), abs(ZOA(zfull))]) + 0.1;
+    text(textxpos, textypos, pars.text, 'FontName','PT Sans Caption', 'FontSize', labelfont, 'HorizontalAlignment', 'right')
 end
 
 xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
@@ -223,6 +232,8 @@ for i = 1:3
     % Plotting the results:
     plot(tfull, abs(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
     plot(TOA, abs(ZOA), '-k', 'LineWidth', 2, 'Color', '#000000');
+    textxpos = 9.5; textypos = max([abs(ZOA(end)), abs(ZOA(zfull))]) + 0.1;
+    text(textxpos, textypos, pars.text, 'FontName','PT Sans Caption', 'FontSize', labelfont, 'HorizontalAlignment', 'right')
 end
 
 xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
@@ -250,7 +261,8 @@ for i = 1:3
     end
 
     % The full scale simulation using the adjacency matrix:
-    lnpars = make_lognormparameters(pars, 3, 1, round(pars.N/5));
+    mu = 3; sigma = 1; kmin = round(pars.N/5);
+    lnpars = make_lognormparameters(pars, mu, sigma, kmin);
     [tfull, thetasfull] = DOPRI_simulatenetwork(tnow,tend,pars.IC,h,lnpars);
     zfull = orderparameter(thetasfull);
     disp('Full scale test done')
@@ -265,12 +277,14 @@ for i = 1:3
     % Plotting the results:
     plot(tfull, abs(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
     plot(TOA, abs(ZOA), '-k', 'LineWidth', 2, 'Color', '#000000');
+    textxpos = 9.5; textypos = max([abs(ZOA(end)), abs(ZOA(zfull))]) + 0.1;
+    text(textxpos, textypos, pars.text, 'FontName','PT Sans Caption', 'FontSize', labelfont, 'HorizontalAlignment', 'right')
 end
 
 xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
 ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
 
-title(sprintf('\\bf Lognorm network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f', pars.N, lnpars.meandegree), 'FontSize', titlefont, 'Interpreter', 'latex')
+title(sprintf('\\bf Lognorm network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f, $$\\mu$$ = %0.1f, $$\\sigma$$ = %0.1f, $$k_{\rm min}$$ = %d', pars.N, lnpars.meandegree, mu, sigma, kmin), 'FontSize', titlefont, 'Interpreter', 'latex')
 legend('$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southeast', 'Orientation','horizontal')
 exportpdf(f_lognorm, '../Figures/InspectMeanFieldLogNorm.pdf', export);
 close(f_lognorm)
