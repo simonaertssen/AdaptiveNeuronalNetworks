@@ -10,12 +10,12 @@ Simon Aertssen (s181603), \today \\
 \section{Writing out the whole system}
 The network dynamics are described as follows:
 \begin{align}
-\frac{d \theta_i}{d t} &= (1 - \cos\theta_i) + (1 + \cos\theta_i)\cdot\left(\eta_i + I_i \right) \qquad \theta_i \in \R^N \nonumber \\
+\frac{d \theta_i}{d t} &= (1 - \cos\theta_i) + (1 + \cos\theta_i)\cdot\left(\eta_i + I_i \right) \qquad \theta_i \in \T^N \nonumber \\
 I_{i} &= \frac{\kappa}{\langle k\rangle} \sum_{j=1}^{N} A_{i j} P_{n}\left(\theta_{j}\right) \label{eq:FullThetaNeuronNetwork} \\
 P_{n}\left(\theta_{j}\right) &= (1 - \cos\theta_j) \nonumber
 \end{align}
 
-We observe synchronization through the order parameter
+We observe synchronisation through the order parameter
 \begin{align}
 Z(t) = \frac{1}{N} \sum_{j=1}^N e^{\ic\theta_j}  \qquad Z(t) \in \C \label{eq:orderparameter}
 \end{align}
@@ -50,7 +50,7 @@ This is the result of the \textsl{Conjugate} or \textsl{Hermitian} symmetry of t
 
 
 \section{Initial conditions}
-As the systems in \cref{eq:FullThetaNeuronNetwork,eq:orderparameter,eq:MeanField,eq:OttAntonsenSystemFull,eq:OttAntonsenMeanField} describe the same dynamics for fully connected networks, it is important to be able to transform initial conditions between systems. When transforming from $\theta_i(t) \rightarrow z(\k,t) \rightarrow Z(t)$ we go from $\R^N \rightarrow \C^{M_\k}$ to $\C^{M_\k} \rightarrow \C$. If we have the same initial conditions, then all systems will predict the same behaviour. We will only map everything to $\C$.\\
+As the systems in \cref{eq:FullThetaNeuronNetwork,eq:orderparameter,eq:MeanField,eq:OttAntonsenSystemFull,eq:OttAntonsenMeanField} describe the same dynamics for fully connected networks, it is important to be able to transform initial conditions between systems. When transforming from $\theta_i(t) \rightarrow z(\k,t) \rightarrow Z(t)$ we go from $\T^N \rightarrow \C^{M_\k}$ to $\C^{M_\k} \rightarrow \C$. If we have the same initial conditions, then all systems will predict the same behaviour. We will only map everything to $\C$.\\
 The following maps can be used to transform the initial conditions, but as they do not give any qualitative information on the dynamics or distributions of the variables, they are not valid for transforming between dynamics. We discard $t=0$ for clarity. \\
 Mapping operations onto the order parameter in the complex plane is straightforward:
 \begin{align*}
@@ -72,6 +72,67 @@ z(\k) \longrightarrow \theta_i &= -\ic \cdot \log \left( \frac{z(\k)\cdot P(\k)}
 \end{align*}
 Or also $\sum_i^N A_{ij} = k^{\rm in} \cup \sum_j^N A_{ij} = \kout$. We can see how $\lim_{N \rightarrow +\infty} n(\k) = P(\k)$, which makes these maps exact for any network size. 
     
+    
+\section{Phase space}
+\subsection{Fixed degree networks}
+In the phase space, we can clearly distinguish three macroscopic states for the mean field:
+\begin{figure}[H]
+\minipage{0.32\textwidth}
+  \includegraphics[width=\linewidth, trim={2cm 1cm 2cm 1.5cm },clip]{../Figures/MFRPSR.png}
+  \caption{PSR state}\label{fig:MFRPSR}
+\endminipage\hfill
+\minipage{0.32\textwidth}
+  \includegraphics[width=\linewidth, trim={2cm 1cm 2cm 1.5cm },clip]{../Figures/MFRPSS.png}
+  \caption{PSS state}\label{fig:MFRPSS}
+\endminipage\hfill
+\minipage{0.32\textwidth}%
+  \includegraphics[width=\linewidth, trim={2cm 1cm 2cm 1.5cm },clip]{../Figures/MFRCPW.png}
+  \caption{CPW state}\label{fig:MFRCPW}
+\endminipage
+\end{figure}
+For different networks this can look a little different.
+
+\subsection{Random networks}
+\begin{figure}[H]
+\minipage{0.32\textwidth}
+  \includegraphics[width=\linewidth, trim={2cm 1cm 2cm 1.5cm },clip]{../Figures/MFOARPSR_random.png}
+  \caption{PSR state}\label{fig:MFRPSR}
+\endminipage\hfill
+\minipage{0.32\textwidth}
+  \includegraphics[width=\linewidth, trim={2cm 1cm 2cm 1.5cm },clip]{../Figures/MFOARPSS_random.png}
+  \caption{PSS state}\label{fig:MFRPSS}
+\endminipage\hfill
+\minipage{0.32\textwidth}%
+  \includegraphics[width=\linewidth, trim={2cm 1cm 2cm 1.5cm },clip]{../Figures/MFOARCPW_random.png}
+  \caption{CPW state}\label{fig:MFRCPW}
+\endminipage
+\end{figure}
+
+\subsection{Scale Free networks}
+\begin{figure}[H]
+\minipage{0.32\textwidth}
+  \includegraphics[width=\linewidth, trim={2cm 1cm 2cm 1.5cm },clip]{../Figures/MFOARPSR_scalefree.png}
+  \caption{PSR state}\label{fig:MFRPSR}
+\endminipage\hfill
+\minipage{0.32\textwidth}
+  \includegraphics[width=\linewidth, trim={2cm 1cm 2cm 1.5cm },clip]{../Figures/MFOARPSS_scalefree.png}
+  \caption{PSS state}\label{fig:MFRPSS}
+\endminipage\hfill
+\minipage{0.32\textwidth}%
+  \includegraphics[width=\linewidth, trim={2cm 1cm 2cm 1.5cm },clip]{../Figures/MFOARCPW_scalefree.png}
+  \caption{CPW state}\label{fig:MFRCPW}
+\endminipage
+\end{figure}
+
+
+\section{Differences between theory and practice}
+\begin{figure}[H]
+  \includegraphics[width=\linewidth]{../Figures/MFRCPW.png}
+  \caption{CPW state}\label{fig:MFRCPW}
+\end{figure}
+
+
+
 
 \section{Fixpoint iteration}
 In \cite{OttAntonsen2017} a fixpoint iteration is suggested to find attractive fixpoints of the system \eqref{eq:OttAntonsenSystemFull}. If we set $\frac{\partial z(\k, t)}{\partial t} = 0$ we can solve the following system:
@@ -87,7 +148,7 @@ We can then obtain the stable equilibria from:
 \begin{align}
 \ic b(\k,t)^2 = I(\k) \hspace{10mm} z(\k, t)_{\pm} = \frac{1 \pm b(\k,t)}{1 \mp b(\k,t)} \label{eq:fixedpointiterations} 
 \end{align}
-where the signs are chosen so that $\vert z(\k, t) \vert \leq 1$.
+where the signs are chosen so that $\vert z(\k, t) \vert \leq 1$. This works.
 
 
 \section{A Newton-Raphson iteration for all fixpoints}
@@ -164,13 +225,32 @@ The off-diagonal elements are found as
 \end{equation}
 
 
-\subsection{Results}
+\subsection{First results}
 I cannot seem to converge close enough.
 \begin{figure}[H]
 \centering
-\includegraphics[width = \textwidth]{../Figures/ProblemsWithNewtonRaphson.png}
+\includegraphics[width = 0.75\textwidth]{../Figures/ProblemsWithNewtonRaphson.png}
 \end{figure}
 
+
+\subsection{Mapping onto $\R^2$}
+$\bar{z}_{\k}$ and $\Re(z_{\k})$ are non-holomorphic (how . Try again by separating the real and imaginary part: $z(\k,t) = x(\k,t) + \ic y(\k,t)$.
+\begin{align*}
+\begin{aligned} \dot{x_{\k}} 
+&=f_{n}\left(x_{\k}, y_{\k} ; \eta_{0}, \Delta, k\right) \\ 
+&=(x_{\k}-1) y_{\k}-\frac{(x_{\k}+1)^{2}-y_{\k}^{2}}{2} \Delta-(x_{\k}+1) y_{\k} \cdot \left[\eta_{0}+ \kappa \cdot H(z, n)\right] \\ \dot{y_{\k}} &=g_{n}\left(x_{\k}, y_{\k} ; \eta_{0}, \Delta, k\right) \\ 
+&=-\frac{(x_{\k}-1)^{2}-y_{\k}^{2}}{2}-(x_{\k}+1) y_{\k} \cdot \Delta+\frac{(x_{\k}+1)^{2}-y_{\k}^{2}}{2} \cdot \left[\eta_{0} + \kappa \cdot H_2(\k, t)\right] \end{aligned}
+\end{align*}
+
+The Jacobian can the be found from taking the derivatives?
+\begin{align*}
+\frac{\partial f_{n}}{\partial x_{\k}} &= y_{\k}-(x_{\k}+1) \cdot \Delta-y_{\k} \cdot \left[\eta_{0} + \kappa \cdot H_2(\k, t) \right] - (x_{\k}+1) \cdot y_{\k} \cdot \left(\kappa \cdot \frac{\partial H}{\partial x_{\k}}\right)\\
+\frac{\partial f_{n}}{\partial y_{\k}} &= (x_{\k}-1)-y_{\k} \cdot \Delta-(x_{\k}+1) \cdot \left[\eta_{0} + \kappa \cdot H_2(\k, t) \right] \\t
+\frac{\partial g_{n}}{\partial x_{\k}} &= -(x_{\k} - 1) - y_{\k} \cdot \Delta + (x_{\k} + 1) \cdot \left[\eta_{0} + \kappa \cdot H_2(\k, t) \right] + \left( \frac{(x_{\k} + 1)^2 - y_{\k}^2}{2} \right) \cdot \left(\kappa \cdot \frac{\partial H}{\partial x_{\k}}\right) \\
+\frac{\partial g_{n}}{\partial y_{\k}} &= y_{\k} - (x_{\k} + 1)\cdot \Delta - y_{\k} \cdot \left[\eta_{0} + \kappa \cdot H_2(\k, t) \right] \\
+\frac{\partial H_2(\k, t)}{\partial x_{\k}} &= \frac{1}{\langle k\rangle} P_{\k} a_{\k \k} \cdot(x_{\k}-2) \cdot \frac{2}{3} 
+\end{align*}
+What dimensions does the Jacobian have now?
 
 \bibliographystyle{utphys}
 \small{\bibliography{references}}
