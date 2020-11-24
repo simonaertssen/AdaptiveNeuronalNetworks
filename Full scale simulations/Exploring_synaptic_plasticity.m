@@ -22,7 +22,7 @@ end
 initarray = make_GPUhandle();
 
 %% Theta model parameters:
-h = 0.005; tnow = h; tend = 200;
+h = 0.005; tnow = h; tend = 1000;
 
 pars.N = 100;
 pars.a_n = 0.666666666666666666667;
@@ -32,6 +32,29 @@ seed = 2; rng(seed);
 IC = randn(pars.N,1);
 
 pars.e = 0; %randcauchy(seed, pars.eta0, pars.delta, pars.N);
+
+
+%% Exploration:
+plastopts = struct('SP', true, 'window', @Kempter1999Window, 'SS', false, 'IP', false);
+[t, thetas_full, K, Kmeans] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
+drawthetas = spikesNaN(thetas_full);
+z = orderparameter(thetas_full);
+
+figure; hold on; box on;
+yyaxis left
+plot(t, drawthetas, '-', 'LineWidth', 0.1, 'Color', [0, 0, 1, 1/pars.N], 'HandleVisibility', 'off')
+plot(t, abs(z), '-k', 'LineWidth', 2)
+ylabel('$\theta_i$','Interpreter','latex', 'FontSize', labelfont)
+ylim([-pi, pi]);
+
+yyaxis right
+plot(t, Kmeans, 'LineWidth', 2, 'Color', "#0072BD")
+ylabel('$\langle k \rangle$','Interpreter','latex', 'FontSize', labelfont)
+
+ax = gca; ax.YAxis(1).Color = [0, 0, 1]; ax.YAxis(2).Color = "#0072BD";
+xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
+
+
 
  %% Results without synaptic scaling:
 f_noSS = figure('Renderer', 'painters', 'Position', [50, 50, 800, 300]); hold on; box on;
@@ -54,7 +77,7 @@ for i = 1:4
     ylabel('$\theta_i$','Interpreter','latex', 'FontSize', labelfont)
     ylim([-pi, pi]); 
     set(gca,'YTick',-pi:pi/2:pi) 
-    set(gca,'YTickLabel',{'-\pi','-\pi/2','0','\pi/2','\pi'})
+    set(gca,'YTickLabel',{'$$-\pi$$','$$-\frac{\pi}{2}$$','$$0$$','$$\frac{\pi}{2}$$','$$\pi$$'}, 'TickLabelInterpreter', 'latex')
 
     yyaxis right
     plot(t, Kmeans, 'LineWidth', 2, 'Color', colors(i))
@@ -68,9 +91,8 @@ for i = 1:4
     xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
 end
 
-print(f_noSS, '../Figures/LearningWithoutScaling.png', '-dpng', '-r300')
-close(f_noSS)
-
+% print(f_noSS, '../Figures/LearningWithoutScaling.png', '-dpng', '-r300')
+% close(f_noSS)
 
 %% Adding synaptic scaling:
 plastopts = struct('SP', true, 'window', @Kempter1999Window, 'SS', true, 'IP', false);

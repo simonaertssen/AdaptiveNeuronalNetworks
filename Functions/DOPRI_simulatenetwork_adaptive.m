@@ -18,7 +18,7 @@ function [tout, xout, K, Kmeans, info] = DOPRI_simulatenetwork_adaptive(ta,tb,x0
     window = plastopts.window;
     
     % Network parameters and handles:
-    K = initarray(ones(N, N));
+    K = initarray(zeros(N, N) + 0.01);
     Kmeans = initarray(zeros(npts,1)); Kmeans(1) = sum(K, 'all')/N + 1.0e-15;
     lastspiketimes = initarray(zeros(N,1));
     eps = 1.0e-15;
@@ -42,6 +42,9 @@ function [tout, xout, K, Kmeans, info] = DOPRI_simulatenetwork_adaptive(ta,tb,x0
         
         pulse = xout(:,i) - xout(:,i+1) > 2*pi - 0.1;
         if synaptic_plasticity && any(pulse == 1)
+            K(pulse,:) = K(pulse,:) - 1.0475*1.0e-5; 
+            K(:,pulse) = K(:,pulse) + 1.0e-5; 
+            
             lastspiketimes(pulse) = t;
             dW = window(lastspiketimes - lastspiketimes');
             % Filter out all zeros that do not contriubute to the learning:
@@ -49,7 +52,7 @@ function [tout, xout, K, Kmeans, info] = DOPRI_simulatenetwork_adaptive(ta,tb,x0
             nonzerotimes = find(lastspiketimes)';
             combos = combvec(nonzerotimes,nonzerotimes);
             idx = sub2ind(size(dW),combos(1,:),combos(2,:));
-            K(idx) = K(idx) + dW(idx);
+            K(idx) = K(idx) + 10*dW(idx);
             if synaptic_scaling
                 K = K * Kmeans(i) ./ (sum(K,1) + eps);
 %                 dW(idx) = dW(idx) * Kmeans(i) ./ (sum(K(idx),1) + eps);
@@ -61,7 +64,7 @@ function [tout, xout, K, Kmeans, info] = DOPRI_simulatenetwork_adaptive(ta,tb,x0
             toimplement = 0;
         end
         
-        Kmeans(i+1) = sum(K, 'all')/N + eps;
+        Kmeans(i+1) = (sum(K, 'all') + eps)/N;
 
         K7 = h*func(t, xout(:,i+1), K, Kmeans(i+1));
     end
