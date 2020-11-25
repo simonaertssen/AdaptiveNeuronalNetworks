@@ -64,7 +64,6 @@ ylabel("$W$", 'Interpreter', 'latex', 'FontSize', labelfont);
 print(f_windows, '../Figures/LearningWindowsTriphasic.png', '-dpng', '-r400')
 close(f_windows)
 
-
 %% Function properties
 clc
 integral(@Kempter1999Window, -0.08, 0.1)
@@ -94,11 +93,31 @@ toc;
 
 % Turns out Waddington is quicker
 
-%% Intrinsic plasticity:
-% Use the theory treated in Song2017
-dt = linspace(-0.01, 0.25, tpts);
 
-plot(dt, Song2017ip(dt))
+%% Observe function shapes: ip learning
+dt = linspace(0, 0.25, tpts);
+
+f_windows = figure('Renderer', 'painters', 'Position', [50 800 300 200]); box on; hold on;
+y = Song2017ip(dt);
+xline(0.09, '--k')
+xline(0.11, '--k')
+
+yleft = Song2017ip(dt(dt<0.09)); ymiddle = Song2017ip(dt((dt>0.09) & (dt<0.11))); yright = Song2017ip(dt(dt>0.11));
+plot(dt(dt<0.09), yleft, 'LineWidth', 2, 'Color', '#0072BD'); 
+plot(dt((dt>0.09) & (dt<0.11)), ymiddle, 'LineWidth', 2, 'Color', '#0072BD', 'HandleVisibility', 'off'); 
+plot(dt(dt>0.11), yright, 'LineWidth', 2, 'Color', '#0072BD', 'HandleVisibility', 'off')
+scatter(0.09, Song2017ip(0.09), 30, [0 0.4470 0.7410], 'filled', 'o')
+scatter(0.11, Song2017ip(0.11), 30, [0 0.4470 0.7410], 'filled', 'o')
+
+text(0.089, -0.04, '$$T_{ \rm min}$$', 'Interpreter', 'latex', 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'right')
+text(0.112, -0.04, '$$T_{ \rm max}$$', 'Interpreter', 'latex', 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left')
+
+xlabel("$t$ [s]", 'Interpreter', 'latex', 'FontSize', labelfont); 
+ylabel("$\phi_i(t)$", 'Interpreter', 'latex', 'FontSize', labelfont);
+
+print(f_windows, '../Figures/IPlearningFunction.png', '-dpng', '-r400')
+close(f_windows)
+
 
 %% Functions
 function out = timeme(N, tpts, handle)
@@ -200,8 +219,8 @@ end
 
 
 function phi = Song2017ip(dt)
-    T_max = 90; %ms
-    T_min = 110; %ms
+    T_min = 90; %ms
+    T_max = 110; %ms
     lr = 0.012;
 
     dt = dt * 1.0e3; % Convert to seconds
@@ -209,7 +228,6 @@ function phi = Song2017ip(dt)
     t_neg_idx = dt < T_min;    
     t_pos_idx = dt > T_max;
     
-    phi((T_min <= dt) & (dt <= T_max)) = 0;
     phi(t_neg_idx) = -lr*exp((T_min - dt(t_neg_idx))/T_min);
     phi(t_pos_idx) = lr*exp((dt(t_pos_idx) - T_max)/T_max);
-end
+    end
