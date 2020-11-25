@@ -18,7 +18,7 @@ function [tout, xout, K, Kmeans, info] = DOPRI_simulatenetwork_adaptive(ta,tb,x0
     
     % Network parameters and handles:
     %K = initarray(zeros(N, N) + 0.01*randn(N));
-    K = initarray(0.01*randn(N));
+    K = initarray(ones(N,N));
     Kmeans = initarray(zeros(npts,1)); Kmeans(1) = sum(K, 'all')/N + 1.0e-15;
     lastspiketimes = initarray(zeros(N,1));
     eps = 1.0e-15;
@@ -68,6 +68,7 @@ function [tout, xout, K, Kmeans, info] = DOPRI_simulatenetwork_adaptive(ta,tb,x0
             %K(idx) = K(idx) + dW(idx);
             K(idx) = Kupdate(K(idx),dW(idx));
             if synaptic_scaling
+                test = 0
                 K = K * Kmeans(i) ./ (sum(K,1) + eps);
             end
         end

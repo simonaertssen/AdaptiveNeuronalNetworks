@@ -22,7 +22,7 @@ end
 initarray = make_GPUhandle();
 
 %% Theta model parameters:
-h = 0.005; tnow = h; tend = 1000;
+h = 0.005; tnow = h; tend = 200;
 
 pars.N = 100;
 pars.a_n = 0.666666666666666666667;
@@ -59,11 +59,20 @@ xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
  %% Results without synaptic scaling:
 f_noSS = figure('Renderer', 'painters', 'Position', [50, 50, 800, 300]); hold on; box on;
 
-winnames = ["Kempter1999Window", "Song2000Window", "ChrolCannon2012Window", "Waddington2014Window"];
+winnames = ["Kempter1999Window", "Song2017Window", "ChrolCannon2012Window", "Waddington2014Window"];
 colors = ["#0072BD", "#D95319", "#77AC30", "#A2142F"];
 for i = 1:4
     name = winnames(i);
-    plastopts = struct('SP', true, 'window', str2func(name), 'SS', false, 'IP', false);
+    
+    STDP = struct('window', str2func(name), 'Kupdate', @(K, W) K + W);
+    if name == "Kempter1999Window"
+        STDP.w_i = 1.0e-5; STDP.w_o = - 1.0475*1.0e-5;
+    end
+    if name == "Song2017Window"
+        STDP.Kupdate = @(K, W) K.*W;
+    end
+    
+    plastopts = struct('SP', STDP);
     [t, thetas_full, ~, Kmeans] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
     drawthetas = spikesNaN(thetas_full);
     z = orderparameter(thetas_full);
@@ -95,7 +104,9 @@ end
 % close(f_noSS)
 
 %% Adding synaptic scaling:
-plastopts = struct('SP', true, 'window', @Kempter1999Window, 'SS', true, 'IP', false);
+STDP = struct('window', @Kempter1999Window, 'Kupdate', @(K, W) K + W, 'w_i', 1.0e-5, 'w_o', - 1.0475*1.0e-5);
+plastopts = struct('SP', STDP, 'SS', true, 'IP', false);
+
 [t, thetas_full, K, Kmeans] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
 drawthetas = spikesNaN(thetas_full);
 z = orderparameter(thetas_full);
