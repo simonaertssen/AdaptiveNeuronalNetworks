@@ -10,7 +10,7 @@ set(groot,'DefaultAxesYGrid','on')
 
 titlefont = 15;
 labelfont = 15;
-export = false;
+export = true;
 
 %% Make a GPU init handle:
 if gpuDeviceCount > 0
@@ -40,10 +40,10 @@ z = orderparameter(thetas_full);
 %% Plotting the results
 f_reproduce = figure('Renderer', 'painters', 'Position', [0, 2000, 300, 1500]); hold on; box on;
 
-subplot(5,1,1); hold on; axis square;
+subplot(5,1,1); hold on; axis square; box on;
 title('Simulation results', 'FontSize', titlefont)
 yyaxis left
-plot(t, drawthetas, '-', 'LineWidth', 0.1, 'Color', [0, 0, 1, 1/(5*pars.N)], 'HandleVisibility', 'off')
+% plot(t, drawthetas, '-', 'LineWidth', 0.1, 'Color', [0, 0, 1, 1/(5*pars.N)], 'HandleVisibility', 'off')
 plot(t, abs(z), '-k', 'LineWidth', 2)
 ylabel('$\theta_i$','Interpreter','latex', 'FontSize', labelfont)
 ylim([-pi, pi]);
@@ -53,20 +53,20 @@ ax = gca; ax.YAxis(1).Color = [0, 0, 1]; ax.YAxis(2).Color = "#0072BD";
 xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('$\langle k \rangle$','Interpreter','latex', 'FontSize', labelfont)
 
-subplot(5,1,2); hold on; axis square;
+subplot(5,1,2); hold on; axis square; box on;
 title('{ \boldmath $K_{ij} $}', 'Interpreter', 'latex', 'FontSize', titlefont)
 xlim([0, pars.N]); ylim([0, pars.N]);
 xlabel('Presynaptic neuron j', 'FontSize', labelfont)
 ylabel('Postynaptic neuron i', 'FontSize', labelfont)
 imagesc(K); colormap(gray);
 
-subplot(5,1,3); hold on; axis square; axis on;
+subplot(5,1,3); hold on; axis square; axis on; box on;
 histogram(K, 'Normalization', 'pdf')
 title('Connectivity strength', 'FontSize', titlefont)
 xlabel('$k$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('Density', 'FontSize', labelfont)
 
-subplot(5,1,4); hold on; axis square;
+subplot(5,1,4); hold on; axis square; box on;
 title('Degree distributions', 'FontSize', titlefont)
 degrees_i = sum(K,2);
 degrees_o = sum(K,1);
@@ -76,7 +76,7 @@ legend('$$k^{\rm in}$$', '$$k^{\rm out}$$', 'Interpreter', 'latex', 'FontSize', 
 xlabel('$k$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('Density', 'FontSize', labelfont)
 
-subplot(5,1,5); hold on; axis square;
+subplot(5,1,5); hold on; axis square; box on;
 title('{ \boldmath $k^{\rm in} \leftrightarrow k^{\rm out}$ }', 'Interpreter', 'latex', 'FontSize', titlefont)
 scatter(degrees_i, degrees_o, '.k')
 xlabel('$$k^{\rm in}$$','Interpreter','latex', 'FontSize', labelfont)
@@ -88,3 +88,6 @@ if size(MP,1)>1
     pause(0.01); % this seems sometimes necessary on a Mac
     set(f_reproduce,'Position',[pos(1,2)+MP(2,1:2) pos(3:4)]);
 end
+
+print(f_reproduce, '../Figures/STDPbeforeIP.png', '-dpng', '-r400')
+
