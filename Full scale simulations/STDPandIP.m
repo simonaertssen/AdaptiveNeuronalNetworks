@@ -30,8 +30,8 @@ pars.e = 0; %randcauchy(seed, pars.eta0, pars.delta, pars.N);
 
 %% The simulation
 STDP = struct('window', @Kempter1999Window, 'Kupdate', @(K, W) K + W, 'w_i', 1.0e-5, 'w_o', - 1.0475*1.0e-5);
-STDP = struct('window', @Song2017Window, 'Kupdate', @(K, W) K.*W); 
-plastopts = struct('SP', STDP, 'SS', false, 'IP', false);
+STDP = struct('window', @Song2017Window, 'Kupdate', @(K, W) K + K.*W); 
+plastopts = struct('SP', STDP);
 
 [t, thetas_full, K, Kmeans] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
 drawthetas = spikesNaN(thetas_full);

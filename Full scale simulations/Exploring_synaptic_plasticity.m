@@ -35,7 +35,9 @@ pars.e = 0; %randcauchy(seed, pars.eta0, pars.delta, pars.N);
 
 
 %% Exploration:
-plastopts = struct('SP', true, 'window', @Kempter1999Window, 'SS', false, 'IP', false);
+STDP = struct('window', @Song2017Window, 'Kupdate', @(K, W) K + K.*W); 
+plastopts = struct('SP', STDP);
+
 [t, thetas_full, K, Kmeans] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
 drawthetas = spikesNaN(thetas_full);
 z = orderparameter(thetas_full);
@@ -69,7 +71,7 @@ for i = 1:4
         STDP.w_i = 1.0e-5; STDP.w_o = - 1.0475*1.0e-5;
     end
     if name == "Song2017Window"
-        STDP.Kupdate = @(K, W) K.*W;
+        STDP.Kupdate = @(K, W) K + K.*W;
     end
     
     plastopts = struct('SP', STDP);
@@ -100,8 +102,8 @@ for i = 1:4
     xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
 end
 
-% print(f_noSS, '../Figures/LearningWithoutScaling.png', '-dpng', '-r300')
-% close(f_noSS)
+print(f_noSS, '../Figures/LearningWithoutScaling.png', '-dpng', '-r300')
+close(f_noSS)
 
 %% Adding synaptic scaling:
 STDP = struct('window', @Kempter1999Window, 'Kupdate', @(K, W) K + W, 'w_i', 1.0e-5, 'w_o', - 1.0475*1.0e-5);
