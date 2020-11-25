@@ -35,6 +35,7 @@ exportpdf(f_windows, '../Figures/LearningWindowsBiphasic.pdf', export);
 close(f_windows)
 
 %% Observe function shapes: triphasic windows
+dt = linspace(-0.08, 0.1, tpts);
 
 f_windows = figure('Renderer', 'painters', 'Position', [50 800 600 200]); box on; hold on;
 ylim([-0.14, 0.12]);
@@ -50,10 +51,16 @@ ylabel("$W$", 'Interpreter', 'latex', 'FontSize', labelfont);
 exportpdf(f_windows, '../Figures/LearningWindowsTriphasic.pdf', export);
 close(f_windows)
 
+%%
+dt = linspace(-0.08, 0.1, tpts);
+
+plot(dt, Song2017Window(dt))
+
 %% Function properties
 clc
 integral(@Kempter1999Window, -0.08, 0.1)
 integral(@Song2000Window, -0.08, 0.1)
+integral(@Song2017Window, -0.08, 0.1)
 integral(@ChrolCannon2012Window, -0.08, 0.1)
 integral(@Waddington2014Window, -0.08, 0.1)
 
@@ -120,6 +127,22 @@ function dW = Song2000Window(dt)
     dW(t_pos_idx) = A_pos*exp(-dt(t_pos_idx)/t_pos);
     dW(t_neg_idx) = A_neg*exp(dt(t_neg_idx)/t_neg);
 end
+
+
+function dW = Song2017Window(dt)
+    t_pos = 20;
+    t_neg = 20;
+    A_pos = 0.005;
+    A_neg = -0.00525;
+
+    dt = dt * 1.0e3; % Convert to seconds
+    dW = zeros(size(dt));
+    t_pos_idx = dt > 0;
+    t_neg_idx = dt <= 0;
+    dW(t_pos_idx) = A_pos*exp(-dt(t_pos_idx)/t_pos);
+    dW(t_neg_idx) = A_neg*exp(dt(t_neg_idx)/t_neg);
+end
+
 
 function dW = Waddington2014Window(dt)
 %     lr = 0.005; alpha = 8.0e-6;
