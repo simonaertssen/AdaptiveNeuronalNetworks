@@ -53,7 +53,6 @@ close(f_windows)
 
 %%
 dt = linspace(-0.08, 0.1, tpts);
-
 plot(dt, Song2017Window(dt))
 
 %% Function properties
@@ -84,6 +83,12 @@ timeme(N, 1000, @Waddington2014Window);
 toc;
 
 % Turns out Waddington is quicker
+
+%% Intrinsic plasticity:
+% Use the theory treated in Song2017
+dt = linspace(-0.01, 0.25, tpts);
+
+plot(dt, Song2017ip(dt))
 
 %% Functions
 function out = timeme(N, tpts, handle)
@@ -163,4 +168,20 @@ function dW = ChrolCannon2012Window(dt)
     t_neg = 2000;
     dt = dt * 1.0e3; % Convert to seconds
     dW = Ap*exp(-((dt - 15).^2/t_pos)) - Am*exp(-((dt - 20).^2/t_neg));
+end
+
+
+function phi = Song2017ip(dt)
+    T_max = 90; %ms
+    T_min = 110; %ms
+    lr = 0.012;
+
+    dt = dt * 1.0e3; % Convert to seconds
+    phi = zeros(size(dt));
+    t_neg_idx = dt < T_min;    
+    t_pos_idx = dt > T_max;
+    
+    phi((T_min <= dt) & (dt <= T_max)) = 0;
+    phi(t_neg_idx) = -lr*exp((T_min - dt(t_neg_idx))/T_min);
+    phi(t_pos_idx) = lr*exp((dt(t_pos_idx) - T_max)/T_max);
 end
