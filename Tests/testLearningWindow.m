@@ -1,5 +1,7 @@
 clear all; close all; clc
-% Test the evaluation speed of some of the learning windows:
+% Test the speed of some of the learning windows and measure some more
+% properties. Make graphs.
+
 %% Setup
 %addpath('../Functions');
 
@@ -44,24 +46,24 @@ close(f_windows)
 dt = linspace(-0.08, 0.1, tpts);
 
 f_windows = figure('Renderer', 'painters', 'Position', [50 800 600 200]); box on; hold on;
-ylim([-0.14, 0.12]);
-
+subplot(1,2,1); box on; hold on; xlim([dt(1), dt(end)]); ylim([-0.14, 0.12]);
 y = ChrolCannon2012Window(dt);
 plot(dt, y, 'LineWidth', 2, 'Color', '#77AC30')
-
-plot(dt, Waddington2014Window(dt), 'LineWidth', 2, 'Color', '#A2142F')
-
-legend("$$W(t)_C$$", "$$W(t)_W$$", 'Interpreter', 'latex', 'FontSize', labelfont, 'Orientation','horizontal')
+legend("$$W(t)_C$$", 'Interpreter', 'latex', 'FontSize', labelfont, 'Orientation','horizontal', 'Location', 'southwest')
 xlabel("$t$ [s]", 'Interpreter', 'latex', 'FontSize', labelfont); 
 ylabel("$W$", 'Interpreter', 'latex', 'FontSize', labelfont);
-exportpdf(f_windows, '../Figures/LearningWindowsTriphasic.pdf', export);
+
+subplot(1,2,2); box on; hold on; xlim([dt(1), dt(end)]); ylim([-0.14, 0.12]);
+plot(dt, Waddington2014Window(dt), 'LineWidth', 2, 'Color', '#A2142F')
+
+legend("$$W(t)_W$$", 'Interpreter', 'latex', 'FontSize', labelfont, 'Orientation','horizontal', 'Location', 'southwest')
+xlabel("$t$ [s]", 'Interpreter', 'latex', 'FontSize', labelfont); 
+ylabel("$W$", 'Interpreter', 'latex', 'FontSize', labelfont);
+
+% exportpdf(f_windows, '../Figures/LearningWindowsTriphasic.pdf', export);
+print(f_windows, '../Figures/LearningWindowsTriphasic.png', '-dpng', '-r400')
 close(f_windows)
 
-%%
-dt = linspace(-0.08, 0.1, tpts); hold on;
-plot(dt, Kempter1999Window(dt))
-plot(dt, Song2017Window(dt))
-hold off
 
 %% Function properties
 clc
