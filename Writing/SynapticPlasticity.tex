@@ -17,22 +17,20 @@ Let us say that $\theta_i$ spikes at time $t_i$ and $\theta_j$ spikes at $t_j$. 
 The functions $W(t)$ that relate $\Delta t_{ij}$ to $\Delta K_{ij}$ are called \textsl{learning windows},  as they define a range in which $K_{ij}$ is able to adapt. When signals between neurons show a very large time difference (negative or positive) we do not expect them to be correlated. Because the learning windows are generally not symmetrical we can also expect an asymmetrical adjacency matrix.\\
 Another characteristic is the integral over the learning window. A window with a negative integral directs synaptic strengths mostly towards inhibitory behaviour, and vice versa with a positive integral. An integral of zero would mean that both inhibitory and excitatory synapses are stimulated equally.\\
 
-\subsection{Method}
 Now that we have a feeling of how \STDP works, we need to formulate the behaviour exactly. One by one, we will denote our ideas into mathematics.
 
-\subsubsection{From Kempter1999}
+
+\subsection{Biphasic learning windows}
+
+\subsubsection{Kempter1999}
 Following the notation in \cite{Kempter1999}, we will denote the spike train coming from each neuron $\theta_i$ as $S_i^{\rm out}(t) = \sum_{n} \delta (t-t_{i}^{n})$, where $t_{i}^{n}$ is the time that $\theta_i$ has fired. Similarly, we will denote the spike train coming into each neuron $\theta_i$ as $S_i^{\rm in}(t) = \sum_{f} \delta (t-t_{i}^{f})$. Now we can say that the synaptic strengths are adjusted as:
 \begin{align}
 \Delta K_{ij} &= \int_{t}^{t+\mathcal{T}} w^{\rm{out}} S_i^{\rm out}(\tau) + w^{\rm{in}} S_{j}^{\rm {in}}(\tau) \mathrm{d}\tau
 + \iint_{t}^{t+\mathcal{T}} W( \tau^\prime - \tau) S_{i}^{\rm out}(\tau) S_{j}^{\rm in}( \tau^\prime) \mathrm{d} \tau \mathrm{d} \tau^\prime
-\label{eq:KempterFormulation1} \\
-&= \sum_{t_i^{n}\in \mathcal{T}} w^{\mathrm{out}} + \sum_{t_{j}^{f} \in \mathcal{T}} w^{\mathrm{in}} + \sum_{t_{j}^{f}, t_i^{n} \in \mathcal{T}} W\left(t_{j}^{f}-t_i^{n}\right) \label{eq:KempterFormulation2}
+\label{eq:KempterSTDPFormulation1} \\
+&= \sum_{t_i^{n}\in \mathcal{T}} w^{\mathrm{out}} + \sum_{t_{j}^{f} \in \mathcal{T}} w^{\mathrm{in}} + \sum_{t_{j}^{f}, t_i^{n} \in \mathcal{T}} W (t_{j}^{f}-t_i^{n} ) \label{eq:KempterSTDPFormulation2}
 \end{align}
-\eqref{eq:KempterFormulation1} is the most general formulation of \STDP and includes a small change in weights when a signal is merely received. Whether this is a process that influences \STDP is still under investigation, but we will neglect the contribution.
-
-
-\subsection{Biphasic Learning windows}
-\subsubsection{Kempter 1999}
+where \cite{Kempter1999} proposes the following learning window:
 \begin{align}
 W(t)_K = \eta
 \begin{cases}
@@ -45,7 +43,11 @@ $\int W(s)_K \mathrm{d}s = 2.56 \times 10^{-4}$.
 
 
 \subsubsection{Song 2000}
-The first formulation of \STDP as a mathematical model was in \cite{Song2000}. 
+The first formulation of \STDP as a mathematical model was in \cite{Song2000}. It is postulated without being concerned about the biological aspect too much. The synaptic strengths are simply updated as:
+\begin{align}
+\Delta K_{ij} &= K_{ij} \sum_{t_{j}^{f}, t_i^{n} \in \mathcal{T}} W (t_{j}^{f}-t_i^{n} ) \label{eq:SongSTDPFormulation1}
+\end{align}
+The learning window is defined as a discontinuous function:
 \begin{align}
 W(t)_S =
 \begin{cases}
@@ -53,11 +55,11 @@ A_{p} \cdot \exp \left(\frac{-t}{\tau_p}\right) & \text{for } s > 0 \\
 A_{n} \cdot \exp \left(\frac{t}{\tau_n}\right)  & \text{for } s \leq 0
 \end{cases} \label{eq:learningwindowKempter1999}
 \end{align}
-where we will use the values as proposed in \cite{ChrolCannon2012}: $A_p = 0.1$, $A_n = -0.12$ and $\tau_p = \tau_n = 20$. $\int W(s)_S \mathrm{d}s = -3.70 \times 10^{-4}$.
+where we will use $A_p = 0.005$, $A_n = -0.00525$ and $\tau_p = \tau_n = 20$ ms. $\int W(s)_S \mathrm{d}s = -3.70 \times 10^{-4}$ so we expect the weights to be suppressed towards a negative value.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width = \textwidth]{../Figures/LearningWindowsBiphasic.pdf}
+\includegraphics[width = \textwidth]{../Figures/LearningWindowsBiphasic.png}
 \caption{Two different biphasic learning windows. We can see how in $W(t)_s$ a larger weight is put on the anti-Hebbian learning.}
 \label{fig:LearningWindowsBiphasic}
 \end{figure}

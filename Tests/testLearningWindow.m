@@ -1,7 +1,7 @@
 clear all; close all; clc
 % Test the evaluation speed of some of the learning windows:
 %% Setup
-addpath('../Functions');
+%addpath('../Functions');
 
 N = 1000;
 tpts = 30001;
@@ -16,22 +16,28 @@ export = true;
 %% Observe function shapes: biphasic windows
 dt = linspace(-0.08, 0.1, tpts);
 
-f_windows = figure('Renderer', 'painters', 'Position', [50 800 600 200]); box on; hold on;
-ylim([-0.14, 0.12]);
+f_windows = figure('Renderer', 'painters', 'Position', [50 800 600 200]); 
 
+subplot(1,2,1); box on; hold on; xlim([dt(1), dt(end)]);
 plot(dt, Kempter1999Window(dt), 'LineWidth', 2, 'Color', '#0072BD')
+legend("$$W(t)_K$$", 'Interpreter', 'latex', 'FontSize', labelfont, 'Orientation','horizontal', 'Location', 'southeast')
+xlabel("$t$ [s]", 'Interpreter', 'latex', 'FontSize', labelfont); 
+ylabel("$W$", 'Interpreter', 'latex', 'FontSize', labelfont);
 
+subplot(1,2,2); ylim([-0.14, 0.12]); xlim([dt(1), dt(end)]); box on; hold on;
 yleft = Song2000Window(dt(dt<=0)); yright = Song2000Window(dt(dt>0));
 plot(dt(dt<=0), yleft, 'LineWidth', 2, 'Color', '#D95319'); 
 plot(dt(dt>0), yright, 'LineWidth', 2, 'Color', '#D95319', 'HandleVisibility', 'off')
 line([0, 0],[min(yleft), max(yright)],'Color','k','LineStyle','--', 'LineWidth', 1, 'HandleVisibility', 'off')
 scatter(0, Song2000Window(0), 30, [0.8500 0.3250 0.0980], 'filled', 'o')
 
-legend("$$W(t)_K$$", "$$W(t)_S$$", 'Interpreter', 'latex', 'FontSize', labelfont, 'Orientation','horizontal')
+legend("$$W(t)_S$$", 'Interpreter', 'latex', 'FontSize', labelfont, 'Orientation','horizontal', 'Location', 'southeast')
 xlabel("$t$ [s]", 'Interpreter', 'latex', 'FontSize', labelfont); 
 ylabel("$W$", 'Interpreter', 'latex', 'FontSize', labelfont);
 
-exportpdf(f_windows, '../Figures/LearningWindowsBiphasic.pdf', export);
+% exportpdf(f_windows, '../Figures/LearningWindowsBiphasic.pdf', export);
+print(f_windows, '../Figures/LearningWindowsBiphasic.png', '-dpng', '-r400')
+
 close(f_windows)
 
 %% Observe function shapes: triphasic windows
@@ -52,8 +58,10 @@ exportpdf(f_windows, '../Figures/LearningWindowsTriphasic.pdf', export);
 close(f_windows)
 
 %%
-dt = linspace(-0.08, 0.1, tpts);
+dt = linspace(-0.08, 0.1, tpts); hold on;
+plot(dt, Kempter1999Window(dt))
 plot(dt, Song2017Window(dt))
+hold off
 
 %% Function properties
 clc
@@ -99,6 +107,24 @@ function out = timeme(N, tpts, handle)
 end
 
 function dW = Kempter1999Window(dt)
+    t_syn = 5;
+    t_pos = 1;
+    t_neg = 20;
+    A_p = 1;
+    A_n = -1;
+    learning_rate = 1.0e-5;
+    eps = 1.0e-9;
+    dt = -dt * 1.0e3; % Convert to seconds
+    
+    dW = zeros(size(dt));
+    t_neg_idx = dt <= 0;
+    t_pos_idx = 0 < dt;
+    dW(t_neg_idx) = exp(dt(t_neg_idx)/t_syn + eps).*(A_p*(1-dt(t_neg_idx)/t_pos) + A_n*(1-dt(t_neg_idx)/t_neg));
+    dW(t_pos_idx) = A_p*exp(-dt(t_pos_idx)/t_pos + eps) + A_n*exp(-dt(t_pos_idx)/t_neg + eps);
+    dW = learning_rate * dW;
+end
+
+function dW = Kempter1999WindowOld(dt)
     t_syn = 5;
     t_pos = 1;
     t_neg = 20;
