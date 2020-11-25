@@ -107,7 +107,7 @@ close(f_noSS)
 
 %% Adding synaptic scaling:
 STDP = struct('window', @Kempter1999Window, 'Kupdate', @(K, W) K + W, 'w_i', 1.0e-5, 'w_o', - 1.0475*1.0e-5);
-plastopts = struct('SP', STDP, 'SS', true, 'IP', false);
+plastopts = struct('SP', STDP, 'SS', true);
 
 [t, thetas_full, K, Kmeans] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
 drawthetas = spikesNaN(thetas_full);
