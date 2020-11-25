@@ -32,20 +32,20 @@ Following the notation in \cite{Kempter1999}, we will denote the spike train com
 \end{align}
 where \cite{Kempter1999} proposes the following learning window:
 \begin{align}
-W(t)_K = \eta
+W(t)_K = \alpha
 \begin{cases}
 \left[A_{p}\left(1-\frac{t}{\tilde{\tau}_{p}}\right)+A_{n}\left(1-\frac{t}{\tilde{\tau}_{n}}\right)\right] \cdot \exp \left( \frac{t}{\tau_{\rm syn}} \right) & \text{for } t \leq 0 \\
 A_{p} \cdot \exp \left(-\frac{t}{\tau_{p}}\right) + A_{n} \cdot \exp \left(-\frac{t}{\tau_{n}} \right) & \text{for } t > 0
 \end{cases} \label{eq:learningwindowKempter1999}
 \end{align}
-Here $t$ is the delay between presynaptic spike arrival and postsynaptic firing, $\eta$ is a small learning parameter and all $\tau$ are time constants. Numerical values are usually  $\eta = 0.05$, $\tau_{\rm syn} = 5$ ms, $\tau_{p} = 1$ ms, $\tau_{n} = 20$ ms and $A_p = 1$ and $A_{n} = -1$. $\tilde{\tau}_{p} \equiv \tau_{\rm syn} \tau_{p} / (\tau_{\rm syn} + \tau_{p})$ and $\tilde{\tau}_{n} \equiv \tau_{\rm syn} \tau_{n} / (\tau_{\rm syn} + \tau_{n})$. \\
+Here $t$ is the delay between presynaptic spike arrival and postsynaptic firing, $\alpha$ is a small learning parameter and all $\tau$ are time constants. Numerical values are usually  $\alpha = 0.05$, $\tau_{\rm syn} = 5$ ms, $\tau_{p} = 1$ ms, $\tau_{n} = 20$ ms and $A_p = 1$ and $A_{n} = -1$. $\tilde{\tau}_{p} \equiv \tau_{\rm syn} \tau_{p} / (\tau_{\rm syn} + \tau_{p})$ and $\tilde{\tau}_{n} \equiv \tau_{\rm syn} \tau_{n} / (\tau_{\rm syn} + \tau_{n})$. \\
 $\int W(s)_K \mathrm{d}s = 2.56 \times 10^{-4}$.
 
 
 \subsubsection{Song 2000}
 The first formulation of \STDP as a mathematical model was in \cite{Song2000}. It is postulated without being concerned about the biological aspect too much. The synaptic strengths are simply updated as:
 \begin{align}
-\Delta K_{ij} &= K_{ij} \sum_{t_{j}^{f}, t_i^{n} \in \mathcal{T}} W (t_{j}^{f}-t_i^{n} ) \label{eq:SongSTDPFormulation1}
+\Delta K_{ij} &= K_{ij} \sum_{t_{j}^{f}, t_i^{n} \in \mathcal{T}} W (t_{j}^{f}-t_i^{n} ) \label{eq:SongSTDPFormulation}
 \end{align}
 The learning window is defined as a discontinuous function:
 \begin{align}
@@ -66,6 +66,11 @@ where we will use $A_p = 0.005$, $A_n = -0.00525$ and $\tau_p = \tau_n = 20$ ms.
 
 
 \subsection{Triphasic Learning windows}
+Based off of neuronal actiity in the hippocmpus, biologically inspired triphasic windows have been developed. The papers describing the learning process are not specifying exactly how the weights are updated, as we have seen before there are a few options. We assume the change is simply:
+\begin{align}
+\Delta K_{ij} =  \sum_{t_{j}^{f}, t_i^{n} \in \mathcal{T}} W (t_{j}^{f}-t_i^{n} ) \label{eq:WaddingtonSTDPFormulation}
+\end{align}
+as there is no mention of other parameters.
 
 \subsubsection{Chrol-Cannon 2012}
 \begin{align}
@@ -74,6 +79,7 @@ W(t)_C = A_{p} \cdot \exp \left(\frac{-\left(t - 15 \right)^{2}}{ \tau_{p}}\righ
 where $A_{p}=0.23$, $A_{n}=0.15$, $\tau_{p}=200$ and $\tau_n = 2000$. $\int W(s)_C \mathrm{d}s = -60.0 \times 10^{-4}$.
 
 \subsubsection{Waddington 2014}
+The learning window is then defined as:
 \begin{align}
 W(t)_W =  A \left[1-\frac{\left(t-\alpha\right)^{2}}{\alpha^{2}}\right] \cdot \exp \left(\frac{-\left|t - \alpha\right|}{\alpha}\right) \label{eq:learningwindowWaddington2014}
 \end{align}
@@ -81,8 +87,8 @@ We will use $A = 0.1$ and $\alpha = 4.0$ ms . $\int W(s)_W \mathrm{d}s = -8.0 \t
 
 \begin{figure}[H]
 \centering
-\includegraphics[width = \textwidth]{../Figures/LearningWindowsTriphasic.pdf}
-\caption{Two different triphasic learning windows. We can see how in $W(t)_C$  a much higher penalty is given to signals that arrive too early or too late. The moments at which signals should peak also differ by about 10 ms.}
+\includegraphics[width = \textwidth]{../Figures/LearningWindowsTriphasic.png}
+\caption{The mean degree $\kmean$ evolves over time as a function of the spiking behaviour, just like we expect.}
 \label{fig:LearningWindowsTriphasic}
 \end{figure}
 
@@ -105,6 +111,22 @@ One technique we can apply to keep the strengths within a definitive range is to
 \begin{align}
 K_{ij}^s = K_{ij} \frac{\frac{1}{N} \sum_{i,j} K_{ij}}{\sum_{i} K_{ij}}
 \end{align}
+In this way, the out-degrees will remain constant. Using this approach, something has to remain constant, whether that is $\kmean$, or $\kmean^2$ or any other property of the adjacency matrix.
+
+
+\subsection{Intrinsic plasticity}
+Instead of scaling the weights to preserve a certain quantity in the network, we can allow the neurons to adjust the sensitivity to incoming signals. So when some synaptic strengths are increased, we can reduce the excitability. In \cite{Song2017} such a method is introduced in detail. We can simply update $\eta_{i} \rightarrow \eta_{i} + \eta_{\max } \cdot \phi_{i}$ where 
+\begin{align}
+\phi_{i} (t) =\left\{\begin{array}{l}-\alpha \cdot \exp \left(\frac{T_{\min }-t}{T_{\rm min }}\right) \text { if } t<T_{ \rm min } \\ \alpha \cdot \exp \left(\frac{t-T_{\rm max }}{T_{\max }}\right) \text { if } t >T_{\rm max } \\ 0, \text { otherwise }\end{array}\right.
+\end{align}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width = 0.5\textwidth]{../Figures/IPlearningFunction.png}
+\caption{The learning behaviour for the intrinsic plastiity.}
+\label{fig:IPlearningFunction}
+\end{figure}
+
 
 
 \subsection{Custom learning windows}
