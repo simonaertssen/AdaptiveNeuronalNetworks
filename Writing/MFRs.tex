@@ -12,7 +12,7 @@ The network dynamics are described as follows:
 \begin{align}
 \frac{d \theta_i}{d t} &= (1 - \cos\theta_i) + (1 + \cos\theta_i)\cdot\left(\eta_i + I_i \right) \qquad \theta_i \in \T^N \nonumber \\
 I_{i} &= \frac{\kappa}{\langle k\rangle} \sum_{j=1}^{N} A_{i j} P_{n}\left(\theta_{j}\right) \label{eq:FullThetaNeuronNetwork} \\
-P_{n}\left(\theta_{j}\right) &= (1 - \cos\theta_j) \nonumber
+P_{n}\left(\theta_{j}\right) &= a_n (1 - \cos\theta_j) \nonumber
 \end{align}
 
 We observe synchronisation through the order parameter
@@ -70,9 +70,11 @@ z(\k) \longrightarrow \theta_i &= -\ic \cdot \log \left( \frac{z(\k)\cdot P(\k)}
 \theta_i \longrightarrow z(\k) &= \sum_{\k} e^{\ic \vartheta_{\k}} \qquad \qquad \vartheta_{\k} = \sum_{i = 1}^{n(\k)} \theta_i \in 
 \left\{ \theta_i \vert \degree(\theta_i) = \k, \forall i \leq N \right\}
 \end{align*}
-Or also $\sum_i^N A_{ij} = k^{\rm in} \cup \sum_j^N A_{ij} = \kout$. We can see how $\lim_{N \rightarrow +\infty} n(\k) = P(\k)$, which makes these maps exact for any network size. 
+%Or also $\sum_i^N A_{ij} = k^{\rm in} \cup \sum_j^N A_{ij} = \kout$. 
+
+We can see how $\lim_{N \rightarrow +\infty} n(\k) = P(\k)$, which makes these maps exact for any network size. 
     
-    
+\newpage
 \section{Phase space}
 \subsection{Fixed degree networks}
 In the phase space, we can clearly distinguish three macroscopic states for the mean field:
@@ -127,10 +129,34 @@ For different networks this can look a little different.
 
 \section{Differences between theory and practice}
 \begin{figure}[H]
-  \includegraphics[width=\linewidth]{../Figures/MFRCPW.png}
-  \caption{CPW state}\label{fig:MFRCPW}
+  \includegraphics[width=\linewidth]{../Figures/InspectMeanFieldFullyConnected.pdf}
+  \caption{Mean field descriptions of fully connected networks.}\label{fig:InspectMeanFieldFullyConnected}
 \end{figure}
 
+\begin{figure}[H]
+  \includegraphics[width=\linewidth]{../Figures/InspectMeanFieldFixedDegree.pdf}
+  \caption{Mean field descriptions of fixed degree networks.}\label{fig:InspectMeanFieldFixedDegree}
+\end{figure}
+
+\begin{figure}[H]
+  \includegraphics[width=\linewidth]{../Figures/InspectMeanFieldRandom.pdf}
+  \caption{Mean field descriptions of random networks.}\label{fig:InspectMeanFieldRandom}
+\end{figure}
+
+\begin{figure}[H]
+  \includegraphics[width=\linewidth]{../Figures/InspectMeanFieldScaleFree.pdf}
+  \caption{Mean field descriptions of scale-free networks.}\label{fig:InspectMeanFieldScaleFree}
+\end{figure}
+
+\begin{figure}[H]
+  \includegraphics[width=\linewidth]{../Figures/testScaleFree.png}
+  \caption{The scale-free networks seem to converge to different limit cycles.}\label{fig:testScaleFree}
+\end{figure}
+
+\begin{figure}[H]
+  \includegraphics[width=\linewidth]{../Figures/InspectMeanFieldLogNorm.pdf}
+  \caption{Mean field descriptions of log-normal networks.}\label{fig:InspectMeanFieldLogNorm}
+\end{figure}
 
 
 
@@ -234,7 +260,7 @@ I cannot seem to converge close enough.
 
 
 \subsection{Mapping onto $\R^2$}
-$\bar{z}_{\k}$ and $\Re(z_{\k})$ are non-holomorphic (how . Try again by separating the real and imaginary part: $z(\k,t) = x(\k,t) + \ic y(\k,t)$.
+$\bar{z}_{\k}$ and $\Re(z_{\k})$ are non-holomorphic. Try again by separating the real and imaginary part: $z(\k,t) = x(\k,t) + \ic y(\k,t)$.
 \begin{align*}
 \begin{aligned} \dot{x_{\k}} 
 &=f_{n}\left(x_{\k}, y_{\k} ; \eta_{0}, \Delta, k\right) \\ 
