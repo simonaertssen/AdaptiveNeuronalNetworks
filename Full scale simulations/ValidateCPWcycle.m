@@ -188,15 +188,18 @@ IC = wrapToPi(randn(pars.N, 1)*2.0);
 IC = pi*ones(pars.N, 1) - pi;
 
 sfpars = make_scalefreeparameters(pars, degree);
+
+sfpars.P = @(x,y) P2D(x, y, sfpars.degree, pars.N);
+
 [~, thetasfull, A] = DOPRI_simulatenetwork(tnow,tend,IC,h,sfpars);
 zfull = orderparameter(thetasfull);
 % ts = findlimitcycle(abs(zfull));
 disp('Full scale test done')
 
 % The OA mean field theory:
-sfpars = prepareOAparameters(sfpars);
+sfpars = prepareOAparameters2DP(sfpars);
 z0 = map_thetatozoa(gather(thetasfull(:,1)), sfpars);
-z0 = orderparameter(IC)*ones(sfpars.Mk,1);
+%z0 = orderparameter(IC)*ones(sfpars.Mk,1);
 [~, ZOA] = OA_simulatenetwork(tnow, tend, z0, sfpars, odeoptions);
 % TOAs = findlimitcycle(abs(ZOA));
 disp('OA mean field test done')
@@ -272,3 +275,21 @@ disp('Made scale-free network figure')
 % 
 % disp('Made lognorm network figure')
 % 
+
+function P = P2D(x,y,degree,N)
+    P = x.^(-degree) + y.^(-degree);
+    P = P/sum(P, 'all')*N;
+end
+
+
+function p = prepareOAparameters2DP(p)
+    [p.k, ~, ic] = unique(p.degrees_i);
+    p.kcount = accumarray(ic, 1);
+    p.Mk = numel(p.k);
+    p.k_o = unique(p.degrees_o);
+    p.OA = zeros(p.Mk, p.Mk);
+    for i = 1:p.Mk
+        p.OA(i, :) = p.P(p.k, p.k_o).*assortativity(p.k, p.k_o, p.k(i), p.k_o(i), p.N, p.meandegree, 0);
+    end
+    p.OA = p.K*p.OA/p.meandegree;
+end
