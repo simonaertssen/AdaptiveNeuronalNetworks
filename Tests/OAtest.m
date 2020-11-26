@@ -22,27 +22,57 @@ seed = 2; rng(seed);
 pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
 IC = - pi/2 * ones(pars.N, 1);
 
-%% A 2D scalefree pdf: this is too difficult
+%% A 2D scalefree pdf: 
 kmin = 750; kmax = 2000; degree = 3; 
 vec = linspace(kmin, kmax, kmax-kmin+1);
 [x,y] = meshgrid(vec, vec);
 
 xy = cat(3,x,y);
 
+% Pull samples from 2D pdf
 P = x.^(-degree) + y.^(-degree);
 P = P/sum(P, 'all')*pars.N;
 
-idx = 1:50:numel(vec);
+idx = 1:numel(vec);
+Xin = kmin:10:kmax;
+Yin = kmin:10:kmax;
+
+Xmat = ones(length(Yin),1)*Xin;
+Ymat = Yin'*ones(1,length(Xin));
+
+samples = zeros(2, pars.N);
+for i = 1:pars.N
+    [samples(1, i),samples(2, i)] = pinky(Xin, Yin, P2D(Xmat, Ymat, degree, pars.N));
+end
+
+%%
+samples(2, :) = samples(1, randperm(pars.N));
 figure; hold on;
-surf(x(idx,idx),y(idx,idx),P(idx,idx));
+surf(x(idx,idx),y(idx,idx),P(idx,idx)/pars.N * 0.9);
+histogram2(samples(1, :), samples(2, :), kmin:100:kmax, kmin:100:kmax, 'Normalization', 'pdf'); % Normal degree vectors from before
+
+%%
+
+sfpars = make_scalefreeparameters(pars, degree, kmin, kmax);
+
+
+figure; hold on;
+histogram2(sfpars.degrees_i, sfpars.degrees_o,'Normalization', 'pdf','XBinLimits',[kmin,kmax],'YBinLimits',[kmin,kmax],'BinMethod', 'fd'); % Normal degree vectors from before
+surf(x(idx,idx),y(idx,idx),P(idx,idx)/pars.N);
 xlabel('x'); ylabel('y'); zlabel('P');
 xlim([kmin-100, kmax+100]); ylim([kmin-100, kmax-100]);
 
-samples = [randi([kmin,kmax],pars.N,1), randi([kmin,kmax],pars.N,1), max(P,[], 'all')*rand(pars.N,1)];
 
-% scatter3(samples(:,1), samples(:,2), samples(:,3))
+
+% figure; hold on;
+% x = sfpars.kmin:sfpars.kmax;
+% plot(x, sfpars.P(x)/sfpars.N)
+% histogram(sfpars.degrees_i, 'Normalization', 'pdf')
+% histogram(sfpars.degrees_o, 'Normalization', 'pdf')
 
 %%
+samples = [randi([kmin,kmax],pars.N,1), randi([kmin,kmax],pars.N,1), max(P,[], 'all')*rand(pars.N,1)];
+
 deletemeidx = zeros(pars.N, 1);
 idx = 1;
 for i = 1:pars.N
@@ -65,6 +95,8 @@ f = @(x) mvnpdf(x,mu,sigma);
 x = slicesample([2,2],pars.N,'pdf',f,'burnin',1000);
 
 hist3(x, [20,20])
+
+%% Try the joint distribution:
 
 %% Test slicesample on the 2D scalefree pdf:
 f = @(x) scalefreepdfmultivariate(x, pars.N, degree, kmin, kmax);
@@ -102,6 +134,11 @@ toc;
 
 
 %% Functions
+
+function P = P2D(x,y,degree,N)
+    P = x.^(-degree) + y.^(-degree);
+    P = P/sum(P, 'all')*N;
+end
 
 function P = scalefreepdfmultivariate(x, N, exponent, kmin, kmax)
     P = x(1).^(-exponent) + x(2).^(-exponent);

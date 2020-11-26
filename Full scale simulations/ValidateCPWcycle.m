@@ -189,7 +189,40 @@ IC = pi*ones(pars.N, 1) - pi;
 
 sfpars = make_scalefreeparameters(pars, degree);
 
+%%
 sfpars.P = @(x,y) P2D(x, y, sfpars.degree, pars.N);
+
+Xin = sfpars.kmin:10:sfpars.kmax;
+Yin = sfpars.kmin:10:sfpars.kmax;
+
+Xmat = ones(length(Yin),1)*Xin;
+Ymat = Yin'*ones(1,length(Xin));
+
+for i = 1:pars.N
+    [sfpars.degrees_i(i),sfpars.degrees_o(i)] = pinky(Xin, Yin, P2D(Xmat, Ymat, degree, pars.N));
+end
+sfpars.degrees_o = sfpars.degrees_i(randperm(pars.N));
+
+%%
+sum(sfpars.degrees_i)
+sum(sfpars.degrees_o)
+
+% Remove extra connections:
+% n = sum(sfpars.degrees_i) - sum(sfpars.degrees_o);
+% if n > 0
+%     abs(
+% else
+% end
+
+% figure; hold on;
+% x = sfpars.kmin:sfpars.kmax;
+% plot(x, sfpars.P(x)/sfpars.N)
+% histogram(sfpars.degrees_i, 'Normalization', 'pdf')
+% histogram(sfpars.degrees_o, 'Normalization', 'pdf')
+
+
+%%
+sfpars.Mk
 
 [~, thetasfull, A] = DOPRI_simulatenetwork(tnow,tend,IC,h,sfpars);
 zfull = orderparameter(thetasfull);
@@ -283,13 +316,13 @@ end
 
 
 function p = prepareOAparameters2DP(p)
-    [p.k, ~, ic] = unique(p.degrees_i);
+    [p.k, ~, ic] = unique([p.degrees_i, p.degrees_o], 'rows');
     p.kcount = accumarray(ic, 1);
-    p.Mk = numel(p.k);
-    p.k_o = unique(p.degrees_o);
+    p.Mk = numel(p.k)/2;
+    
     p.OA = zeros(p.Mk, p.Mk);
     for i = 1:p.Mk
-        p.OA(i, :) = p.P(p.k, p.k_o).*assortativity(p.k, p.k_o, p.k(i), p.k_o(i), p.N, p.meandegree, 0);
+        p.OA(i, :) = p.P(p.k(:,1), p.k(:,2)).*assortativity(p.k(:,1), p.k(:,2), p.k(i,1), p.k(i,2), p.N, p.meandegree, 0);
     end
     p.OA = p.K*p.OA/p.meandegree;
 end
