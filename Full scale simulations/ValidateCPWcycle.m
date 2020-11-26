@@ -198,8 +198,8 @@ disp('Full scale test done')
 
 % The OA mean field theory:
 sfpars = prepareOAparameters2DP(sfpars);
-z0 = map_thetatozoa(gather(thetasfull(:,1)), sfpars);
-%z0 = orderparameter(IC)*ones(sfpars.Mk,1);
+% z0 = map_thetatozoa(gather(thetasfull(:,1)), sfpars);
+z0 = orderparameter(IC)*ones(sfpars.Mk,1);
 [~, ZOA] = OA_simulatenetwork(tnow, tend, z0, sfpars, odeoptions);
 % TOAs = findlimitcycle(abs(ZOA));
 disp('OA mean field test done')
