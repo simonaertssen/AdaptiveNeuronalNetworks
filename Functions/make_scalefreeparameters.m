@@ -22,7 +22,6 @@ function scalefreepars = make_scalefreeparameters(pars, degree, kmin, kmax)
     scalefreepars.degrees_i = zeros(pars.N,1);
     scalefreepars.degrees_i(idx(1:n)) = kmin:kmax;
     scalefreepars.degrees_i(idx(n+1:end)) = randsample(kmin:kmax, pars.N-n, true, scalefreepars.P(kmin:kmax))';
-%     scalefreepars.degrees_i = randsample(kmin:kmax, pars.N, true, scalefreepars.P(kmin:kmax))';
 
     if max(scalefreepars.degrees_i) > pars.N - 1
         disp(['Setting higher in-degrees to ', num2str(pars.N-1)]);
