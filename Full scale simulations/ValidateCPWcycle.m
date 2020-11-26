@@ -15,7 +15,7 @@ export = false;
 
 %% Make a GPU init handle:
 if gpuDeviceCount > 0
-    d = gpuDevice(4);
+    d = gpuDevice(3);
 end
 initarray = make_GPUhandle();
 
