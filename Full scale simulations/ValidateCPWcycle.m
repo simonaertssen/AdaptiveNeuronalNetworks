@@ -183,7 +183,7 @@ odeoptions = odeset('RelTol', 1.0e-9,'AbsTol', 1.0e-9);
 % 
 %% 3. Perform a full scale simulation of a scale-free network:
 % The full scale simulation using the adjacency matrix:
-degree = 3;
+degree = 3; kmin = 750; kmax = 1750;
 IC = wrapToPi(randn(pars.N, 1)*2.0);
 IC = pi*ones(pars.N, 1) - pi;
 
@@ -197,8 +197,6 @@ Pnorm = x.^(-degree) .* y.^(-degree);
 Pnorm = sum(Pnorm, 'all')/sfpars.N;
 sfpars.P2D = @(x,y) P2D(x, y, sfpars.degree)/Pnorm;
 
-sum(sfpars.P2D(x, y), 'all')
-
 % Good figure showing the 2D pdf
 
 % figure; hold on; box on;
@@ -208,9 +206,11 @@ sum(sfpars.P2D(x, y), 'all')
 % view(45,44); xlabel("x"); ylabel("y"); zlabel("Density")
 
 %%
-[~, thetasfull, A] = DOPRI_simulatenetwork(tnow,tend,IC,h,sfpars);
-zfull = orderparameter(thetasfull);
-% ts = findlimitcycle(abs(zfull));
+disp('Start')
+
+% [~, thetasfull, A] = DOPRI_simulatenetwork(tnow,tend,IC,h,sfpars);
+% zfull = orderparameter(thetasfull);
+% % ts = findlimitcycle(abs(zfull));
 disp('Full scale test done')
 
 % The OA mean field theory:
@@ -246,7 +246,7 @@ phasespaceplot();
 title(sprintf('\\bf Scale-free network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f, $$\\gamma$$ = %0.1f', pars.N, sfpars.meandegree, sfpars.degree), 'FontSize', titlefont, 'Interpreter', 'latex')
 legend('$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southoutside', 'Orientation','horizontal')
 % exportpdf(f_scalefree, '../Figures/InspectMeanFieldScaleFreePhaseSpace.pdf', export);
-print(f_scalefree, '../Figures/testScaleFree.png', '-dpng', '-r300')
+% print(f_scalefree, '../Figures/testScaleFree.png', '-dpng', '-r300')
 % close(f_scalefree)
 
 disp('Made scale-free network figure')

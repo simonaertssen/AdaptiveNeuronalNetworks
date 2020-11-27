@@ -11,7 +11,7 @@ pars.N = 10000;
 meandegreetoget = 100;
 f_1Dpdfs = figure('Renderer', 'painters', 'Position', [50 800 900 400]); box on; hold on;
 
-%% A random network: CORRECT
+%% A 1D random network: CORRECT
 randompars = make_randomparameters(pars, meandegreetoget/(pars.N - 1));
 
 if round(sum(randompars.P(1:pars.N))) == pars.N; disp('Sum is correct'); end
@@ -31,7 +31,7 @@ subplot(2,3,5); hold on; grid on; axis square; box on;
 scatter(randompars.degrees_i, randompars.degrees_o, '.k');
 xlabel('$$k^{\rm in}$$', 'Interpreter', 'latex', 'FontSize', labelfont)
 
-%% A scale free network: CORRECT
+%% A 1D scale free network: CORRECT
 kmin = 68; kmax = 200;
 scalefreepars = make_scalefreeparameters(pars, 3, kmin, kmax);
 scalefreepars.meandegree
@@ -57,7 +57,7 @@ scatter(scalefreepars.degrees_i, scalefreepars.degrees_o, '.k');
 xlabel('$$k^{\rm in}$$', 'Interpreter', 'latex', 'FontSize', labelfont)
 pos = plt2.Position; plt2.Position = [pos(1) - 0.09, pos(2), pos(3), pos(4)];
 
-%% A fixed degree network / diracnet: CORRECT
+%% A 1D fixed degree network / diracnet: CORRECT
 fixeddegreepars = make_fixeddegreeparameters(pars, meandegreetoget);
 
 if sum(fixeddegreepars.P(1:pars.N)) == pars.N; disp('Sum is correct'); end
@@ -85,10 +85,10 @@ xlabel('$$k^{\rm in}$$', 'Interpreter', 'latex', 'FontSize', labelfont)
 ylabel('$$k^{\rm out}$$', 'Interpreter', 'latex', 'FontSize', labelfont)
 pos = plt.Position; plt.Position = [pos(1) + 0.09, pos(2), pos(3), pos(4)];
 
-%% Produce figure
+%% Produce 1D figure
 print(f_1Dpdfs, '../Figures/Distributions/1D.png', '-dpng', '-r300')
 
-%% Test: a lognormal network - inspired by scale-free CORRECT
+%% Test: a 1D lognormal network - inspired by scale-free CORRECT
 % lognormpars = make_lognormparameters(pars, 3, 1, 500);
 % 
 % if round(sum(lognormpars.P(1:pars.N))) == pars.N; disp('Sum is correct'); end
@@ -102,3 +102,21 @@ print(f_1Dpdfs, '../Figures/Distributions/1D.png', '-dpng', '-r300')
 % histogram(lognormpars.degrees_i, 'Normalization', 'pdf');
 % plot(x, lognormpars.P(x)/pars.N);
 % xline(lognormpars.meandegree, 'k--')
+
+%% Now the 2D pdfs:
+%% A 2D fixed degree network / diracnet: CORRECT
+fixeddegreepars = make_fixeddegreeparameters(pars, meandegreetoget);
+
+fixeddegreepars.P2D = @(x,y) fixeddegreepars.P(x) .* fixeddegreepars.P(y) / pars.N;
+
+if sum(fixeddegreepars.P2D(1:pars.N, 1:pars.N), 'all') == pars.N; disp('Sum is correct'); end
+
+%%
+[x,y] = meshgrid(minmax, minmax);
+idx = round(linspace(1, numel(minmax), 25));
+sum(fixeddegreepars.P2D(1:pars.N, 1:pars.N), 'all')
+
+%%
+minmax = linspace(meandegreetoget - 10, meandegreetoget + 10, 21);
+
+histogram2(fixeddegreepars.degrees_i, fixeddegreepars.degrees_o, minmax, minmax, 'Normalization', 'pdf'); % Normal degree vectors from before
