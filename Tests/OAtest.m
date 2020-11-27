@@ -14,7 +14,7 @@ export = true;
 tnow = 0; tend = 8;
 h = 0.01;
 
-pars.N = 1000;
+pars.N = 10000;
 pars.a_n = 0.666666666666666666667;
 pars.eta0 = 0.5; pars.delta = 0.7; pars.K = 2;
 seed = 2; rng(seed);
@@ -22,12 +22,36 @@ seed = 2; rng(seed);
 pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
 IC = - pi/2 * ones(pars.N, 1);
 
+%% Test how the 1D scale-free pdf looks like after randperm:
+kmin = 750; kmax = 2000; degree = 3; 
+sfpars = make_scalefreeparameters(pars, degree, kmin, kmax);
+
+vec = linspace(kmin, kmax, kmax-kmin+1);
+[x,y] = meshgrid(vec, vec);
+idx = round(linspace(1, numel(vec), 25));
+
+figure; hold on;
+surf(x(idx,idx),y(idx,idx),P2D(x(idx,idx),y(idx,idx),kmin, kmax, degree, pars.N)/pars.N);
+
+kminkmax = kmin:kmax;
+
+P1 = sfpars.P(kminkmax)/(sfpars.N^2);
+plot3(kminkmax, kmax*ones(size(kminkmax)), P1, 'LineWidth', 4);
+plot3(kmax*ones(size(kminkmax)), kminkmax, P1, 'LineWidth', 4);
+
+plot3(kminkmax, kmin*ones(size(kminkmax)), P1(1) + sfpars.P(kminkmax).*sfpars.P(kminkmax)/(sfpars.N^2), 'LineWidth', 4);
+plot3(kmin*ones(size(kminkmax)), kminkmax, P1(1) + sfpars.P(kminkmax).*sfpars.P(kminkmax)/(sfpars.N^2), 'LineWidth', 4);
+
+plot3(kminkmax, kminkmax, sfpars.P(kminkmax).*sfpars.P(kminkmax)/(sfpars.N^2), 'LineWidth', 4);
+
+kminkmax = linspace(kmin, kmax, 20);
+histogram2(sfpars.degrees_i, sfpars.degrees_o, kminkmax, kminkmax, 'Normalization', 'pdf'); % Normal degree vectors from before
+view(20,44); xlabel("x"); ylabel("y"); zlabel("Density")
+
 %% A 2D scalefree pdf: 
 kmin = 750; kmax = 2000; degree = 3; 
 vec = linspace(kmin, kmax, kmax-kmin+1);
 [x,y] = meshgrid(vec, vec);
-
-xy = cat(3,x,y);
 
 % Pull samples from 2D pdf
 P = x.^(-degree) + y.^(-degree);
@@ -46,10 +70,10 @@ for i = 1:pars.N
 end
 
 %%
-samples(2, :) = samples(1, randperm(pars.N));
 figure; hold on;
 surf(x(idx,idx),y(idx,idx),P(idx,idx)/pars.N * 0.9);
-histogram2(samples(1, :), samples(2, :), kmin:100:kmax, kmin:100:kmax, 'Normalization', 'pdf'); % Normal degree vectors from before
+kminkmax = linspace(kmin, kmax, 10);
+histogram2(samples(1, :), samples(2, :), kminkmax, kminkmax, 'Normalization', 'pdf'); % Normal degree vectors from before
 
 %%
 
@@ -96,13 +120,6 @@ x = slicesample([2,2],pars.N,'pdf',f,'burnin',1000);
 
 hist3(x, [20,20])
 
-%% Try the joint distribution:
-
-%% Test slicesample on the 2D scalefree pdf:
-f = @(x) scalefreepdfmultivariate(x, pars.N, degree, kmin, kmax);
-x = slicesample(kmax*[1,1],100000,'pdf',f,'burnin',10000);
-
-hist3(x, [20,20])
 
 %% Testing the OA approach:
 oapars = make_scalefreeparameters(pars, 3, 1, 500);
@@ -135,20 +152,33 @@ toc;
 
 %% Functions
 
-function P = P2D(x,y,degree,N)
-    P = x.^(-degree) + y.^(-degree);
-    P = P/sum(P, 'all')*N;
+function P = P2D(X,Y, kmin, kmax, degree, N)
+    P = X.^(-degree) .* Y.^(-degree);
+    
+    vec = linspace(kmin, kmax, kmax-kmin+1);
+    [x,y] = meshgrid(vec, vec);
+    Pnorm = x.^(-degree) .* y.^(-degree);
+    P = P/sum(Pnorm, 'all')*N;
 end
 
-function P = scalefreepdfmultivariate(x, N, exponent, kmin, kmax)
-    P = x(1).^(-exponent) + x(2).^(-exponent);
+function p = prepareOAparameters2DP(p)
+    [p.k, ~, ic] = unique([p.degrees_i, p.degrees_o], 'rows', 'stable');
+    p.kcount = accumarray(ic, 1);
+    p.Mk = numel(p.k)/2;
+    
+    p.OA = zeros(p.Mk, p.Mk);
+    for i = 1:p.Mk
+        p.OA(i, :) = p.P(p.k(:,1), p.k(:,2)).*assortativity(p.k(:,1), p.k(:,2), p.k(i,1), p.k(i,2), p.N, p.meandegree, 0);
+    end
+    p.OA = p.K*p.OA/p.meandegree;
 end
 
-function p = prepareOAparameters2D(p)
+
+function p = prepareOAparameters2Dold(p)
 %     [d_i, d_o] = meshgrid(unique(p.degrees_i), unique(p.degrees_o));
 %     p.k = [reshape(d_i, numel(d_i), 1), reshape(d_o, numel(d_o), 1)];
     p.k = unique([p.degrees_i, p.degrees_o], 'rows');
-    p.Mk = numel(p.k)/2
+    p.Mk = numel(p.k)/2;
 %     p.P = @(x) p.P(x)*sum(p.P(p.k(:,1)))/p.N;
     
 %     p.k = unique(p.degrees_i);
