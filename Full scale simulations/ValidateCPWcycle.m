@@ -190,11 +190,12 @@ IC = pi*ones(pars.N, 1) - pi;
 sfpars = make_scalefreeparameters(pars, degree);
 
 %%
+disp("Making random numbers")
+
 vec = linspace(sfpars.kmin, sfpars.kmax, sfpars.kmax-sfpars.kmin+1);
 [x,y] = meshgrid(vec, vec);
-idx = 1:numel(vec);
 
-sfpars.P = @(x,y) P2D(x, y, sfpars.degree, pars.N);
+sfpars.P = @(x,y) P2D(x, y, sfpars.kmin, sfpars.kmax, sfpars.degree, sfpars.N);
 
 Xin = sfpars.kmin:10:sfpars.kmax;
 Yin = sfpars.kmin:10:sfpars.kmax;
@@ -203,17 +204,9 @@ Xmat = ones(length(Yin),1)*Xin;
 Ymat = Yin'*ones(1,length(Xin));
 
 for i = 1:pars.N
-    [sfpars.degrees_i(i),sfpars.degrees_o(i)] = pinky(Xin, Yin, P2D(Xmat, Ymat, degree, pars.N));
+    [sfpars.degrees_i(i),sfpars.degrees_o(i)] = pinky(Xin, Yin, P2D(Xmat, Ymat, sfpars.kmin, sfpars.kmax, sfpars.degree, sfpars.N));
 end
-% sfpars.degrees_o = sfpars.degrees_i(randperm(pars.N));
-
-
-% Remove extra connections:
-% n = sum(sfpars.degrees_i) - sum(sfpars.degrees_o);
-% if n > 0
-%     abs(
-% else
-% end
+sfpars.degrees_o = sfpars.degrees_i(randperm(pars.N));
 
 % figure; hold on;
 % x = sfpars.kmin:sfpars.kmax;
@@ -225,10 +218,11 @@ end
 % sfpars = prepareOAparameters2DP(sfpars);
 % 
 % figure; hold on;
+% idx = round(linspace(1, numel(vec), 10));
 % surf(x(idx,idx),y(idx,idx),sfpars.P(x(idx,idx),y(idx,idx))/pars.N);
 % kminkmax = linspace(sfpars.kmin, sfpars.kmax, 10);
 % histogram2(sfpars.degrees_i, sfpars.degrees_o, kminkmax, kminkmax, 'Normalization', 'pdf'); % Normal degree vectors from before
-
+% 
 
 %%
 [~, thetasfull, A] = DOPRI_simulatenetwork(tnow,tend,IC,h,sfpars);
@@ -318,9 +312,13 @@ disp('Made scale-free network figure')
 % disp('Made lognorm network figure')
 % 
 
-function P = P2D(x,y,degree,N)
-    P = x.^(-degree) + y.^(-degree);
-    P = P/sum(P, 'all')*N;
+function P = P2D(X,Y,kmin, kmax, degree, N)
+    P = X.^(-degree) + Y.^(-degree);
+    
+    vec = linspace(kmin, kmax, kmax-kmin+1);
+    [x,y] = meshgrid(vec, vec);
+    Pnorm = x.^(-degree) + y.^(-degree);
+    P = P/sum(Pnorm, 'all')*N;
 end
 
 
