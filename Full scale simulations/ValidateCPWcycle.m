@@ -23,7 +23,7 @@ initarray = make_GPUhandle();
 tnow = 0; tend = 20;
 h = 0.005;
 
-pars.N = 5000;
+pars.N = 10000;
 pars.a_n = 0.666666666666666666667;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 
@@ -189,36 +189,23 @@ IC = pi*ones(pars.N, 1) - pi;
 
 sfpars = make_scalefreeparameters(pars, degree);
 
-disp("Making random numbers")
-
+% Make the right 2D pdf:
 vec = linspace(sfpars.kmin, sfpars.kmax, sfpars.kmax-sfpars.kmin+1);
 [x,y] = meshgrid(vec, vec);
+idx = round(linspace(1, numel(vec), 25));
+Pnorm = x.^(-degree) .* y.^(-degree);
+Pnorm = sum(Pnorm, 'all')/sfpars.N;
+sfpars.P2D = @(x,y) P2D(x, y, sfpars.degree)/Pnorm;
 
-sfpars.P = @(x,y) P2D(x, y, sfpars.kmin, sfpars.kmax, sfpars.degree, sfpars.N);
+sum(sfpars.P2D(x, y), 'all')
 
-Xin = sfpars.kmin:10:sfpars.kmax;
-Yin = sfpars.kmin:10:sfpars.kmax;
+% Good figure showing the 2D pdf
 
-Xmat = ones(length(Yin),1)*Xin;
-Ymat = Yin'*ones(1,length(Xin));
-
-for i = 1:pars.N
-    [sfpars.degrees_i(i), ~] = pinky(Xin, Yin, P2D(Xmat, Ymat, sfpars.kmin, sfpars.kmax, sfpars.degree, sfpars.N));
-end
-%%
-sfpars.degrees_i = min(sfpars.kmax, max(sfpars.kmin, round(sfpars.degrees_i + 2*randn(pars.N, 1))));
-sfpars.degrees_o = sfpars.degrees_i(randperm(pars.N));
-
-%%
-% sfpars = prepareOAparameters2DP(sfpars);
-% 
-% figure; hold on;
-% idx = round(linspace(1, numel(vec), 10));
-% surf(x(idx,idx),y(idx,idx),sfpars.P(x(idx,idx),y(idx,idx))/pars.N);
-% kminkmax = linspace(sfpars.kmin, sfpars.kmax, 10);
+% figure; hold on; box on;
+% kminkmax = linspace(sfpars.kmin, sfpars.kmax, 20);
 % histogram2(sfpars.degrees_i, sfpars.degrees_o, kminkmax, kminkmax, 'Normalization', 'pdf'); % Normal degree vectors from before
-% scatter(sfpars.k(:,1), sfpars.k(:,2)); % Normal degree vectors from before
-
+% surf(x(idx,idx),y(idx,idx),sfpars.P2D(x(idx,idx),y(idx,idx))/sfpars.N);
+% view(45,44); xlabel("x"); ylabel("y"); zlabel("Density")
 
 %%
 [~, thetasfull, A] = DOPRI_simulatenetwork(tnow,tend,IC,h,sfpars);
@@ -307,13 +294,8 @@ disp('Made scale-free network figure')
 % disp('Made lognorm network figure')
 % 
 
-function P = P2D(X,Y,kmin, kmax, degree, N)
-    P = X.^(-degree) + Y.^(-degree);
-    
-    vec = linspace(kmin, kmax, kmax-kmin+1);
-    [x,y] = meshgrid(vec, vec);
-    Pnorm = x.^(-degree) + y.^(-degree);
-    P = P/sum(Pnorm, 'all')*N;
+function P = P2D(X,Y,degree)
+    P = X.^(-degree) .* Y.^(-degree);
 end
 
 
@@ -324,7 +306,7 @@ function p = prepareOAparameters2DP(p)
     
     p.OA = zeros(p.Mk, p.Mk);
     for i = 1:p.Mk
-        p.OA(i, :) = p.P(p.k(:,1), p.k(:,2)).*assortativity(p.k(:,1), p.k(:,2), p.k(i,1), p.k(i,2), p.N, p.meandegree, 0);
+        p.OA(i, :) = p.P2D(p.k(:,1), p.k(:,2)).*assortativity(p.k(:,1), p.k(:,2), p.k(i,1), p.k(i,2), p.N, p.meandegree, 0);
     end
     p.OA = p.K*p.OA/p.meandegree;
 end
