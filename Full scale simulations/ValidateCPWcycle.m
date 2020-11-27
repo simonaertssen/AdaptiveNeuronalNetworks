@@ -23,7 +23,7 @@ initarray = make_GPUhandle();
 tnow = 0; tend = 20;
 h = 0.005;
 
-pars.N = 10000;
+pars.N = 1000;
 pars.a_n = 0.666666666666666666667;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 
@@ -189,7 +189,6 @@ IC = pi*ones(pars.N, 1) - pi;
 
 sfpars = make_scalefreeparameters(pars, degree);
 
-%%
 disp("Making random numbers")
 
 vec = linspace(sfpars.kmin, sfpars.kmax, sfpars.kmax-sfpars.kmin+1);
@@ -204,15 +203,11 @@ Xmat = ones(length(Yin),1)*Xin;
 Ymat = Yin'*ones(1,length(Xin));
 
 for i = 1:pars.N
-    [sfpars.degrees_i(i),sfpars.degrees_o(i)] = pinky(Xin, Yin, P2D(Xmat, Ymat, sfpars.kmin, sfpars.kmax, sfpars.degree, sfpars.N));
+    [sfpars.degrees_i(i), ~] = pinky(Xin, Yin, P2D(Xmat, Ymat, sfpars.kmin, sfpars.kmax, sfpars.degree, sfpars.N));
 end
+%%
+sfpars.degrees_i = round(sfpars.degrees_i + 3*randn(pars.N, 1));
 sfpars.degrees_o = sfpars.degrees_i(randperm(pars.N));
-
-% figure; hold on;
-% x = sfpars.kmin:sfpars.kmax;
-% plot(x, sfpars.P(x)/sfpars.N)
-% histogram(sfpars.degrees_i, 'Normalization', 'pdf')
-% histogram(sfpars.degrees_o, 'Normalization', 'pdf')
 
 %%
 % sfpars = prepareOAparameters2DP(sfpars);
@@ -222,7 +217,7 @@ sfpars.degrees_o = sfpars.degrees_i(randperm(pars.N));
 % surf(x(idx,idx),y(idx,idx),sfpars.P(x(idx,idx),y(idx,idx))/pars.N);
 % kminkmax = linspace(sfpars.kmin, sfpars.kmax, 10);
 % histogram2(sfpars.degrees_i, sfpars.degrees_o, kminkmax, kminkmax, 'Normalization', 'pdf'); % Normal degree vectors from before
-% 
+
 
 %%
 [~, thetasfull, A] = DOPRI_simulatenetwork(tnow,tend,IC,h,sfpars);
@@ -232,8 +227,7 @@ disp('Full scale test done')
 
 % The OA mean field theory:
 sfpars = prepareOAparameters2DP(sfpars);
-sfpars.Mk
-pars.N
+
 % z0 = map_thetatozoa(gather(thetasfull(:,1)), sfpars);
 z0 = orderparameter(IC)*ones(sfpars.Mk,1);
 [~, ZOA] = OA_simulatenetwork(tnow, tend, z0, sfpars, odeoptions);
@@ -323,7 +317,7 @@ end
 
 
 function p = prepareOAparameters2DP(p)
-    [p.k, ~, ic] = unique([p.degrees_i, p.degrees_o], 'rows', 'stable');
+    [p.k, ~, ic] = unique([p.degrees_i, p.degrees_o], 'rows');
     p.kcount = accumarray(ic, 1);
     p.Mk = numel(p.k)/2;
     
