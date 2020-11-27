@@ -104,19 +104,47 @@ print(f_1Dpdfs, '../Figures/Distributions/1D.png', '-dpng', '-r300')
 % xline(lognormpars.meandegree, 'k--')
 
 %% Now the 2D pdfs:
-%% A 2D fixed degree network / diracnet: CORRECT
+%% A 2D fixed degree network / diracnet
 fixeddegreepars = make_fixeddegreeparameters(pars, meandegreetoget);
 
 fixeddegreepars.P2D = @(x,y) fixeddegreepars.P(x) .* fixeddegreepars.P(y) / pars.N;
 
 if sum(fixeddegreepars.P2D(1:pars.N, 1:pars.N), 'all') == pars.N; disp('Sum is correct'); end
-
 %%
-[x,y] = meshgrid(minmax, minmax);
-idx = round(linspace(1, numel(minmax), 25));
-sum(fixeddegreepars.P2D(1:pars.N, 1:pars.N), 'all')
-
-%%
-minmax = linspace(meandegreetoget - 10, meandegreetoget + 10, 21);
-
+figure; hold on; grid on;
+title('Fixed degree', 'FontSize', titlefont);
+plot3([meandegreetoget, meandegreetoget], [meandegreetoget, meandegreetoget], [0, 2])
+minmax = linspace(meandegreetoget - 10, meandegreetoget + 10, 20);
 histogram2(fixeddegreepars.degrees_i, fixeddegreepars.degrees_o, minmax, minmax, 'Normalization', 'pdf'); % Normal degree vectors from before
+xlabel('$$k^{\rm in}$$', 'Interpreter', 'latex', 'FontSize', labelfont);
+ylabel('$$k^{\rm out}$$', 'Interpreter', 'latex', 'FontSize', labelfont);
+view(110, 20)
+
+scatter3(fixeddegreepars.degrees_i, fixeddegreepars.degrees_o, -ones(1, pars.N), 150, '.k');
+ax = gca;
+ax.ZTick(ax.ZTick < 0) = [];
+
+
+%% A 2D random network:
+randompars = make_randomparameters(pars, meandegreetoget/(pars.N - 1));
+
+randompars.P2D = @(x,y) randompars.P(x) .* randompars.P(y) / pars.N;
+
+if sum(randompars.P2D(1:pars.N, 1:pars.N), 'all') == pars.N; disp('Sum is correct'); end
+%%
+figure; hold on; grid on;
+title('Random', 'FontSize', titlefont);
+
+minmax = linspace(randompars.meandegree - 3*sqrt(randompars.meandegree), randompars.meandegree + 3*sqrt(randompars.meandegree), 20);
+[x,y] = meshgrid(minmax, minmax);
+
+surf(x, y, randompars.P2D(x,y)/pars.N);
+
+% histogram2(randompars.degrees_i, randompars.degrees_o, minmax, minmax, 'Normalization', 'pdf'); % Normal degree vectors from before
+% xlabel('$$k^{\rm in}$$', 'Interpreter', 'latex', 'FontSize', labelfont);
+% ylabel('$$k^{\rm out}$$', 'Interpreter', 'latex', 'FontSize', labelfont);
+view(110, 20)
+% 
+% scatter3(randompars.degrees_i, randompars.degrees_o, -0.001*ones(1, pars.N), '.k');
+% ax = gca;
+% ax.ZTick(ax.ZTick < 0) = [];
