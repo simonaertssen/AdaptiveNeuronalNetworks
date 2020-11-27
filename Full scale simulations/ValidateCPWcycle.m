@@ -206,7 +206,7 @@ for i = 1:pars.N
     [sfpars.degrees_i(i), ~] = pinky(Xin, Yin, P2D(Xmat, Ymat, sfpars.kmin, sfpars.kmax, sfpars.degree, sfpars.N));
 end
 %%
-sfpars.degrees_i = round(sfpars.degrees_i + 3*randn(pars.N, 1));
+sfpars.degrees_i = min(sfpars.kmax, max(sfpars.kmin, round(sfpars.degrees_i + 2*randn(pars.N, 1))));
 sfpars.degrees_o = sfpars.degrees_i(randperm(pars.N));
 
 %%
@@ -217,6 +217,7 @@ sfpars.degrees_o = sfpars.degrees_i(randperm(pars.N));
 % surf(x(idx,idx),y(idx,idx),sfpars.P(x(idx,idx),y(idx,idx))/pars.N);
 % kminkmax = linspace(sfpars.kmin, sfpars.kmax, 10);
 % histogram2(sfpars.degrees_i, sfpars.degrees_o, kminkmax, kminkmax, 'Normalization', 'pdf'); % Normal degree vectors from before
+% scatter(sfpars.k(:,1), sfpars.k(:,2)); % Normal degree vectors from before
 
 
 %%
@@ -317,7 +318,7 @@ end
 
 
 function p = prepareOAparameters2DP(p)
-    [p.k, ~, ic] = unique([p.degrees_i, p.degrees_o], 'rows');
+    [p.k, ~, ic] = unique([p.degrees_i, p.degrees_o], 'rows', 'stable');
     p.kcount = accumarray(ic, 1);
     p.Mk = numel(p.k)/2;
     
