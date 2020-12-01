@@ -121,5 +121,6 @@ function [z, zs] = NewtonRaphsonIteration(z0, p)
     disp(['Algorithm took ', num2str(evaltime), ' steps'])
     test = df(z0, p);
     det(test)
-    test(1:8, 1:8)
+    trace(test)
+    eig(test)
 end
