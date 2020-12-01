@@ -281,7 +281,7 @@ $z(\k,t) = x(\k,t) + \ic y(\k,t)$.
 The Jacobian can the be found from taking the derivatives?
 \begin{align*}
 \frac{\partial f_{\k}}{\partial x_{\k}} &= y_{\k}-(x_{\k}+1) \cdot \Delta-y_{\k} \cdot \left[\eta_{0} + \kappa \cdot H_{2_{\k}} \right] - (x_{\k}+1) \cdot y_{\k} \cdot \left(\kappa \cdot \frac{\partial H_{2_{\k}}}{\partial x_{\k}}\right)\\
-\frac{\partial f_{\k}}{\partial y_{\k}} &= (x_{\k}-1)-y_{\k} \cdot \Delta-(x_{\k}+1) \cdot \left[\eta_{0} + \kappa \cdot H_{2_{\k}} \right] \\
+\frac{\partial f_{\k}}{\partial y_{\k}} &= (x_{\k}-1)+y_{\k} \cdot \Delta-(x_{\k}+1) \cdot \left[\eta_{0} + \kappa \cdot H_{2_{\k}} \right] \\
 \frac{\partial g_{\k}}{\partial x_{\k}} &= -(x_{\k} - 1) - y_{\k} \cdot \Delta + (x_{\k} + 1) \cdot \left[\eta_{0} + \kappa \cdot H_{2_{\k}} \right] + \left( \frac{(x_{\k} + 1)^2 - y_{\k}^2}{2} \right) \cdot \left(\kappa \cdot \frac{\partial H_{2_{\k}}}{\partial x_{\k}}\right) \\
 \frac{\partial g_{\k}}{\partial y_{\k}} &= y_{\k} - (x_{\k} + 1)\cdot \Delta - y_{\k} \cdot \left[\eta_{0} + \kappa \cdot H_{2_{\k}} \right] \\
 \frac{\partial H_{2_{\k}}}{\partial x_{\k}} &= \frac{1}{\langle k\rangle} P_{\k} a_{\k \k} \cdot(x_{\k}-2) \cdot \frac{2}{3} \\
