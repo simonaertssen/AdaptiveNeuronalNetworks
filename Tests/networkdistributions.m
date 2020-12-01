@@ -128,7 +128,7 @@ ax.ZTick(ax.ZTick < 0) = [];
 %% A 2D random network:
 randompars = make_randomparameters(pars, meandegreetoget/(pars.N - 1));
 
-randompars.P2D = @(x,y) randompars.P(x) .* randompars.P(y) / pars.N;
+randompars.P2D = @(x,y) randompars.P(x) / pars.N;
 
 if sum(randompars.P2D(1:pars.N, 1:pars.N), 'all') == pars.N; disp('Sum is correct'); end
 %%
@@ -136,13 +136,18 @@ figure; hold on; grid on;
 title('Random', 'FontSize', titlefont);
 
 minmax = linspace(randompars.meandegree - 3*sqrt(randompars.meandegree), randompars.meandegree + 3*sqrt(randompars.meandegree), 20);
-[x,y] = meshgrid(minmax, minmax);
 
-surf(x, y, randompars.P2D(x,y)/pars.N);
+histogram2(randompars.degrees_i, randompars.degrees_o, minmax, minmax, 'Normalization', 'pdf'); % Normal degree vectors from before
+s = findobj(gca,'Type','Surface');
+s.FaceAlpha = 0.65;
 
-% histogram2(randompars.degrees_i, randompars.degrees_o, minmax, minmax, 'Normalization', 'pdf'); % Normal degree vectors from before
-% xlabel('$$k^{\rm in}$$', 'Interpreter', 'latex', 'FontSize', labelfont);
-% ylabel('$$k^{\rm out}$$', 'Interpreter', 'latex', 'FontSize', labelfont);
+x = 70:130;
+P1 = randompars.P(x).*randompars.P(x)/(pars.N^2);
+plot3(x, meandegreetoget*ones(size(x)), P1, 'LineWidth', 4);
+plot3(meandegreetoget*ones(size(x)), x, P1, 'LineWidth', 4);
+
+xlabel('$$k^{\rm in}$$', 'Interpreter', 'latex', 'FontSize', labelfont);
+ylabel('$$k^{\rm out}$$', 'Interpreter', 'latex', 'FontSize', labelfont);
 view(110, 20)
 % 
 % scatter3(randompars.degrees_i, randompars.degrees_o, -0.001*ones(1, pars.N), '.k');
