@@ -28,10 +28,10 @@ For a fixed degree network it has been proven that the order parameter follows:
     
 For an arbitrary network the order parameter follows a trajectory per degree. When we assemble the whole expression for the Ott-Antonsen manifold as found in \cite{OttAntonsen2017} with $H_2(\k,t)$ as in \cite{Martens2020}, we obtain the following:
 \begin{align}
-\frac{\partial z(\k, t)}{\partial t} &= -\ic \frac{(z(\k, t)-1)^{2}}{2} + \frac{(z(\k, t)+1)^{2}}{2} \cdot I(\k) \qquad z(\k,t) \in \C^{M_\k} \nonumber \\
+\frac{\partial z(\k, t)}{\partial t} &= -\ic \frac{(z(\k, t)-1)^{2}}{2} + \frac{(z(\k, t)+1)^{2}}{2} \cdot I(\k, t) \qquad z(\k,t) \in \C^{M_\k} \nonumber \\
 %I(\k) &= -\Delta(\k) + \ic \eta_{0}(\k) + i d_{n} \kappa \cdot H_n(\k,t) \label{eq:OttAntonsenSystemFull} \\
 %H_n(\k,t) &= \frac{a_n}{\kmean} \sum_{\kacc} P\left(\kacc\right) a\left(\kacc \rightarrow \k\right) \cdot \left[A_{0}+\sum_{p=1}^{n} A_{p}\left(z\left(\kacc, t\right)^{p} + \overline{z}\left(\kacc, t\right)^{p}\right)\right] 
-I(\k) &= -\Delta(\k) + \ic \eta_{0}(\k) + i \kappa \cdot H_2(\k,t) \label{eq:OttAntonsenSystemFull} \\
+I(\k, t) &= -\Delta(\k) + \ic \eta_{0}(\k) + i \kappa \cdot H_2(\k,t) \label{eq:OttAntonsenSystemFull} \\
 H_2(\k,t) &= \frac{1}{\kmean} \sum_{\kacc} P\left(\kacc\right) a\left(\kacc \rightarrow \k\right) \cdot \left( 1 + \frac{z(\kacc, t)^2 + \overline{z}(\kacc, t)^2}{6} - \frac{4}{3} \Re(z(\kacc, t)) \right) \nonumber
 \end{align}
 
@@ -74,89 +74,89 @@ z(\k) \longrightarrow \theta_i &= -\ic \cdot \log \left( \frac{z(\k)\cdot P(\k)}
 
 We can see how $\lim_{N \rightarrow +\infty} n(\k) = P(\k)$, which makes these maps exact for any network size. 
     
-\newpage
-\section{Phase space}
-\subsection{Fixed degree networks}
-In the phase space, we can clearly distinguish three macroscopic states for the mean field:
-\begin{figure}[H]
-\minipage{0.32\textwidth}
-  \includegraphics[width=\linewidth, trim={2cm 1cm 2cm 1.5cm },clip]{../Figures/MFRPSR.png}
-  \caption{PSR state}\label{fig:MFRPSR}
-\endminipage\hfill
-\minipage{0.32\textwidth}
-  \includegraphics[width=\linewidth, trim={2cm 1cm 2cm 1.5cm },clip]{../Figures/MFRPSS.png}
-  \caption{PSS state}\label{fig:MFRPSS}
-\endminipage\hfill
-\minipage{0.32\textwidth}%
-  \includegraphics[width=\linewidth, trim={2cm 1cm 2cm 1.5cm },clip]{../Figures/MFRCPW.png}
-  \caption{CPW state}\label{fig:MFRCPW}
-\endminipage
-\end{figure}
-For different networks this can look a little different.
-
-\subsection{Random networks}
-\begin{figure}[H]
-\minipage{0.32\textwidth}
-  \includegraphics[width=\linewidth, trim={2cm 1cm 2cm 1.5cm },clip]{../Figures/MFOARPSR_random.png}
-  \caption{PSR state}\label{fig:MFRPSR}
-\endminipage\hfill
-\minipage{0.32\textwidth}
-  \includegraphics[width=\linewidth, trim={2cm 1cm 2cm 1.5cm },clip]{../Figures/MFOARPSS_random.png}
-  \caption{PSS state}\label{fig:MFRPSS}
-\endminipage\hfill
-\minipage{0.32\textwidth}%
-  \includegraphics[width=\linewidth, trim={2cm 1cm 2cm 1.5cm },clip]{../Figures/MFOARCPW_random.png}
-  \caption{CPW state}\label{fig:MFRCPW}
-\endminipage
-\end{figure}
-
-\subsection{Scale Free networks}
-\begin{figure}[H]
-\minipage{0.32\textwidth}
-  \includegraphics[width=\linewidth, trim={2cm 1cm 2cm 1.5cm },clip]{../Figures/MFOARPSR_scalefree.png}
-  \caption{PSR state}\label{fig:MFRPSR}
-\endminipage\hfill
-\minipage{0.32\textwidth}
-  \includegraphics[width=\linewidth, trim={2cm 1cm 2cm 1.5cm },clip]{../Figures/MFOARPSS_scalefree.png}
-  \caption{PSS state}\label{fig:MFRPSS}
-\endminipage\hfill
-\minipage{0.32\textwidth}%
-  \includegraphics[width=\linewidth, trim={2cm 1cm 2cm 1.5cm },clip]{../Figures/MFOARCPW_scalefree.png}
-  \caption{CPW state}\label{fig:MFRCPW}
-\endminipage
-\end{figure}
-
-
-\section{Differences between theory and practice}
-\begin{figure}[H]
-  \includegraphics[width=\linewidth]{../Figures/InspectMeanFieldFullyConnected.pdf}
-  \caption{Mean field descriptions of fully connected networks.}\label{fig:InspectMeanFieldFullyConnected}
-\end{figure}
-
-\begin{figure}[H]
-  \includegraphics[width=\linewidth]{../Figures/InspectMeanFieldFixedDegree.pdf}
-  \caption{Mean field descriptions of fixed degree networks.}\label{fig:InspectMeanFieldFixedDegree}
-\end{figure}
-
-\begin{figure}[H]
-  \includegraphics[width=\linewidth]{../Figures/InspectMeanFieldRandom.pdf}
-  \caption{Mean field descriptions of random networks.}\label{fig:InspectMeanFieldRandom}
-\end{figure}
-
-\begin{figure}[H]
-  \includegraphics[width=\linewidth]{../Figures/InspectMeanFieldScaleFree.pdf}
-  \caption{Mean field descriptions of scale-free networks.}\label{fig:InspectMeanFieldScaleFree}
-\end{figure}
-
-\begin{figure}[H]
-  \includegraphics[width=\linewidth]{../Figures/testScaleFree.png}
-  \caption{The scale-free networks seem to converge to different limit cycles.}\label{fig:testScaleFree}
-\end{figure}
-
-\begin{figure}[H]
-  \includegraphics[width=\linewidth]{../Figures/InspectMeanFieldLogNorm.pdf}
-  \caption{Mean field descriptions of log-normal networks.}\label{fig:InspectMeanFieldLogNorm}
-\end{figure}
+%\newpage
+%\section{Phase space}
+%\subsection{Fixed degree networks}
+%In the phase space, we can clearly distinguish three macroscopic states for the mean field:
+%\begin{figure}[H]
+%\minipage{0.32\textwidth}
+%  \includegraphics[width=\linewidth, trim={2cm 1cm 2cm 1.5cm },clip]{../Figures/PhaseSpace/MFRPSR.png}
+%  \caption{PSR state}\label{fig:MFRPSR}
+%\endminipage\hfill
+%\minipage{0.32\textwidth}
+%  \includegraphics[width=\linewidth, trim={2cm 1cm 2cm 1.5cm },clip]{../Figures/PhaseSpace/MFRPSS.png}
+%  \caption{PSS state}\label{fig:MFRPSS}
+%\endminipage\hfill
+%\minipage{0.32\textwidth}%
+%  \includegraphics[width=\linewidth, trim={2cm 1cm 2cm 1.5cm },clip]{../Figures/PhaseSpace/MFRCPW.png}
+%  \caption{CPW state}\label{fig:MFRCPW}
+%\endminipage
+%\end{figure}
+%For different networks this can look a little different.
+%
+%\subsection{Random networks}
+%\begin{figure}[H]
+%\minipage{0.32\textwidth}
+%  \includegraphics[width=\linewidth, trim={2cm 1cm 2cm 1.5cm },clip]{../Figures/PhaseSpace/MFOARPSR_random.png}
+%  \caption{PSR state}\label{fig:MFRPSR}
+%\endminipage\hfill
+%\minipage{0.32\textwidth}
+%  \includegraphics[width=\linewidth, trim={2cm 1cm 2cm 1.5cm },clip]{../Figures/PhaseSpace/MFOARPSS_random.png}
+%  \caption{PSS state}\label{fig:MFRPSS}
+%\endminipage\hfill
+%\minipage{0.32\textwidth}%
+%  \includegraphics[width=\linewidth, trim={2cm 1cm 2cm 1.5cm },clip]{../Figures/PhaseSpace/MFOARCPW_random.png}
+%  \caption{CPW state}\label{fig:MFRCPW}
+%\endminipage
+%\end{figure}
+%
+%\subsection{Scale Free networks}
+%\begin{figure}[H]
+%\minipage{0.32\textwidth}
+%  \includegraphics[width=\linewidth, trim={2cm 1cm 2cm 1.5cm },clip]{../Figures/PhaseSpace/MFOARPSR_scalefree.png}
+%  \caption{PSR state}\label{fig:MFRPSR}
+%\endminipage\hfill
+%\minipage{0.32\textwidth}
+%  \includegraphics[width=\linewidth, trim={2cm 1cm 2cm 1.5cm },clip]{../Figures/PhaseSpace/MFOARPSS_scalefree.png}
+%  \caption{PSS state}\label{fig:MFRPSS}
+%\endminipage\hfill
+%\minipage{0.32\textwidth}%
+%  \includegraphics[width=\linewidth, trim={2cm 1cm 2cm 1.5cm },clip]{../Figures/PhaseSpace/MFOARCPW_scalefree.png}
+%  \caption{CPW state}\label{fig:MFRCPW}
+%\endminipage
+%\end{figure}
+%
+%
+%\section{Differences between theory and practice}
+%\begin{figure}[H]
+%  \includegraphics[width=\linewidth]{../Figures/InspectMeanFieldFullyConnected.pdf}
+%  \caption{Mean field descriptions of fully connected networks.}\label{fig:InspectMeanFieldFullyConnected}
+%\end{figure}
+%
+%\begin{figure}[H]
+%  \includegraphics[width=\linewidth]{../Figures/InspectMeanFieldFixedDegree.pdf}
+%  \caption{Mean field descriptions of fixed degree networks.}\label{fig:InspectMeanFieldFixedDegree}
+%\end{figure}
+%
+%\begin{figure}[H]
+%  \includegraphics[width=\linewidth]{../Figures/InspectMeanFieldRandom.pdf}
+%  \caption{Mean field descriptions of random networks.}\label{fig:InspectMeanFieldRandom}
+%\end{figure}
+%
+%\begin{figure}[H]
+%  \includegraphics[width=\linewidth]{../Figures/InspectMeanFieldScaleFree.pdf}
+%  \caption{Mean field descriptions of scale-free networks.}\label{fig:InspectMeanFieldScaleFree}
+%\end{figure}
+%
+%\begin{figure}[H]
+%  \includegraphics[width=\linewidth]{../Figures/testScaleFree.png}
+%  \caption{The scale-free networks seem to converge to different limit cycles.}\label{fig:testScaleFree}
+%\end{figure}
+%
+%\begin{figure}[H]
+%  \includegraphics[width=\linewidth]{../Figures/InspectMeanFieldLogNorm.pdf}
+%  \caption{Mean field descriptions of log-normal networks.}\label{fig:InspectMeanFieldLogNorm}
+%\end{figure}
 
 
 
@@ -258,25 +258,55 @@ I cannot seem to converge close enough.
 \includegraphics[width = 0.75\textwidth]{../Figures/ProblemsWithNewtonRaphson.png}
 \end{figure}
 
-
-\subsection{Mapping onto $\R^2$}
-$\bar{z}_{\k}$ and $\Re(z_{\k})$ are non-holomorphic. Try again by separating the real and imaginary part: $z(\k,t) = x(\k,t) + \ic y(\k,t)$.
+The reason that this method does not work is because the field $H_2(\k,t)$ is non-holomorphic. We can verify this with the Cauchy-Riemann equations:
 \begin{align*}
-\begin{aligned} \dot{x_{\k}} 
-&=f_{n}\left(x_{\k}, y_{\k} ; \eta_{0}, \Delta, k\right) \\ 
-&=(x_{\k}-1) y_{\k}-\frac{(x_{\k}+1)^{2}-y_{\k}^{2}}{2} \Delta-(x_{\k}+1) y_{\k} \cdot \left[\eta_{0}+ \kappa \cdot H(z, n)\right] \\ \dot{y_{\k}} &=g_{n}\left(x_{\k}, y_{\k} ; \eta_{0}, \Delta, k\right) \\ 
-&=-\frac{(x_{\k}-1)^{2}-y_{\k}^{2}}{2}-(x_{\k}+1) y_{\k} \cdot \Delta+\frac{(x_{\k}+1)^{2}-y_{\k}^{2}}{2} \cdot \left[\eta_{0} + \kappa \cdot H_2(\k, t)\right] \end{aligned}
+z(\k,t) &= x(\k,t) + \ic \cdot y(\k,t)\\
+f\left( z(\k,t) \right) &= u\left(x(\k, t), y(\k, t) \right) + \ic v\left(x(\k, t), y(\k, t) \right)\\
+&= \frac{1}{\kmean} \sum_{\kacc} P\left(\kacc\right) a\left(\kacc \rightarrow \k\right) \cdot \left( 1 + \frac{z(\kacc, t)^2 + \overline{z}(\kacc, t)^2}{6} - \frac{4}{3} \Re(z(\kacc, t)) \right)\\
+&= \frac{1}{\kmean} \sum_{\kacc} P\left(\kacc\right) a\left(\kacc \rightarrow \k\right) \cdot \left( 1 + \frac{x(\kacc, t)^2}{3} - \frac{4}{3} x(\kacc, t) \right)
+\end{align*}
+This leaves us with only $u$ defined as a real-valued function, so that the Cauchy-Riemann equations do not hold: the function is non-holomorphic. 
+ 
+\subsection{Mapping onto $\R^2$}
+$\bar{z}_{\k}$ and $\Re(z_{\k})$ are non-holomorphic. Try again by separating the real and imaginary part: \\
+$z(\k,t) = x(\k,t) + \ic y(\k,t)$.
+\begin{align*}
+\dot{x_{\k}} 
+&=f_{\k} \left(x_{\k}, y_{\k}, \eta_{0}, \Delta, \kappa \right) \\ 
+&=(x_{\k}-1) y_{\k}-\frac{(x_{\k}+1)^{2}-y_{\k}^{2}}{2} \Delta-(x_{\k}+1) \cdot y_{\k} \cdot \left[\eta_{0}+ \kappa \cdot H_{2_{\k}}\right] \\ 
+\dot{y_{\k}} &= g_{\k} \left(x_{\k}, y_{\k}, \eta_{0}, \Delta, \kappa \right) \\ 
+&=-\frac{(x_{\k}-1)^{2}-y_{\k}^{2}}{2}-(x_{\k}+1) y_{\k} \cdot \Delta+\frac{(x_{\k}+1)^{2}-y_{\k}^{2}}{2} \cdot \left[\eta_{0} + \kappa \cdot H_{2_{\k}} \right] 
 \end{align*}
 
 The Jacobian can the be found from taking the derivatives?
 \begin{align*}
-\frac{\partial f_{n}}{\partial x_{\k}} &= y_{\k}-(x_{\k}+1) \cdot \Delta-y_{\k} \cdot \left[\eta_{0} + \kappa \cdot H_2(\k, t) \right] - (x_{\k}+1) \cdot y_{\k} \cdot \left(\kappa \cdot \frac{\partial H}{\partial x_{\k}}\right)\\
-\frac{\partial f_{n}}{\partial y_{\k}} &= (x_{\k}-1)-y_{\k} \cdot \Delta-(x_{\k}+1) \cdot \left[\eta_{0} + \kappa \cdot H_2(\k, t) \right] \\t
-\frac{\partial g_{n}}{\partial x_{\k}} &= -(x_{\k} - 1) - y_{\k} \cdot \Delta + (x_{\k} + 1) \cdot \left[\eta_{0} + \kappa \cdot H_2(\k, t) \right] + \left( \frac{(x_{\k} + 1)^2 - y_{\k}^2}{2} \right) \cdot \left(\kappa \cdot \frac{\partial H}{\partial x_{\k}}\right) \\
-\frac{\partial g_{n}}{\partial y_{\k}} &= y_{\k} - (x_{\k} + 1)\cdot \Delta - y_{\k} \cdot \left[\eta_{0} + \kappa \cdot H_2(\k, t) \right] \\
-\frac{\partial H_2(\k, t)}{\partial x_{\k}} &= \frac{1}{\langle k\rangle} P_{\k} a_{\k \k} \cdot(x_{\k}-2) \cdot \frac{2}{3} 
+\frac{\partial f_{\k}}{\partial x_{\k}} &= y_{\k}-(x_{\k}+1) \cdot \Delta-y_{\k} \cdot \left[\eta_{0} + \kappa \cdot H_{2_{\k}} \right] - (x_{\k}+1) \cdot y_{\k} \cdot \left(\kappa \cdot \frac{\partial H_{2_{\k}}}{\partial x_{\k}}\right)\\
+\frac{\partial f_{\k}}{\partial y_{\k}} &= (x_{\k}-1)-y_{\k} \cdot \Delta-(x_{\k}+1) \cdot \left[\eta_{0} + \kappa \cdot H_{2_{\k}} \right] \\
+\frac{\partial g_{\k}}{\partial x_{\k}} &= -(x_{\k} - 1) - y_{\k} \cdot \Delta + (x_{\k} + 1) \cdot \left[\eta_{0} + \kappa \cdot H_{2_{\k}} \right] + \left( \frac{(x_{\k} + 1)^2 - y_{\k}^2}{2} \right) \cdot \left(\kappa \cdot \frac{\partial H_{2_{\k}}}{\partial x_{\k}}\right) \\
+\frac{\partial g_{\k}}{\partial y_{\k}} &= y_{\k} - (x_{\k} + 1)\cdot \Delta - y_{\k} \cdot \left[\eta_{0} + \kappa \cdot H_{2_{\k}} \right] \\
+\frac{\partial H_{2_{\k}}}{\partial x_{\k}} &= \frac{1}{\langle k\rangle} P_{\k} a_{\k \k} \cdot(x_{\k}-2) \cdot \frac{2}{3} \\
+\frac{\partial H_{2_{\k}}}{\partial y_{\k}} &= 0 \\
+\text{And the } & \text{off-diagonal elements:} \\
+\frac{\partial f_{\k}}{\partial x_{\kacc}} &= - (x_{\k}+1) \cdot y_{\k} \cdot \left(\kappa \cdot \frac{\partial H_{2_{\k}}}{\partial x_{\kacc}}\right)\\
+\frac{\partial f_{\k}}{\partial y_{\kacc}} &= 0 \\
+\frac{\partial g_{\k}}{\partial x_{\kacc}} &= \left( \frac{(x_{\k} + 1)^2 - y_{\k}^2}{2} \right) \cdot \left(\kappa \cdot \frac{\partial H_{2_{\k}}}{\partial x_{\kacc}}\right) \\
+\frac{\partial g_{\k}}{\partial y_{\kacc}} &= 0\\
+\frac{\partial H_{2_{\k}}}{\partial x_{\kacc}} &= \frac{1}{\langle k\rangle} P_{\kacc} a_{\kacc \k} \cdot(x_{\kacc}-2) \cdot \frac{2}{3} \\
+\frac{\partial H_{2_{\k}}}{\partial y_{\kacc}} &= 0
 \end{align*}
-What dimensions does the Jacobian have now?
+
+What dimensions does the Jacobian have now? $2 n \times 2 n$.
+
+ 
+
+
+\subsection{From the order parameter}
+What if we take the Jacobian straight from the OA order parameter? If $z(\k,t) = x(\k,t) + \ic y(\k,t)$:
+\begin{align}
+\overline{Z}(t) &= \frac{1}{N} \sum_{\k} P(\k) \cdot \left( x(\k,t) + \ic y(\k,t) \right) = \frac{1}{N} \sum_{\k} P(\k) x(\k,t) + \ic \frac{1}{N} \sum_{\k} P(\k) y(\k,t)  
+\end{align}
+
+
 
 \bibliographystyle{utphys}
 \small{\bibliography{references}}
