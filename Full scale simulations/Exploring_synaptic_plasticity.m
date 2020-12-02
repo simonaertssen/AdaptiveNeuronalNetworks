@@ -36,9 +36,11 @@ pars.e = 0; %randcauchy(seed, pars.eta0, pars.delta, pars.N);
 
 %% Exploration:
 STDP = struct('window', @Song2017Window, 'Kupdate', @(K, W) K + K.*W); 
-plastopts = struct('SP', STDP);
+plastopts = struct('SP', STDP, 'KMAX', 10);
 
-[t, thetas_full, K, Kmeans] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
+K0 = initarray(10*ones(pars.N)); % For the learning windows
+
+[t, thetas_full, K, Kmeans] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,K0,plastopts);
 drawthetas = spikesNaN(thetas_full);
 z = orderparameter(thetas_full);
 
@@ -61,7 +63,7 @@ xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
  %% Results without synaptic scaling:
 f_noSS = figure('Renderer', 'painters', 'Position', [50, 50, 800, 300]); hold on; box on;
 
-K0 = initarray(10*ones(N,N)); % For the learning windows
+K0 = initarray(5*ones(pars.N)); % For the learning windows
 
 winnames = ["Kempter1999Window", "Song2017Window", "ChrolCannon2012Window", "Waddington2014Window"];
 colors = ["#0072BD", "#D95319", "#77AC30", "#A2142F"];
@@ -76,7 +78,7 @@ for i = 1:4
         STDP.Kupdate = @(K, W) K + K.*W;
     end
     
-    plastopts = struct('SP', STDP);
+    plastopts = struct('SP', STDP, 'KMAX', 10);
     [t, thetas_full, ~, Kmeans] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,K0,plastopts);
     drawthetas = spikesNaN(thetas_full);
     z = orderparameter(thetas_full);
@@ -85,22 +87,24 @@ for i = 1:4
     xlim([tnow, tend]); 
     
     yyaxis left
-    plot(t, drawthetas, '-', 'LineWidth', 1.5, 'Color', [0, 0, 1, 0.01], 'HandleVisibility', 'off')
-    plot(t, abs(z), '-k', 'LineWidth', 2)
-    ylabel('$\theta_i$','Interpreter','latex', 'FontSize', labelfont)
-    ylim([-pi, pi]); 
-    set(gca,'YTick',-pi:pi/2:pi) 
-    set(gca,'YTickLabel',{'$$-\pi$$','$$-\frac{\pi}{2}$$','$$0$$','$$\frac{\pi}{2}$$','$$\pi$$'}, 'TickLabelInterpreter', 'latex')
+    rasterplot(t, drawthetas, labelfont);
+
+%     plot(t, drawthetas, '-', 'LineWidth', 1.5, 'Color', [0, 0, 1, 0.01], 'HandleVisibility', 'off')
+%     plot(t, abs(z), '-k', 'LineWidth', 2)
+%     ylabel('$\theta_i$','Interpreter','latex', 'FontSize', labelfont)
+%     ylim([-pi, pi]); 
+%     set(gca,'YTick',-pi:pi/2:pi) 
+%     set(gca,'YTickLabel',{'$$-\pi$$','$$-\frac{\pi}{2}$$','$$0$$','$$\frac{\pi}{2}$$','$$\pi$$'}, 'TickLabelInterpreter', 'latex')
 
     yyaxis right
-    plot(t, Kmeans, 'LineWidth', 2, 'Color', colors(i))
+    plot(t, Kmeans(1,:), 'LineWidth', 2, 'Color', colors(i))
     ylabel('$\langle k \rangle$','Interpreter','latex', 'FontSize', labelfont)
     
     name = char(name);
     title(sprintf('$$W(t)_%s$$', name(1)), 'Interpreter', 'latex', 'FontSize', titlefont)
     %legend(sprintf('$$W(t)_%s$$', name(1)), 'Location', 'southwest', 'Interpreter', 'latex', 'FontSize', labelfont)
 
-    ax = gca; ax.YAxis(1).Color = [0, 0, 1]; ax.YAxis(2).Color = colors(i);
+    ax = gca; ax.YAxis(1).Color = [0, 0, 0 ]; ax.YAxis(2).Color = colors(i);
     xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
 end
 

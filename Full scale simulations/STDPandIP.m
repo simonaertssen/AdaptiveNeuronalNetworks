@@ -26,11 +26,11 @@ pars.N = 100;
 pars.a_n = 0.666666666666666666667;
 seed = 2; rng(seed);
 IC = randn(pars.N,1);
-pars.e = 0; %randcauchy(seed, pars.eta0, pars.delta, pars.N);
+pars.e = 1; %randcauchy(seed, pars.eta0, pars.delta, pars.N);
 
 %% The simulation
-STDP = struct('window', @Kempter1999Window, 'Kupdate', @(K, W) K + W, 'w_i', 1.0e-5, 'w_o', - 1.0475*1.0e-5);
-% STDP = struct('window', @Song2017Window, 'Kupdate', @(K, W) K + K.*W); 
+% STDP = struct('window', @Kempter1999Window, 'Kupdate', @(K, W) K + W, 'w_i', 1.0e-5, 'w_o', - 1.0475*1.0e-5);
+STDP = struct('window', @Song2017Window, 'Kupdate', @(K, W) K + K.*W); 
 plastopts = struct('SP', STDP, 'KMAX', 10);
 K0 = initarray(zeros(pars.N) + 0.01*randn(pars.N)); % For the STDPversusIP script
 
@@ -38,16 +38,15 @@ K0 = initarray(zeros(pars.N) + 0.01*randn(pars.N)); % For the STDPversusIP scrip
 drawthetas = spikesNaN(thetas_full);
 z = orderparameter(thetas_full);
 
+
 %% Plotting the results
-f_reproduce = figure('Renderer', 'painters', 'Position', [0, 2000, 300, 1500]); hold on; box on;
+f_reproduce = figure('Renderer', 'painters', 'Position', [0, 2000, 300, 1400]); hold on; box on;
 
 subplot(5,1,1); hold on; axis square; box on;
 title('Simulation results', 'FontSize', titlefont)
 yyaxis left
-% plot(t, drawthetas, '-', 'LineWidth', 0.1, 'Color', [0, 0, 1, 1/(5*pars.N)], 'HandleVisibility', 'off')
-plot(t, abs(z), '-k', 'LineWidth', 2)
-ylabel('$\theta_i$','Interpreter','latex', 'FontSize', labelfont)
-ylim([-pi, pi]);
+rasterplot(t, drawthetas, labelfont);
+
 yyaxis right
 plot(t, Kmeans, 'LineWidth', 2, 'Color', "#0072BD")
 ax = gca; ax.YAxis(1).Color = [0, 0, 1]; ax.YAxis(2).Color = "#0072BD";
