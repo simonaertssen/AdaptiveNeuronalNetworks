@@ -22,9 +22,12 @@ function [tout, xout, K, Kmeans, info] = DOPRI_simulatenetwork_adaptive(ta,tb,x0
     else 
         K = initarray(10*ones(N,N)); % For the learning windows
     end
-    Kmeans = initarray(zeros(npts,1)); Kmeans(1) = sum(K, 'all')/N + 1.0e-15;
-    lastspiketimes = initarray(zeros(N,1));
+    
     eps = 1.0e-15;
+    Kmeans = initarray(zeros(2,npts)); 
+    Kmeans(1,1) = (sum(K, 'all') + eps)/N; 
+    Kmeans(2,1) = (sum(abs(K), 'all') + eps)/N;
+    lastspiketimes = initarray(zeros(N,1));
     
     % Pasticity options:
     synaptic_plasticity = false;
@@ -75,14 +78,15 @@ function [tout, xout, K, Kmeans, info] = DOPRI_simulatenetwork_adaptive(ta,tb,x0
                 K = K * Kmeans(i) ./ (sum(K,1) + eps);
             end
             % Rescale to the maximum
-            K = min(-KMAX, max(KMAX, K));
+            K = min(KMAX, max(-KMAX, K));
         end
         
         if intrnsic_plasticity
             toimplement = 0;
         end
         
-        Kmeans(i+1) = (sum(K, 'all') + eps)/N;
+        Kmeans(1,i+1) = (sum(K, 'all') + eps)/N; 
+        Kmeans(2,i+1) = (sum(abs(K), 'all') + eps)/N;
 
         K7 = h*func(t, xout(:,i+1), K, Kmeans(i+1));
     end
