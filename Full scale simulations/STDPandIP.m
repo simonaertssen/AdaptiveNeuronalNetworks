@@ -20,7 +20,7 @@ end
 initarray = make_GPUhandle();
 
 %% Theta model parameters:
-h = 0.005; tnow = h; tend = 1000;
+h = 0.005; tnow = h; tend = 100;
 
 pars.N = 100;
 pars.a_n = 0.666666666666666666667;
@@ -30,10 +30,11 @@ pars.e = 0; %randcauchy(seed, pars.eta0, pars.delta, pars.N);
 
 %% The simulation
 STDP = struct('window', @Kempter1999Window, 'Kupdate', @(K, W) K + W, 'w_i', 1.0e-5, 'w_o', - 1.0475*1.0e-5);
-STDP = struct('window', @Song2017Window, 'Kupdate', @(K, W) K + K.*W); 
-plastopts = struct('SP', STDP);
+% STDP = struct('window', @Song2017Window, 'Kupdate', @(K, W) K + K.*W); 
+plastopts = struct('SP', STDP, 'KMAX', 10);
+K0 = initarray(zeros(pars.N) + 0.01*randn(pars.N)); % For the STDPversusIP script
 
-[t, thetas_full, K, Kmeans] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
+[t, thetas_full, K, Kmeans] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,K0,plastopts);
 drawthetas = spikesNaN(thetas_full);
 z = orderparameter(thetas_full);
 
@@ -89,5 +90,5 @@ if size(MP,1)>1
     set(f_reproduce,'Position',[pos(1,2)+MP(2,1:2) pos(3:4)]);
 end
 
-print(f_reproduce, '../Figures/STDPbeforeIP.png', '-dpng', '-r400')
+% print(f_reproduce, '../Figures/STDPbeforeIP.png', '-dpng', '-r400')
 

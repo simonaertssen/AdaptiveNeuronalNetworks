@@ -1,4 +1,4 @@
-function [tout, xout, K, Kmeans, info] = DOPRI_simulatenetwork_adaptive(ta,tb,x0,h,p,plastopts) 
+function [tout, xout, K, Kmeans, info] = DOPRI_simulatenetwork_adaptive(ta,tb,x0,h,p,K0,plastopts) 
     initarray = make_GPUhandle();
     disp("Start simulation.")
     
@@ -17,8 +17,11 @@ function [tout, xout, K, Kmeans, info] = DOPRI_simulatenetwork_adaptive(ta,tb,x0
     func = @(t, x, K, Kmean) thetaneurons_full_adaptive(t, x, K, p.e, p.a_n, Kmean);
     
     % Network parameters and handles:
-    K = initarray(zeros(N, N) + 0.01*randn(N)); % For the STDPversusIP script
-    K = initarray(10*ones(N,N)); % For the learning windows
+    if nargin > 6
+        K = K0;
+    else 
+        K = initarray(10*ones(N,N)); % For the learning windows
+    end
     Kmeans = initarray(zeros(npts,1)); Kmeans(1) = sum(K, 'all')/N + 1.0e-15;
     lastspiketimes = initarray(zeros(N,1));
     eps = 1.0e-15;
@@ -27,8 +30,9 @@ function [tout, xout, K, Kmeans, info] = DOPRI_simulatenetwork_adaptive(ta,tb,x0
     synaptic_plasticity = false;
     synaptic_scaling = false;
     intrnsic_plasticity = false;
-    w_i = 0; w_o = 0;
+    w_i = 0; w_o = 0; KMAX = inf;
     if isstruct(plastopts)
+        KMAX = plastopts.KMAX;
         synaptic_plasticity = isstruct(plastopts.SP);
         if isfield(plastopts.SP,'window')
             window = plastopts.SP.window;
@@ -70,6 +74,8 @@ function [tout, xout, K, Kmeans, info] = DOPRI_simulatenetwork_adaptive(ta,tb,x0
             if synaptic_scaling
                 K = K * Kmeans(i) ./ (sum(K,1) + eps);
             end
+            % Rescale to the maximum
+            K = min(-KMAX, max(KMAX, K));
         end
         
         if intrnsic_plasticity

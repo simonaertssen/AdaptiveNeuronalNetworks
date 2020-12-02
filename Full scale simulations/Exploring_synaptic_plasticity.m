@@ -61,6 +61,8 @@ xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
  %% Results without synaptic scaling:
 f_noSS = figure('Renderer', 'painters', 'Position', [50, 50, 800, 300]); hold on; box on;
 
+K0 = initarray(10*ones(N,N)); % For the learning windows
+
 winnames = ["Kempter1999Window", "Song2017Window", "ChrolCannon2012Window", "Waddington2014Window"];
 colors = ["#0072BD", "#D95319", "#77AC30", "#A2142F"];
 for i = 1:4
@@ -75,7 +77,7 @@ for i = 1:4
     end
     
     plastopts = struct('SP', STDP);
-    [t, thetas_full, ~, Kmeans] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
+    [t, thetas_full, ~, Kmeans] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,K0,plastopts);
     drawthetas = spikesNaN(thetas_full);
     z = orderparameter(thetas_full);
 
