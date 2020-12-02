@@ -48,11 +48,11 @@ Zplot = plot(real(Z), imag(Z), 'LineWidth', 2);
 
 % 2D OA integration
 zoa2D = zeros(2*p.Mk, 1);
-zoa2D(1:p.Mk) = real(zoa);
-zoa2D(p.Mk+1:end) = imag(zoa);
+zoa2D(1:2:end) = real(zoa);
+zoa2D(2:2:end) = imag(zoa);
 
 [TOA, b] = ode45(@(t,z) MFROA2D(t,z,p), [0, 10], zoa2D, opts);
-Z2D = b(:, 1:p.Mk)*p.P(p.k)/p.N + 1i*b(:, p.Mk+1:end)*p.P(p.k)/p.N;
+Z2D = b(:, 1:2:end)*p.P(p.k)/p.N + 1i*b(:, 2:2:end)*p.P(p.k)/p.N;
 scatter(real(Z2D(1)), imag(Z2D(1)), 100, 'ob');
 Z2Dplot = plot(real(Z2D), imag(Z2D), 'LineWidth', 2);
 
@@ -60,7 +60,7 @@ legend([Zplot, Z2Dplot], "OA", "OA2D", "Location", "northeast")
 
 %%
 function dfdz = MFROAJEntangled(z,p)
-    x = z(1:p.Mk); y = z(p.Mk+1:end);
+    x = z(1:2:end); y = z(2:2:end);
     dfdz = zeros(2*p.Mk, 2*p.Mk);
     
     etaH2k = p.eta0 + p.OA*(1 + (x.*x)/3 - 4.*x/3);
@@ -93,40 +93,42 @@ function [z, zs] = NewtonRaphsonIterationEntangled(z0, p)
     z = zeros(2*p.Mk, 1);
     z(1:2:end) = real(z0);
     z(2:2:end) = imag(z0);
-
-    maxevals = 30;
     
+    zc = z0';
+    zval = zeros(2*p.Mk, 1);
+        
+    maxevals = 30;
     zs = NaN(2, maxevals+1);
     zs(1, 1) = z(1:2:end)'*p.P(p.k)/p.N;
-    zs(2, 1) = z(p.Mk+1:end)'*p.P(p.k)/p.N;
+    zs(2, 1) = z(2:2:end)'*p.P(p.k)/p.N;
     for evaltime = 1:maxevals
         z0 = z;
         
-%         fval = f(z,p);
-%         fval = [fval(1,:), fval(2,:)]';
-%         fval = df(z,p)\fval;
-%         fval = [fval(1:p.Mk), fval(p.Mk+1:end)];
-    
-%         det(df(z,p))
-        fdiv = df(z,p)\f(z,p);
+        fval = MFROA(0,zc',p);    
+        zval(1:2:end) = real(fval);
+        zval(2:2:end) = imag(fval);
+        
+        fdiv = df(z,p)\zval;
         z = z - fdiv;
         
         error = norm(z - z0);
         if error < 1.0e-9
             break
         end
-        zs(1, evaltime+1) = z(1:p.Mk)'*p.P(p.k)/p.N;
-        zs(2, evaltime+1) = z(p.Mk+1:end)'*p.P(p.k)/p.N;
+        zs(1, evaltime+1) = z(1:2:end)'*p.P(p.k)/p.N;
+        zs(2, evaltime+1) = z(2:2:end)'*p.P(p.k)/p.N;
         if abs(zs(1, evaltime+1) + 1i*zs(2, evaltime+1)) > 1
             warning("Out of the complex circle");
             break
         end
+        
+        zc = z(1:2:end) + 1i*z(2:2:end);
     end
     plot(zs(1,:), zs(2,:), 'LineWidth', 2)
     disp(['Algorithm took ', num2str(evaltime), ' steps'])
-    test = df(z0, p);
-    det(test)
-    trace(test)
+%     test = df(z0, p);
+%     det(test)
+%     trace(test)
 %     eig(test)
 end
 
