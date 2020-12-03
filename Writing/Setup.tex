@@ -14,6 +14,7 @@
 \usepackage{multicol}
 \usepackage{xspace}
 
+\usepackage{tocloft}
 
 % Colouring the references
 \usepackage{hyperref}
@@ -43,7 +44,7 @@
 
 % Section properties redefinitions
 \makeatletter
-\renewcommand\section{\@startsection {section}{1}{\z@}{3ex }{0.1ex } {\normalfont\large\bfseries}}
+\renewcommand\section{\@startsection {section}{1}{\z@}{3ex }{0.7ex } {\normalfont\large\bfseries}}
 \renewcommand\subsection{\@startsection{subsection}{1}{\z@}{2ex }{0.1ex } {\normalfont \bfseries}}
 \renewcommand\subsubsection{\@startsection{subsubsection}{3}{\z@}{-1.5ex\@plus -1ex \@minus -.2ex}{.5ex}{\normalfont}}
 \makeatother
@@ -65,16 +66,22 @@
 \fancyhf{} 
 \renewcommand{\headrulewidth}{0pt}
 \newcommand{\mainmatter}{\clearpage \cfoot{\thepage\ of \pageref{LastPage}}
-\setcounter{page}{0}
+\setcounter{page}{1}
 \pagenumbering{arabic}}
-\usepackage{comment}
+%\usepackage{comment}
+
+\lfoot{\footnotesize \textcolor{Gray}{\thesistitle}}
+\rfoot{\footnotesize \textcolor{Gray}{\thesisauthor, \thedate}}
+\fancyhfoffset{0pt}
+
 
 % Sort the bibliography and add to the table of contents
 \usepackage[sort]{cite}
 \setlength\columnsep{15pt}
 \usepackage[nottoc,numbib]{tocbibind}
 
-% Command definitions:
+
+% Command definitions and macros:
 \newcommand{\dtheta}{{\dot{\theta}}\xspace}
 \newcommand{\ic}{{\rm{i}}\xspace}
 
@@ -106,6 +113,22 @@
 \newcommand{\LTD}{{LTD}\xspace}
 
 \def\matlab{\textsc{Matlab}\xspace}
+
+% Author macros:
+\newcommand{\thesistitle}{Dynamics of adaptive neuronal networks}
+\newcommand{\thesissubtitle}{A trip to topology and back}
+
+\newcommand{\thesisauthor}{Simon Aertssen} % Your name :) 
+\newcommand{\studentnumber}{s181603}
+\newcommand{\thedate}{February 1$^{\text{st}}$ 2020 } 
+\newcommand{\thesissupervisorI}{Erik Martens} 
+\newcommand{\thesissupervisorII}{Poul Hjorth} 
+
+\newcommand{\department}{DTU Compute}
+\newcommand{\departmentdescriber}{Department of Applied Mathematics and Computer Science}
+\newcommand{\addressI}{Richard Petersens Plads, Building 324}
+\newcommand{\addressII}{2800 Kgs. Lyngby, DK}
+\newcommand{\departmentwebsite}{www.compute.dtu.dk}
 
 
 %% ------ Front page ------ %%

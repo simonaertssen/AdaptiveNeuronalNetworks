@@ -6,23 +6,30 @@
 
 \mainmatter
 
-\tableofcontents
 \pagenumbering{Roman}
-\input{Introduction}
-\input{Nomenclature}
+\input{Frontmatter/Titlepage}
+\tableofcontents
+
+\input{Frontmatter/Introduction}
+\input{Frontmatter/Nomenclature}
 
 \renewcommand{\thepage}{\arabic{page}}% Arabic page numbers
-\input{Networks}
-\input{Theta Neuron Model}
+\input{Mainmatter/Networks}
+\input{Mainmatter/Theta Neuron Model}
+\input{Mainmatter/Mean Field Reductions}
+\input{Mainmatter/OttAntonsen Directed Graphs}
+\input{Mainmatter/Hebbian Learning}
+\input{Mainmatter/Plasticity}
+\input{Mainmatter/Emerging Network Topologies}
+\input{Mainmatter/Conclusion and discussion}
 
-In \cite{Martens2020}
+Test citations: In \cite{Martens2020}
 
-% Safely add bibliography (for hyperref)
-%\cleardoublepage
-%\phantomsection
-%\addcontentsline{toc}{chapter}{Bibliography}
+\newpage
 \bibliographystyle{utphys}
 \bibliography{references}
+
+\input{Backmatter/Appendix}
 
 \label{LastPage}~
 
