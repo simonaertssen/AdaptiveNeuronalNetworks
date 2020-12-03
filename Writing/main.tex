@@ -1,13 +1,19 @@
+% Build with pdflatex_build, which moves all miscellaneous files into a tmp folder.
+% See https://tex.stackexchange.com/questions/67211/use-texshop-preview-window-when-different-output-dir-is-set
+
 \input{Setup.tex}
 \begin{document}
 
 \mainmatter
 
+\today
+Help
 \input{Nomenclature}
 
-%\bibliographystyle{utphys}
-%\small{\bibliography{references}}
+In \cite{Martens2020}
 
+\bibliographystyle{utphys}
+\small{\bibliography{references}}
 \label{LastPage}~
 
 \end{document}
