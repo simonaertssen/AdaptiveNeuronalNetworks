@@ -1,20 +1,42 @@
+% !TEX root = ../main.tex
 \newpage
-\section{Network Topologies}
+\section{Network Topologies} \label{NetworkTopologies}
+
+
 \subsection{Fixed-degree networks}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque nisl eros, 
-pulvinar facilisis justo mollis, auctor consequat urna. Morbi a bibendum metus. 
-Donec scelerisque sollicitudin enim eu venenatis. Duis tincidunt laoreet ex, 
-in pretium orci vestibulum eget.
+\noindent A network consists of nodes, connected by links. The most simple network is one where all the nodes are connected, and so all nodes have a degree of $N$. In general, we can make networks where all nodes have the same degree $k = \kmean$:
+\begin{align}
+P(k) = \left\{\begin{array}{ll}\kmean & \text{if } k=\kmean \\0 & \text{otherwise}\end{array}\right. \label{eq:diracpdf}
+\end{align}
+We will refer to these networks as fixed-degree networks.
+
 
 \subsection{Random / Erd{\"o}s-R{\'e}ny networks}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque nisl eros, 
-pulvinar facilisis justo mollis, auctor consequat urna. Morbi a bibendum metus. 
-Donec scelerisque sollicitudin enim eu venenatis. Duis tincidunt laoreet ex, 
-in pretium orci vestibulum eget.
+In 1959 Erd{\"o}s and R{\'e}ny published their work on random graphs\cite{RandomGraphs1959}, where links are established if a random uniformly distributed number is higher than a threshold $p$. The degrees follow a binomial distribution: 
+\begin{align}
+P(k)=\left(\begin{array}{c}N-1 \\ k\end{array}\right) p^{k}(1-p)^{N-1-k} \label{eq:binomialpdf}
+\end{align}
+with a mean $\mu = p(N-1)$ and standard deviation $\sigma = \mu(1-p)$. For networks where $\kmean \ll N$, the network can be well approximated by a Poisson distribution:
+\begin{align}
+P(k) = e^{-\kmean} \frac{\kmean^{k}}{k !} \label{eq:poissonpdf}
+\end{align}
+with a mean $\mu = \kmean$ and standard deviation $\sigma = \sqrt{\kmean}$. Both \eqref{eq:binomialpdf} and \eqref{eq:poissonpdf} describe similar quantities, but the latter is used more often due to its analytical simplicity \cite{BarabasiNetworkBook2016}.
+
 
 \subsection{Scale-free networks}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque nisl eros, 
-pulvinar facilisis justo mollis, auctor consequat urna. Morbi a bibendum metus. 
-Donec scelerisque sollicitudin enim eu venenatis. Duis tincidunt laoreet ex, 
-in pretium orci vestibulum eget.
+What we can often observe in nature is the preferential attachment to nodes with a high degree \cite{Bullmore2010}: the rich or famous tend to get more rich or famous. This trait is also described as the 80/20 rule by Pareto. Networks with this property consist of a small number of highly connected nodes, and a large number of low degree nodes. We can represent this with a power law distribution:
+\begin{align}
+P(k) = A k^{-\gamma} \label{eq:scalefreepdf}
+\end{align}
+with $A$ is a constant so that $\sum_{k=1}^{\infty} P(k) = 1$. We can also see that $A \sum_{k=1}^{\infty} k^{-\gamma} = 1$ so that $A = \sum_{k=1}^{\infty} k^{\gamma} = 1/\zeta(k)$, the Riemann Z{\'e}ta function \cite{BarabasiNetworkBook2016}. 
 
+Networks with a distribution like \eqref{eq:scalefreepdf} are called \textit{scale-free} networks, as they lack an internal scale to represent the magnitude of the network: we can observe \eqref{eq:scalefreepdf} on different scales like the probability of two Hollywood actors appearing in a movie, or the connections between web pages on the internet \cite{Barabasi2003}. One description that comes close is the \textit{natural cutoff} $k_{\text{max}}$, the expected degree of the largest degree in the network. As we only expect the largest hub to be the only hub in the domain $[k_{\text{max}}, +\infty]$:
+\begin{align*}
+\int_{k_{\text{max}}}^{\infty} P(k) dk=\frac{1}{N}
+\end{align*}
+For \eqref{eq:scalefreepdf} this results in:
+\begin{align}
+k_{\text{max}}=k_{\text{min}} \cdot N^{\frac{1}{\gamma-1}} \label{eq:scalefreecutoff}
+\end{align}
+which shows that there might be large differences in size between the nodes. There are constraints on $\gamma$ to yield a scale-free network. When $0 < \gamma < 2$ the largest hub grows faster than $N$, so once its degree exceeds $N-1$ there are no more new nodes to connect to. A rigorous proof is given in \cite{Bassler2011}. For $\gamma = 2$, the system grows linearly, as we can see in \eqref{eq:scalefreecutoff}. When $2 < \gamma \leq 3$ we find the most scale-free networks, as for $\gamma > 3$ hubs are not sufficiently large and numerous to have much influence on the network
+\cite{BarabasiNetworkBook2016}.

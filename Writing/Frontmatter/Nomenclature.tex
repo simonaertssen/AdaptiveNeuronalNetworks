@@ -1,14 +1,30 @@
+% !TEX root = ../main.tex
 \newpage
 \section{Nomenclature}
+\vspace{-.5cm}
 \begin{alignat*}{2}
-& N &&\text{Network degree. Number of neurons in the network.}\\
-&A_{ij} &&\text{Adjacency matrix. Models which neuron $i$ is connected to neuron $j$ and vice-ersa.}\\
-& P &&\text{Network degree distribution.}\\
-& k, \kmean &&\text{Node degree, average node degree}\\
-&\gamma &&\text{Degree exponent of a scale-free network}\\
-&\dtheta, \theta &&\text{Phase variable of the theta model}\\
-&\eta_i, I(t)_i &&\text{Excitability and input current of neuron $i$}\\
-&g(\eta \rvert \eta_0, \Delta) \quad &&\text{Excitability distribution}\\
-&\kappa &&\text{Coupling strength}\\
-& Z(t), \bar{Z}(t) &&\text{Order parameter, discrete and continuous.}\\
+& \ic&&\text{Imaginary unit.}\\ \\
+& N &&\text{Network degree. The number of neurons in the network.}\\
+& A_{ij} &&\text{Adjacency matrix. Models which neuron $i$ is connected to neuron $j$ and vice-versa.}\\
+& \kmean &&\text{Average node degree in the network.}\\
+& \k &&\text{Node degree. Vector of the in- and out-degree of a single node as $\left(\kin, \kout \right)$.}\\
+& \kinb, \koutb && \text{Node degree vector of all in- and out degrees of the network.} \\
+& M_{\k} &&\text{Number of unique node degrees in the network.}\\
+& P(\k) &&\text{Network degree distribution. Probability of a node having degree $\k$.}\\
+&\gamma &&\text{Degree exponent of a scale-free network.}\\ 
+&p &&\text{Probability threshold of forming a link in random networks.}\\ 
+&c &&\text{Assortativity of the network.}\\ \\
+&\theta(t)_i &&\text{Phase variable function of the theta model (of neuron $i$).}\\
+& \Pulse_n (\theta)&&\text{Pulse shaped synaptic coupling function.}\\
+&\kappa &&\text{Macroscopic coupling strength.}\\
+&\eta_i, I(t)_i &&\text{Excitability threshold and input current (of neuron $i$).}\\
+&g(\eta \rvert \eta_0, \sigma) \quad &&\text{Excitability threshold distribution with mean $\eta_0$ and width $\sigma$.}\\ \\
+& Z(t) &&\text{Kuramoto order parameter function.}\\
+& z(\k, t) &&\text{Order parameter function for nodes with degree $\k$.}\\
+& \bar{Z}(t) &&\text{Mean field order parameter function for arbitrary networks.}\\ \\
+& \Sin(t)_i, \Sout(t)_i \quad &&\text{Spike trains received and emitted by neuron $i$ as a sum of delta functions in time.}\\ 
+& K_{ij} &&\text{Synaptic connectivity matrix. Strength of the connections between neurons $i$ and $j$.}\\
+& \Delta t_{ij} &&\text{Time difference between spikes of neurons $i$ and $j$.}\\
+& W(\Delta t_{ij}) &&\text{Learning window. Models the correlation between synaptic strength and spike times.}\\ 
+& \phi(\Delta t_{ij}) &&\text{IP learning function. Models correlation between excitability strength and spike times.}\\ 
 \end{alignat*}

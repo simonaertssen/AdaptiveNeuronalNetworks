@@ -1,10 +1,81 @@
+% !TEX root = ../main.tex
 \newpage
-\section{The Theta Neuron Model}
+\section{The Theta Neuron Model} \label{TheThetaNeuronModel}
+
+
 \subsection{Model description}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque nisl eros, 
-pulvinar facilisis justo mollis, auctor consequat urna. Morbi a bibendum metus. 
-Donec scelerisque sollicitudin enim eu venenatis. Duis tincidunt laoreet ex, 
-in pretium orci vestibulum eget.
+A number of neuron model families have been identified, and often there exists a continuous change of variables from models of the same family into a \textit{canonical} model that can represent the whole family \cite{Hoppensteadt2001CanonicalNM}. As the transformation is not required to be invertible, we can study the universal neurocomputational properties of the family in a low dimensional model.
+It was Hodgkin \cite{Hodgkin1948} who classified neurons into two types based on their excitability, upon experimenting with the electrical stimulation of cells. Class 1 models begin to spike at an arbitrarily slow rate, and the spiking frequency increases when the applied current is increased. Class 2 models spike as soon as their internal threshold is exceeded and the spiking frequency stays relatively constant within a certain frequency band \cite{Hoppensteadt2001CanonicalNM}.\\
+In \cite{Ermentrout1986}, a class 1 canonical phase model was proposed:
+\begin{align}
+\dot{\theta} = (1-\cos \theta)+(1+\cos \theta) \cdot \iota \label{eq:thetaneuron}
+\end{align}
+with $\iota$ a bifurcation parameter on the supplied current. We can visualise the dynamics on the unit circle, like in Figure \ref{fig:thetaneuronbifurcationtikz}. The neuron produces a spike when $\theta$ surpasses $\pi$. As $\iota$ increases, we see the coalescence of a saddle and node and the neuron starts to fire periodically, we can recognise the features of the class 1 model in Figure. This makes \eqref{eq:thetaneuron} the normal form of the \textit{saddle-node-on-invariant-circle} ($\SNIC$) bifurcation \cite{Luke2013}.\\
+
+We can easily extend the model to networks of neurons:
+\begin{align}
+\dot{\theta}_{i} &=\left(1-\cos \theta_{i}\right)+\left(1+\cos \theta_{i}\right) \cdot \left[\eta_{i} + \kappa I_{i}(t)\right] \label{eq:thetaneuronnetwork} \\
+I_{i}(t) &=\frac{1}{\k} \sum_{j=1}^{N} A_{i j} \cdot \mathcal{P}_{n}(\theta_{j}) \label{eq:thetaneuronnetworkcurrent}
+\end{align}
+where the excitability is drawn from a distribution and $\mathcal{P}(\theta)  = a_n(1 - \cos \theta)^n$ models synaptic coupling by a pulse-shaped signal, emitted when a neuron fires. $n$ models the sharpness of the pulse, and $a_n$ is a normalisation constant. We will take $n=2$ from here in as in\cite{Luke2013}, \cite{OttAntonsen2017}, \cite{Martens2020}. Another type of coupling is proportional to the difference in voltage between neurons \cite{Martens2020}. Note that for a fully connected network, \eqref{eq:thetaneuronnetworkcurrent} reduces to the scenarios in \cite{Luke2013} and \cite{Martens2020}.
+
+\begin{figure}[H]
+\minipage{0.33\linewidth}
+\centering
+\begin{tikzpicture}
+    \draw (0,0) circle [radius=1];
+    \draw (0,-1.2) node[below]{$\iota < 0$};
+    \draw (-1,0) node[left]{$\pi$};
+    \draw[fill=red, red] (-1,0) circle [radius=0.05];
+    \draw (-1,0) node[right]{spike};
+    
+    \draw[black, ->] (0.866, 0.5)to[out=-60,in=90](1,0);
+    \draw[fill=white, draw=black] (0.866,0.5) circle [radius=0.1];
+    \draw (0.866,0.5) node[left]{\small{threshold}};
+    
+    \draw[fill=black, draw=black] (0.866,-0.5) circle [radius=0.1];
+    \draw (0.866,-0.5) node[left]{\small{rest}};
+    
+    \draw[black, ->] (0.5,0.866)to[out=150,in=0](0,1);
+    \draw[black, ->] (-0.5,-0.866)to[out=-30,in=180](0,-1);
+\end{tikzpicture}
+\endminipage
+\minipage{0.33\linewidth}
+\centering
+\begin{tikzpicture}
+    \draw (0,0) circle [radius=1];
+    \draw (0,-1.2) node[below]{$\iota = 0$};
+    \draw[fill=red, red] (-1,0) circle [radius=0.05];
+    \draw (-1,0) node[right]{spike};
+    
+    \draw[fill=gray, draw=black] (1,0) circle [radius=0.1];
+    
+    \draw[black, ->] (0.5,0.866)to[out=150,in=0](0,1);
+    \draw[black, ->] (-0.5,-0.866)to[out=-30,in=180](0,-1);
+\end{tikzpicture}
+\endminipage
+\minipage{0.33\linewidth}
+\centering
+\begin{tikzpicture}
+    \draw (0,0) circle [radius=1];
+    \draw (0,-1.2) node[below]{$\iota > 0$};
+    \draw (1,0) node[right]{0};
+    \draw[fill=black, black] (1,0) circle [radius=0.025];
+    \draw[fill=red, red] (-1,0) circle [radius=0.05];
+    \draw (-1,0) node[right]{spike};
+    
+    \draw[black, dotted] (0,0)to(1,0);
+    \draw(0,0) node[above]{$\theta$};
+    \draw[black, dotted] (0,0)to(0.866,0.5);
+    
+    \draw[black, ->] (0.5,0.866)to[out=150,in=0](0,1);
+    \draw[black, ->] (-0.5,-0.866)to[out=-30,in=180](0,-1);
+\end{tikzpicture}
+\endminipage
+\caption{SNIC bifurcation of the theta neuron model. For $\iota < 0$, the neuron is in a rest state but excitable. For $\iota > 0$, the neuron spikes regularly. The bifurcation occurs at $\iota = 0$. A spike occurs when $\theta = \pi$.}
+\label{fig:thetaneuronbifurcationtikz}
+\end{figure}
+
 
 \subsection{Solutions for static currents}
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque nisl eros, 
@@ -12,10 +83,10 @@ pulvinar facilisis justo mollis, auctor consequat urna. Morbi a bibendum metus.
 Donec scelerisque sollicitudin enim eu venenatis. Duis tincidunt laoreet ex, 
 in pretium orci vestibulum eget.
 
+
 \subsection{Networks of theta neurons}
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque nisl eros, 
 pulvinar facilisis justo mollis, auctor consequat urna. Morbi a bibendum metus. 
 Donec scelerisque sollicitudin enim eu venenatis. Duis tincidunt laoreet ex, 
 in pretium orci vestibulum eget.
-
 
