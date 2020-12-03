@@ -44,6 +44,11 @@ Icon
 *.bbl
 *.blg
 *.synctex(busy)
+*.nlo
+*.fdb_latexmk
+*.fls
+*.ilg
+*.nls
 
 # And no maple code:
 *.bak
