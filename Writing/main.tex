@@ -1,4 +1,4 @@
-% Build with pdflatex_build, which moves all miscellaneous files into a tmp folder.
+% Build with custom engines, which move all miscellaneous files into a 'build' folder.
 % See https://tex.stackexchange.com/questions/67211/use-texshop-preview-window-when-different-output-dir-is-set
 
 \input{Setup.tex}
@@ -6,14 +6,24 @@
 
 \mainmatter
 
-\today
-
+\tableofcontents
+\pagenumbering{Roman}
+\input{Introduction}
 \input{Nomenclature}
+
+\renewcommand{\thepage}{\arabic{page}}% Arabic page numbers
+\input{Networks}
+\input{Theta Neuron Model}
 
 In \cite{Martens2020}
 
+% Safely add bibliography (for hyperref)
+%\cleardoublepage
+%\phantomsection
+%\addcontentsline{toc}{chapter}{Bibliography}
 \bibliographystyle{utphys}
-\small{\bibliography{references}}
+\bibliography{references}
+
 \label{LastPage}~
 
 \end{document}
