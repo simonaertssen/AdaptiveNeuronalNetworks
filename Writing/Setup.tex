@@ -32,7 +32,16 @@
   colorlinks = true,
 }
 
+% Nomenclature
+\usepackage{nomencl}
+\makenomenclature
+%\renewcommand{\nomname}{List of symbols}
+\renewcommand{\nompreamble}{\noindent Definitions of the nomenclature}
+\newlength{\nomitemorigsep}
+\setlength{\nomitemorigsep}{\nomitemsep}
+\setlength{\nomitemsep}{-\itemsep}
 
+% Section properties redefinitions
 \makeatletter
 \renewcommand\section{\@startsection {section}{1}{\z@}{3ex }{0.1ex } {\normalfont\large\bfseries}}
 \renewcommand\subsection{\@startsection{subsection}{1}{\z@}{2ex }{0.1ex } {\normalfont \bfseries}}
@@ -60,7 +69,7 @@
 \pagenumbering{arabic}}
 \usepackage{comment}
 
-% sort the bibliography
+% Sort the bibliography
 \usepackage[sort]{cite}
 \setlength\columnsep{15pt}
 
