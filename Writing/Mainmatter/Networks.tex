@@ -1,12 +1,25 @@
 % !TEX root = ../main.tex
 \newpage
-\section{Network Topologies} \label{NetworkTopologies}
+\section{Network Topologies} \label{sec:NetworkTopologies}
 
+Networks consists of \textsl{nodes} $n_j$, $j \leq N$ connected by \textsl{links}. They arise in any context where objects are \textsl{related} to each other. 
+
+\subsection{Representations and properties}
+We represent a finite network through the adjacency matrix: $A_{ij} $ = 1 if there exists a relation from node $j$ to node $i$ and 0 otherwise. This means that $A_{ij}$ can be \textsl{undirected} (symmetric) or \textsl{undirected}. If we think of the relations between guests at a party, then the social network is directed, as people might not know each other mutually. However, the network of people having shaken hands is symmetric. Self-links are an edge-case that depends on the context, as one generally does not shake hands with himself. \\
+%The number of links that a node has is denoted as the \textsl{degree}. 
+From $A_{ij}$ we can compute the in- and out-degree vectors, which show how many links a node has coming in and out:
+\begin{align}
+\kinbi = \sum_{j=1}^{N} A_{i j} \hspace{15mm} \koutbj = \sum_{i=1}^{N} A_{i j}  \hspace{15mm} \degree(n_j) = \k_j = (\boldsymbol{k}_j^{\bf in}, \koutbj) \in \K \subset \mathbb{N} \label{eq:definekinkoutfromA} 
+\end{align}
+The distribution of $\kinb$ and $\koutb$ is the most defining property of the network:
+\begin{align}
+(\kinb, \koutb) \sim P(\degree(n) = \k) \label{eq:definekinkoutfromP} \end{align}
+The support of $P$ is the set of unique degrees $\K$ with cardinality $M_\k$, which consists of integers. For symmetric networks, $\kinb = \koutb$, so that $P$ is really a univariate distribution.
 
 \subsection{Fixed-degree networks}
-\noindent A network consists of nodes, connected by links. The most simple network is one where all the nodes are connected, and so all nodes have a degree of $N$. In general, we can make networks where all nodes have the same degree $k = \kmean$:
+\noindent A network consists of nodes, connected by links. The most simple network is one where all the nodes are connected, and so all nodes have a degree of $N$. In general, we can make networks where all nodes have the same degree, $\kmean$:
 \begin{align}
-P(k) = \left\{\begin{array}{ll}\kmean & \text{if } k=\kmean \\0 & \text{otherwise}\end{array}\right. \label{eq:diracpdf}
+P(k) = \left\{\begin{array}{ll}\kmean & \text{if } k=\kmean \\0 & \text{otherwise}\end{array}\right. \hspace{15mm} \K = \{ \kmean \} \label{eq:diracpdf}
 \end{align}
 We will refer to these networks as fixed-degree networks.
 
@@ -14,11 +27,11 @@ We will refer to these networks as fixed-degree networks.
 \subsection{Random / Erd{\"o}s-R{\'e}ny networks}
 In 1959 Erd{\"o}s and R{\'e}ny published their work on random graphs\cite{RandomGraphs1959}, where links are established if a random uniformly distributed number is higher than a threshold $p$. The degrees follow a binomial distribution: 
 \begin{align}
-P(k)=\left(\begin{array}{c}N-1 \\ k\end{array}\right) p^{k}(1-p)^{N-1-k} \label{eq:binomialpdf}
+P(k)=\left(\begin{array}{c}N-1 \\ k\end{array}\right) p^{k}(1-p)^{N-1-k}  \hspace{15mm} \K = [0,N] \label{eq:binomialpdf}
 \end{align}
 with a mean $\mu = p(N-1)$ and standard deviation $\sigma = \mu(1-p)$. For networks where $\kmean \ll N$, the network can be well approximated by a Poisson distribution:
 \begin{align}
-P(k) = e^{-\kmean} \frac{\kmean^{k}}{k !} \label{eq:poissonpdf}
+P(k) = e^{-\kmean} \frac{\kmean^{k}}{k !} \hspace{15mm} \K = [0,N] \label{eq:poissonpdf}
 \end{align}
 with a mean $\mu = \kmean$ and standard deviation $\sigma = \sqrt{\kmean}$. Both \eqref{eq:binomialpdf} and \eqref{eq:poissonpdf} describe similar quantities, but the latter is used more often due to its analytical simplicity \cite{BarabasiNetworkBook2016}.
 
@@ -36,7 +49,7 @@ Networks with a distribution like \eqref{eq:scalefreepdf} are called \textit{sca
 \end{align*}
 For \eqref{eq:scalefreepdf} this results in:
 \begin{align}
-k_{\text{max}}=k_{\text{min}} \cdot N^{\frac{1}{\gamma-1}} \label{eq:scalefreecutoff}
+\kmax = \kmin \cdot N^{\frac{1}{\gamma-1}} \label{eq:scalefreecutoff}
 \end{align}
 which shows that there might be large differences in size between the nodes. There are constraints on $\gamma$ to yield a scale-free network. When $0 < \gamma < 2$ the largest hub grows faster than $N$, so once its degree exceeds $N-1$ there are no more new nodes to connect to. A rigorous proof is given in \cite{Bassler2011}. For $\gamma = 2$, the system grows linearly, as we can see in \eqref{eq:scalefreecutoff}. When $2 < \gamma \leq 3$ we find the most scale-free networks, as for $\gamma > 3$ hubs are not sufficiently large and numerous to have much influence on the network
 \cite{BarabasiNetworkBook2016}.
