@@ -13,7 +13,8 @@ F = @thetaneuron; h = 0.001;
 
 feqpts = figure('Renderer', 'painters', 'Position', [50 800 1000 200]); 
 titlefont = 15;
-labelfont = 15;
+labelfont = 20;
+axesfont = 15;
 m = 1; n = 3;
 
 %% Steady current: 0.5
@@ -41,8 +42,7 @@ for i = 1:3
     text(tend - 0.1, -eqpt(1) + 0.4, num2str(-eqpt(1)), 'HorizontalAlignment', 'right');
     
     xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
-    set(gca,'YTick',-pi:pi/2:pi) 
-    set(gca,'YTickLabel',{'-\pi','-\pi/2','0','\pi/2','\pi'})
+    set(gca,'YTick',-pi:pi/2:pi, 'YTickLabel',{'-$$\pi$$','$$\frac{\pi}{2}$$','0','$$\frac{\pi}{2}$$','$$\pi$$'}, 'TickLabelInterpreter', 'latex', 'YLim', [-pi-0.2, pi + 0.2], 'FontSize', axesfont)
     
     if i == 1
         ylabel('$\theta$','Interpreter','latex', 'FontSize', labelfont);
@@ -53,13 +53,13 @@ for i = 1:3
     maxy = max(I(t));
     plot(t, I(t), '-', 'LineWidth', 1, 'color', '#A2142F');
     ax = gca; ax.YAxis(1).Color = 'k'; ax.YAxis(2).Color = '#A2142F';
-    set(gca,'YTick', -2:0.5:0, 'YLim', [-1.5, 3]);
+    set(gca,'YTick', -1:0.5:0, 'YLim', [-1.5, 4]);
     
     if i == 3
         ylabel('$I$','Interpreter','latex', 'FontSize', labelfont);
     end
     
-    removewhitspace();
+%     removewhitspace();
 
 end
 

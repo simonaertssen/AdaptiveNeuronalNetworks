@@ -36,7 +36,7 @@ ylabel('$\theta$','Interpreter','latex', 'FontSize', labelfont);
 xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
 set(gca,'YTick',-pi:pi:pi, 'YTickLabel',{'-$$\pi$$','0','$$\pi$$'}, 'TickLabelInterpreter', 'latex', 'YLim', [-pi - 1.5, pi + 0.2], 'FontSize', axesfont)
     
-yyaxis right
+yyaxis right; hold on; box on;
 maxy = max(I(t));
 plot(t, I(t), '-', 'LineWidth', 1, 'color', '#A2142F');
 ax = gca; ax.YAxis(1).Color = 'k'; ax.YAxis(2).Color = '#A2142F';
@@ -60,7 +60,7 @@ plot(t, thetas, ':k', 'LineWidth', 1);
 xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
 set(gca,'YTick',-pi:pi:pi, 'YTickLabel',{'-$$\pi$$','0','$$\pi$$'}, 'TickLabelInterpreter', 'latex', 'YLim', [-pi - 1.5, pi + 0.2], 'FontSize', axesfont)
 
-yyaxis right
+yyaxis right; hold on; box on;
 maxy = max(I(t));
 plot(t, I(t), '-', 'LineWidth', 1, 'color', '#A2142F');
 ax = gca; ax.YAxis(1).Color = 'k'; ax.YAxis(2).Color = '#A2142F';
@@ -84,7 +84,7 @@ xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
 %set(gca,'YTick',-pi:pi/2:pi, 'YTickLabel',{'-$$\pi$$','-$$\frac{\pi}{2}$$','0','$$\frac{\pi}{2}$$','$$\pi$$'}, 'TickLabelInterpreter', 'latex', 'YLim', [-pi - 1.5, pi + 0.2], 'FontSize', axesfont)
 set(gca,'YTick',-pi:pi:pi, 'YTickLabel',{'-$$\pi$$','0','$$\pi$$'}, 'TickLabelInterpreter', 'latex', 'YLim', [-pi - 1.5, pi + 0.2], 'FontSize', axesfont)
 
-yyaxis right
+yyaxis right; hold on; box on;
 maxy = max(I(t));
 plot(t, I(t), '-', 'LineWidth', 1, 'color', '#A2142F');
 ylim([-1, max(I(t))*5]);

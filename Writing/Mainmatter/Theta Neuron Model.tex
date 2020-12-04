@@ -5,12 +5,7 @@
 
 \subsection{Model description}
 A number of neuron model families have been identified, and often there exists a continuous change of variables from models of the same family into a \textit{canonical} model that can represent the whole family \cite{Hoppensteadt2001CanonicalNM}. As the transformation is not required to be invertible, we can study the universal neurocomputational properties of the family in a low dimensional model.
-It was Hodgkin \cite{Hodgkin1948} who classified neurons into two types based on their excitability, upon experimenting with the electrical stimulation of cells. Class 1 models begin to spike at an arbitrarily slow rate, and the spiking frequency increases when the applied current is increased. Class 2 models spike as soon as their internal threshold is exceeded and the spiking frequency stays relatively constant within a certain frequency band \cite{Hoppensteadt2001CanonicalNM}.\\
-In \cite{Ermentrout1986}, a class 1 canonical phase model was proposed:
-\begin{align}
-\dot{\theta} = (1-\cos \theta)+(1+\cos \theta) \cdot I \label{eq:thetaneuron}
-\end{align}
-with $I$ a bifurcation parameter on the supplied current. We can visualise the dynamics on the unit circle, like in Figure \ref{fig:thetaneuronbifurcationtikz}. The neuron produces a spike when $\theta$ surpasses $\pi$. As $I$ increases, we see the coalescence of a saddle and node and the neuron starts to fire periodically, we can recognise the features of the class 1 model in Figure \ref{fig:ThetaNeuronResponseToCurrent}. This makes \eqref{eq:thetaneuron} the normal form of the \textit{saddle-node-on-invariant-circle} ($\SNIC$) bifurcation \cite{Luke2013}.
+It was Hodgkin \cite{Hodgkin1948} who classified neurons into two types based on their excitability, upon experimenting with the electrical stimulation of cells. Class 1 models begin to spike at an arbitrarily slow rate, and the spiking frequency increases when the applied current is increased. Class 2 models spike as soon as their internal threshold is exceeded and the spiking frequency stays relatively constant within a certain frequency band \cite{Hoppensteadt2001CanonicalNM}.
 
 \begin{figure}[H]
 \minipage{0.33\linewidth}
@@ -69,12 +64,34 @@ with $I$ a bifurcation parameter on the supplied current. We can visualise the d
 \label{fig:thetaneuronbifurcationtikz}
 \end{figure}
 
+In \cite{Ermentrout1986}, a class 1 canonical phase model was proposed:
+\begin{align}
+\dot{\theta} = (1-\cos \theta)+(1+\cos \theta) \cdot I \qquad \theta \in \T \label{eq:thetaneuron}
+\end{align}
+with $I$ a bifurcation parameter on the supplied current. We can visualise the dynamics on the unit circle, like in Figure \ref{fig:thetaneuronbifurcationtikz}. The neuron produces a spike when $\theta$ surpasses $\pi$. As $I$ increases, we see the coalescence of a saddle and node and the neuron starts to fire periodically, we can recognise the features of the class 1 model in Figure \ref{fig:ThetaNeuronResponseToCurrent}. This makes \eqref{eq:thetaneuron} the normal form of the \textit{saddle-node-on-invariant-circle} ($\SNIC$) bifurcation \cite{Luke2013}.
+
 \begin{figure}[H]
 \centering
 \includegraphics[width = \textwidth]{../Figures/ThetaNeuronResponseToCurrent.pdf}
-\caption{Properties of the theta neuron model. Left: the spike frequency of $\theta$ increases as $I$ is increased over time, which is the distinguishing feature of class 1 canonical models. Middle: spikes occur  and Right:}
+\caption{Properties of the theta neuron model. Left: the spike frequency of $\theta$ increases as $I$ is increased over time, which is the distinguishing feature of class 1 canonical models. Middle: spikes occur within a finite time period when $I > 0$ and within infite time when $I = 0$. Right: when $I$ is large, the neuron \textsl{bursts}.}
 \label{fig:ThetaNeuronResponseToCurrent}
 \end{figure}
+
+For $I > 0$, $\dot{\theta} > 0$ so that $\theta$ moves continuously around the circle. Equilibria only exist for $I < 0$: 
+\begin{align*}
+\dot{\theta} &= 1-\cos \theta+I+I \cdot \cos \theta = (I+1)+(I-1) \cdot \cos \theta \\
+\theta^{\ast} &= \pm \arccos \left(\frac{I+1}{1-I}\right)+2 \pi n
+\end{align*}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width = \textwidth]{../Figures/ThetaModelEquilibriumPoints.pdf}
+\caption{Equilibria $\theta^{\ast}$ for different $I$. Left: $I = -0.5$. Middle: $I = -1$. Right: $I = -1.2$.}
+\label{fig:ThetaModelEquilibriumPoints}
+\end{figure}
+
+
+
 
 
 \subsection{Solutions for static currents}
@@ -83,7 +100,7 @@ with $I$ a bifurcation parameter on the supplied current. We can visualise the d
 \subsection{Networks of theta neurons}
 We can easily extend the model to networks of neurons:
 \begin{align}
-\dot{\theta}_{i} &=\left(1-\cos \theta_{i}\right)+\left(1+\cos \theta_{i}\right) \cdot \left[\eta_{i} + \kappa I_{i}(t)\right] \label{eq:thetaneuronnetwork} \\
+\dot{\theta}_{i} &=\left(1-\cos \theta_{i}\right)+\left(1+\cos \theta_{i}\right) \cdot \left[\eta_{i} + \kappa \cdot I_{i}(t)\right] \qquad \theta_i \in \T^N  \label{eq:thetaneuronnetwork} \\
 I_{i}(t) &=\frac{1}{\kmean} \sum_{j=1}^{N} A_{i j} \cdot \mathcal{P}_{n}(\theta_{j}) \label{eq:thetaneuronnetworkcurrent}
 \end{align}
 where the excitability is drawn from a distribution and $\mathcal{P}(\theta)  = a_n(1 - \cos \theta)^n$ models synaptic coupling by a pulse-shaped signal, emitted when a neuron fires. $n$ models the sharpness of the pulse, and $a_n$ is a normalisation constant. We will take $n=2$ from here in as in\cite{Luke2013}, \cite{OttAntonsen2017}, \cite{Martens2020}. Another type of coupling is proportional to the difference in voltage between neurons \cite{Martens2020}. Note that for a fully connected network, \eqref{eq:thetaneuronnetworkcurrent} reduces to the scenarios in \cite{Luke2013} and \cite{Martens2020}.
