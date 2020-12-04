@@ -11,13 +11,13 @@ in pretium orci vestibulum eget.
 We can find an exact solution for $A$ given the degree vectors in \eqref{eq:definekinkoutfromP}. $A_{ij}$ represents a directed graph, but $A_{ij} \neq A_{ji}$ is not a necessary condition. For the elements of $A_{ij}$ we need to find $N^2$ number of variables. We have the following constraints:
 \begin{enumerate}
 \item The column- and row-sums of $A_{ij}$ must be equal to $\kinb$ and $\koutb$, see \eqref{eq:definekinkoutfromA}. 2$N$ constraints.
-\item Self-coupling is mandatory: $A_{ii} = \boldsymbol{0}$. $N$ constraints.
+\item Self-coupling is mandatory: $A_{ii} = \boldsymbol{1}$. $N$ constraints.
 \item The total number of links is constant: $\sum_{i=1}^{N} \kinbi \equiv \sum_{j=1}^{N} \koutbj \equiv \sum_{i,j=1}^{N}A_{i j}$. 1 constraint.
 \end{enumerate}
 This means that there are $N^2 - (3N + 1)$ variables to find. Once a solution has been found, $A_{ij}$ can be switched with element $A_{ic}$ if $A_{ij} \neq A_{ic}$ and $A_{rj}$ with $A_{rc}$, which yields a new feasible solution. The number of switches one can make is high, and therefore we can simply try a stochastic approach to obtain $A$:
 \begin{enumerate}
-\item Choose a random row $i \in [1,N]$, which will need $m = \kinbi$ elements that are 1.
-\item Do $\permute ( \koutbj, j \neq i)$ and find the indices $\boldsymbol{\ell}$ of the $m$ first largest elements. 
+\item Choose a random row $i \in [1,N]$. $A_{i,i} = 1$, so we need $m = \kinbi - 1$ elements that are 1.
+\item Perform $\permute ( \koutbj, j \neq i)$ and therein find the indices $\boldsymbol{\ell}$ of the $m$ first largest elements. 
 \item Set $A_{il} = 1 \: \: \forall \: \: l \in \permuteinv (\boldsymbol{\ell})$.
 \end{enumerate}
 Algorithms that find the largest value in a vector start from the first or the last element. The permutation allows us to find different maxima every time by shuffling the vector.
