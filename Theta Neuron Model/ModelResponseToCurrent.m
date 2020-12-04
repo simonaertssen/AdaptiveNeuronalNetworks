@@ -10,7 +10,7 @@ set(groot,'DefaultAxesXGrid','on')
 set(groot,'DefaultAxesYGrid','on')
 
 tnow = 0; tend = 10;
-F = @thetaneuron; h = 0.0005;
+F = @thetaneuron; h = 0.001;
 
 fexcite = figure('Renderer', 'painters', 'Position', [50 800 1000 200]);
 titlefont = 15;
@@ -24,17 +24,17 @@ I = @excitabilitycurrent;
 
 [t, thetas] = DOPRI_singleneuron(F, tnow, tend, -pi, h, I);
 NaNthetas = spikesNaN(thetas);
-drawthetas = 1 + cos(thetas);
 
 imrow(1) = subplot(m,n,1); hold on; box on;
 
 title("Class 1 excitability", 'FontSize', titlefont, 'FontName', 'SansSerif');
-yyaxis left
-ylim([-0.5, 2.1]);
-plot(t, drawthetas, '-', 'LineWidth', 2, 'color', '#0072BD');
-ylabel('$1 + \cos\theta$','Interpreter','latex', 'FontSize', labelfont);
+yyaxis left; hold on;
+plot(t, NaNthetas, '-', 'LineWidth', 2, 'color', '#0072BD');
+plot(t, thetas, ':k', 'LineWidth', 1);
+ylabel('$\theta$','Interpreter','latex', 'FontSize', labelfont);
 xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
-
+set(gca,'YTick',-pi:pi/2:pi, 'YTickLabel',{'-\pi','-\pi/2','0','\pi/2','\pi'}, 'YLim', [-pi - 1.5, pi + 0.2])
+    
 yyaxis right
 maxy = max(I(t));
 plot(t, I(t), '-', 'LineWidth', 1, 'color', '#A2142F');
@@ -48,15 +48,16 @@ set(gca,'YTick', 0:maxy:maxy, 'YLim', [-10, maxy*8]);
 I = @spikecurrent;
 
 [t, thetas] = DOPRI_singleneuron(F, tnow, tend, -pi, h, I);
-drawthetas = 1 + cos(thetas);
+NaNthetas = spikesNaN(thetas);
 
 imrow(2) = subplot(m,n,2); hold on; box on;
 
 title("Spiking", 'FontSize', titlefont, 'FontName', 'SansSerif');
-yyaxis left
-ylim([-0.5, 2.1]);
-plot(t, drawthetas, '-', 'LineWidth', 2, 'color', '#0072BD');
+yyaxis left; hold on;
+plot(t, NaNthetas, '-', 'LineWidth', 2, 'color', '#0072BD');
+plot(t, thetas, ':k', 'LineWidth', 1);
 xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
+set(gca,'YTick',-pi:pi/2:pi, 'YTickLabel',{'-\pi','-\pi/2','0','\pi/2','\pi'}, 'YLim', [-pi - 1.5, pi + 0.2])
 
 yyaxis right
 maxy = max(I(t));
@@ -70,15 +71,16 @@ set(gca,'YTick', 0:maxy:maxy, 'YLim', [-2, maxy*8]);
 I = @burstcurrent;
 
 [t, thetas] = DOPRI_singleneuron(F, tnow, tend, -pi, h, I);
-drawthetas = 1 + cos(thetas);
+NaNthetas = spikesNaN(thetas);
 
 imrow(3) = subplot(m,n,3); hold on; box on;
 
 title("Bursting", 'FontSize', titlefont, 'FontName', 'SansSerif');
-yyaxis left
-ylim([-0.5, 2.1]);
-plot(t, drawthetas, '-', 'LineWidth', 2, 'color', '#0072BD');
+yyaxis left; hold on;
+plot(t, NaNthetas, '-', 'LineWidth', 2, 'color', '#0072BD');
+plot(t, thetas, ':k', 'LineWidth', 1);
 xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
+set(gca,'YTick',-pi:pi/2:pi, 'YTickLabel',{'-\pi','-\pi/2','0','\pi/2','\pi'}, 'YLim', [-pi - 1.5, pi + 0.2])
 
 yyaxis right
 maxy = max(I(t));
@@ -90,52 +92,51 @@ set(gca,'YTick', 0:maxy:maxy, 'YLim', [-200, maxy*8])
 
 
 %% Save the figure:
-% print(fexcite, '../Figures/ThetaNeuronResponseToCurrent.png', '-dpng', '-r300')
 exportgraphics(fexcite,'../Figures/ThetaNeuronResponseToCurrent.pdf')
 
 
 %% Investigate the frequency - current curve:
 % We know that T = pi/sqrt(I)
-
-fI = figure('Renderer', 'painters', 'Position', [50 800 500 200]); hold on; box on;
-I = @fI_current;
-h = 0.01;
-
-tend = 50;
-
-% Theoratical result:
-Idraw = linspace(-10,10, 200);
-plot(Idraw, sqrt(Idraw)./pi, 'LineWidth', 6);
-
-nmeasure = 33;
-Imeasure = [linspace(-10,-1, nmeasure/3), linspace(0,1, nmeasure/3), linspace(2,10, nmeasure/3)];
-frequencies = zeros(nmeasure,1);
-for i = 1:nmeasure
-    I = @(t) Imeasure(i);
-
-    % Simulate
-    [t, thetas] = DOPRI_singleneuron(F, 0, tend, -pi, h, I);
-    NaNthetas = spikesNaN(thetas);
-
-    % Measurements:
-    if sum(isnan(NaNthetas)) > 0
-        idx = [1, find(isnan(NaNthetas))];
-        frequencies(i) = mean(1./diff(t(idx))) + 0;
-    else    
-        frequencies(i) = 0;
-    end
-end
-
-drawfrequencies = interp1(Imeasure',frequencies,Idraw);
-
-plot(Idraw, drawfrequencies, ':k', 'LineWidth', 2);
-
-xlabel('$I$','Interpreter','latex', 'FontSize', labelfont)
-ylabel('$T$','Interpreter','latex', 'FontSize', labelfont)
-legend('$\frac{\pi}{\sqrt{I}}$', '$\hat{T}$', 'Interpreter','latex', 'FontSize', labelfont, 'Location', 'northwest')
-
-exportgraphics(fI,'../Figures/ThetaNeuronResponseToCurrentPeriod.pdf')
-
+% 
+% fI = figure('Renderer', 'painters', 'Position', [50 800 500 200]); hold on; box on;
+% I = @fI_current;
+% h = 0.01;
+% 
+% tend = 50;
+% 
+% % Theoratical result:
+% Idraw = linspace(-10,10, 200);
+% plot(Idraw, sqrt(Idraw)./pi, 'LineWidth', 6);
+% 
+% nmeasure = 33;
+% Imeasure = [linspace(-10,-1, nmeasure/3), linspace(0,1, nmeasure/3), linspace(2,10, nmeasure/3)];
+% frequencies = zeros(nmeasure,1);
+% for i = 1:nmeasure
+%     I = @(t) Imeasure(i);
+% 
+%     % Simulate
+%     [t, thetas] = DOPRI_singleneuron(F, 0, tend, -pi, h, I);
+%     NaNthetas = spikesNaN(thetas);
+% 
+%     % Measurements:
+%     if sum(isnan(NaNthetas)) > 0
+%         idx = [1, find(isnan(NaNthetas))];
+%         frequencies(i) = mean(1./diff(t(idx))) + 0;
+%     else    
+%         frequencies(i) = 0;
+%     end
+% end
+% 
+% drawfrequencies = interp1(Imeasure',frequencies,Idraw);
+% 
+% plot(Idraw, drawfrequencies, ':k', 'LineWidth', 2);
+% 
+% xlabel('$I$','Interpreter','latex', 'FontSize', labelfont)
+% ylabel('$T$','Interpreter','latex', 'FontSize', labelfont)
+% legend('$\frac{\pi}{\sqrt{I}}$', '$\hat{T}$', 'Interpreter','latex', 'FontSize', labelfont, 'Location', 'northwest')
+% 
+% exportgraphics(fI,'../Figures/ThetaNeuronResponseToCurrentPeriod.pdf')
+% 
 %% Functions:
 function I = excitabilitycurrent(t)
     I = max(t/10, power(t,2));
@@ -143,7 +144,7 @@ end
 
 function I = spikecurrent(t)
     I = zeros(size(t));
-    spike = 5;
+    spike = 10;
     I(t > 1 & t < 2) = spike;
     I(t > 3 & t < 4) = spike;
     
