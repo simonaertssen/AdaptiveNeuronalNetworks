@@ -19,8 +19,8 @@ m = 1; n = 3;
 
 %% Steady current: 0.5
 
-currents = [-0.5, -1, -1.2];
-for i = 1:3
+currents = [-1, -0.5];
+for i = 1:2
     current = currents(i);
     I = @(t) steadycurrent(t, current);
     
@@ -36,18 +36,15 @@ for i = 1:3
     plot(t, drawthetas, '-', 'LineWidth', 2, 'color', '#0072BD');
     eqpt = -acos((I(t) + 1)./(1 - I(t)));
     plot(t, eqpt, '--k', 'LineWidth', 1);
-    text(tend - 0.1, eqpt(1) + 0.4, num2str(eqpt(1)), 'HorizontalAlignment', 'right');
+    text(tend - 0.1, eqpt(1) + 0.4, num2str(eqpt(1)), 'HorizontalAlignment', 'right', 'FontSize', axesfont);
     
     plot(t, -eqpt, '--k', 'LineWidth', 1);
-    text(tend - 0.1, -eqpt(1) + 0.4, num2str(-eqpt(1)), 'HorizontalAlignment', 'right');
+    text(tend - 0.1, -eqpt(1) + 0.4, num2str(-eqpt(1)), 'HorizontalAlignment', 'right', 'FontSize', axesfont);
     
     xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
     set(gca,'YTick',-pi:pi/2:pi, 'YTickLabel',{'-$$\pi$$','$$\frac{\pi}{2}$$','0','$$\frac{\pi}{2}$$','$$\pi$$'}, 'TickLabelInterpreter', 'latex', 'YLim', [-pi-0.2, pi + 0.2], 'FontSize', axesfont)
     
-    if i == 1
-        ylabel('$\theta$','Interpreter','latex', 'FontSize', labelfont);
-    end
-
+    ylabel('$\theta$','Interpreter','latex', 'FontSize', labelfont);
   
     yyaxis right
     maxy = max(I(t));
@@ -63,10 +60,18 @@ for i = 1:3
 
 end
 
-%% Save:
-% print(feqpts, '../Figures/ThetaModelEquilibriumPoints.png', '-dpng', '-r300')
-exportgraphics(feqpts,'../Figures/ThetaModelEquilibriumPoints.pdf')
+imrow(3) = subplot(m,n,3); hold on; box on;
+Ibif = linspace(-3,0); bif = acos((Ibif+1)./(1-Ibif));
+xlim([-3,0.5]);
+plot(Ibif, -bif, 'b','LineWidth', 2);
+plot(Ibif, bif, '--r', 'LineWidth', 2);
+xlabel('$I$','Interpreter','latex', 'FontSize', labelfont)
+ylabel('$\theta^{\ast}$','Interpreter','latex', 'FontSize', labelfont);
+set(gca,'YTick',-pi:pi/2:pi, 'YTickLabel',{'-$$\pi$$','$$\frac{\pi}{2}$$','0','$$\frac{\pi}{2}$$','$$\pi$$'}, 'TickLabelInterpreter', 'latex', 'YLim', [-pi-0.2, pi + 0.2], 'FontSize', axesfont)
 
+
+%% Save:
+exportgraphics(feqpts,'../Figures/ThetaModelEquilibriumPoints.pdf')
 
 %% Functions:
 function I = steadycurrent(t, current)

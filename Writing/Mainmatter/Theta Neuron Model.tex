@@ -1,11 +1,10 @@
 % !TEX root = ../main.tex
 \newpage
 \section{The Theta Neuron Model} \label{TheThetaNeuronModel}
-
-
-\subsection{Model description}
 A number of neuron model families have been identified, and often there exists a continuous change of variables from models of the same family into a \textit{canonical} model that can represent the whole family \cite{Hoppensteadt2001CanonicalNM}. As the transformation is not required to be invertible, we can study the universal neurocomputational properties of the family in a low dimensional model.
 It was Hodgkin \cite{Hodgkin1948} who classified neurons into two types based on their excitability, upon experimenting with the electrical stimulation of cells. Class 1 models begin to spike at an arbitrarily slow rate, and the spiking frequency increases when the applied current is increased. Class 2 models spike as soon as their internal threshold is exceeded and the spiking frequency stays relatively constant within a certain frequency band \cite{Hoppensteadt2001CanonicalNM}.
+
+\subsection{Model description}
 
 \begin{figure}[H]
 \minipage{0.33\linewidth}
@@ -80,13 +79,22 @@ with $I$ a bifurcation parameter on the supplied current. We can visualise the d
 For $I > 0$, $\dot{\theta} > 0$ so that $\theta$ moves continuously around the circle. Equilibria only exist for $I < 0$: 
 \begin{align*}
 \dot{\theta} &= 1-\cos \theta+I+I \cdot \cos \theta = (I+1)+(I-1) \cdot \cos \theta \\
-\theta^{\ast} &= \pm \arccos \left(\frac{I+1}{1-I}\right)+2 \pi n
+\theta^{\ast}_{1, 2} &= \pm \arccos \left(\frac{I+1}{1-I}\right)+2 \pi n
 \end{align*}
+We can find the stability of the equilibria through:
+\begin{align*}
+\frac{\mathrm{d}}{\mathrm{d} \theta}((1-\cos \theta)+(1+\cos \theta) \cdot I) &= \sin \theta-\sin \theta \cdot I = (1-I) \cdot \sin \theta
+\end{align*}
+In the equilibria this yields:
+\begin{align*}
+\frac{\mathrm{d}}{\mathrm{d} \theta}\left( \theta^{\ast}_{1, 2} \right) &= \pm(1-I) \cdot \sqrt{1-\frac{I+1}{1-I}}=\pm(1-I) \cdot \frac{2 \sqrt{-I}}{1-I} = \pm2 \sqrt{-I}
+\end{align*}
+This yields a stable equilibrium point for $\theta^{\ast}_{1}$ and an unstable for $\theta^{\ast}_{2}$.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width = \textwidth]{../Figures/ThetaModelEquilibriumPoints.pdf}
-\caption{Equilibria $\theta^{\ast}$ for different $I$. Left: $I = -0.5$. Middle: $I = -1$. Right: $I = -1.2$.}
+\caption{Equilibria $\theta^{\ast}$ for different values of $I$. Left: $I = -1$ yields $\theta^{\ast} = \pm \frac{\pi}{2}$. Middle: $I = -0.5$. Right: bifurcation diagram of the \SNIC bifurcation, with the stable equilibria in blue, and the unstable in red.}
 \label{fig:ThetaModelEquilibriumPoints}
 \end{figure}
 
