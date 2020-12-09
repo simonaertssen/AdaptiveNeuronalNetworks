@@ -1,5 +1,76 @@
+% !TEX root = ../main.tex
+
 \newpage
-\section{Appendix}
-\subsection{Solution to the theta neuron model}
+\appendix
+\section{Appendix} \label{sec:Appendix}
+
+\subsection{Transformation to the QIF model} \label{app:TransformationToQIF}
+We prove that the transformation \eqref{eq:QIFtransformation} holds from the \QIF model \eqref{eq:QIFmodel} to the Theta model \eqref{eq:thetaneuron}.
+\begin{align*}
+V &\equiv \tan \left( \frac{\theta}{2} \right) \quad \longrightarrow \quad
+\frac{\mathop{d V}}{\mathop{d t}} = \frac{1}{2 \cos ^{2}\left(\frac{\theta}{2}\right)} \frac{d \theta}{ \mathop{d t}}
+\end{align*}
+Insert into $\frac{\mathop{d V}}{\mathop{d t}}= V^2 + I$:
+\begin{align*}
+\frac{\mathop{d \theta}}{\mathop{d t}} &= 2\left(\cos ^{2}\left(\frac{\theta}{2}\right) \cdot \tan ^{2}\left(\frac{\theta}{2}\right)+\cos ^{2}\left(\frac{\theta}{2}\right) \cdot I \right) = 2\left(\sin ^{2}\left(\frac{\theta}{2}\right)+\cos ^{2}\left(\frac{\theta}{2}\right) \cdot I \right)
+\end{align*}
+Using $\cos ^{2}\left(\frac{\theta}{2}\right) = \frac{1+\cos \left(\frac{\theta}{2}\right)}{2}$ and $\sin ^{2}\left(\frac{\theta}{2}\right)=\frac{1-\cos \left(\frac{\theta}{2}\right)}{2}$:
+\begin{align*}
+\dot{\theta} &=2\left(\frac{1-\cos \theta}{2}+\left(\frac{1+\cos \theta}{2}\right) \cdot I \right) =(1-\cos \theta)+(1+\cos \theta) \cdot I
+\end{align*}
+This proves that the ransformation is correct.
+
+ 
+\subsection{Solutions to the Theta Neuron model} \label{app:ThetaModelSolutions}
+We will follow \cite{Depending on the value of $I$, we can distinguish multiple solutions.
+\subsubsection{Solving for $I = 0$}
+Starting from \eqref{eq:QIFmodel}, the solution is simply:
+\begin{align*}
+\int_{V(0)}^{V(t)} \frac{\mathop{dv}}{v^2} &= \frac{1}{v}\Big\rvert_{V(0)}^{V(t)} = - \frac{1}{V(t)} + \frac{1}{V(0)} \qquad \qquad
+\int_0^t d\tau = t
+\end{align*}
+So that $V(t) = \frac{V(0)}{1-V(0)t}$.
+Setting $V(0) = -\infty$ after a spike:
+\begin{align*}
+V(t) &= \lim_{V(0) = -\infty} \sqrt{I} \cdot \tan \left( t \sqrt{I} + \arctan \left( \frac{V(0)}{\sqrt{I}} \right) \right) = \sqrt{I} \cdot \tan \left( t \sqrt{I} - \frac{\pi}{2} \right) \\
+&=  \sqrt{I} \cdot \cot \left( t \sqrt{I} \right) 
+\end{align*}
+
+
+\subsubsection{Solving for $I > 0$}
+Separate the variables as $\frac{\mathop{dv}}{v^2 + I} = \mathop{dt}$ and integrate from $t=0$:
+\begin{align*}
+\int_{V(0)}^{V(t)} \frac{\mathop{dv}}{v^2 + I} &= \int_{V(0)}^{V(t)} \frac{I}{\left(\frac{v}{\sqrt{I}}\right)^2 + 1} \mathop{dv}
+\quad \longrightarrow \quad x = \frac{v}{\sqrt{I}} \quad \mathop{dx} = \frac{\mathop{dv}}{\sqrt{I}} \\
+&= \int_{\frac{V(0)}{\sqrt{I}}}^{\frac{V(t)}{\sqrt{I}}} \frac{I}{x^2 + 1} \mathop{dx}= \frac{1}{\sqrt{I}} \arctan(x) \Big \rvert_{\frac{V(0)}{\sqrt{I}}}^{\frac{V(t)}{\sqrt{I}}} 
+= \frac{1}{\sqrt{I}} \left( \arctan \left( \frac{V(t)}{\sqrt{I}} \right) - \arctan \left( \frac{V(0)}{\sqrt{I}} \right) \right)\\
+\end{align*}
+Solving for $V(t)$:
+\begin{align*}
+V(t) &= \sqrt{I} \cdot \tan \left( t \sqrt{I} + \arctan \left( \frac{V(0)}{\sqrt{I}} \right) \right)
+\end{align*}
+Setting $V(0) = -\infty$ after a spike:
+\begin{align*}
+V(t) &= \lim_{V(0) = -\infty} \sqrt{I} \cdot \tan \left( t \sqrt{I} + \arctan \left( \frac{V(0)}{\sqrt{I}} \right) \right) = \sqrt{I} \cdot \tan \left( t \sqrt{I} - \frac{\pi}{2} \right) \\
+&=  \sqrt{I} \cdot \cot \left( t \sqrt{I} \right) 
+\end{align*}
+\eqref{eq:ThetaNeuronModelSolution} is then found by taking the inverse of the transformation \eqref{eq:QIFtransformation}.
+
+\subsubsection{Solving for $I < 0$}
+Change variables: $I = -\tilde{I}^2$. Separate variables as $\frac{\mathop{dv}}{v^2 - \tilde{I}^2} = \mathop{dt}$ and integrate from $t = 0$:
+\begin{align*}
+\int_{V(0)}^{V(t)} \frac{\mathop{dv}}{v^2 - \tilde{I}^2} &= \int_{V(0)}^{V(t)} \frac{\mathop{dv}}{(v+\tilde{I})(v-\tilde{I})} 
+= \frac{1}{2 \tilde{I}} \int \frac{\mathop{dv}}{v-\tilde{I}}-\frac{1}{2 \tilde{I}} \int \frac{\mathop{dv}}{v+\tilde{I}} \\
+&= \frac{1}{2 \tilde{I}} \log (v-\tilde{I})-\frac{1}{2 \tilde{I}} \log (V+\tilde{I})
+\end{align*}
+
+
 \subsection{Jacobian of the Ott-Antonsen manifold}
 \subsection{Jacobian of the Ott-Antonsen extended manifold}
+
+
+
+
+
+
+
