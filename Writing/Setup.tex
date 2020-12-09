@@ -80,6 +80,12 @@
 \setlength\columnsep{15pt}
 \usepackage[nottoc,numbib]{tocbibind}
 
+% Redefine the \left and \right operators:
+\let\originalleft\left
+\let\originalright\right
+\renewcommand{\left}{\mathopen{}\mathclose\bgroup\originalleft}
+\renewcommand{\right}{\aftergroup\egroup\originalright}
+
 
 % Command definitions and macros:
 \newcommand{\ic}{{\rm{i}}\xspace}
