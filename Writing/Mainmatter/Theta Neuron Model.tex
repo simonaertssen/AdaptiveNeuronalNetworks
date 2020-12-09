@@ -4,7 +4,7 @@
 A number of neuron model families have been identified, and often there exists a continuous change of variables from models of the same family into a \textit{canonical} model that can represent the whole family \cite{Hoppensteadt2001CanonicalNM}. As the transformation is not required to be invertible, we can study the universal neurocomputational properties of the family in a low dimensional model.
 It was Hodgkin \cite{Hodgkin1948} who classified neurons into two types based on their excitability, upon experimenting with the electrical stimulation of cells. Class 1 models begin to spike at an arbitrarily slow rate, and the spiking frequency increases when the applied current is increased. Class 2 models spike as soon as their internal threshold is exceeded and the spiking frequency stays relatively constant within a certain frequency band \cite{Hoppensteadt2001CanonicalNM}.
 
-\subsection{Model description}
+\subsection{Model description} \label{sec:TheThetaNeuronModelDescription}
 
 \begin{figure}[H]
 \minipage{0.33\linewidth}
@@ -83,11 +83,11 @@ For $I > 0$, $\dot{\theta} > 0$ so that $\theta$ moves continuously around the c
 \end{align*}
 We can find the stability of the equilibria through:
 \begin{align*}
-\frac{\mathrm{d}}{\mathrm{d} \theta}((1-\cos \theta)+(1+\cos \theta) \cdot I) &= \sin \theta-\sin \theta \cdot I = (1-I) \cdot \sin \theta
+\frac{\mathop{d}}{\mathop{d \theta}}((1-\cos \theta)+(1+\cos \theta) \cdot I) &= \sin \theta-\sin \theta \cdot I = (1-I) \cdot \sin \theta
 \end{align*}
 In the equilibria this yields:
 \begin{align*}
-\frac{\mathrm{d}}{\mathrm{d} \theta}\left( \theta^{\ast}_{1, 2} \right) &= \pm(1-I) \cdot \sqrt{1-\frac{I+1}{1-I}}=\pm(1-I) \cdot \frac{2 \sqrt{-I}}{1-I} = \pm2 \sqrt{-I}
+\frac{\mathop{d}}{\mathop{d \theta}}\left( \theta^{\ast}_{1, 2} \right) &= \pm(1-I) \cdot \sqrt{1-\frac{I+1}{1-I}}=\pm(1-I) \cdot \frac{2 \sqrt{-I}}{1-I} = \pm2 \sqrt{-I}
 \end{align*}
 This yields a stable equilibrium point for $\theta^{\ast}_{1}$ and an unstable for $\theta^{\ast}_{2}$.
 
@@ -99,10 +99,8 @@ This yields a stable equilibrium point for $\theta^{\ast}_{1}$ and an unstable f
 \end{figure}
 
 
-
-
-
-\subsection{Solutions for static currents}
+\subsection{Solutions for static currents} \label{sec:TheThetaNeuronModelSolutions}
+Gaining insight into \eqref{eq:thetaneuron} is hard, due to the difficulty of finding an analytical solution. However, it has been noted that there exists a simple transformation $V \equiv \tan \frac{\theta}{2}$ which yields $\dot{V} = V^2 + I$, see \ref{app:TransformationToQIF}. This model is also called the \textsl{Quadratic Integrate and Fire model} (\QIF). $V$ and $\theta$ are both continuous on $\T$, so insights from a solution for $V$ can be transformed directly. The solution is (see \ref{app:ThetaModelSolutions}):
 
 
 \subsection{Networks of theta neurons}
