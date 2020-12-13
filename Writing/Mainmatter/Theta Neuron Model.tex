@@ -112,23 +112,26 @@ This model is called the \textsl{Quadratic Integrate and Fire model} (\QIF). \eq
 
 
 \subsection{Frequency response} \label{sec:TheThetaNeuronModelFrequencyResponse}
-As we already saw in Figure \ref{fig:ThetaNeuronResponseToCurrent}, an increasing input current increases the spiking frequency. We can compute this relationship by measuring how long it takes for $V$ to reach a spike: we solve \eqref{eq:ThetaNeuronModelSolution} for $t$ at $V(t) = +\infty$. This tields the oscillation period $T = \frac{\pi}{\sqrt{I}}$. 
+As we already saw in Figure \ref{fig:ThetaNeuronResponseToCurrent}, an increasing input current increases the spiking frequency. We can compute this relationship by measuring how long it takes for $V$ to reach a spike: we solve \eqref{eq:ThetaNeuronModelSolution} for $t$ at $V(t) = +\infty$. This yields the oscillation period $T = \frac{\pi}{\sqrt{I}}$, which we can see in Figure \ref{fig:ThetaNeuronResponseToCurrentPeriod}.
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \centering
 \includegraphics[width = 0.75\textwidth]{../Figures/ThetaNeuronResponseToCurrentPeriod.pdf}
-\caption{Frequency response of the theta model, with theoretical results in blue, and experimental results in black dots. For $I \leq 0$ the spike period is infinite, which is why we see the .}
+\caption{Frequency response of the theta model, with theoretical results in blue, and experimental results in black dots. For $I \leq 0$ the spike period is infinite, which is why we see the solutions to \eqref{eq:thetaneuron} approach $\theta = 0$ for $I = $..}
 \label{fig:ThetaNeuronResponseToCurrentPeriod}
 \end{figure}
 
-In most of our future work, $I$ will not be a static current. We ask ourselves: how much does $T$ change when $I$ is perturbed? We can measure this with the normalised magnitude of the derivative:
+In most of our future work, $I$ will not be a static current. We ask ourselves: how sensitively does $T$ depend on $I$ when $I$ is perturbed? We can measure this as a \textsl{relative} perturbation using $\mathop{dI}/I$ and $\mathop{dT/T}$ \cite{IntroductionModelingDynamics} :
 \begin{align*}
-\left| \frac{dT}{d\iota} \frac{\iota}{T} \right| &= \left| \frac{dT / T}{d\iota / \iota}\right| 
-= \left|- \frac{\pi}{2} \left(\frac{1}{\sqrt{\iota}}\right)^3 \frac{\iota}{T} \right| 
-= \left| \frac{\pi}{2} \left(\frac{T}{\pi}\right)^3 \frac{\iota}{T} \right| 
+\left| \frac{dT}{dI} \frac{I}{T} \right| &= \left| \frac{dT / T}{dI / I}\right| 
+= \left|- \frac{\pi}{2} \left(\frac{1}{\sqrt{I}}\right)^3 \frac{I}{T} \right| 
+= \left| \frac{\pi}{2} \left(\frac{T}{\pi}\right)^3 \frac{I}{T} \right| 
 = \frac{1}{2} \left|\left(\frac{T}{\pi}\right)^2 \cdot \left(\frac{\pi}{T}\right)^2 \right| = \frac{1}{2}
 \end{align*}
-Hence, a 1\% change in $I$ will result in a 0.5 \% change in the period. In Figure \ref{fig:ThetaNeuronResponseToCurrentPeriod} the frequency $\frac{1}{T}$ is measured and plotted in function of the current.
+Hence, a 1\% change in $I$ will result in a 0.5 \% change in the period.
+
+
+
 
 
 \subsection{Networks of theta neurons}
