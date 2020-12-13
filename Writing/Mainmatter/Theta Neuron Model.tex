@@ -109,12 +109,18 @@ This model is called the \textsl{Quadratic Integrate and Fire model} (\QIF). \eq
 \begin{align}
 \theta = 2 \cdot \arctan \left(-\sqrt{I} \cdot \cot (t \sqrt{I}) \right) \label{eq:ThetaNeuronModelSolution}
 \end{align}
-
+The equilibria of the \QIF model are simply $\pm \sqrt{I}$ so that we can express $\theta^{\ast}_{1, 2} = 2 \cdot\arctan \left( \mp \sqrt{I} \right)$.
 
 \subsection{Frequency response} \label{sec:TheThetaNeuronModelFrequencyResponse}
-As we already saw in Figure \ref{fig:ThetaNeuronResponseToCurrent}, an increasing input current increases the spiking frequency. We can compute this relationship by measuring how long it takes for $V$ to reach a spike: we solve \eqref{eq:ThetaNeuronModelSolution} for $t$ at $V(t) = +\infty$. This yields the oscillation period $T = \frac{\pi}{\sqrt{I}}$, which we can see in Figure \ref{fig:ThetaNeuronResponseToCurrentPeriod}.
+As we already saw in Figure \ref{fig:ThetaNeuronResponseToCurrent}, an increasing current increases the spiking frequency. We can compute this relationship by measuring how long it takes for $V$ to reach a spike: we solve \eqref{eq:ThetaNeuronModelSolution} for $t$ at $V(t) = +\infty$ in \ref{app:ThetaModelFrequencyResponse}. This yields the oscillation period $T = \frac{\pi}{\sqrt{I}}$ which we can see in Figure \ref{fig:ThetaNeuronResponseToCurrentPeriod}. 
 
-\begin{figure}[ht]
+We know that when $\theta > \theta^{\ast}_{2}$ a spike occurs. But the time that it takes to reach the spike can be arbitrarily long, depending on how far we are over $\theta^{\ast}_{2}$. So, spikes will occur, but after a delay that is dependant on the stimulus. Explicitly, if we perturb $\theta(0) = \theta^{\ast}_{2} + \varepsilon$ we obtain from  \cite{Gutkin2014}:
+\begin{align*}
+T_{\text {spike}} = \frac{-\tanh ^{-1}\left(1+\frac{\epsilon}{\sqrt{I}}\right)}{\sqrt{I}}
+\end{align*}
+The delay to the spike blows up as $\varepsilon \rightarrow$ 0.
+
+\begin{figure}[H]
 \centering
 \includegraphics[width = 0.75\textwidth]{../Figures/ThetaNeuronResponseToCurrentPeriod.pdf}
 \caption{Frequency response of the theta model, with theoretical results in blue, and experimental results in black dots. For $I \leq 0$ the spike period is infinite, which is why we see the solutions to \eqref{eq:thetaneuron} approach $\theta = 0$ for $I = $..}
@@ -132,8 +138,7 @@ Hence, a 1\% change in $I$ will result in a 0.5 \% change in the period.
 
 
 \subsection{Phase response} \label{sec:TheThetaNeuronModelPhaseResponse}
-
-
+Perturbations on the period can also be understood from the perspective of the phase. The phase response 
 
 \subsection{Networks of theta neurons}
 We can easily extend the model to networks of neurons:
