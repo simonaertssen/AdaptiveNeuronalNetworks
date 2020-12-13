@@ -100,45 +100,45 @@ exportgraphics(fexcite,'../Figures/ThetaNeuronResponseToCurrent.pdf')
 %% Investigate the frequency - current curve:
 % We know that T = pi/sqrt(I)
 % 
-% fI = figure('Renderer', 'painters', 'Position', [50 800 500 200]); hold on; box on;
-% I = @fI_current;
-% h = 0.01;
-% 
-% tend = 50;
-% 
-% % Theoratical result:
-% Idraw = linspace(-10,10, 200);
-% plot(Idraw, sqrt(Idraw)./pi, 'LineWidth', 6);
-% 
-% nmeasure = 33;
-% Imeasure = [linspace(-10,-1, nmeasure/3), linspace(0,1, nmeasure/3), linspace(2,10, nmeasure/3)];
-% frequencies = zeros(nmeasure,1);
-% for i = 1:nmeasure
-%     I = @(t) Imeasure(i);
-% 
-%     % Simulate
-%     [t, thetas] = DOPRI_singleneuron(F, 0, tend, -pi, h, I);
-%     NaNthetas = spikesNaN(thetas);
-% 
-%     % Measurements:
-%     if sum(isnan(NaNthetas)) > 0
-%         idx = [1, find(isnan(NaNthetas))];
-%         frequencies(i) = mean(1./diff(t(idx))) + 0;
-%     else    
-%         frequencies(i) = 0;
-%     end
-% end
-% 
-% drawfrequencies = interp1(Imeasure',frequencies,Idraw);
-% 
-% plot(Idraw, drawfrequencies, ':k', 'LineWidth', 2);
-% 
-% xlabel('$I$','Interpreter','latex', 'FontSize', labelfont)
-% ylabel('$T$','Interpreter','latex', 'FontSize', labelfont)
-% legend('$\frac{\pi}{\sqrt{I}}$', '$\hat{T}$', 'Interpreter','latex', 'FontSize', labelfont, 'Location', 'northwest')
-% 
-% exportgraphics(fI,'../Figures/ThetaNeuronResponseToCurrentPeriod.pdf')
-% 
+fI = figure('Renderer', 'painters', 'Position', [50 800 500 200]); hold on; box on;
+I = @fI_current;
+h = 0.01;
+
+tend = 50;
+
+% Theoratical result:
+Idraw = linspace(-10,10, 200);
+plot(Idraw, sqrt(Idraw)./pi, 'LineWidth', 6);
+
+nmeasure = 33;
+Imeasure = [linspace(-10,-1, nmeasure/3), linspace(0,1, nmeasure/3), linspace(2,10, nmeasure/3)];
+frequencies = zeros(nmeasure,1);
+for i = 1:nmeasure
+    I = @(t) Imeasure(i);
+
+    % Simulate
+    [t, thetas] = DOPRI_singleneuron(F, 0, tend, -pi, h, I);
+    NaNthetas = spikesNaN(thetas);
+
+    % Measurements:
+    if sum(isnan(NaNthetas)) > 0
+        idx = [1, find(isnan(NaNthetas))];
+        frequencies(i) = mean(1./diff(t(idx))) + 0;
+    else    
+        frequencies(i) = 0;
+    end
+end
+
+drawfrequencies = interp1(Imeasure',frequencies,Idraw);
+
+plot(Imeasure, frequencies, ':k', 'LineWidth', 3);
+
+xlabel('$I$','Interpreter','latex', 'FontSize', labelfont)
+ylabel('$\frac{1}{T}$','Interpreter','latex','Rotation', 0, 'FontSize', labelfont*1.5, 'VerticalAlignment','middle', 'HorizontalAlignment','right')
+legend('$\frac{\sqrt{I}}{\pi}$', '$1/\hat{T}$', 'Interpreter','latex', 'FontSize', labelfont, 'Location', 'northwest')
+
+exportgraphics(fI,'../Figures/ThetaNeuronResponseToCurrentPeriod.pdf')
+
 %% Functions:
 function I = excitabilitycurrent(t)
     I = max(t/10, power(t,2));
