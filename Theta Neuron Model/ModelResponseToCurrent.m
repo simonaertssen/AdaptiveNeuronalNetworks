@@ -30,8 +30,8 @@ imrow(1) = subplot(m,n,1); hold on; box on;
 
 %title("Class 1 excitability", 'FontSize', titlefont, 'FontName', 'SansSerif');
 yyaxis left; hold on;
-plot(t, NaNthetas, '-', 'LineWidth', 2, 'color', '#0072BD');
 plot(t, thetas, ':k', 'LineWidth', 1);
+plot(t, NaNthetas, '-', 'LineWidth', 2, 'color', '#0072BD');
 ylabel('$\theta$','Interpreter','latex', 'FontSize', labelfont);
 xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
 set(gca,'YTick',-pi:pi:pi, 'YTickLabel',{'-$$\pi$$','0','$$\pi$$'}, 'TickLabelInterpreter', 'latex', 'YLim', [-pi - 1.5, pi + 0.2], 'FontSize', axesfont)
@@ -55,8 +55,8 @@ imrow(2) = subplot(m,n,2); hold on; box on;
 
 %title("Spiking", 'FontSize', titlefont, 'FontName', 'SansSerif');
 yyaxis left; hold on;
-plot(t, NaNthetas, '-', 'LineWidth', 2, 'color', '#0072BD');
 plot(t, thetas, ':k', 'LineWidth', 1);
+plot(t, NaNthetas, '-', 'LineWidth', 2, 'color', '#0072BD');
 xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
 set(gca,'YTick',-pi:pi:pi, 'YTickLabel',{'-$$\pi$$','0','$$\pi$$'}, 'TickLabelInterpreter', 'latex', 'YLim', [-pi - 1.5, pi + 0.2], 'FontSize', axesfont)
 
@@ -78,8 +78,8 @@ imrow(3) = subplot(m,n,3); hold on; box on;
 
 %title("Bursting", 'FontSize', titlefont, 'FontName', 'SansSerif');
 yyaxis left; hold on;
-plot(t, NaNthetas, '-', 'LineWidth', 2, 'color', '#0072BD');
 plot(t, thetas, ':k', 'LineWidth', 1);
+plot(t, NaNthetas, '-', 'LineWidth', 2, 'color', '#0072BD');
 xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
 %set(gca,'YTick',-pi:pi/2:pi, 'YTickLabel',{'-$$\pi$$','-$$\frac{\pi}{2}$$','0','$$\frac{\pi}{2}$$','$$\pi$$'}, 'TickLabelInterpreter', 'latex', 'YLim', [-pi - 1.5, pi + 0.2], 'FontSize', axesfont)
 set(gca,'YTick',-pi:pi:pi, 'YTickLabel',{'-$$\pi$$','0','$$\pi$$'}, 'TickLabelInterpreter', 'latex', 'YLim', [-pi - 1.5, pi + 0.2], 'FontSize', axesfont)
