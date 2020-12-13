@@ -34,12 +34,13 @@ V(t) &= \lim_{V(0) \rightarrow - \infty} \frac{V(0)}{1-V(0)t} \underset{\frac{\i
 \subsubsection{Solving for \texorpdfstring{$I > 0$}{TEXT}}
 %Separate the variables as $\frac{\mathop{dv}}{v^2 + I} = \mathop{dt}$ and integrate from $t=0$:
 \begin{align*}
-\int_{V(0)}^{V(t)} \frac{\mathop{dv}}{v^2 + I} &= \int_{V(0)}^{V(t)} \frac{I}{\left(\frac{v}{\sqrt{I}}\right)^2 + 1} \mathop{dv}
-\quad \longrightarrow \quad x = \frac{v}{\sqrt{I}} \quad \mathop{dx} = \frac{\mathop{dv}}{\sqrt{I}} \\
-&= \int_{\frac{V(0)}{\sqrt{I}}}^{\frac{V(t)}{\sqrt{I}}} \frac{I}{x^2 + 1} \mathop{dx}= \frac{1}{\sqrt{I}} \arctan(x) \Big \rvert_{\frac{V(0)}{\sqrt{I}}}^{\frac{V(t)}{\sqrt{I}}} 
-= \frac{1}{\sqrt{I}} \left( \arctan \left( \frac{V(t)}{\sqrt{I}} \right) - \arctan \left( \frac{V(0)}{\sqrt{I}} \right) \right)\\
+\int_{V(0)}^{V(t)} \frac{\mathop{dv}}{v^2 + I} &= \int_{V(0)}^{V(t)} \frac{I}{\left(\frac{v}{\sqrt{I}}\right)^2 + 1} \mathop{dv} 
+\overset{x = \frac{v}{\sqrt{I}}}{\underset{\mathop{dx} = \frac{dv}{\sqrt{I}}}{=}} 
+%\quad \longrightarrow \quad x = \frac{v}{\sqrt{I}} \quad \mathop{dx} = \frac{\mathop{dv}}{\sqrt{I}} \\
+\int_{\frac{V(0)}{\sqrt{I}}}^{\frac{V(t)}{\sqrt{I}}} \frac{I}{x^2 + 1} \mathop{dx}= \frac{1}{\sqrt{I}} \arctan(x) \Big \rvert_{\frac{V(0)}{\sqrt{I}}}^{\frac{V(t)}{\sqrt{I}}} \\
+&= \frac{1}{\sqrt{I}} \left( \arctan \left( \frac{V(t)}{\sqrt{I}} \right) - \arctan \left( \frac{V(0)}{\sqrt{I}} \right) \right) = 
 \int_0^t \mathop{d\tau} &= t \\
-V(t) &= \lim_{V(0) = -\infty} \sqrt{I} \cdot \tan \left( t \sqrt{I} + \arctan \left( \frac{V(0)}{\sqrt{I}} \right) \right) = \sqrt{I} \cdot \tan \left( t \sqrt{I} - \frac{\pi}{2} \right) \\
+V(t) &= \lim_{V(0) \rightarrow -\infty} \sqrt{I} \cdot \tan \left( t \sqrt{I} + \arctan \left( \frac{V(0)}{\sqrt{I}} \right) \right) = \sqrt{I} \cdot \tan \left( t \sqrt{I} - \frac{\pi}{2} \right) \\
 &=  \sqrt{I} \cdot \cot \left( t \sqrt{I} \right) 
 \end{align*}
 
@@ -51,30 +52,22 @@ V(t) &= \lim_{V(0) = -\infty} \sqrt{I} \cdot \tan \left( t \sqrt{I} + \arctan \l
 %&= \frac{1}{2 \tilde{I}} \log (v-\tilde{I}) -\frac{1}{2 \tilde{I}} \log (v+\tilde{I})\Big \rvert_{V(0)}^{V(t)} 
 &= \frac{1}{2 \tilde{I}} \log \left(1-\frac{2 \tilde{I}}{v+\tilde{I}}\right) \Big \rvert_{V(0)}^{V(t)} 
 = \int_0^t \mathop{d\tau} = t \\
-V(t) &= \lim_{V(0) = -\infty} \frac{2 \sqrt{-I}}{1 - \left(1-\frac{2 \sqrt{-I}}{V(0)+\sqrt{-I}}\right)\cdot e^{2 t \sqrt{-I}}}-\sqrt{-I}\\
+V(t) &= \lim_{V(0) \rightarrow -\infty} \frac{2 \sqrt{-I}}{1 - \left(1-\frac{2 \sqrt{-I}}{V(0)+\sqrt{-I}}\right)\cdot e^{2 t \sqrt{-I}}}-\sqrt{-I}\\
 &= \frac{2 \sqrt{-I}}{1 - e^{2 t \sqrt{-I}}}-\sqrt{-I}
 \end{align*}
 
 
 \subsection{Frequency response of the neuron models} \label{app:ThetaModelFrequencyResponse}
-We perform an integration vrom
+The integral is solved like before, but now with the conditions of the spike:
 \begin{align*}
-T = \int_{V(0)}^{+\infty} \frac{\iota}{\left(\frac{v}{\sqrt{\iota}}\right)^2 + 1} dv 
-\underset{x = \frac{v}{\sqrt{\iota}} \: \:dx = \frac{dv}{\sqrt{\iota}}}{=} 
-\int_{\frac{V(0)}{\sqrt{\iota}}}^{+\infty} \frac{\iota}{x^2 + 1} dx 
-= \frac{1}{\sqrt{\iota}} \arctan(x) \rvert_{\frac{V(0)}{\sqrt{\iota}}}^{+\infty} 
-= \frac{1}{\sqrt{\iota}} \left( \frac{\pi}{2} - \arctan \left( \frac{V(0)}{\sqrt{\iota}} \right) \right)
+T &= \lim_{a \rightarrow \infty} \int_{-a}^{a} \frac{I}{\left(\frac{v}{\sqrt{I}}\right)^2 + 1} \mathop{dv} 
+\overset{x = \frac{v}{\sqrt{I}}}{\underset{\mathop{dx} = \frac{dv}{\sqrt{I}}}{=}} 
+\lim_{a \rightarrow \infty} \int_{\frac{-a}{\sqrt{I}}}^{\frac{a}{\sqrt{I}}} \frac{I}{x^2 + 1} \mathop{dx}
+= \lim_{a \rightarrow \infty} \frac{1}{\sqrt{I}} \arctan(x) \Big \rvert_{\frac{-a}{\sqrt{I}}}^{\frac{a}{\sqrt{I}}} \\
+&= \frac{1}{\sqrt{I}} \left( \frac{\pi}{2} - \left( - \frac{\pi}{2} \right) \right)
+= \frac{\pi}{\sqrt{I}}
 \end{align*}
-
-If then $V(0) = –\infty$ the time between spikes is:
-
-\begin{align*}
-T = \lim_{V(0) \rightarrow -\infty} \frac{1}{\sqrt{\iota}} \left( \frac{\pi}{2} - \arctan \left( \frac{V(0)}{\sqrt{\iota}} \right) \right) = \frac{1}{\sqrt{\iota}} \left( \frac{\pi}{2} - \left( - \frac{\pi}{2} \right) \right)
-= \frac{\pi}{\sqrt{\iota}}
-\end{align*}
-
-So the frequency of oscillation is proportional to $\sqrt{\iota}$. This result is valid for the theta and QIF models.
-
+So the frequency of oscillation is proportional to $\sqrt{I}$. 
 
 \subsection{Jacobian of the Ott-Antonsen manifold}
 \subsection{Jacobian of the Ott-Antonsen extended manifold}

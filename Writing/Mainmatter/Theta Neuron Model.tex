@@ -105,7 +105,7 @@ Gaining insight into \eqref{eq:thetaneuron} is hard, due to the difficulty of fi
 V &\equiv \tan \left( \frac{\theta}{2} \right) \label{eq:QIFtransformation} \\
 \dot{V} &= V^2 + I \label{eq:QIFmodel}
 \end{align}
-This model is called the \textsl{Quadratic Integrate and Fire model} (\QIF). \eqref{eq:QIFmodel} models the membrane potential of a neuron, which spikes to $=\infty$ when the neuron spikes and is reset at $-\infty$. $V$ and $\theta$ are both continuous on $\T$, so insights from a solution for $V$ can be transformed directly. The solution is (see \ref{app:ThetaModelSolutions}):
+This model is called the \textsl{Quadratic Integrate and Fire model} (\QIF). \eqref{eq:QIFmodel} models the membrane potential of a neuron, which spikes to $=\infty$ when the neuron spikes and is reset at $-\infty$. The transformation \eqref{eq:QIFtransformation} is continuous between spikes, so insights from a solution for $V$ can be transformed directly. The solution is (see \ref{app:ThetaModelSolutions}):
 \begin{align}
 \theta = 2 \cdot \arctan \left(-\sqrt{I} \cdot \cot (t \sqrt{I}) \right) \label{eq:ThetaNeuronModelSolution}
 \end{align}
@@ -131,6 +131,7 @@ In most of our future work, $I$ will not be a static current. We ask ourselves: 
 Hence, a 1\% change in $I$ will result in a 0.5 \% change in the period.
 
 
+\subsection{Phase response} \label{sec:TheThetaNeuronModelPhaseResponse}
 
 
 
