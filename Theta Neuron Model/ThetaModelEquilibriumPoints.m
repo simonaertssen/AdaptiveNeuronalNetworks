@@ -33,6 +33,7 @@ for i = 1:2
 
     yyaxis left
     ylim([-pi, pi]);
+    plot(t, thetas, ':k', 'LineWidth', 1, 'HandleVisibility','off');
     plot(t, drawthetas, '-', 'LineWidth', 2, 'color', '#0072BD');
     eqpt = -acos((I(t) + 1)./(1 - I(t)));
     plot(t, eqpt, '--k', 'LineWidth', 1);
