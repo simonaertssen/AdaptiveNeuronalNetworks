@@ -39,7 +39,7 @@ with a mean $\mu = \kmean$ and standard deviation $\sigma = \sqrt{\kmean}$. Both
 \subsection{Scale-free networks}
 What we can often observe in nature is the preferential attachment to nodes with a high degree \cite{Bullmore2010}: the rich or famous tend to get more rich or famous. This trait is also described as the 80/20 rule by Pareto. Networks with this property consist of a small number of highly connected nodes, and a large number of low degree nodes. We can represent this with a power law distribution:
 \begin{align}
-P(k) = A k^{-\gamma} \label{eq:scalefreepdf}
+P(k) = A k^{-\gamma} \hspace{15mm} \K = [\kmin, \kmax] \label{eq:scalefreepdf}
 \end{align}
 with $A$ is a constant so that $\sum_{k=1}^{\infty} P(k) = 1$. We can also see that $A \sum_{k=1}^{\infty} k^{-\gamma} = 1$ so that $A = \sum_{k=1}^{\infty} k^{\gamma} = 1/\zeta(k)$, the Riemann Z{\'e}ta function \cite{BarabasiNetworkBook2016}. 
 
@@ -51,5 +51,6 @@ For \eqref{eq:scalefreepdf} this results in:
 \begin{align}
 \kmax = \kmin \cdot N^{\frac{1}{\gamma-1}} \label{eq:scalefreecutoff}
 \end{align}
-which shows that there might be large differences in size between the nodes. There are constraints on $\gamma$ to yield a scale-free network. When $0 < \gamma < 2$ the largest hub grows faster than $N$, so once its degree exceeds $N-1$ there are no more new nodes to connect to. A rigorous proof is given in \cite{Bassler2011}. For $\gamma = 2$, the system grows linearly, as we can see in \eqref{eq:scalefreecutoff}. When $2 < \gamma \leq 3$ we find the most scale-free networks, as for $\gamma > 3$ hubs are not sufficiently large and numerous to have much influence on the network
+which shows that there might be large differences in size between the nodes. \\
+There are constraints on $\gamma$ to yield a scale-free network. When $0 < \gamma < 2$ the largest hub grows faster than $N$, so once its degree exceeds $N-1$ there are no more new nodes to connect to and the network will not be able to grow according to \eqref{eq:scalefreepdf}. A rigorous proof is given in \cite{Bassler2011}. For $\gamma = 2$, the system grows linearly, as we can see in \eqref{eq:scalefreecutoff}. When $2 < \gamma \leq 3$ we find the most scale-free networks, as for $\gamma > 3$ hubs are not sufficiently large and numerous to have much influence on the network
 \cite{BarabasiNetworkBook2016}.
