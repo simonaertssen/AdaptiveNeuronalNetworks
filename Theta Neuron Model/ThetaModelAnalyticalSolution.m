@@ -1,7 +1,4 @@
-% We will test whether the analytical solution 
-% theta = 2*np.arctan(np.sqrt(i)*np.tan(t*np.sqrt(i) - np.pi/2))
-% is valid by recording the error between simullations and theory.
-
+% Display the different analytical solutions
 clear all; close all; clc;
 
 %% Setup
@@ -13,24 +10,26 @@ set(groot,'DefaultAxesYGrid','on')
 tnow = 0; tend = 20;
 F = @thetaneuron; h = 0.001; IC = -pi;
 
-fanalytic = figure('Renderer', 'painters', 'Position', [50 800 1000 800]);
+%%
+feqpts = figure('Renderer', 'painters', 'Position', [50 800 1000 200]); 
 titlefont = 15;
 labelfont = 15;
-m = 3; n = 1;
+axesfont = 15;
+m = 1; n = 3;
 
 
-%% A simple constant current
-
-I = @simplecurrent;
+%% Excitable regime
+I = @(x) -5;
 
 [t, thetas] = DOPRI_singleneuron(F, tnow, tend, IC, h, I);
 drawthetas = spikesNaN(thetas);
-realthetas = 2*atan(-sqrt(I(t)).*cot(t.*sqrt(I(t))));
+
+sI = sqrt(-I(0));
+realthetas = 2*atan(2*sI./(1 - exp(2*t*sI)) - sI);
 
 imrow(1) = subplot(m,n,1); hold on; box on;
 
-yyaxis left
-ylim([-pi - 1.0, pi + 0.3]);
+ylim([-pi - 1.0, pi + 0.1]);
 plot(t, thetas, ':k', 'LineWidth', 1, 'HandleVisibility','off');
 plot(t, drawthetas, '-', 'LineWidth', 2, 'color', '#0072BD');
 
@@ -40,29 +39,21 @@ plot(t, spikesNaN(realthetas), '-', 'LineWidth', 2, 'color', '#77AC30');
 ylabel('$\theta$','Interpreter','latex', 'FontSize', labelfont);
 xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
 
-yyaxis right
-maxy = max(I(t));
-plot(t, I(t), '-', 'LineWidth', 1, 'color', '#A2142F');
-ylabel('$I = 2$','Interpreter','latex', 'FontSize', labelfont);
-ax = gca; ax.YAxis(1).Color = 'k'; ax.YAxis(2).Color = '#A2142F';
-set(gca,'YTick', 0:maxy:maxy, 'YLim', [0, maxy*10]);
-
 legend('Simulation', 'Analytical');
 
 
-%% A more difficult linear current
-
-epsilon = 0.01;
-I = @(t) linearcurrent(epsilon, t);
+%% Bifurcation
+I = @(x) 0;
 
 [t, thetas] = DOPRI_singleneuron(F, tnow, tend, IC, h, I);
 drawthetas = spikesNaN(thetas);
-realthetas = 2*atan(-sqrt(I(t)).*cot(t.*sqrt(I(t))) + epsilon);
+
+sI = sqrt(-I(0));
+realthetas = 2*atan(2*sI./(1 - exp(2*t*sI)) - sI);
 
 imrow(2) = subplot(m,n,2); hold on; box on;
 
-yyaxis left
-ylim([-pi - 1.0, pi + 0.3]);
+ylim([-pi - 1.0, pi + 0.1]);
 plot(t, thetas, ':k', 'LineWidth', 1, 'HandleVisibility','off');
 plot(t, drawthetas, '-', 'LineWidth', 2, 'color', '#0072BD');
 
@@ -71,28 +62,21 @@ plot(t, spikesNaN(realthetas), '-', 'LineWidth', 2, 'color', '#77AC30');
 
 ylabel('$\theta$','Interpreter','latex', 'FontSize', labelfont);
 xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
-
-yyaxis right
-maxy = max(I(t));
-plot(t, I(t), '-', 'LineWidth', 1, 'color', '#A2142F');
-ylabel('$I = 2 + t 1.0e^{-3}$','Interpreter','latex', 'FontSize', labelfont);
-ax = gca; ax.YAxis(1).Color = 'k'; ax.YAxis(2).Color = '#A2142F';
-set(gca,'YTick', 0:maxy:maxy, 'YLim', [0, maxy*10]);
 
 legend('Simulation', 'Analytical');
 
-%% A more difficult parabolic current
-
-I = @paraboliccurrent;
+%% Periodic regime
+I = @(x) 5;
 
 [t, thetas] = DOPRI_singleneuron(F, tnow, tend, IC, h, I);
 drawthetas = spikesNaN(thetas);
-realthetas = 2*atan(-1./(t + 0.05.*t));
+
+sI = sqrt(-I(0));
+realthetas = 2*atan(2*sI./(1 - exp(2*t*sI)) - sI);
 
 imrow(3) = subplot(m,n,3); hold on; box on;
 
-yyaxis left
-ylim([-pi - 1.0, pi + 0.3]);
+ylim([-pi - 1.0, pi + 0.1]);
 plot(t, thetas, ':k', 'LineWidth', 1, 'HandleVisibility','off');
 plot(t, drawthetas, '-', 'LineWidth', 2, 'color', '#0072BD');
 
@@ -101,13 +85,6 @@ plot(t, spikesNaN(realthetas), '-', 'LineWidth', 2, 'color', '#77AC30');
 
 ylabel('$\theta$','Interpreter','latex', 'FontSize', labelfont);
 xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
-
-yyaxis right
-maxy = max(I(t));
-plot(t, I(t), '-', 'LineWidth', 1, 'color', '#A2142F');
-ylabel('$I$','Interpreter','latex', 'FontSize', labelfont);
-ax = gca; ax.YAxis(1).Color = 'k'; ax.YAxis(2).Color = '#A2142F';
-set(gca,'YTick', 0:maxy:maxy, 'YLim', [0, maxy*10]);
 
 legend('Simulation', 'Analytical');
 
