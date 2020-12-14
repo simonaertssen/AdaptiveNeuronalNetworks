@@ -5,14 +5,21 @@ A number of neuron model families have been identified, and often there exists a
 It was Hodgkin \cite{Hodgkin1948} who classified neurons into two types based on their excitability, upon experimenting with the electrical stimulation of cells. Class 1 models begin to spike at an arbitrarily slow rate, and the spiking frequency increases when the applied current is increased. Class 2 models spike as soon as their internal threshold is exceeded and the spiking frequency stays relatively constant within a certain frequency band \cite{Hoppensteadt2001CanonicalNM}.
 
 \subsection{Model description} \label{sec:TheThetaNeuronModelDescription}
+In \cite{Ermentrout1986}, a class 1 canonical phase model was proposed:
+\begin{align}
+\dot{\theta} = (1-\cos \theta)+(1+\cos \theta) \cdot I \qquad \theta \in \T \label{eq:thetaneuron}
+\end{align}
+with $I$ a bifurcation parameter on the supplied current. We can visualise the dynamics on the unit circle, like in Figure \ref{fig:thetaneuronbifurcationtikz}. The neuron produces a spike when $\theta$ surpasses $\pi$, upon which $\theta \leftarrow -\pi$. 
 
 \begin{figure}[H]
 \minipage{0.33\linewidth}
 \centering
 \begin{tikzpicture}
     \draw (0,0) circle [radius=1];
-    \draw (0,-1.2) node[below]{$I < 0$};
+    \draw (0,-1.2) node[below]{Excitable regime: $I < 0$};
     \draw (-1,0) node[left]{$\pi$};
+    \draw[fill=black, black] (1,0) circle [radius=0.025];
+    \draw (1,0) node[right]{0};
     \draw[fill=red, red] (-1,0) circle [radius=0.05];
     \draw (-1,0) node[right]{spike};
     
@@ -31,9 +38,11 @@ It was Hodgkin \cite{Hodgkin1948} who classified neurons into two types based on
 \centering
 \begin{tikzpicture}
     \draw (0,0) circle [radius=1];
-    \draw (0,-1.2) node[below]{$I = 0$};
+    \draw (0,-1.2) node[below]{Bifurcation: $I = 0$};
+    \draw (1,0) node[right]{0};
     \draw[fill=red, red] (-1,0) circle [radius=0.05];
     \draw (-1,0) node[right]{spike};
+    \draw (-1,0) node[left]{$\pi$};
     
     \draw[fill=gray, draw=black] (1,0) circle [radius=0.1];
     
@@ -45,7 +54,8 @@ It was Hodgkin \cite{Hodgkin1948} who classified neurons into two types based on
 \centering
 \begin{tikzpicture}
     \draw (0,0) circle [radius=1];
-    \draw (0,-1.2) node[below]{$I > 0$};
+    \draw (0,-1.2) node[below]{Periodic regime: $I > 0$};
+    \draw (-1,0) node[left]{$\pi$};
     \draw (1,0) node[right]{0};
     \draw[fill=black, black] (1,0) circle [radius=0.025];
     \draw[fill=red, red] (-1,0) circle [radius=0.05];
@@ -59,15 +69,11 @@ It was Hodgkin \cite{Hodgkin1948} who classified neurons into two types based on
     \draw[black, ->] (-0.5,-0.866)to[out=-30,in=180](0,-1);
 \end{tikzpicture}
 \endminipage
-\caption{SNIC bifurcation of the theta neuron model. For $I < 0$, the neuron is in a rest state but excitable. For $I > 0$, the neuron spikes regularly. The bifurcation occurs at $I = 0$. A spike occurs when $\theta = \pi$.}
+\caption{SNIC bifurcation of the theta neuron model. A spike occurs when $\theta = \pi$. For $I < 0$, the neuron is in a rest state but \textsl{excitable}. For $I > 0$, $\dot{\theta} > 0$ so that $\theta$ moves continuously around the circle and we can observe \textsl{periodic} sustained spiking. The saddle-node bifurcation occurs at $I = 0$, so that $\theta$ will spike when it is larger than 0.}
 \label{fig:thetaneuronbifurcationtikz}
 \end{figure}
 
-In \cite{Ermentrout1986}, a class 1 canonical phase model was proposed:
-\begin{align}
-\dot{\theta} = (1-\cos \theta)+(1+\cos \theta) \cdot I \qquad \theta \in \T \label{eq:thetaneuron}
-\end{align}
-with $I$ a bifurcation parameter on the supplied current. We can visualise the dynamics on the unit circle, like in Figure \ref{fig:thetaneuronbifurcationtikz}. The neuron produces a spike when $\theta$ surpasses $\pi$. As $I$ increases, we see the coalescence of a saddle and node and the neuron starts to fire periodically, we can recognise the features of the class 1 model in Figure \ref{fig:ThetaNeuronResponseToCurrent}. This makes \eqref{eq:thetaneuron} the normal form of the \textit{saddle-node-on-invariant-circle} ($\SNIC$) bifurcation \cite{Luke2013}.
+We can recognise the features of the class 1 model in Figure \ref{fig:ThetaNeuronResponseToCurrent}. This makes \eqref{eq:thetaneuron} the normal form of the \textit{saddle-node-on-invariant-circle} ($\SNIC$) bifurcation \cite{Luke2013}.
 
 \begin{figure}[H]
 \centering
@@ -76,7 +82,7 @@ with $I$ a bifurcation parameter on the supplied current. We can visualise the d
 \label{fig:ThetaNeuronResponseToCurrent}
 \end{figure}
 
-For $I > 0$, $\dot{\theta} > 0$ so that $\theta$ moves continuously around the circle. Equilibria only exist for $I < 0$: 
+Equilibria only exist for the \textsl{excitable} regime $I < 0$: 
 \begin{align*}
 \dot{\theta} &= 1-\cos \theta+I+I \cdot \cos \theta = (I+1)+(I-1) \cdot \cos \theta \\
 \theta^{\ast}_{1, 2} &= \pm \arccos \left(\frac{I+1}{1-I}\right)+2 \pi n
@@ -89,8 +95,7 @@ In the equilibria this yields:
 \begin{align*}
 \frac{\mathop{d}}{\mathop{d \theta}}\left( \theta^{\ast}_{1, 2} \right) &= \pm(1-I) \cdot \sqrt{1-\frac{I+1}{1-I}}=\pm(1-I) \cdot \frac{2 \sqrt{-I}}{1-I} = \pm2 \sqrt{-I}
 \end{align*}
-This yields a stable equilibrium point for $\theta^{\ast}_{1}$ and an unstable for $\theta^{\ast}_{2}$.
-
+This yields a stable equilibrium point for $\theta^{\ast}_{1}$ and an unstable for $\theta^{\ast}_{2}$. This means that as $\theta$ gets perturbed above $\theta^{\ast}_{2}$, a spike occurs and $\theta$ converges to $\theta^{\ast}_{1}$. This is demonstrated in Figure \ref{fig:ThetaModelEquilibriumPoints}.
 \begin{figure}[H]
 \centering
 \includegraphics[width = \textwidth]{../Figures/ThetaModelEquilibriumPoints.pdf}
@@ -99,20 +104,30 @@ This yields a stable equilibrium point for $\theta^{\ast}_{1}$ and an unstable f
 \end{figure}
 
 
-\subsection{Solutions for static currents} \label{sec:TheThetaNeuronModelSolutions}
+\subsection{Solutions for static currents} \label{sec:TheThetaNeuronModelSolutionPeriodics}
 Gaining insight into \eqref{eq:thetaneuron} is hard, due to the difficulty of finding an analytical solution. However, it has been noted that there exists a simple transformation which yields (see \ref{app:TransformationToQIF}):
 \begin{align}
 V &\equiv \tan \left( \frac{\theta}{2} \right) \label{eq:QIFtransformation} \\
 \dot{V} &= V^2 + I \label{eq:QIFmodel}
 \end{align}
-This model is called the \textsl{Quadratic Integrate and Fire model} (\QIF). \eqref{eq:QIFmodel} models the membrane potential of a neuron, which spikes to $=\infty$ when the neuron spikes and is reset at $-\infty$. The transformation \eqref{eq:QIFtransformation} is continuous between spikes, so insights from a solution for $V$ can be transformed directly. The solution is (see \ref{app:ThetaModelSolutions}):
+This model is called the \textsl{Quadratic Integrate and Fire model} (\QIF). \eqref{eq:QIFmodel} models the membrane potential of a neuron, which spikes to $=\infty$ when the neuron spikes and is reset at $-\infty$. The transformation \eqref{eq:QIFtransformation} is continuous between spikes, so insights from a solution for $V$ can be transformed directly. The equilibria of the \QIF model are simply $\pm \sqrt{I}$ so that we can express $\theta^{\ast}_{1, 2} = 2 \cdot\arctan \left( \mp \sqrt{I} \right)$ \cite{Gutkin2014}. \\
+
+The solution for the excitable regime $I < 0$ is :
 \begin{align}
-\theta = 2 \cdot \arctan \left(-\sqrt{I} \cdot \cot (t \sqrt{I}) \right) \label{eq:ThetaNeuronModelSolution}
+\theta = 2 \cdot \arctan \left( \frac{2 \sqrt{-I}}{1 - e^{2 t \sqrt{-I}}}-\sqrt{-I} \right) \label{eq:ThetaNeuronModelSolutionPeriodicExcitable}
 \end{align}
-The equilibria of the \QIF model are simply $\pm \sqrt{I}$ so that we can express $\theta^{\ast}_{1, 2} = 2 \cdot\arctan \left( \mp \sqrt{I} \right)$.
+The solution at the bifurcation $I = 0$ is :
+\begin{align}
+\theta = 2 \cdot \arctan \left(\frac{-1}{t} \right) \label{eq:ThetaNeuronModelSolutionPeriodicBifurcation}
+\end{align}
+The solution for the periodic regime $I > 0$ is :
+\begin{align}
+\theta = 2 \cdot \arctan \left(-\sqrt{I} \cdot \cot (t \sqrt{I}) \right) \label{eq:ThetaNeuronModelSolutionPeriodic}
+\end{align}
+The solutions to \eqref{eq:ThetaNeuronModelSolutionPeriodicExcitable}-\eqref{eq:ThetaNeuronModelSolutionPeriodic} are described in \ref{app:ThetaModelSolutions}.
 
 \subsection{Frequency response} \label{sec:TheThetaNeuronModelFrequencyResponse}
-As we already saw in Figure \ref{fig:ThetaNeuronResponseToCurrent}, an increasing current increases the spiking frequency. We can compute this relationship by measuring how long it takes for $V$ to reach a spike: we solve \eqref{eq:ThetaNeuronModelSolution} for $t$ at $V(t) = +\infty$ in \ref{app:ThetaModelFrequencyResponse}. This yields the oscillation period $T = \frac{\pi}{\sqrt{I}}$ which we can see in Figure \ref{fig:ThetaNeuronResponseToCurrentPeriod}. 
+As we already saw in Figure \ref{fig:ThetaNeuronResponseToCurrent}, an increasing current increases the spiking frequency. We can compute this relationship by measuring how long it takes for $V$ to reach a spike: we solve \eqref{eq:ThetaNeuronModelSolutionPeriodic} for $t$ at $V(t) = +\infty$ in \ref{app:ThetaModelFrequencyResponse}. This yields the oscillation period $T = \frac{\pi}{\sqrt{I}}$ which we can see in Figure \ref{fig:ThetaNeuronResponseToCurrentPeriod}. 
 
 We know that when $\theta > \theta^{\ast}_{2}$ a spike occurs. But the time that it takes to reach the spike can be arbitrarily long, depending on how far we are over $\theta^{\ast}_{2}$. So, spikes will occur, but after a delay that is dependant on the stimulus. Explicitly, if we perturb $\theta(0) = \theta^{\ast}_{2} + \varepsilon$ we obtain from  \cite{Gutkin2014}:
 \begin{align*}
@@ -123,7 +138,7 @@ The delay to the spike blows up as $\varepsilon \rightarrow$ 0.
 \begin{figure}[H]
 \centering
 \includegraphics[width = 0.75\textwidth]{../Figures/ThetaNeuronResponseToCurrentPeriod.pdf}
-\caption{Frequency response of the theta model, with theoretical results in blue, and experimental results in black dots. For $I \leq 0$ the spike period is infinite, which is why we see the solutions to \eqref{eq:thetaneuron} approach $\theta = 0$ for $I = $..}
+\caption{Frequency response of the theta model, with theoretical results in blue, and experimental results in black dots. For $I \leq 0$ the spike period is infinite, which is why we see the solutions to \eqref{eq:thetaneuron} approach $\theta = 0$ for $I = 0$.}
 \label{fig:ThetaNeuronResponseToCurrentPeriod}
 \end{figure}
 
@@ -138,7 +153,7 @@ Hence, a 1\% change in $I$ will result in a 0.5 \% change in the period.
 
 
 \subsection{Phase response} \label{sec:TheThetaNeuronModelPhaseResponse}
-Perturbations on the period can also be understood from the perspective of the phase. The phase response 
+Perturbations on the period can also be understood from the perspective of the phase. The phase response curve (\PRC)
 
 \subsection{Networks of theta neurons}
 We can easily extend the model to networks of neurons:

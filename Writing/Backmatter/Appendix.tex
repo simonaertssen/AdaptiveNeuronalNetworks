@@ -18,18 +18,29 @@ Using $\cos ^{2}\left(\frac{\theta}{2}\right) = \frac{1+\cos \left(\frac{\theta}
 \begin{align*}
 \dot{\theta} &=2\left(\frac{1-\cos \theta}{2}+\left(\frac{1+\cos \theta}{2}\right) \cdot I \right) =(1-\cos \theta)+(1+\cos \theta) \cdot I
 \end{align*}
-This proves that the transformation is correct.
+This proves that the transformation \eqref{eq:QIFtransformation} is correct.
 
  
 \subsection{Solutions to the QIF model} \label{app:ThetaModelSolutions}
-Depending on the value of $I$, we can distinguish multiple solutions  \cite{Perez2020}. In all cases we can integrate through the separation of variables. Solutions are bound to start at $V(0)$ after a spike has occured. Solutions for $\theta$ are found by taking the inverse of the transformation \eqref{eq:QIFtransformation}.
+Depending on the value of $I$, we can distinguish multiple solutions  \cite{Perez2020}. In all cases we can integrate through the separation of variables. Solutions are bound to start at $V(0)$, right after a spike has occured at $t=0$. Solutions for $\theta$ are found by taking the inverse of the transformation \eqref{eq:QIFtransformation}.
+
+\subsubsection{Solving for \texorpdfstring{$I < 0$}{TEXT}}
+%Change variables: $I = -\tilde{I}^2$. Separate variables as $\frac{\mathop{dv}}{v^2 - \tilde{I}^2} = \mathop{dt}$ and integrate from $t = 0$:
+\begin{align*}
+\int_{V(0)}^{V(t)} \frac{\mathop{dv}}{v^2 - \tilde{I}^2} &= \int_{V(0)}^{V(t)} \frac{\mathop{dv}}{(v+\tilde{I})(v-\tilde{I})} 
+= \frac{1}{2 \tilde{I}} \int_{V(0)}^{V(t)} \frac{\mathop{dv}}{v-\tilde{I}}-\frac{1}{2 \tilde{I}} \int_{V(0)}^{V(t)} \frac{\mathop{dv}}{v+\tilde{I}} \\
+%&= \frac{1}{2 \tilde{I}} \log (v-\tilde{I}) -\frac{1}{2 \tilde{I}} \log (v+\tilde{I})\Big \rvert_{V(0)}^{V(t)} 
+&= \frac{1}{2 \tilde{I}} \log \left(1-\frac{2 \tilde{I}}{v+\tilde{I}}\right) \Big \rvert_{V(0)}^{V(t)} 
+= \int_0^t \mathop{d\tau} = t \\
+V(t) &= \lim_{V(0) \rightarrow -\infty} \frac{2 \sqrt{-I}}{1 - \left(1-\frac{2 \sqrt{-I}}{V(0)+\sqrt{-I}}\right)\cdot e^{2 t \sqrt{-I}}}-\sqrt{-I}\\
+&= \frac{2 \sqrt{-I}}{1 - e^{2 t \sqrt{-I}}}-\sqrt{-I}
+\end{align*}
 
 \subsubsection{Solving for \texorpdfstring{$I = 0$}{TEXT}}
 \begin{align*}
 \int_{V(0)}^{V(t)} \frac{\mathop{dv}}{v^2} &= \frac{1}{v}\Big\rvert_{V(0)}^{V(t)} = - \frac{1}{V(t)} + \frac{1}{V(0)} = \int_0^t \mathop{d\tau} = t \\
 V(t) &= \lim_{V(0) \rightarrow - \infty} \frac{V(0)}{1-V(0)t} \underset{\frac{\infty}{\infty}}{\overset{\mathrm{H}}{=}} \frac{-1}{t}
 \end{align*}
-
 
 \subsubsection{Solving for \texorpdfstring{$I > 0$}{TEXT}}
 %Separate the variables as $\frac{\mathop{dv}}{v^2 + I} = \mathop{dt}$ and integrate from $t=0$:
@@ -42,18 +53,6 @@ V(t) &= \lim_{V(0) \rightarrow - \infty} \frac{V(0)}{1-V(0)t} \underset{\frac{\i
 \int_0^t \mathop{d\tau} &= t \\
 V(t) &= \lim_{V(0) \rightarrow -\infty} \sqrt{I} \cdot \tan \left( t \sqrt{I} + \arctan \left( \frac{V(0)}{\sqrt{I}} \right) \right) = \sqrt{I} \cdot \tan \left( t \sqrt{I} - \frac{\pi}{2} \right) \\
 &=  \sqrt{I} \cdot \cot \left( t \sqrt{I} \right) 
-\end{align*}
-
-\subsubsection{Solving for \texorpdfstring{$I < 0$}{TEXT}}
-%Change variables: $I = -\tilde{I}^2$. Separate variables as $\frac{\mathop{dv}}{v^2 - \tilde{I}^2} = \mathop{dt}$ and integrate from $t = 0$:
-\begin{align*}
-\int_{V(0)}^{V(t)} \frac{\mathop{dv}}{v^2 - \tilde{I}^2} &= \int_{V(0)}^{V(t)} \frac{\mathop{dv}}{(v+\tilde{I})(v-\tilde{I})} 
-= \frac{1}{2 \tilde{I}} \int_{V(0)}^{V(t)} \frac{\mathop{dv}}{v-\tilde{I}}-\frac{1}{2 \tilde{I}} \int_{V(0)}^{V(t)} \frac{\mathop{dv}}{v+\tilde{I}} \\
-%&= \frac{1}{2 \tilde{I}} \log (v-\tilde{I}) -\frac{1}{2 \tilde{I}} \log (v+\tilde{I})\Big \rvert_{V(0)}^{V(t)} 
-&= \frac{1}{2 \tilde{I}} \log \left(1-\frac{2 \tilde{I}}{v+\tilde{I}}\right) \Big \rvert_{V(0)}^{V(t)} 
-= \int_0^t \mathop{d\tau} = t \\
-V(t) &= \lim_{V(0) \rightarrow -\infty} \frac{2 \sqrt{-I}}{1 - \left(1-\frac{2 \sqrt{-I}}{V(0)+\sqrt{-I}}\right)\cdot e^{2 t \sqrt{-I}}}-\sqrt{-I}\\
-&= \frac{2 \sqrt{-I}}{1 - e^{2 t \sqrt{-I}}}-\sqrt{-I}
 \end{align*}
 
 
