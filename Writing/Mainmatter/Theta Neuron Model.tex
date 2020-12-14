@@ -99,7 +99,7 @@ This yields a stable equilibrium point for $\theta^{\ast}_{1}$ and an unstable f
 \begin{figure}[H]
 \centering
 \includegraphics[width = \textwidth]{../Figures/ThetaModelEquilibriumPoints.pdf}
-\caption{Equilibria $\theta^{\ast}$ for different values of $I$. Left: $I = -1$ yields $\theta^{\ast} = \pm \frac{\pi}{2}$. Middle: $I = -0.5$. Right: bifurcation diagram of the \SNIC bifurcation, with the stable equilibria in blue, and the unstable in red.}
+\caption{Equilibria $\theta^{\ast}$ for different values of $I$. Left: $I = -1$ yields $\theta^{\ast}_{1,2} = \pm \frac{\pi}{2}$, one of the simulations is started exactly on the unstable equilibrium. Middle: $I = -0.5$. Right: bifurcation diagram of the \SNIC bifurcation, with the stable equilibria in blue, and the unstable in red.}
 \label{fig:ThetaModelEquilibriumPoints}
 \end{figure}
 
@@ -153,9 +153,9 @@ Hence, a 1\% change in $I$ will result in a 0.5 \% change in the period.
 
 
 \subsection{Phase response} \label{sec:TheThetaNeuronModelPhaseResponse}
-Perturbations on the period can also be understood from the perspective of the phase. Changes to the phase $\theta$ can delay or advance the event of a spike, and in general this depends on exactly when the stimulus occurs. The phase response curve (\PRC) gives us exactly that relation.
+Perturbations on the period can also be understood from the perspective of the phase. Changes to the phase $\theta$ can delay or advance the event of a spike, and in general this depends on exactly when the stimulus occurs. The phase response curve (\PRC) gives us exactly that relation \cite{Perez2020, Gutkin2014}.
 
-For infinitesimally small perturbations to the phase, we can find the \PRC as the \textsl{adjoint} of the solution \cite{Gutkin2014} as:
+For infinitesimally small perturbations to the phase, we can find the \PRC as the \textsl{adjoint} of the solution as:
 \begin{align*}
 \PRC(t)=\frac{1}{d V / d t}=\frac{1}{2 \sqrt{I}}(1-\cos (2 \cdot t \cdot \sqrt{I}))
 \end{align*}
@@ -167,6 +167,12 @@ We can easily extend the model to networks of neurons:
 \dot{\theta}_{i} &=\left(1-\cos \theta_{i}\right)+\left(1+\cos \theta_{i}\right) \cdot \left[\eta_{i} + \kappa \cdot I_{i}(t)\right] \qquad \theta_i \in \T^N  \label{eq:thetaneuronnetwork} \\
 I_{i}(t) &=\frac{1}{\kmean} \sum_{j=1}^{N} A_{i j} \cdot \mathcal{P}_{n}(\theta_{j}) \label{eq:thetaneuronnetworkcurrent}
 \end{align}
-where the excitability $\eta_i$ is drawn from a distribution $g(\eta \rvert \eta_0, \sigma)$ and $\mathcal{P}(\theta)  = a_n(1 - \cos \theta)^n$ models synaptic coupling by a pulse-shaped signal, emitted when a neuron fires. $n$ models the sharpness of the pulse, and $a_n$ is a normalisation constant. We will take $n=2$ from here in as in\cite{Luke2013}, \cite{OttAntonsen2017}, \cite{Martens2020}. Another type of coupling is proportional to the difference in voltage between neurons \cite{Martens2020}. Note that for a fully connected network, \eqref{eq:thetaneuronnetworkcurrent} reduces to the scenarios in \cite{Luke2013} and \cite{Martens2020}.
+where the excitability $\eta_i$ is drawn from a distribution $g(\eta \rvert \eta_0, \sigma)$ and $\mathcal{P}(\theta)  = a_n(1 - \cos \theta)^n$ models synaptic coupling by a pulse-shaped signal, emitted when a neuron fires. $n$ models the sharpness of the pulse, and $a_n$ is a normalisation constant. We will take $n=2$ from here in as in\cite{Luke2013}, \cite{OttAntonsen2017}, \cite{Martens2020}. 
+
+
+Another type of coupling is proportional to the difference in voltage between neurons \cite{Martens2020}. Note that for a fully connected network, \eqref{eq:thetaneuronnetworkcurrent} reduces to the scenarios in \cite{Luke2013} and \cite{Martens2020}.
+
+In \eqref{eq:thetaneuronnetwork} we see everything come together: changes to the phase $\theta_i$ come from $\dtheta_i$, which in turn depends on $I$, which depends on all phases in the network.
+
 
 
