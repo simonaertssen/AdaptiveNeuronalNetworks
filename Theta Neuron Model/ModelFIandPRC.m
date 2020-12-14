@@ -104,7 +104,7 @@ imrow(3) = subplot(m,n,3); hold on; box on;
 xlim([0, T]);
 plot(t, iPRC, 'LineWidth', 2, 'color', '#D95319')
 
-ylabel('\slPRC', 'Interpreter','tex', 'FontSize', labelfont)
+ylabel('\sl PRC', 'FontSize', labelfont, 'FontName', 'SansSerif')
 xlabel('$\phi$','Interpreter','latex', 'FontSize', labelfont)
 
 
