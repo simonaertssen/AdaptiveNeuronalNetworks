@@ -88,10 +88,10 @@ plot(t, drawbifthetas, '-r', 'LineWidth', 2);
 plot(t, realthetas(t), ':k', 'LineWidth', 1, 'HandleVisibility','off');
 plot(t, drawrealthetas, '-', 'LineWidth', 2, 'color', '#0072BD');
 
-text(phasebifftime + 0.02, 0.5*(drawbifthetas(bifidx+1) + drawrealthetas(bifidx-1)) + 0.3, '$$\varepsilon$$', 'HorizontalAlignment', 'left', 'FontSize', labelfont, 'Interpreter', 'latex');
+text(phasebifftime + 0.02, 0.5*(drawbifthetas(bifidx+1) + drawrealthetas(bifidx-1)) + 0.4, '$$\varepsilon$$', 'HorizontalAlignment', 'left', 'FontSize', labelfont, 'Interpreter', 'latex');
 
 ylabel('$\theta$','Interpreter','latex', 'FontSize', labelfont)
-set(gca,'XTick',[0, phasebifftime, newvaluetime, realspiketime, bifspiketime], 'XTickLabel',{'0','$$\phi$$','$$\phi_{\rm new}$$','$$T$$','$$T_{\phi}$$'}, 'TickLabelInterpreter', 'latex', 'FontSize', axesfont)
+set(gca,'XTick',[0, phasebifftime, newvaluetime, realspiketime, bifspiketime], 'XTickLabel',{'0','$$\phi$$','$$\phi_{\rm{new}}$$','$$T$$','$$T_{\phi}$$'}, 'TickLabelInterpreter', 'latex', 'FontSize', axesfont, 'FontName', 'SansSerif')
 set(gca,'YTick',-pi:pi/2:pi, 'YTickLabel',{'-$$\pi$$','$$\frac{\pi}{2}$$','0','$$\frac{\pi}{2}$$','$$\pi$$'}, 'TickLabelInterpreter', 'latex', 'YLim', [-pi-0.2, pi + 0.2], 'FontSize', axesfont)
 
 
