@@ -12,95 +12,16 @@ set(groot,'DefaultAxesYGrid','on')
 tnow = 0; tend = 10;
 F = @thetaneuron; h = 0.001;
 
-fexcite = figure('Renderer', 'painters', 'Position', [50 800 1000 200]);
+fI = figure('Renderer', 'painters', 'Position', [50 800 1000 200]);
 titlefont = 15;
 labelfont = 20;
-axesfont = 15;
+axesfont = 17;
 m = 1; n = 3;
-
-%% Excitability:
-% The theta neuron model is of type 1 excitability, meaning that the frequency 
-% of spikes goes up as the input current increases.
-I = @excitabilitycurrent;
-
-[t, thetas] = DOPRI_singleneuron(F, tnow, tend, -pi, h, I);
-NaNthetas = spikesNaN(thetas);
-
-imrow(1) = subplot(m,n,1); hold on; box on;
-
-%title("Class 1 excitability", 'FontSize', titlefont, 'FontName', 'SansSerif');
-yyaxis left; hold on;
-plot(t, thetas, ':k', 'LineWidth', 1);
-plot(t, NaNthetas, '-', 'LineWidth', 2, 'color', '#0072BD');
-ylabel('$\theta$','Interpreter','latex', 'FontSize', labelfont);
-xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
-set(gca,'YTick',-pi:pi:pi, 'YTickLabel',{'-$$\pi$$','0','$$\pi$$'}, 'TickLabelInterpreter', 'latex', 'YLim', [-pi - 1.5, pi + 0.2], 'FontSize', axesfont)
-    
-yyaxis right; hold on; box on;
-maxy = max(I(t));
-plot(t, I(t), '-', 'LineWidth', 1, 'color', '#A2142F');
-ax = gca; ax.YAxis(1).Color = 'k'; ax.YAxis(2).Color = '#A2142F';
-set(gca,'YTick', 0:maxy:maxy, 'YLim', [-10, maxy*8]);
-
-
-
-%% Spiking behaviour:
-% The neuron spikes when the input current > 0
-I = @spikecurrent;
-
-[t, thetas] = DOPRI_singleneuron(F, tnow, tend, -pi, h, I);
-NaNthetas = spikesNaN(thetas);
-
-imrow(2) = subplot(m,n,2); hold on; box on;
-
-%title("Spiking", 'FontSize', titlefont, 'FontName', 'SansSerif');
-yyaxis left; hold on;
-plot(t, thetas, ':k', 'LineWidth', 1);
-plot(t, NaNthetas, '-', 'LineWidth', 2, 'color', '#0072BD');
-xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
-set(gca,'YTick',-pi:pi:pi, 'YTickLabel',{'-$$\pi$$','0','$$\pi$$'}, 'TickLabelInterpreter', 'latex', 'YLim', [-pi - 1.5, pi + 0.2], 'FontSize', axesfont)
-
-yyaxis right; hold on; box on;
-maxy = max(I(t));
-plot(t, I(t), '-', 'LineWidth', 1, 'color', '#A2142F');
-ax = gca; ax.YAxis(1).Color = 'k'; ax.YAxis(2).Color = '#A2142F';
-set(gca,'YTick', 0:maxy:maxy, 'YLim', [-2, maxy*8]);
-
-
-%% Bursting behaviour:
-% The neuron spikes when the input current > 0
-I = @burstcurrent;
-
-[t, thetas] = DOPRI_singleneuron(F, tnow, tend, -pi, h, I);
-NaNthetas = spikesNaN(thetas);
-
-imrow(3) = subplot(m,n,3); hold on; box on;
-
-%title("Bursting", 'FontSize', titlefont, 'FontName', 'SansSerif');
-yyaxis left; hold on;
-plot(t, thetas, ':k', 'LineWidth', 1);
-plot(t, NaNthetas, '-', 'LineWidth', 2, 'color', '#0072BD');
-xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
-%set(gca,'YTick',-pi:pi/2:pi, 'YTickLabel',{'-$$\pi$$','-$$\frac{\pi}{2}$$','0','$$\frac{\pi}{2}$$','$$\pi$$'}, 'TickLabelInterpreter', 'latex', 'YLim', [-pi - 1.5, pi + 0.2], 'FontSize', axesfont)
-set(gca,'YTick',-pi:pi:pi, 'YTickLabel',{'-$$\pi$$','0','$$\pi$$'}, 'TickLabelInterpreter', 'latex', 'YLim', [-pi - 1.5, pi + 0.2], 'FontSize', axesfont)
-
-yyaxis right; hold on; box on;
-maxy = max(I(t));
-plot(t, I(t), '-', 'LineWidth', 1, 'color', '#A2142F');
-ylim([-1, max(I(t))*5]);
-ylabel('$I$','Interpreter','latex', 'FontSize', labelfont)
-ax = gca; ax.YAxis(1).Color = 'k'; ax.YAxis(2).Color = '#A2142F';
-set(gca,'YTick', 0:maxy:maxy, 'YLim', [-200, maxy*8])
-
-
-%% Save the figure:
-exportgraphics(fexcite,'../Figures/ThetaNeuronResponseToCurrent.pdf')
-
 
 %% Investigate the frequency - current curve:
 % We know that T = pi/sqrt(I)
-% 
-fI = figure('Renderer', 'painters', 'Position', [50 800 500 200]); hold on; box on;
+
+imrow(1) = subplot(m,n,1); hold on; box on;
 I = @fI_current;
 h = 0.01;
 
@@ -108,7 +29,7 @@ tend = 50;
 
 % Theoratical result:
 Idraw = linspace(-10,10, 200);
-plot(Idraw, sqrt(Idraw)./pi, 'LineWidth', 6);
+plot(Idraw, sqrt(Idraw)./pi, 'LineWidth', 6, 'color', '#EDB120');
 
 nmeasure = 33;
 Imeasure = [linspace(-10,-1, nmeasure/3), linspace(0,1, nmeasure/3), linspace(2,10, nmeasure/3)];
@@ -137,29 +58,61 @@ xlabel('$I$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('$\frac{1}{T}$','Interpreter','latex','Rotation', 0, 'FontSize', labelfont*1.5, 'VerticalAlignment','middle', 'HorizontalAlignment','right')
 legend('$\frac{\sqrt{I}}{\pi}$', '$1/\hat{T}$', 'Interpreter','latex', 'FontSize', labelfont, 'Location', 'northwest')
 
-exportgraphics(fI,'../Figures/ThetaNeuronResponseToCurrentPeriod.pdf')
+%% Draw the explanation about the PRC:
+I = 5;
+t = linspace(0, 2, 1001);
+realthetas = @(t) 2*atan(-sqrt(I)*cot(t*sqrt(I)));
+drawrealthetas = spikesNaN(realthetas(t));
+realspiketime = t(isnan(drawrealthetas));
+
+phasebifftime = 0.8; change = 0.2;
+bifthetas = realthetas(t);
+bifidx = find(t == phasebifftime);
+bifthetas(bifidx:end) = realthetas(t(bifidx:end) - change);
+drawbifthetas = spikesNaN(bifthetas);
+bifspiketime = t(isnan(drawbifthetas));
+
+replacedvalue = realthetas(phasebifftime);
+bifthetas(bifidx) = NaN;
+drawbifthetas(bifidx) = NaN;
+
+newvaluetime = fsolve(@(t) realthetas(t-change) - replacedvalue, phasebifftime, optimoptions('fsolve','Display','off'));
+
+imrow(2) = subplot(m,n,2); hold on; box on;
+hold on
+line([phasebifftime, phasebifftime], [drawrealthetas(bifidx-1), drawbifthetas(bifidx+1)], 'LineStyle', '--', 'color', 'k', 'LineWidth', 1)
+
+plot(t, bifthetas, ':k', 'LineWidth', 1, 'HandleVisibility','off');
+plot(t, drawbifthetas, '-r', 'LineWidth', 2);
+
+plot(t, realthetas(t), ':k', 'LineWidth', 1, 'HandleVisibility','off');
+plot(t, drawrealthetas, '-', 'LineWidth', 2, 'color', '#0072BD');
+
+text(phasebifftime + 0.02, 0.5*(drawbifthetas(bifidx+1) + drawrealthetas(bifidx-1)) + 0.3, '$$\varepsilon$$', 'HorizontalAlignment', 'left', 'FontSize', labelfont, 'Interpreter', 'latex');
+
+ylabel('$\theta$','Interpreter','latex', 'FontSize', labelfont)
+set(gca,'XTick',[0, phasebifftime, newvaluetime, realspiketime, bifspiketime], 'XTickLabel',{'0','$$\phi$$','$$\phi_{\rm new}$$','$$T_{\tau}$$','$$T$$'}, 'TickLabelInterpreter', 'latex', 'FontSize', axesfont)
+set(gca,'YTick',-pi:pi/2:pi, 'YTickLabel',{'-$$\pi$$','$$\frac{\pi}{2}$$','0','$$\frac{\pi}{2}$$','$$\pi$$'}, 'TickLabelInterpreter', 'latex', 'YLim', [-pi-0.2, pi + 0.2], 'FontSize', axesfont)
+
+
+%% Draw the PRC itself:
+I = 2; T = pi/sqrt(I);
+t = linspace(0, T);
+iPRC = 1/(2*I) * (1 - cos(2*pi*t/T));
+
+imrow(3) = subplot(m,n,3); hold on; box on;
+xlim([0, T]);
+plot(t, iPRC, 'LineWidth', 2, 'color', '#D95319')
+
+ylabel('\slPRC', 'Interpreter','tex', 'FontSize', labelfont)
+xlabel('$\phi$','Interpreter','latex', 'FontSize', labelfont)
+
+
+%%
+exportgraphics(fI,'../Figures/ThetaNeuronfIandPRC.pdf')
+
 
 %% Functions:
-function I = excitabilitycurrent(t)
-    I = max(t/10, power(t,2));
-end
-
-function I = spikecurrent(t)
-    I = zeros(size(t));
-    spike = 10;
-    I(t > 1 & t < 2) = spike;
-    I(t > 3 & t < 4) = spike;
-    
-    I(t > 5 & t < 6) = spike;
-    I(t > 7 & t < 8) = spike;
-end
-
-function I = burstcurrent(t)
-    I = zeros(size(t));
-    burst = 500;
-    I(t > 2 & t < 3) = burst;
-    I(t > 6 & t < 7) = burst;
-end
 
 function I = fI_current(t)
     I = 1.0e-3.*t.^(1);
