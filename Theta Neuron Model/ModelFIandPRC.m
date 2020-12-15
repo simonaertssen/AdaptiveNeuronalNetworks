@@ -72,15 +72,15 @@ bifthetas(bifidx:end) = realthetas(t(bifidx:end) - change);
 drawbifthetas = spikesNaN(bifthetas);
 bifspiketime = t(isnan(drawbifthetas));
 
-replacedvalue = realthetas(phasebifftime);
-bifthetas(bifidx) = NaN;
-drawbifthetas(bifidx) = NaN;
+replacedvalue = bifthetas(t == phasebifftime);
+bifthetas(bifidx-1) = NaN;
+drawbifthetas(bifidx-1) = NaN;
 
-newvaluetime = fsolve(@(t) realthetas(t-change) - replacedvalue, phasebifftime, optimoptions('fsolve','Display','off'));
+newvaluetime = fsolve(@(t) realthetas(t) - replacedvalue, phasebifftime, optimoptions('fsolve','Display','off'));
 
-figure; hold on; %imrow(2) = subplot(m,n,2); hold on; box on;
+imrow(2) = subplot(m,n,2); hold on; box on;
 hold on
-line([phasebifftime, phasebifftime], [drawrealthetas(bifidx-1), drawbifthetas(bifidx+1)], 'LineStyle', '--', 'color', 'k', 'LineWidth', 1)
+line([phasebifftime, phasebifftime], [drawrealthetas(bifidx), drawbifthetas(bifidx)], 'LineStyle', '--', 'color', 'k', 'LineWidth', 1)
 
 plot(t, bifthetas, ':k', 'LineWidth', 1, 'HandleVisibility','off');
 plot(t, drawbifthetas, '-r', 'LineWidth', 2);
@@ -90,9 +90,11 @@ plot(t, drawrealthetas, '-', 'LineWidth', 2, 'color', '#0072BD');
 
 text(phasebifftime + 0.02, 0.5*(drawbifthetas(bifidx+1) + drawrealthetas(bifidx-1)) + 0.4, '$$\varepsilon$$', 'HorizontalAlignment', 'left', 'FontSize', labelfont, 'Interpreter', 'latex');
 
+
+xlabel('Time','Interpreter','tex','FontSize', labelfont, 'FontName', 'SansSerif')
 ylabel('$\theta$','Interpreter','latex', 'FontSize', labelfont)
-set(gca,'XTick',[0, phasebifftime, newvaluetime, realspiketime, bifspiketime], 'XTickLabel',{'0','$$\phi$$','$$\phi_{\rm{new}}$$','$$T$$','$$T_{\phi}$$'}, 'TickLabelInterpreter', 'latex', 'FontSize', axesfont, 'FontName', 'SansSerif')
-set(gca,'YTick',[-pi, -pi/2, 0, pi/2, pi], 'YTickLabel',{'-$$\pi$$','$$-\frac{\pi}{2}$$','0','$$\frac{\pi}{2}$$','$$\pi$$'}, 'TickLabelInterpreter', 'latex', 'YLim', [-pi-0.2, pi + 0.2], 'FontSize', axesfont)
+set(gca,'XTick',[0, newvaluetime, phasebifftime, realspiketime, bifspiketime], 'XTickLabel',{'0','$$\phi_{\rm{new}}$$','$$\phi$$','$$T$$','$$T_{\phi}$$'}, 'TickLabelInterpreter', 'latex', 'FontSize', axesfont, 'FontName', 'SansSerif')
+set(gca,'YTick',[-pi, -pi/2, replacedvalue, 0, pi/2, pi], 'YTickLabel',{'-$$\pi$$','$$-\frac{\pi}{2}$$',' ','0','$$\frac{\pi}{2}$$','$$\pi$$'}, 'TickLabelInterpreter', 'latex', 'YLim', [-pi-0.2, pi + 0.2], 'FontSize', axesfont)
 
 
 %% Draw the PRC itself:
