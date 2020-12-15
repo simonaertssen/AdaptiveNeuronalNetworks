@@ -1,11 +1,19 @@
 % !TEX root = ../main.tex
 \newpage
 \section{The Theta Neuron Model} \label{TheThetaNeuronModel}
+\subsection{Modelling neuronal behaviour}
+Neurons communicate through \textsl{synapses} with electrical and chemical signals, in the form of action potentials and neurotransmitters respectively. We will speak of the presynaptic neuron as the neuron that sends a signal and of the postsynaptic neuron as the neuron that receives a signal. When the membrane voltage of a presynaptic neuron reaches an internal threshold, the neuron spikes (or fires) and an electrical signal travels down the neuron axons \cite{IntroductionModelingDynamics}. At the synapse, the electrical signal is converted into a chemical signal in the form of a neurotransmitter release of the presynaptic neuron, upon which the postsynaptic neuron receives the neurotransmitters and constructs its own electrical signal \cite{ActionPotentialsAndSynapses}. Most neurons in the central nervous system use either the excitatory neurotransmitter glutamate (AMPA or NMDA) or the inhibitory neurotransmitter GABA \cite{MathFoundationNeuroscience, Zhang2012}. 
+
+As signals are converted from electrical to chemical and back, we will model the communication process as entirely electrical, consisting solely of action potentials. These will be modeled by a pulse-shaped curve, modulated by a dynamic variable of the neuron (for example the phase angle for the Theta neuron). The magnitude of the response of the postsynaptic neuron can be modeled by a coupling strength. The inhibitory/excitatory behavior can be modeled by allowing a negative/positive coupling strength between neurons \cite{Luke2013, Martens2020, Montbrio2015, OttAntonsen2017}.
+
+
+\subsection{Canonical neuron models}
 A number of neuron model families have been identified, and often there exists a continuous change of variables from models of the same family into a \textit{canonical} model that can represent the whole family \cite{Hoppensteadt2001CanonicalNM}. As the transformation is not required to be invertible, we can study the universal neurocomputational properties of the family in a low dimensional model.
 It was Hodgkin \cite{Hodgkin1948} who classified neurons into two types based on their excitability, upon experimenting with the electrical stimulation of cells. Class 1 models begin to spike at an arbitrarily slow rate, and the spiking frequency increases when the applied current is increased. Class 2 models spike as soon as their internal threshold is exceeded and the spiking frequency stays relatively constant within a certain frequency band \cite{Hoppensteadt2001CanonicalNM}.
 
-\subsection{Model description} \label{sec:TheThetaNeuronModelDescription}
-In \cite{Ermentrout1986}, a class 1 canonical phase model was proposed:
+
+\subsection{Theta Neuron model description} \label{sec:TheThetaNeuronModelDescription}
+In \cite{Ermentrout1986}, a Class 1 canonical phase model was proposed:
 \begin{align}
 \dot{\theta} = (1-\cos \theta)+(1+\cos \theta) \cdot I \qquad \theta \in \T \label{eq:thetaneuron}
 \end{align}
@@ -178,9 +186,7 @@ We can easily extend the model to networks of neurons:
 \dot{\theta}_{i} &=\left(1-\cos \theta_{i}\right)+\left(1+\cos \theta_{i}\right) \cdot \left[\eta_{i} + I_{i}(t)\right] \qquad \theta_i \in \T^N  \label{eq:thetaneuronnetwork} \\
 I_{i}(t) &=\frac{\kappa}{\kmean} \sum_{j=1}^{N} A_{i j} \cdot \mathcal{P}_{n}(\theta_{j}) \label{eq:thetaneuronnetworkcurrent}
 \end{align}
-where the excitability $\eta_i$ allows neuron $i$ to adjust in which regime it is situated, and $\eta_i \sim g(\eta \rvert \eta_0, \sigma)$.
-
- is drawn from a distribution  and $\mathcal{P}_n(\theta)  = a_n(1 - \cos \theta)^n$ models synaptic coupling by a pulse-shaped signal, emitted when a neuron fires. $n$ models the sharpness of the pulse, and $a_n$ is a normalisation constant so that . We will take $n=2$ from here in as in\cite{Luke2013}, \cite{OttAntonsen2017}, \cite{Martens2020}. 
+where the excitability $\eta_i$ allows neuron $i$ to adjust in which regime it is situated, and $\eta_i \sim g(\eta \rvert \eta_0, \sigma)$. $\kappa$ is the $\mathcal{P}_n(\theta)  = a_n(1 - \cos \theta)^n$ models synaptic coupling by a pulse-shaped signal, emitted when a neuron fires. $n$ models the sharpness of the pulse, and $a_n$ is a normalisation constant so that $\int_{0}^{2 \pi} \mathcal{P}_{n} d \theta=2 \pi$. We will take $n=2$ from here, as in\cite{Luke2013, OttAntonsen2017, Martens2020}. 
 
 
 Another type of coupling is proportional to the difference in voltage between neurons \cite{Martens2020}. Note that for a fully connected network, \eqref{eq:thetaneuronnetworkcurrent} reduces to the scenarios in \cite{Luke2013} and \cite{Martens2020}.
