@@ -98,15 +98,37 @@ set(gca,'YTick',[-pi, -pi/2, replacedvalue, 0, pi/2, pi], 'YTickLabel',{'-$$\pi$
 
 
 %% Draw the PRC itself:
-I = 2; T = pi/sqrt(I);
-t = linspace(0, T);
-iPRC = 1/(2*I) * (1 - cos(2*pi*t/T));
-
 imrow(3) = subplot(m,n,3); hold on; box on;
-xlim([0, T]);
-plot(t, iPRC, 'LineWidth', 2, 'color', '#D95319')
 
+I = 2; T = pi/sqrt(I);
+t = linspace(0, T, 100);
+t = t(1:end-1);
+iPRC = 1/(2*I) * (1 - cos(2*pi*t/T));
+realthetas = @(t) 2*atan(-sqrt(I)*cot(t*sqrt(I)));
+realdthetas = @(t) 2*I*csc(t*sqrt(I)).^2./(I*cot(t*sqrt(I)).^2 + 1);
+
+xlim([0, T]);
+yyaxis right;
+plot(t, iPRC, 'LineWidth', 2, 'color', '#D95319')
 ylabel('\sl PRC', 'FontSize', labelfont, 'FontName', 'SansSerif')
+
+yyaxis left;
+plot(t, realthetas(t), 'LineWidth', 2, 'color', '#0072BD')
+ylabel('$$\theta$$', 'FontSize', labelfont, 'Interpreter', 'latex')
+set(gca,'YTick',[-pi, -pi/2, 0, pi/2, pi], 'YTickLabel',{'-$$\pi$$','$$-\frac{\pi}{2}$$','0','$$\frac{\pi}{2}$$','$$\pi$$'}, 'TickLabelInterpreter', 'latex', 'YLim', [-pi-0.2, pi + 0.2], 'FontSize', axesfont)
+ax = gca; ax.YAxis(1).Color = 'k'; ax.YAxis(2).Color = '#D95319';
+
+
+% es = logspace(-2, -1, 5)
+% es = linspace(0.001, 0.05, 5);
+% phi = t;
+% 
+% for e = es
+%     Tf = 1/sqrt(I)*(pi/2 - atan(e/sqrt(I) + cot(phi*sqrt(I)))) - phi;
+%         PRC = - Tf*(2*I);
+%     plot(phi, PRC, 'LineWidth', 2)
+% end
+
 xlabel('$\phi$','Interpreter','latex', 'FontSize', labelfont)
 
 set(gca,'XTick',[0, T/2, T], 'XTickLabel',{'0','$$T/2$$','$$T$$'}, 'TickLabelInterpreter', 'latex')
