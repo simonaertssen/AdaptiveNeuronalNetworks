@@ -43,7 +43,7 @@ for i = 1:2
     text(tend - 0.1, -eqpt(1) + 0.4, num2str(-eqpt(1)), 'HorizontalAlignment', 'right', 'FontSize', axesfont);
     
     xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
-    set(gca,'YTick',-pi:pi/2:pi, 'YTickLabel',{'-$$\pi$$','$$\frac{\pi}{2}$$','0','$$\frac{\pi}{2}$$','$$\pi$$'}, 'TickLabelInterpreter', 'latex', 'YLim', [-pi-0.2, pi + 0.2], 'FontSize', axesfont)
+    set(gca,'YTick',-pi:pi/2:pi, 'YTickLabel',{'-$$\pi$$','$$-\frac{\pi}{2}$$','0','$$\frac{\pi}{2}$$','$$\pi$$'}, 'TickLabelInterpreter', 'latex', 'YLim', [-pi-0.2, pi + 0.2], 'FontSize', axesfont)
     
     ylabel('$\theta$','Interpreter','latex', 'FontSize', labelfont);
   
@@ -68,7 +68,7 @@ plot(Ibif, -bif, 'b','LineWidth', 2);
 plot(Ibif, bif, '--r', 'LineWidth', 2);
 xlabel('$I$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('$\theta^{\ast}$','Interpreter','latex', 'FontSize', labelfont);
-set(gca,'YTick',-pi:pi/2:pi, 'YTickLabel',{'-$$\pi$$','$$\frac{\pi}{2}$$','0','$$\frac{\pi}{2}$$','$$\pi$$'}, 'TickLabelInterpreter', 'latex', 'YLim', [-pi-0.2, pi + 0.2], 'FontSize', axesfont)
+set(gca,'YTick',-pi:pi/2:pi, 'YTickLabel',{'-$$\pi$$','$$-\frac{\pi}{2}$$','0','$$\frac{\pi}{2}$$','$$\pi$$'}, 'TickLabelInterpreter', 'latex', 'YLim', [-pi-0.2, pi + 0.2], 'FontSize', axesfont)
 
 
 %% Save:

@@ -78,7 +78,7 @@ drawbifthetas(bifidx) = NaN;
 
 newvaluetime = fsolve(@(t) realthetas(t-change) - replacedvalue, phasebifftime, optimoptions('fsolve','Display','off'));
 
-imrow(2) = subplot(m,n,2); hold on; box on;
+figure; hold on; %imrow(2) = subplot(m,n,2); hold on; box on;
 hold on
 line([phasebifftime, phasebifftime], [drawrealthetas(bifidx-1), drawbifthetas(bifidx+1)], 'LineStyle', '--', 'color', 'k', 'LineWidth', 1)
 
@@ -92,7 +92,7 @@ text(phasebifftime + 0.02, 0.5*(drawbifthetas(bifidx+1) + drawrealthetas(bifidx-
 
 ylabel('$\theta$','Interpreter','latex', 'FontSize', labelfont)
 set(gca,'XTick',[0, phasebifftime, newvaluetime, realspiketime, bifspiketime], 'XTickLabel',{'0','$$\phi$$','$$\phi_{\rm{new}}$$','$$T$$','$$T_{\phi}$$'}, 'TickLabelInterpreter', 'latex', 'FontSize', axesfont, 'FontName', 'SansSerif')
-set(gca,'YTick',-pi:pi/2:pi, 'YTickLabel',{'-$$\pi$$','$$\frac{\pi}{2}$$','0','$$\frac{\pi}{2}$$','$$\pi$$'}, 'TickLabelInterpreter', 'latex', 'YLim', [-pi-0.2, pi + 0.2], 'FontSize', axesfont)
+set(gca,'YTick',[-pi, -pi/2, 0, pi/2, pi], 'YTickLabel',{'-$$\pi$$','$$-\frac{\pi}{2}$$','0','$$\frac{\pi}{2}$$','$$\pi$$'}, 'TickLabelInterpreter', 'latex', 'YLim', [-pi-0.2, pi + 0.2], 'FontSize', axesfont)
 
 
 %% Draw the PRC itself:
