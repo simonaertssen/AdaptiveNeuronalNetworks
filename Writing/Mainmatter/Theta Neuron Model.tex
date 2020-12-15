@@ -5,6 +5,7 @@
 Neurons communicate through \textsl{synapses} with electrical and chemical signals, in the form of action potentials and neurotransmitters respectively. We will speak of the presynaptic neuron as the neuron that sends a signal and of the postsynaptic neuron as the neuron that receives a signal. When the membrane voltage of a presynaptic neuron reaches an internal threshold, the neuron spikes (or fires) and an electrical signal travels down the neuron axons \cite{IntroductionModelingDynamics}. At the synapse, the electrical signal is converted into a chemical signal in the form of a neurotransmitter release of the presynaptic neuron, upon which the postsynaptic neuron receives the neurotransmitters and constructs its own electrical signal \cite{ActionPotentialsAndSynapses}. Most neurons in the central nervous system use either the excitatory neurotransmitter glutamate (AMPA or NMDA) or the inhibitory neurotransmitter GABA \cite{MathFoundationNeuroscience, Zhang2012}. 
 
 As signals are converted from electrical to chemical and back, we will model the communication process as entirely electrical, consisting solely of action potentials. These will be modeled by a pulse-shaped curve, modulated by a dynamic variable of the neuron (for example the phase angle for the Theta neuron). The magnitude of the response of the postsynaptic neuron can be modeled by a coupling strength. The inhibitory/excitatory behavior can be modeled by allowing a negative/positive coupling strength between neurons \cite{Luke2013, Martens2020, Montbrio2015, OttAntonsen2017}.
+Another electrical communication process occurs when current flows between neurons proportional to the difference in their membrane voltages. We will avoid modeling the two communication modes at the same time, due to tractability \cite{Martens2020}. 
 
 
 \subsection{Canonical neuron models}
@@ -176,7 +177,6 @@ We can use $\phi \in [0, T[$ and $\theta \in \T$ to see that \eqref{eq:PRC2} can
 \end{align}
 which is the magnitude with which $I$ excites the model \eqref{eq:thetaneuron}, \cite{Ermentrout1996}. Analysis of the \PRC thus allows us to study how the bifurcation of $\theta$ with magnitude $I$ occurs.\\
 
-
 The \PRC is always positive, which indicates that a positive bifurcation will advance the time of the spike, and vice versa. This has also been reported as a distinguishing feature of Class 1 models, \cite{Ermentrout1996}.
 
 
@@ -186,12 +186,14 @@ We can easily extend the model to networks of neurons:
 \dot{\theta}_{i} &=\left(1-\cos \theta_{i}\right)+\left(1+\cos \theta_{i}\right) \cdot \left[\eta_{i} + I_{i}(t)\right] \qquad \theta_i \in \T^N  \label{eq:thetaneuronnetwork} \\
 I_{i}(t) &=\frac{\kappa}{\kmean} \sum_{j=1}^{N} A_{i j} \cdot \mathcal{P}_{n}(\theta_{j}) \label{eq:thetaneuronnetworkcurrent}
 \end{align}
-where the excitability $\eta_i$ allows neuron $i$ to adjust in which regime it is situated, and $\eta_i \sim g(\eta \rvert \eta_0, \sigma)$. $\kappa$ is the $\mathcal{P}_n(\theta)  = a_n(1 - \cos \theta)^n$ models synaptic coupling by a pulse-shaped signal, emitted when a neuron fires. $n$ models the sharpness of the pulse, and $a_n$ is a normalisation constant so that $\int_{0}^{2 \pi} \mathcal{P}_{n} d \theta=2 \pi$. We will take $n=2$ from here, as in\cite{Luke2013, OttAntonsen2017, Martens2020}. 
+where the excitability $\eta_i$ allows neuron $i$ to adjust in which regime it is situated, and $\eta_i \sim g(\eta \rvert \eta_0, \sigma)$. $\kappa$ is the \textsl{synaptic} or \textsl{coupling} strength, and $\mathcal{P}_n(\theta)  = a_n(1 - \cos \theta)^n$ models synaptic coupling by a pulse-shaped signal, emitted when a neuron fires. $n$ models the sharpness of the pulse, and $a_n$ is a normalisation constant so that $\int_{0}^{2 \pi} \mathcal{P}_{n} d \theta=2 \pi$. We will take $n=2$ from here, as in\cite{Luke2013, OttAntonsen2017, Martens2020}. 
+Note that for a fully connected network, $A_{ij} = 1$ so that \eqref{eq:thetaneuronnetworkcurrent} reduces to the work in \cite{Luke2013} and \cite{Martens2020}. \\
 
+In \eqref{eq:thetaneuronnetwork} we see everything come together: changes to the phase $\theta_i$ are induced by $\dtheta_i$ which in turn depends on the bifurcation of $\theta$ with magnitude $I_i$ which depends on all neurons in the network. \\
 
-Another type of coupling is proportional to the difference in voltage between neurons \cite{Martens2020}. Note that for a fully connected network, \eqref{eq:thetaneuronnetworkcurrent} reduces to the scenarios in \cite{Luke2013} and \cite{Martens2020}.
-
-In \eqref{eq:thetaneuronnetwork} we see everything come together: changes to the phase $\theta_i$ come from $\dtheta_i$, which in turn depends on $I$, which depends on all phases in the network.
-
-
+Studying a set of equations like \eqref{eq:thetaneuronnetworkcurrent} is not feasible, as we are quickly approaching thousands of neurons. And in the end, the dynamics of a single neuron are not of interest. Instead, we wish to capture and study how the network behaves as a whole. One aspect, synchrony, can be captured by the Kuramoto order parameter:
+\begin{align}
+Z(t) = \frac{1}{N} \sum_{j=1}^N e^{\ic\theta_j}  \qquad Z(t) \in \C \label{eq:orderparameter}
+\end{align}
+Different works on the dynamics of \eqref{eq:orderparameter} have been published \cite{Luke2013, Martens2020}, and we will build on that analysis in the coming chapters.
 

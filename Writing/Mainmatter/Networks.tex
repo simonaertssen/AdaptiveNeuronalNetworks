@@ -14,7 +14,13 @@ From $A_{ij}$ we can compute the in- and out-degree vectors, which show how many
 The distribution of $\kinb$ and $\koutb$ is the most defining property of the network:
 \begin{align}
 (\kinb, \koutb) \sim P(\degree(n) = \k) \label{eq:definekinkoutfromP} \end{align}
-The support of $P$ is the set of unique degrees $\K$ with cardinality $M_\k$, which consists of integers. For symmetric networks, $\kinb = \koutb$, so that $P$ is really a univariate distribution.
+The support of $P$ is the set of unique degrees $\K$ with cardinality $M_\k$, which consists of integers. For symmetric networks, $\kinb = \koutb$, so that $P$ is really a univariate distribution. \\
+
+The average degree of the network is then: 
+\begin{align}
+\kmean = \frac{1}{N} \sum_{i,j=1}^{N,N} A_{ij} = \sum_{i=1}^{N} \kinbi = \sum_{j=1}^{N} \koutbj \label{eq:kmean} 
+\end{align}
+
 
 \subsection{Fixed-degree networks}
 \noindent A network consists of nodes, connected by links. The most simple network is one where all the nodes are connected, and so all nodes have a degree of $N$. In general, we can make networks where all nodes have the same degree, $\kmean$:
