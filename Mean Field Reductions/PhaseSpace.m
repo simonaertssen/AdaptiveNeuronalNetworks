@@ -105,8 +105,8 @@ scatter(eqpt(1), eqpt(2), 150, 'or', 'filled')
 
 % End figure:
 set(gcf,'color','w'); xlim([-1,1]); ylim([-1,1]);
-xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
-ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
+xlabel('Re$\left[ Z(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
+ylabel('Im$\left[ Z(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 print(f_MFRPSR, '../Figures/MFRPSR.png', '-dpng', '-r300')
 close(f_MFRPSR)
 
@@ -141,8 +141,8 @@ scatter(eqpt(1), eqpt(2), 150, 'or', 'filled')
 
 % End figure:
 hold off; set(gcf,'color','w'); xlim([-1,1]); ylim([-1,1]); axis square;
-xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
-ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
+xlabel('Re$\left[ Z(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
+ylabel('Im$\left[ Z(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 print(f_MFRPSS, '../Figures/MFRPSS.png', '-dpng', '-r300')
 close(f_MFRPSS)
 
@@ -227,8 +227,8 @@ plot_arrow(curve(1,end-6), curve(2,end-6), curve(1,end), curve(2,end), 'headwidt
 
 % End figure:
 hold off; set(gcf,'color','w'); xlim([-1,1]); ylim([-1,1]); axis square;
-xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
-ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
+xlabel('Re$\left[ Z(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
+ylabel('Im$\left[ Z(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 print(f_MFRCPW, '../Figures/MFRCPW.png', '-dpng', '-r300')
 close(f_MFRCPW)
 
