@@ -191,9 +191,9 @@ Note that for a fully connected network, $A_{ij} = 1$ so that \eqref{eq:thetaneu
 
 In \eqref{eq:thetaneuronnetwork} we see everything come together: changes to the phase $\theta_i$ are induced by $\dtheta_i$ which in turn depends on the bifurcation of $\theta$ with magnitude $I_i$ which depends on all neurons in the network. \\
 
-Studying a set of equations like \eqref{eq:thetaneuronnetworkcurrent} is not feasible, as we are quickly approaching thousands of neurons. And in the end, the dynamics of a single neuron are not of interest. Instead, we wish to capture and study how the network behaves as a whole. One aspect, synchrony, can be captured by the Kuramoto order parameter:
+Studying a set of differential equations like \eqref{eq:thetaneuronnetworkcurrent} is not feasible, as we are quickly approaching thousands of neurons. And in the end, the dynamics of a single neuron are not of interest. Instead, we wish to capture and study how the network behaves as a whole. One aspect, synchrony, can be captured by the Kuramoto order parameter:
 \begin{align}
 Z(t) = \frac{1}{N} \sum_{j=1}^N e^{\ic\theta_j}  \qquad Z(t) \in \C \label{eq:orderparameter}
 \end{align}
-Different works on the dynamics of \eqref{eq:orderparameter} have been published \cite{Luke2013, Martens2020}, and we will build on that analysis in the coming chapters.
+$Z$ is a complex variable, consisting of a radius $r = \rvert Z \rvert$ and argument $\psi \arg \left( Z \right)$, so that $Z(t) = r(t) e^{\ic \psi(t)}$. When all phases are uniformly distributed across the unit circle $\T$, then $\rvert Z \rvert = 0$, resulting in a network with no synchronisation. When all phases are exactly the same, $\rvert Z \rvert = 1$, and the network is fully scynchronised. Different works on the dynamics of \eqref{eq:orderparameter} have been published \cite{Luke2013, Martens2020}, and we will build on that analysis in the following chapters.
 
