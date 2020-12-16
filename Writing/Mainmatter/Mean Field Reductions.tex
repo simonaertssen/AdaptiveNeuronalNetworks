@@ -1,22 +1,67 @@
 % !TEX root = ../main.tex
 \newpage
 \section{Mean Field Reductions}
-\subsection{The Ott-Antonsen manifold for fully connected networks}
-In \cite{OttAntonsen2008, OttAntonsen2009, OttAntonsen2010} a method was published to predict the dynamics of the order parameter \eqref{eq:orderparameter} for a fully connected network ($A_{ij} = 1$) of oscillators. The authors explore a continuum interpretation of the mean field, in the limit that  $N \gg 1$. It is assumed that the state of of the neurons can be represented by a continuous probability distribution, $f(\theta, \eta \rvert \k, t)$, so that $g(\eta \rvert \k) = \int f \mathop{d\theta}$. The number of oscillators is constant, so that $f$ is constrained by a continuity equation, and it is shown that there exists a manifold of invariant probability densities to which the dynamics are attracted to. We are left with a simplified description of the dynamics of the network, the \textsl{mean-field reduction} (\MFR). The exact \MFR is obtained by expanding $g$ as a Fourier series, and expanding the pulse $\mathcal{P}_n$ using the binomial theorem. When assuming $\eta_i$ is distributed according to a Lorenz distribution:
+\subsection{The Ott-Antonsen manifold}
+The \textsl{mean-field reduction} (\MFR) is the theory that predicts the dynamics of the order parameter \eqref{eq:orderparameter}. In \cite{OttAntonsen2008, OttAntonsen2009, OttAntonsen2010} such a method was published for fully connected networks of indistinguishable oscillators. In \cite{Restrepo2014} the authors extended their work to include networks with arbitrary degree distributions, applied to the Kuramoto model. Later this analysis was extended to networks of the Theta Neuron model \cite{OttAntonsen2017}. \\
+
+We will now consider the limit $N \gg 1$ and formulate an exact \MFR for different types of networks, following the method in \cite{OttAntonsen2017}. To simplify notation, the authors incorporate the network size in to $P$ so that $\sum_{\k \in \K} P(\k) = N$. To specify the probability of a link from a node of degree $\kacc$ to one of degree $\k$ we can define an assortativity function:
 \begin{align}
-g(\eta | \k)=\frac{1}{\pi} \frac{\sigma(\k)}{(\eta-\eta_{0}(\k))^{2}+\sigma(\k)^{2}} \label{eq:Lorentzpdf}
+a\left(\k_j \rightarrow \k_i \right) = 0 \leq \frac{k^{\rm{out}^{\prime}}_j k^{\rm{in}}_i}{N \kmean} \leq 1 \label{eq:assortativityfunction}
 \end{align}
-the set of reduced equations then takes a particularly simple form, as the continuity equation can be evaluated at the poles of $g$ using the Cauchy residue theorem for the integration of complex variables and one find a closed form expression.
+where we have chosen a neutral assortativity \cite{OttAntonsen2017}. \eqref{eq:assortativityfunction} is constrained in \cite{Restrepo2014} so that the number of links in the network, $N \kmean$, remains constant:
+\begin{align*}
+\sum_{\kacc} \sum_{\k} P\left( \kacc \right) \: a\left(\kacc \rightarrow \k\right) P\left(\k\right) = N\langle k\rangle
+\end{align*}
+We can now assume that the state of all neurons can be represented by a probability density function $f(\theta, \eta | \k, t)$. Hence, the marginal distribution 
+\begin{align*}
+    \int_{\R} \int_{\T} f(\vartheta, \eta^{\prime} | \k, t) \mathop{d \vartheta} \mathop{d \eta^{\prime}} 
+\end{align*}
+gives the fraction of nodes of degree $\k$ with a phase in $\T$ at time $t$. Also, we assume $\eta_i$ do not change over time, so that $\int_{\T} f(\vartheta, \eta^{\prime} | \k, t) \: \mathop{d \vartheta} = g(\eta | \k)$ gives the excitability distribution. \\
+
+To describe the global synchronisation of the network of theta neurons \eqref{eq:thetaneuronnetwork} we have introduced the order parameter \eqref{eq:orderparameter}. It is now hypothesized that $Z(t)$ can be approximated by a mean-field order parameter, defined by the continuum limit:
+\begin{align}
+\bar{Z}(t)= \frac{1}{N} \sum_{\k \in \K}P(\k) \int_{\R} \int_{\T} f\left(\vartheta, \eta^{\prime} | \k, t\right) e^{\ic \vartheta} \mathop{d \vartheta} \mathop{d \eta^{\prime}} \label{eq:meanfieldorderparameter}
+\end{align}
+Here, $f$ is constrained by a continuity equation, as the number of oscillators is conserved:
+\begin{align}
+\frac{\partial f}{\partial t}+\frac{\partial}{\partial \theta}\left(v_{\theta} f\right) = 0 \label{eq:transportequation}
+\end{align}
+with $v_{\theta}$ a continuum version of \eqref{eq:thetaneuronnetwork}:
+\begin{align*}
+v_{\theta} &= (1-\cos \theta)+(1+\cos \theta) \left[\eta + I(\k,t) \right]\\
+I(\k,t) &= \frac{\kappa}{\kmean}\sum_{\kacc \in \K} P(\kacc ) \:a\left(\kacc \rightarrow \k \right) \times \left[ \int_{\R} \int_{\T} f\left(\vartheta, \eta^{\prime} | \kacc, t\right) \: a_{n} \left(1-\cos \vartheta\right)^{n} \mathop{d \vartheta} \mathop{d \eta^{\prime}} \right] &
+\end{align*}
+In \cite{OttAntonsen2008} it is shown that there exists a manifold of invariant probability densities for the continuity equation. The exact \MFR is obtained by expanding $f$ as a Fourier series, and expanding the pulse $\mathcal{P}_n$ using the binomial theorem. When assuming $\eta_i$ is distributed according to a Lorenz distribution:
+\begin{align}
+g(\eta |\k)=\frac{1}{\pi} \frac{\sigma(\k)}{(\eta-\eta_{0}(\k))^{2}+\sigma(\k)^{2}} \label{eq:Lorentzpdf}
+\end{align}
+the set of reduced equations then takes a particularly simple form, as \eqref{eq:meanfieldorderparameter} can be evaluated the poles of $g$ using the Cauchy residue theorem for the integration of complex variables and find a closed form expression. We can now capture the dynamics by $z(\k,t)$, the mean-field variable for nodes of degree $\k$:
+\begin{align}
+\frac{\partial z(\k, t)}{\partial t} &= -\ic \frac{(z(\k, t)-1)^{2}}{2} + \frac{(z(\k, t)+1)^{2}}{2} \cdot I(\k, t) \qquad z(\k,t) \in \C^{M_\k} \nonumber \\
+I(\k, t) &= -\sigma(\k) + \ic \eta_{0}(\k) + i H_2(\k,t) \label{eq:OttAntonsenSystemFull} \\
+H_2(\k,t) &= \frac{\kappa}{\kmean} \sum_{\kacc \in \K} P\left(\kacc\right) \: a\left(\kacc \rightarrow \k\right) \cdot \left( 1 + \frac{z(\kacc, t)^2 + (z(\kacc, t)^c )^2}{6} - \frac{4}{3} \Re(z(\kacc, t)) \right) \nonumber
+\end{align}
+with $z^c$ the complex conjugate. $H$ is a legacy term and has been computed in \cite{Martens2020}.
+The mean-field order parameter can now be expressed in terms of $z(\k,t)$. Using the constraints on $f$ and $g$ we can now solve \eqref{eq:meanfieldorderparameter} as:
+\begin{align}
+\overline{Z}(t) &= \frac{1}{N} \sum_{\k} P(\k) z(\k, t) \qquad \overline{Z}(t) \in \C \label{eq:OttAntonsenMeanField}
+\end{align}
+which clearly reflects the network architecture. We have now formulated the evolution on the invariant manifold by a reduced set of ordinary differential equations. The \MFR is computationally efficient, and in \cite{OttAntonsen2017} many methods for improving this efficiency further are treated.
 
 
-\subsection{Dynamics of the mean field}
-Using this approach, the \MFR becomes \cite{Luke2013, Martens2020}:
+\subsection{Simplifications for fixed-degree networks}
+In the case of a fixed-degree network, every node has $\deg (\theta_i) = (\kmean, \kmean)$ so:
+\begin{align*}
+    \frac{1}{\kmean} \sum_{\kacc \in \K} P\left(\kacc\right) \: a\left(\kacc \rightarrow \k\right) = \frac{1}{\kmean} N \left( \frac{\kmean \kmean}{N \kmean} \right) = 1
+\end{align*}
+This is an identical formulation as in \cite{Luke2013} and \cite{Martens2020} and for any fixed-degree network, \eqref{eq:OttAntonsenSystemFull} reduces to a single complex differential equation:
 \begin{align}
 \dot{Z}(t)= -\ic \frac{(Z-1)^2}{2}+\frac{(Z+1)^2}{2} \cdot \left(-\sigma+ \ic\eta_{0}
-+ \ic \kappa \cdot \left(1+\frac{Z^{2} + \overline{Z}^{2} }{6} - \frac{4}{3} \Re(Z)\right)\right) \label{eq:MeanField}
++ \ic \kappa \cdot \left(1+\frac{Z^{2} + (Z^c)^{2} }{6} - \frac{4}{3} \Re(Z)\right)\right) \label{eq:MeanField}
 \end{align}
-We can now describe the mean-field dynamics using \eqref{eq:MeanField}, and as it is a complex-valued function, the reduced system is two-dimensional, with three bifurcation parameters $\eta_0, \sigma$ and $\kappa$. For a fully connected network, three distinct macroscopic states can be identified.\\
-In the partially synchronous rest state (\PSR) we can observe in Figure \ref{fig:MFRPSR}, $\bar{Z}(t)$ settles onto a stable node. Most neurons can be found in a resting state $\eta_0 + \sigma \lesssim 0$, and inhibit one another through $\kappa < 0$. Most neurons are therefore inactive, though some spiking neurons from the tail of $g(\eta)$ are present but have a neglegible effect. \\
+This is an identical formulation as in \cite{Luke2013} and \cite{Martens2020} and for any fixed-degree network, and as it is a complex-valued function, the reduced system is two-dimensional, with three bifurcation parameters $\eta_0, \sigma$ and $\kappa$. We will start our analysis with \eqref{eq:MeanField}\\
+
+Three distinct macroscopic states can be identified. In the partially synchronous rest state (\PSR) we can observe in Figure \ref{fig:MFRPSR}, $\bar{Z}(t)$ settles onto a stable node. Most neurons can be found in a resting state $\eta_0 + \sigma \lesssim 0$, and inhibit one another through $\kappa < 0$. Most neurons are therefore inactive, though some spiking neurons from the tail of $g(\eta)$ are present but have a neglegible effect. \\
 
 In Figure \ref{fig:MFRPSS} we can observe a partially synchronous spiking (\PSS) state, where we can see how $\bar{Z}(t)$ settles onto a stable focus. This happens predominantly when $\eta_0 - \sigma \gtrsim 0$ and most neurons inherently spike, with the coupling being either excitatory or weakly inhibitory. Although most neurons are active, the network is partially synchronous and organized such that phase cancellation occurs by continuous spiking among the neurons.\\
 
@@ -48,7 +93,6 @@ A more detailed discussion of the different regimes and bifurcations can be foun
 \end{figure}
 
 
-
 \subsection{The Ott-Antonsen extension to arbitrary network topologies}
 In \cite{Restrepo2014} the authors extended their work to include networks with arbitrary degree distributions, applied to the Kuramoto model. Later this analysis was extended to networks of the Theta Neuron model \cite{OttAntonsen2017}. \\
 
@@ -76,6 +120,7 @@ We can then find the mean field dynamics through:
 \end{align}
 which clearly reflects the network architecture. We have now formulated the evolution on the invariant manifold by a simple ordinary differential equation. 
 
+
 \subsection{Implications of the reduction}
 The advantages of using the \MFR can be found in the number of equations we now have left to investigate. As there are $M_{\k}$ equations in \eqref{eq:OttAntonsenSystemFull}, instead of $N$ equations for $N$ neurons, the reduction becomes more and more efficient for larger networks. In the case of a fixed-degree network, every node has a degree $\kmean$ so 
 \begin{align*}
@@ -83,8 +128,7 @@ The advantages of using the \MFR can be found in the number of equations we now 
 \end{align*}
 This yields an identical formulation as in \cite{Luke2013} and \cite{Martens2020} and so for any fixed-degree networks, \eqref{eq:OttAntonsenSystemFull} yields a single complex differential equation. The \MFR is computationally efficient, and in \cite{OttAntonsen2017} many methods for improving this efficiency further are treated.
 
-\subsection{Challenges for directed networks}
-While $P(\k)$ denotes a bivariate distribution, giving the 
-None of the publications on the \MFR has made an implementation for directed networks. That is because of multiple reasons:
 
+\subsection{Challenges for directed networks}
+While $P(\k)$ denotes a bivariate distribution, none of the publications on the \MFR has made an implementation for directed networks. The challenge is that now the support $\K$ is a much larger set, as $\K = \koutb \times \kinb$. For example, the scale-free pdf \eqref{eq:scalefreepdf} has $M_{\k} = \kmax - \kmin$ number of degrees in its support. When we wish to extend \eqref{eq:scalefreepdf} to a bivariate pdf, $M_{\k}$ grows to $\left( \kmax - \kmin \right)$
 

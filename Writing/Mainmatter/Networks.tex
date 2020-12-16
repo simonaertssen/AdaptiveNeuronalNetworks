@@ -26,7 +26,7 @@ For symmetric networks, $\kinb = \koutb$, so that $P$ is really a univariate dis
 \begin{align}
 P(k) = \left\{\begin{array}{ll}\kmean & \text{if } k=\kmean \\0 & \text{otherwise}\end{array}\right. \hspace{15mm} \K = \{ \kmean \} \label{eq:diracpdf}
 \end{align}
-We will refer to these networks as fixed-degree networks.
+We will refer to these networks as fixed-degree networks. When $\kmean = N$, all nodes are self-coupled and connected to all other nodes in the network, so we speak of a \textsl{fully connected} network. 
 
 
 \subsection{Random / Erd{\"o}s-R{\'e}ny networks}
@@ -59,3 +59,24 @@ For \eqref{eq:scalefreepdf} this results in:
 which shows that there might be large differences in size between the nodes. \\
 There are constraints on $\gamma$ to yield a scale-free network. When $0 < \gamma < 2$ the largest hub grows faster than $N$, so once its degree exceeds $N-1$ there are no more new nodes to connect to and the network will not be able to grow according to \eqref{eq:scalefreepdf}. A rigorous proof is given in \cite{Bassler2011}. For $\gamma = 2$, the system grows linearly, as we can see in \eqref{eq:scalefreecutoff}. When $2 < \gamma \leq 3$ we find the most scale-free networks, as for $\gamma > 3$ hubs are not sufficiently large and numerous to have much influence on the network
 \cite{BarabasiNetworkBook2016}.
+
+\subsection{Networks of theta neurons}
+We can easily extend the model to networks of neurons:
+\begin{align}
+\dot{\theta}_{i} &=\left(1-\cos \theta_{i}\right)+\left(1+\cos \theta_{i}\right) \cdot \left[\eta_{i} + I_{i}(t)\right] \qquad \theta_i \in \T^N  \label{eq:thetaneuronnetwork} \\
+I_{i}(t) &=\frac{\kappa}{\kmean} \sum_{j=1}^{N} A_{i j} \cdot \mathcal{P}_{n}(\theta_{j}) \label{eq:thetaneuronnetworkcurrent}
+\end{align}
+where the excitability $\eta_i$ allows neuron $i$ to adjust in which regime it is situated, and $\eta_i \sim g(\eta \rvert \eta_0, \sigma)$. $\kappa$ is the \textsl{synaptic} or \textsl{coupling} strength, and $\mathcal{P}_n(\theta)  = a_n(1 - \cos \theta)^n$ models synaptic coupling by a pulse-shaped signal, emitted when a neuron fires. $n$ models the sharpness of the pulse, and $a_n$ is a normalisation constant so that $\int_{0}^{2 \pi} \mathcal{P}_{n} d \theta=2 \pi$. We will take $n=2$ from here, as in\cite{Luke2013, OttAntonsen2017, Martens2020}. 
+%Note that for a fully connected network, $A_{ij} = 1$ so that \eqref{eq:thetaneuronnetworkcurrent} reduces to the work in \cite{Luke2013} and \cite{Martens2020}. \\
+
+In \eqref{eq:thetaneuronnetwork} we see everything come together: changes to the phase $\theta_i$ are induced by $\dtheta_i$ which in turn depends on the bifurcation of $\theta$ with magnitude $I_i$ which depends on all neurons in the network. \\
+
+Studying a set of differential equations like \eqref{eq:thetaneuronnetworkcurrent} is not feasible, as we are quickly approaching thousands of neurons. And in the end, the dynamics of a single neuron are not of interest. Instead, we wish to capture and study how the network behaves as a whole. One aspect, synchrony, can be captured by the Kuramoto order parameter:
+\begin{align}
+Z(t) = \frac{1}{N} \sum_{j=1}^N e^{\ic\theta_j}  \qquad Z(t) \in \C \label{eq:orderparameter}
+\end{align}
+$Z$ is a complex variable, consisting of a radius $r = \rvert Z \rvert$ and argument $\psi \arg \left( Z \right)$, so that $Z(t) = r(t) e^{\ic \psi(t)}$. When all phases are uniformly distributed across the unit circle $\T$, then $\rvert Z \rvert = 0$, resulting in a network with no synchronisation. When all phases are exactly the same, $\rvert Z \rvert = 1$, and the network is fully scynchronised. \eqref{eq:orderparameter} describes the \textsl{mean-field} of the network, a simpler model that describes the average behaviour of the whole network. Analysis is conducted either on $ \rvert Z(t) \rvert$ versus time, or in the complex unit circle as $\Re (Z(t))$ versus $\Im (Z(t))$.
+
+Different works on the dynamics of \eqref{eq:orderparameter} have been published \cite{Luke2013, Martens2020}, and we will build on that analysis in the following chapters.
+
+
