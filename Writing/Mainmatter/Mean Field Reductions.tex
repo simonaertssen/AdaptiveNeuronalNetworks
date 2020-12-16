@@ -8,9 +8,9 @@ We will now consider the limit $N \gg 1$ and formulate an exact \MFR for differe
 \begin{align}
 a\left(\k_j \rightarrow \k_i \right) = 0 \leq \frac{k^{\rm{out}^{\prime}}_j k^{\rm{in}}_i}{N \kmean} \leq 1 \label{eq:assortativityfunction}
 \end{align}
-where we have chosen a neutral assortativity \cite{OttAntonsen2017}. \eqref{eq:assortativityfunction} is constrained in \cite{Restrepo2014} so that the number of links in the network, $N \kmean$, remains constant:
+where we have chosen a neutral assortativity \cite{OttAntonsen2017}. \eqref{eq:assortativityfunction} is constrained so that the number of links in the network, $N \kmean$, remains constant \cite{Restrepo2014}:
 \begin{align*}
-\sum_{\kacc} \sum_{\k} P\left( \kacc \right) \: a\left(\kacc \rightarrow \k\right) P\left(\k\right) = N\langle k\rangle
+\sum_{\kacc \in \K} \sum_{\k \in \K} P\left( \kacc \right) \: a\left(\kacc \rightarrow \k\right) P\left(\k\right) = N \kmean
 \end{align*}
 We can now assume that the state of all neurons can be represented by a probability density function $f(\theta, \eta | \k, t)$. Hence, the marginal distribution 
 \begin{align*}
