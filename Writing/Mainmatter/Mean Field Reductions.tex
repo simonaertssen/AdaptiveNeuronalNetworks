@@ -66,6 +66,7 @@ Three distinct macroscopic states can be identified. In the partially synchronou
 In Figure \ref{fig:MFRPSS} we can observe a partially synchronous spiking (\PSS) state, where we can see how $\bar{Z}(t)$ settles onto a stable focus. This happens predominantly when $\eta_0 - \sigma \gtrsim 0$ and most neurons inherently spike, with the coupling being either excitatory or weakly inhibitory. Although most neurons are active, the network is partially synchronous and organized such that phase cancellation occurs by continuous spiking among the neurons.\\
 
 Lastly, in the collective periodic wave state (\CPW) we can observe a limit cycle of the mean field, in Figure \ref{fig:MFRCPW}. Most neurons are active and inhibitory: $\eta_0 > 0$ and $k < 0$. The collective oscillation emerges from the interplay between the neurons’ inherent tendency to spike and the strong suppressive network interaction. \CPW states are mediated through Hopf bifurcations and homoclinic bifurcations of $Z(t)$. We can also see the occurrence of a saddle-node bifurcation in the lower hand corner, for low $\sigma$. We will continue to study the \CPW due to their interesting properties.\\
+
 A more detailed discussion of the different regimes and bifurcations can be found in \cite{Luke2013}.
 
 \begin{figure}[H]
@@ -93,42 +94,8 @@ A more detailed discussion of the different regimes and bifurcations can be foun
 \end{figure}
 
 
-\subsection{The Ott-Antonsen extension to arbitrary network topologies}
-In \cite{Restrepo2014} the authors extended their work to include networks with arbitrary degree distributions, applied to the Kuramoto model. Later this analysis was extended to networks of the Theta Neuron model \cite{OttAntonsen2017}. \\
+\subsection{Implications and challenges of the \MFR}
+The advantages of using the \MFR can be found in the number of equations we now have left to investigate. As there are $M_{\k}$ equations in \eqref{eq:OttAntonsenSystemFull}, instead of $N$ equations for $N$ neurons, the reduction becomes more and more efficient for larger networks. As we have seen in \eqref{eq:MeanField} this yields a single equation for a fixed-degree network.\\
 
-The authors incorporate the network size into $P$ so that $\sum_{\k \in \K} P(\k) = N$. An assortativity function was introduced to constrain the equations to respect a constant number of links in the network:
-\begin{align}
-a\left(\k_j \rightarrow \k_i \right) = 0 \leq \frac{k^{\rm{out}^{\prime}}_j k^{\rm{in}}_i}{N \kmean} \leq 1 \label{eq:assortativityfunction}
-\end{align}
-$a\left(\k_j \rightarrow \k_i \right)$ models the probability of a link from a node of degree $\kacc$ to one of degree $\k$ and is constrained in \cite{Restrepo2014} so that:
-\begin{align*}
-\sum_{\kacc} \sum_{\k} P\left( \kacc \right) \: a\left(\kacc \rightarrow \k\right) P\left(\k\right) = N\langle k\rangle
-\end{align*}
-which is the number of links in the network. In our work, we have chosen a neutral assortativity \cite{OttAntonsen2017}. \\
-
-The dynamics of the mean field are now given per degree in the network, that is to say: all nodes with the same degree $\k$ follow the same dynamics.
-\begin{align}
-\frac{\partial z(\k, t)}{\partial t} &= -\ic \frac{(z(\k, t)-1)^{2}}{2} + \frac{(z(\k, t)+1)^{2}}{2} \cdot I(\k, t) \qquad z(\k,t) \in \C^{M_\k} \nonumber \\
-I(\k, t) &= -\sigma(\k) + \ic \eta_{0}(\k) + i H_2(\k,t) \label{eq:OttAntonsenSystemFull} \\
-H_2(\k,t) &= \frac{\kappa}{\kmean} \sum_{\kacc \in \K} P\left(\kacc\right) \: a\left(\kacc \rightarrow \k\right) \cdot \left( 1 + \frac{z(\kacc, t)^2 + \overline{z}(\kacc, t)^2}{6} - \frac{4}{3} \Re(z(\kacc, t)) \right) \nonumber
-\end{align}
-This is the most general form of the theory, applied to our situation. In the following, we will allow independant variables $\eta_0 \equiv \eta_0(\k)$ and $\sigma \equiv \sigma(\k)$. \\
-
-We can then find the mean field dynamics through:
-\begin{align}
-\overline{Z}(t) &= \frac{1}{N} \sum_{\k \in \K} P(\k) z(\k, t) \qquad \overline{Z}(t) \in \C \label{eq:OttAntonsenMeanField}
-\end{align}
-which clearly reflects the network architecture. We have now formulated the evolution on the invariant manifold by a simple ordinary differential equation. 
-
-
-\subsection{Implications of the reduction}
-The advantages of using the \MFR can be found in the number of equations we now have left to investigate. As there are $M_{\k}$ equations in \eqref{eq:OttAntonsenSystemFull}, instead of $N$ equations for $N$ neurons, the reduction becomes more and more efficient for larger networks. In the case of a fixed-degree network, every node has a degree $\kmean$ so 
-\begin{align*}
-    \frac{1}{\kmean} \sum_{\kacc \in \K} P\left(\kacc\right) \: a\left(\kacc \rightarrow \k\right) = \frac{1}{\kmean} N \left( \frac{\kmean \kmean}{N \kmean} \right) = 1
-\end{align*}
-This yields an identical formulation as in \cite{Luke2013} and \cite{Martens2020} and so for any fixed-degree networks, \eqref{eq:OttAntonsenSystemFull} yields a single complex differential equation. The \MFR is computationally efficient, and in \cite{OttAntonsen2017} many methods for improving this efficiency further are treated.
-
-
-\subsection{Challenges for directed networks}
-While $P(\k)$ denotes a bivariate distribution, none of the publications on the \MFR has made an implementation for directed networks. The challenge is that now the support $\K$ is a much larger set, as $\K = \koutb \times \kinb$. For example, the scale-free pdf \eqref{eq:scalefreepdf} has $M_{\k} = \kmax - \kmin$ number of degrees in its support. When we wish to extend \eqref{eq:scalefreepdf} to a bivariate pdf, $M_{\k}$ grows to $\left( \kmax - \kmin \right)$
+While the \MFR gives us the opportunity to use any arbitray bivariate distribution $P(\k)$, none of the publications on the \MFR have made an implementation for directed networks. The challenge is that now the support $\K$ is a much larger set, as $\K = \koutb \times \kinb$. For example, the scale-free distribution \eqref{eq:scalefreepdf} has $M_{\k} = \kmax - \kmin$ number of degrees in its support. When we wish to extend \eqref{eq:scalefreepdf} to a bivariate distribution, $M_{\k}$ grows to $\left( \kmax - \kmin \right)$. In \cite{OttAntonsen2017}, $M_{\k} = $ 1250. For 10.000 neurons, that is a reduction of 12,5\%. A bivariate distribution would need about $1.56 \times 10^6$ equations. It is not feasible to solve this many equations at once.
 
