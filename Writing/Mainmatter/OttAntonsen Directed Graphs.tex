@@ -2,13 +2,16 @@
 \newpage
 \section{\mywork Mean Field Reductions for undirected graphs}
 \subsection{Directed graphs as permutations}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque nisl eros, 
-pulvinar facilisis justo mollis, auctor consequat urna. Morbi a bibendum metus. 
-Donec scelerisque sollicitudin enim eu venenatis. Duis tincidunt laoreet ex, 
-in pretium orci vestibulum eget.
+So how can we use the \MFR efficiently when the network is a directed graph with an asymmetrical adjacency matrix? Let's investigate.
+\begin{itemize}
+\item Sampling $\kinb$ and $\koutb$ from a bivariate distribution requires us to find the marginal distribution of $P$ for $\kinb$, sampling $\kinbi$, and then sampling $\koutbj$ from $P$ while keeping $\kinbi$ fixed. This is a cumbersome process.
+\item However, if we assume that the marginal distributions for $\kinb$ an $\koutb$ are independent, there is a simplification to be found. We can even assume that the two marginal distributions are identical univariate distributions. 
+\item Hence, we can sample $\kinb$ and find $\koutb = \permute ( \kinb )$ so that the total number of links remains constant. 
+\item Using 
+\end{itemize}
 
 \subsection{Building the adjacency matrix} \label{sec:buildingA}
-We can find an exact solution for $A$ given the degree vectors in \eqref{eq:definekinkoutfromP}. $A_{ij}$ represents a directed graph, but $A_{ij} \neq A_{ji}$ is not a necessary condition. For the elements of $A_{ij}$ we need to find $N^2$ number of variables. We have the following constraints:
+If we want to simulate the network of theta neurons \eqref{eq:thetaneuronnetworkcurrent} we need to construct the adjacency matrix. We can find an exact solution for $A$ given the degree vectors in \eqref{eq:definekinkoutfromP}. $A_{ij}$ represents a directed graph, but $A_{ij} \neq A_{ji}$ is not a necessary condition. For the elements of $A_{ij}$ we need to find $N^2$ number of variables. We have the following constraints:
 \begin{enumerate}
 \item The column- and row-sums of $A_{ij}$ must be equal to $\kinb$ and $\koutb$, see \eqref{eq:definekinkoutfromA}. 2$N$ constraints.
 \item Self-coupling is mandatory: $A_{ii} = \boldsymbol{1}$. $N$ constraints.
