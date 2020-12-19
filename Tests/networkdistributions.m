@@ -119,7 +119,7 @@ if sum(fixeddegreepars.P2D(1:pars.N, 1:pars.N), 'all') == pars.N; disp('Sum is c
 
 %%
 subplot(1,3,1); hold on; grid on; box on;
-title('Fixed degree', 'FontSize', titlefont);
+title('Fixed-degree', 'FontSize', titlefont);
 xlabel('\boldmath$k^{\rm in}$', 'Interpreter', 'latex', 'FontSize', labelfont);
 ylabel('\boldmath$k^{\rm out}$', 'Interpreter', 'latex', 'FontSize', labelfont);
 zlabel('Density', 'FontSize', labelfont, 'HorizontalAlignment', 'left');
@@ -236,8 +236,8 @@ ax.ZTick(ax.ZTick < 0) = [];
 colormap(jet)
 
 %% Produce 2D figure
-print(f_2Dpdfs, '../Figures/Distributions/2D.png', '-dpng', '-r300')
-
+print(f_2Dpdfs, '../Figures/Distributions/2D.png', '-dpng', '-r600')
+close(f_2Dpdfs)
 
 %% Functions:
 function P = P2D(X,Y, kmin, kmax, degree, N)

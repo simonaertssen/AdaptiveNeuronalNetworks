@@ -1,6 +1,7 @@
 close all; clear vars; clc
 addpath('../Functions');
 
+titlefont = 20;
 %% Making the adjacency matrix from a degree distribution
 % From P(k) ~ k_i and P(k) ~ k_j to A_ij: a combinatorial problem...
 % k_in = sum(A,2), k_out = sum(A,1)
@@ -25,7 +26,7 @@ A_fixeddegree = adjacencymatrix(degrees_in, degrees_out);
 f_fixeddegree = figure('Renderer', 'painters', 'Position', [0 800 400 400]);
 hAxes = axes(f_fixeddegree); 
 imshow(full(A_fixeddegree), 'Parent', hAxes);
-title(hAxes, ['Fixed degree $$A_{ij}$$: $$N$$ = ', num2str(N), ', $$\langle k \rangle$$ = ', num2str(mean(degrees_in))],'interpreter','latex', 'FontSize', 15)
+title(hAxes, ['Fixed degree $$A_{ij}$$: $$N$$ = ', num2str(N), ', $$\langle k \rangle$$ = ', num2str(mean(degrees_in))],'interpreter','latex', 'FontSize', titlefont)
 print(f_fixeddegree, '../Figures/A_fixeddegree.png', '-dpng', '-r300')
 
 close(f_fixeddegree)
@@ -44,7 +45,7 @@ A_random = adjacencymatrix(degrees_in, degrees_out);
 f_random = figure('Renderer', 'painters', 'Position', [50 800 400 400]);
 hAxes = axes(f_random); 
 imshow(full(A_random), 'Parent', hAxes);
-title(hAxes, ['Random $$A_{ij}$$: $$N$$ = ', num2str(N), ', $$\langle k \rangle$$ = ', num2str(round(mean(degrees_in)))],'interpreter','latex', 'FontSize', 15)
+title(hAxes, ['Random $$A_{ij}$$: $$N$$ = ', num2str(N), ', $$\langle k \rangle$$ = ', num2str(round(mean(degrees_in)))],'interpreter','latex', 'FontSize', titlefont)
 print(f_random, '../Figures/A_random.png', '-dpng', '-r300')
 
 close(f_random)
@@ -61,7 +62,7 @@ A_scalefree = adjacencymatrix(scalefreepars.degrees_in, degrees_out);
 f_scalefree = figure('Renderer', 'painters', 'Position', [50 800 400 400]);
 hAxes = axes(f_scalefree); 
 imshow(full(A_scalefree), 'Parent', hAxes);
-title(hAxes, ['Scale free $$A_{ij}$$: $$N$$ = ', num2str(N), ', $$ k \in $$ [', num2str(scalefreepars.kmin), ',', num2str(scalefreepars.kmax), '], $$\gamma$$ = ', num2str(degree)],'interpreter','latex', 'FontSize', 15)
+title(hAxes, ['Scale free $$A_{ij}$$: $$N$$ = ', num2str(N), ', $$ k \in $$ [', num2str(scalefreepars.kmin), ',', num2str(scalefreepars.kmax), '], $$\gamma$$ = ', num2str(degree)],'interpreter','latex', 'FontSize', titlefont)
 print(f_scalefree, '../Figures/A_scalefree.png', '-dpng', '-r300')
 
 close(f_scalefree)

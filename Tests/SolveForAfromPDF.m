@@ -17,16 +17,18 @@ N = 10;
 pars.N = N;
 networkpars = make_randomparameters(pars, 0.3);
 
-degrees_in = networkpars.degrees_in;
-degrees_out = networkpars.degrees_out;
+degrees_i = networkpars.degrees_i;
+degrees_o = networkpars.degrees_o;
+
+titlefont = 20;
 
 %% The algorithm:
 clc
-N = numel(degrees_in);
-if max(degrees_in) >= N
+N = numel(degrees_i);
+if max(degrees_i) >= N
     error('Degree too large');
 end
-numnonzeros = sum(degrees_in);
+numnonzeros = sum(degrees_i);
 
 % Test for laptop version or other:
 if version('-release') == "2020a"
@@ -37,22 +39,22 @@ end
 
 xidx = zeros(numnonzeros, 1, numtype);
 yidx = zeros(numnonzeros, 1, numtype);
-idxidx = cumsum([1; degrees_in]); % For indexing the idx and yidx vector
+idxidx = cumsum([1; degrees_i]); % For indexing the idx and yidx vector
 disp(idxidx')
 
 % Adjust for zeros in first and last row
-prob_leftout = degrees_out(1);
-probs = degrees_out;
+prob_leftout = degrees_o(1);
+probs = degrees_o;
 
-din = degrees_in'
-dout = degrees_out'
+din = degrees_i'
+dout = degrees_o'
 
 A = zeros(N,N);
 
 rowpermutation = randperm(N);
 for i = 1:N
     rowindex = i;
-    numelements = degrees_in(rowindex);
+    numelements = degrees_i(rowindex);
     if numelements == 0
         continue
     end
@@ -81,12 +83,12 @@ end
 A = sparse(xidx, yidx, ones(numnonzeros, 1, 'logical'));
 A(N,N) = 0;
 
-C = cat(1, full(A), degrees_out');
-C = cat(2, C, [degrees_in; -100])
+C = cat(1, full(A), degrees_o');
+C = cat(2, C, [degrees_i; -100])
 
 assert(sum(diag(A)) == 0);
 
-diffcols = degrees_out' - full(sum(A,1))
+diffcols = degrees_o' - full(sum(A,1))
 nonzeroidx = find(diffcols)
 numel(nonzeroidx)
 if numel(nonzeroidx) > 0
@@ -103,11 +105,11 @@ if numel(nonzeroidx) > 0
             end
         end
     end
-    C = cat(1, full(A), degrees_out');
-    C = cat(2, C, [degrees_in; -100])
+    C = cat(1, full(A), degrees_o');
+    C = cat(2, C, [degrees_i; -100])
 end
 
-diffcols = degrees_out' - full(sum(A,1))
+diffcols = degrees_o' - full(sum(A,1))
 
 %% Test the function:
 pars.N = 1000;
@@ -115,14 +117,14 @@ netp = 0.60143;
 meandegree = netp*(N - 1);
 networkpars = make_randomparameters(pars, netp);
 
-assert(sum(networkpars.degrees_in) == sum(networkpars.degrees_out))
+assert(sum(networkpars.degrees_i) == sum(networkpars.degrees_o))
 
 tic 
-A_random = adjacencymatrix(networkpars.degrees_in, networkpars.degrees_out);
+A_random = adjacencymatrix(networkpars.degrees_i, networkpars.degrees_o);
 toc
 
 tic 
-A_random = adjacencymatrix_from_sampling(networkpars.degrees_in, networkpars.degrees_out);
+A_random = adjacencymatrix_from_sampling(networkpars.degrees_i, networkpars.degrees_o);
 toc
 
 % Lesson: faster if we just get it after one try, but it seems to be more
@@ -133,24 +135,27 @@ pars.N = 500;
 netdegree = 50;
 fdpars = make_fixeddegreeparameters(pars, netdegree); 
 
-A_fixeddegree = adjacencymatrix(fdpars.degrees_in, fdpars.degrees_out);
+A_fixeddegree = adjacencymatrix(fdpars.degrees_i, fdpars.degrees_o); box on;
 f_fixeddegree = figure('Renderer', 'painters', 'Position', [0 800 400 400]);
 hAxes = axes(f_fixeddegree); 
-imshow(full(A_fixeddegree), 'Parent', hAxes);
-title(hAxes, ['Fixed degree $$A_{ij}$$: $$N$$ = ', num2str(pars.N), ', $$\langle k \rangle$$ = ', num2str(fdpars.meandegree)],'interpreter','latex', 'FontSize', 10)
-exportpdf(f_fixeddegree, '../Figures/A_fixeddegree1.pdf', true);
+imagesc(full(A_fixeddegree), 'Parent', hAxes);
+colormap(gray);
+title(hAxes, ['Fixed degree: $$\langle k \rangle$$ = ', num2str(fdpars.meandegree)],'interpreter','latex', 'FontSize', titlefont)
+exportpdf(f_fixeddegree, '../Figures/Adjacency matrices/A_fixeddegree1.pdf', true);
 
 close(f_fixeddegree)
 
+%%
 netdegree = 300;
 fdpars = make_fixeddegreeparameters(pars, netdegree); 
 
-A_fixeddegree = adjacencymatrix(fdpars.degrees_in, fdpars.degrees_out);
-f_fixeddegree = figure('Renderer', 'painters', 'Position', [0 800 400 400]);
+A_fixeddegree = adjacencymatrix(fdpars.degrees_i, fdpars.degrees_o);
+f_fixeddegree = figure('Renderer', 'painters', 'Position', [0 800 400 400]); box on;
 hAxes = axes(f_fixeddegree); 
-imshow(full(A_fixeddegree), 'Parent', hAxes);
-title(hAxes, ['Fixed degree $$A_{ij}$$: $$N$$ = ', num2str(pars.N), ', $$\langle k \rangle$$ = ', num2str(fdpars.meandegree)],'interpreter','latex', 'FontSize', 10)
-exportpdf(f_fixeddegree, '../Figures/A_fixeddegree2.pdf', true);
+imagesc(full(A_fixeddegree), 'Parent', hAxes);
+colormap(gray);
+title(hAxes, ['Fixed degree $$A_{ij}$$: $$\langle k \rangle$$ = ', num2str(fdpars.meandegree)],'interpreter','latex', 'FontSize', titlefont)
+exportpdf(f_fixeddegree, '../Figures/Adjacency matrices/A_fixeddegree2.pdf', true);
 
 close(f_fixeddegree)
 
@@ -159,46 +164,46 @@ close(f_fixeddegree)
 netp = 0.10043;
 rdpars = make_randomparameters(pars, netp);
 
-A_random = adjacencymatrix(rdpars.degrees_in, rdpars.degrees_out);
+A_random = adjacencymatrix(rdpars.degrees_i, rdpars.degrees_o);
 f_random = figure('Renderer', 'painters', 'Position', [50 800 400 400]);
 hAxes = axes(f_random); 
 imshow(full(A_random), 'Parent', hAxes);
-title(hAxes, ['Random $$A_{ij}$$: $$N$$ = ', num2str(pars.N), ', $$\langle k \rangle$$ = ', num2str(round(rdpars.meandegree))],'interpreter','latex', 'FontSize', 10)
-exportpdf(f_random, '../Figures/A_random1.pdf', true);
+title(hAxes, ['Random $$A_{ij}$$: $$N$$ = ', num2str(pars.N), ', $$\langle k \rangle$$ = ', num2str(round(rdpars.meandegree))],'interpreter','latex', 'FontSize', titlefont)
+exportpdf(f_random, '../Figures/Adjacency matrices/A_random1.pdf', true);
 
 close(f_random)
 
 netp = netdegree/(pars.N-1);
 rdpars = make_randomparameters(pars, netp);
 
-A_random = adjacencymatrix(rdpars.degrees_in, rdpars.degrees_out);
+A_random = adjacencymatrix(rdpars.degrees_i, rdpars.degrees_o);
 f_random = figure('Renderer', 'painters', 'Position', [50 800 400 400]);
 hAxes = axes(f_random); 
 imshow(full(A_random), 'Parent', hAxes);
-title(hAxes, ['Random $$A_{ij}$$: $$N$$ = ', num2str(pars.N), ', $$\langle k \rangle$$ = ', num2str(round(rdpars.meandegree))],'interpreter','latex', 'FontSize', 10)
-exportpdf(f_random, '../Figures/A_random2.pdf', true);
+title(hAxes, ['Random $$A_{ij}$$: $$N$$ = ', num2str(pars.N), ', $$\langle k \rangle$$ = ', num2str(round(rdpars.meandegree))],'interpreter','latex', 'FontSize', titlefont)
+exportpdf(f_random, '../Figures/Adjacency matrices/A_random2.pdf', true);
 close(f_random)
 
 %% Now using scale free networks:
 degree = 2.1;
-sfpars = make_scalefreeparameters(pars, degree, 50, 400);
+sfpars = make_scalefreeparameters(pars, degree, 100, 500);
 
-A_scalefree = adjacencymatrix(sfpars.degrees_in, sfpars.degrees_out);
+A_scalefree = adjacencymatrix(sfpars.degrees_i, sfpars.degrees_o);
 f_scalefree = figure('Renderer', 'painters', 'Position', [50 800 400 400]);
 hAxes = axes(f_scalefree); 
 imshow(full(A_scalefree), 'Parent', hAxes);
-title(hAxes, ['Scale free $$A_{ij}$$: $$N$$ = ', num2str(pars.N), ', $$ k \in $$ [', num2str(sfpars.kmin), ',', num2str(sfpars.kmax), '], $$\gamma$$ = ', num2str(degree)],'interpreter','latex', 'FontSize', 10)
-exportpdf(f_scalefree, '../Figures/A_scalefree1.pdf', true);
+title(hAxes, ['Scale free $$A_{ij}$$: $$N$$ = ', num2str(pars.N), ', $$ k \in $$ [', num2str(sfpars.kmin), ',', num2str(sfpars.kmax), '], $$\gamma$$ = ', num2str(degree)],'interpreter','latex', 'FontSize', titlefont)
+exportpdf(f_scalefree, '../Figures/Adjacency matrices/A_scalefree1.pdf', true);
 
 close(f_scalefree)
 
 degree = 10;
 sfpars = make_scalefreeparameters(pars, degree, 50, pars.N);
 
-A_scalefree = adjacencymatrix(sfpars.degrees_in, sfpars.degrees_out);
+A_scalefree = adjacencymatrix(sfpars.degrees_i, sfpars.degrees_o);
 f_scalefree = figure('Renderer', 'painters', 'Position', [50 800 400 400]);
 hAxes = axes(f_scalefree); 
 imshow(full(A_scalefree), 'Parent', hAxes);
-title(hAxes, ['Scale free $$A_{ij}$$: $$N$$ = ', num2str(pars.N), ', $$ k \in $$ [', num2str(sfpars.kmin), ',', num2str(sfpars.kmax), '], $$\gamma$$ = ', num2str(degree)],'interpreter','latex', 'FontSize', 10)
-exportpdf(f_scalefree, '../Figures/A_scalefree2.pdf', true);
+title(hAxes, ['Scale free $$A_{ij}$$: $$N$$ = ', num2str(pars.N), ', $$ k \in $$ [', num2str(sfpars.kmin), ',', num2str(sfpars.kmax), '], $$\gamma$$ = ', num2str(degree)],'interpreter','latex', 'FontSize', titlefont)
+exportpdf(f_scalefree, '../Figures/Adjacency matrices/A_scalefree2.pdf', true);
 close(f_scalefree)
