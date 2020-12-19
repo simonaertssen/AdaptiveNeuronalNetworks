@@ -166,13 +166,13 @@ title('Random', 'FontSize', titlefont);
 xlabel('\boldmath$k^{\rm in}$', 'Interpreter', 'latex', 'FontSize', labelfont);
 ylabel('\boldmath$k^{\rm out}$', 'Interpreter', 'latex', 'FontSize', labelfont);
 % zlabel('Density', 'FontSize', labelfont, 'HorizontalAlignment', 'left');
-view(110, 20)
+view(110, 10)
 
 % The 3D histogram
 minmax = linspace(randompars.meandegree - 3*sqrt(randompars.meandegree), randompars.meandegree + 3*sqrt(randompars.meandegree), 16);
 xlim([minmax(1), minmax(end)])
 ylim([minmax(1), minmax(end)])
-hist = histogram2(randompars.degrees_i, randompars.degrees_o, minmax, minmax, 'Normalization', 'pdf','EdgeColor','none','FaceAlpha',1,'ShowEmptyBins','on'); % Normal degree vectors from before
+hist = histogram2(randompars.degrees_i, randompars.degrees_o, minmax, minmax, 'Normalization', 'pdf','FaceAlpha',1,'ShowEmptyBins','on'); % Normal degree vectors from before
 colormap(jet)
 
 % The pdf
