@@ -17,6 +17,7 @@ This hypothesis can be tested: we assume that $P(\k) = P(\kin) \cdot P(\kout)$ s
 \caption{Bivariate distributions for different network topologies, using 10$^4$ number of samples. The surface given by $P(\k)$ is well approximated by the histogram of variates sampled from a univariate distribution. $\kmean =  2 \times 10^3$ for all topologies, $p \approx 0.2$ for the random network and $\gamma = 4.3$ for the scale-free network.}
 \label{fig:2Ddistributions}
 \end{figure}
+Hence, we can use univariate distributions in our simulations of the Ott-Antonsen Mean Field \eqref{eq:OttAntonsenMeanField}.
 
 
 \subsection{Building the adjacency matrix} \label{sec:buildingA}
@@ -57,8 +58,6 @@ Algorithms that find the largest value in a vector start from the first or the l
    \caption{Adjacency matrices for different types of networks with $N$ = 500 and $\kmean$ = 100. We can see how the fixed-degree network is quite homogeneous, while the random network shows some more clustering. The scale-free network has a low number of nodes with a very high degree, which is why we see vertical and horizontal stripes in the adjacency matrix.}
    \label{fig:adjacencymatrices}
 \end{figure}
-
-Hence, we can 
 
 \subsection{Fixed-degree networks as a baseline}
 \begin{figure}[H]

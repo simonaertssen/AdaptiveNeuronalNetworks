@@ -128,6 +128,11 @@ V(t) = -\sqrt{I} \cdot \cot (t \sqrt{I}) \label{eq:ThetaNeuronModelSolutionPerio
 \end{align}
 These equations assume that at $t=0$ a spike has occured. he steps required to find \eqref{eq:ThetaNeuronModelSolutionPeriodicExcitable}-\eqref{eq:ThetaNeuronModelSolutionPeriodic} are described in \ref{app:ThetaModelSolutions}. Solutions for $\theta$ are found by taking the inverse of the transformation \eqref{eq:QIFtransformation}.
 
+
+\subsection{Numerical solutions} \label{sec:TheThetaNeuronModelODE45}
+When $I$ is not static, we need to revert to numerical solutions. For this work, a fixed-step 4-stage Runge-Kutta method was implemented (Dormand-Prince 45) to numerically solve all differential equations. A fixed-step algorithm makes it possible to finely tune the large memory demand of the systems presented in this work. 
+
+
 \subsection{Frequency response} \label{sec:TheThetaNeuronModelFrequencyResponse}
 As we already saw in Figure \ref{fig:ThetaNeuronResponseToCurrent}, an increasing current increases the spiking frequency. We can compute this relationship by measuring how long it takes for $V$ to reach a spike: we solve \eqref{eq:ThetaNeuronModelSolutionPeriodic} for $t$ at $V(t) = +\infty$ in \ref{app:ThetaModelFrequencyResponse}. This yields the oscillation period $T = \frac{\pi}{\sqrt{I}}$ which we can see in Figure \ref{fig:ThetaNeuronfIandPRC}. 
 
@@ -152,6 +157,7 @@ Hence, a 1\% change in $I$ will result in a 0.5 \% change in the period.
 \caption{Response of the theta model to bifurcations on the frequency and the phase. Left: Frequency response of the theta model. For $I \leq 0$ the spike period is infinite, which is why we see the solutions to \eqref{eq:thetaneuron} approach $\theta = 0$ for $I = 0$. Middle: a bifurcation $\varepsilon$ at time $\phi$ perturbs $\theta(t)$ (in blue) which results in a delayed spike (trajectory in red). Right: The \PRC, \eqref{eq:PRC2} in red, with a solution for $\theta$ (in blue), to show when the model is the most susceptible to bifurcations.}
 \label{fig:ThetaNeuronfIandPRC}
 \end{figure}
+
 
 \subsection{Phase response} \label{sec:TheThetaNeuronModelPhaseResponse}
 Perturbations on the period can also be understood from the perspective of the phase. Changes to the phase $\theta$ can delay or advance the event of a spike, and in general this depends on exactly when the stimulus occurs. The phase response curve (\PRC) gives us exactly that relation \cite{Perez2020, Gutkin2014}.

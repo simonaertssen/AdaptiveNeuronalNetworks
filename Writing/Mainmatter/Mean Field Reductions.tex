@@ -38,7 +38,7 @@ g(\eta |\k)=\frac{1}{\pi} \frac{\sigma(\k)}{(\eta-\eta_{0}(\k))^{2}+\sigma(\k)^{
 the set of reduced equations then takes a particularly simple form, as \eqref{eq:meanfieldorderparameter} can be evaluated the poles of $g$ using the Cauchy residue theorem for the integration of complex variables and find a closed form expression. We can now capture the dynamics by $z(\k,t)$, the mean-field variable for nodes of degree $\k$:
 \begin{align}
 \frac{\partial z(\k, t)}{\partial t} &= -\ic \frac{(z(\k, t)-1)^{2}}{2} + \frac{(z(\k, t)+1)^{2}}{2} \cdot I(\k, t) \qquad z(\k,t) \in \C^{M_\k} \nonumber \\
-I(\k, t) &= -\sigma(\k) + \ic \eta_{0}(\k) + i H_2(\k,t) \label{eq:OttAntonsenSystemFull} \\
+I(\k, t) &= -\sigma(\k) + \ic \eta_{0}(\k) + \ic H_2(\k,t) \label{eq:OttAntonsenSystemFull} \\
 H_2(\k,t) &= \frac{\kappa}{\kmean} \sum_{\kacc \in \K} P\left(\kacc\right) \: a\left(\kacc \rightarrow \k\right) \cdot \left( 1 + \frac{z(\kacc, t)^2 + (z(\kacc, t)^c )^2}{6} - \frac{4}{3} \Re(z(\kacc, t)) \right) \nonumber
 \end{align}
 with $z^c$ the complex conjugate. $H$ is a legacy term and has been computed in \cite{Martens2020}.
