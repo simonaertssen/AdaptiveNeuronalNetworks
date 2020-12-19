@@ -21,7 +21,7 @@ initarray = make_GPUhandle();
 
 %% Theta model parameters:
 tnow = 0; tend = 10;
-h = 0.001;
+h = 0.0005;
 
 p.N = 15000;
 p.a_n = 0.666666666666666666667;
@@ -39,7 +39,7 @@ PSSp.eta0 = 0.5; PSSp.delta = 0.5; PSSp.K = 1;
 PSSp.e = randcauchy(seed, PSSp.eta0, PSSp.delta, PSSp.N);
 
 CPWp = p; CPWp.text = '\it CPW';
-CPWp.IC = wrapToPi(randn(p.N, 1)*1.55);
+CPWp.IC = wrapToPi(randn(p.N, 1)*1.45);
 CPWp.eta0 = 10.75; CPWp.delta = 0.5; CPWp.K = -9;
 CPWp.e = randcauchy(seed, CPWp.eta0, CPWp.delta, CPWp.N);
 

@@ -1,6 +1,9 @@
 % !TEX root = ../main.tex
 \newpage
 \section{\mywork Mean Field Reductions for undirected graphs}
+We will now investigate the questions that were raised after deriving the \MFR. How do we deal with the curse of dimensionality concerning the degree distribution? But there are also other questions to be answered. If the synchronisation dynamics of the network of Theta neurons \eqref{eq:thetaneuronnetwork} can be predicted by the Ott-Antonsen reductions \eqref{eq:OttAntonsenMeanField} and \eqref{eq:MeanField}, then it can also be measured by the order parameter \eqref{eq:orderparameter}. These systems describe the same quantity, but how can we show that?
+
+
 \subsection{Directed graphs as permutations}
 So how can we use the \MFR efficiently when the network is a directed graph with an asymmetrical adjacency matrix? Let's investigate.
 \begin{itemize}
@@ -11,7 +14,7 @@ So how can we use the \MFR efficiently when the network is a directed graph with
 
 This hypothesis can be tested: we assume that $P(\k) = P(\kin) \cdot P(\kout)$ so that $P$ consists of two identical and independent distributions, given by the distributions presented in Chapter \ref{sec:NetworkTopologies}. Then, we sample $\kinb \sim P(\kin)$ and perform a permutation to find all node degrees $\k_j$. The surface given by $P$ and the histogram of $\k_j$ have been plotted in Figure \ref{fig:2Ddistributions}. As we can see, the variates follow the distribution well. 
 
-\begin{figure}[H]
+\begin{figure}[ht]
 \centering
 \includegraphics[trim=2.5cm 0cm 2.5cm 0cm, clip=true, width = \textwidth]{../Figures/Distributions/2D.png}
 \caption{Bivariate distributions for different network topologies, using 10$^4$ number of samples. The surface given by $P(\k)$ is well approximated by the histogram of variates sampled from a univariate distribution. $\kmean =  2 \times 10^3$ for all topologies, $p \approx 0.2$ for the random network and $\gamma = 4.3$ for the scale-free network.}
@@ -35,7 +38,7 @@ This means that there are $N^2 - (3N + 1)$ variables to find. Once a solution ha
 \end{enumerate}
 Algorithms that find the largest value in a vector start from the first or the last element. The permutation allows us to find different maxima every time by shuffling the vector.
 
-\begin{figure}[H]
+\begin{figure}[ht]
 \centering
 \begin{subfigure}[b]{0.32\linewidth}
    \centering
@@ -59,8 +62,40 @@ Algorithms that find the largest value in a vector start from the first or the l
    \label{fig:adjacencymatrices}
 \end{figure}
 
+
+\subsection{Initial conditions} \label{sec:initialconditions}
+As the systems in \cref{eq:orderparameter,eq:OttAntonsenMeanField,eq:MeanField} describe the same dynamics for fully connected networks, it is important to be able to transform initial conditions between systems. If we expect their behaviour to be the same, then we need to test that by starting from the same point in time. Hence we can test whether \textsl{macroscopically} we can find the same equilibria, but we can also test \textsl{microscopically} whether the systems arrive at those points at the same time. 
+
+%  If the initial conditions of all systems are exactly the same, then we should find that they describe the exact same behaviour.
+% - macroscopically and microscopically - and this is the best way to test the \MFR theory. 
+
+When transforming between $\theta_i(t) \leftrightarrow z(\k,t) \leftrightarrow Z(t)$ we go from $\T^N \leftrightarrow \C^{M_\k} \leftrightarrow \C$. If we have the same initial conditions, then all systems will predict the same behaviour. We will only map everything to $\C$.\\
+The following maps can be used to transform the initial conditions, but as they do not give any qualitative information on the dynamics or distributions of the variables, they are not valid for transforming between dynamics. \\
+
+Given an initial phase angle $\theta(0)_i$ or initial degree dynamics $z(\k, 0)$ we wish to find their resulting description in the complex uni circle. Mapping operations onto the order parameter is straightforward and happens by the definitions in  \eqref{eq:orderparameter} and \eqref{eq:OttAntonsenMeanField}:
+\begin{align*}
+\theta(0)_i \xrightarrow{\hspace*{8mm}} Z(0) &= \frac{1}{N} \sum_{j=1}^N e^{\ic\theta(0)_j} \\
+z(\k,0) \longrightarrow \overline{Z}(0) &= \frac{1}{N} \sum_{\k} P(\k) z(\k, 0)
+\end{align*}
+Starting from an initial synchronization $Z(0)$ and taking the inverse tranfsormation, we can make use of the fact that the average of a set of identical values is the value itself. This is simple for $\theta(0)_i$: all will be the same at $t = 0$. For $z(\k,0)$ we have a weighed average which we need to undo, making sure that the whole sums up to $N$.
+\begin{align*}
+Z(0) \xrightarrow{\hspace*{9mm}} \theta(0)_{i} &= -\ic \cdot \log \left( Z(0) \right) \\
+Z(0) \longrightarrow z(\k,0) &= \overline{\frac{Z(0) \cdot n(\k)}{P(\k)}}
+\end{align*}
+
+Then, transferring between $\theta_i$ and $z(\k)$, we need to filter $\theta_i$ per degree:
+\begin{align*}
+z(\k) \longrightarrow \theta_i &= -\ic \cdot \log \left( \frac{z(\k)\cdot P(\k)}{n(\k)} \right) \qquad \text{ if } \degree(\theta_i) = \k \\
+\theta_i \longrightarrow z(\k) &= \sum_{\k} e^{\ic \vartheta_{\k}} \qquad \qquad \vartheta_{\k} = \sum_{i = 1}^{n(\k)} \theta_i \in 
+\left\{ \theta_i \vert \degree(\theta_i) = \k, \forall i \leq N \right\}
+\end{align*}
+%Or also $\sum_i^N A_{ij} = k^{\rm in} \cup \sum_j^N A_{ij} = \kout$. 
+
+We can see how $\lim_{N \rightarrow +\infty} n(\k) = P(\k)$, which makes these maps exact for any network size. 
+
+
 \subsection{Fixed-degree networks as a baseline}
-\begin{figure}[H]
+\begin{figure}[ht]
 \centering
 \includegraphics[width = \textwidth]{../Figures/InspectMeanFieldFixedDegree.pdf}
 \caption{Comparison}
