@@ -7,13 +7,14 @@ Networks consists of \textsl{nodes} $n_j$, $j \leq N$ connected by \textsl{links
 \subsection{Representations and properties}
 We represent a finite network through the adjacency matrix: $A_{ij} $ = 1 if there exists a relation from node $j$ to node $i$ and 0 otherwise. This means that $A_{ij}$ can be \textsl{undirected} (symmetric) or \textsl{undirected}. If we think of the relations between guests at a party, then the social network is directed, as people might not know each other mutually. However, the network of people having shaken hands is symmetric. Self-links are an edge-case that depends on the context, as one generally does not shake hands with himself. \\
 %The number of links that a node has is denoted as the \textsl{degree}. 
-From $A_{ij}$ we can compute the in- and out-degree vectors, which show how many links a node has coming in and out:
+The \textsl{degree} $\k$ of a node is a two-vector of the number of links coming in to and going out of the node, ($\kin, \kout$). From $A_{ij}$ we can compute the in- and out-degree vectors, which show how many links a node has coming in and out:
 \begin{align}
 \kinbi = \sum_{j=1}^{N} A_{i j} \hspace{15mm} \koutbj = \sum_{i=1}^{N} A_{i j}  \hspace{15mm} \degree(n_j) = \k_j = (\boldsymbol{k}_j^{\bf in}, \koutbj) \in \K \subset \mathbb{N} \label{eq:definekinkoutfromA} 
 \end{align}
 The distribution of $\kinb$ and $\koutb$ is the most defining property of the network:
 \begin{align}
-(\kinb, \koutb) \sim P(\degree(n) = \k) \label{eq:definekinkoutfromP} \end{align}
+(\kinb, \koutb) \sim P(\degree(n) = \k) \label{eq:definekinkoutfromP} 
+\end{align}
 The support of $P$ is the set of unique degrees $\K$ with cardinality $M_\k$, which consists of integers. The average degree of the network is then: 
 \begin{align}
 \kmean = \frac{1}{N} \sum_{i,j=1}^{N} A_{ij} = \frac{1}{N} \sum_{i=1}^{N} \kinbi = \frac{1}{N} \sum_{j=1}^{N} \koutbj \label{eq:kmean} 
