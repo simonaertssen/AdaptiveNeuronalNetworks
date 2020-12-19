@@ -3,14 +3,19 @@ addpath('../Functions');
 labelfont = 15;
 titlefont = 15;
 
+make1Dplots = false;
+make2Dplots = true;
+
 %% Test the different networks and their statistical properties
 % We need to evaluate whether some of the random numbers we are pulling are
 % actually following the right pdf.
 
 pars.N = 10000;
+
 meandegreetoget = 100;
 
 %% Figure handle
+if make1Dplots == true
 f_1Dpdfs = figure('Renderer', 'painters', 'Position', [50 800 900 400]); box on; hold on;
 
 %% A 1D random network: CORRECT
@@ -105,9 +110,11 @@ pos = plt.Position; plt.Position = [pos(1) + 0.09, pos(2), pos(3), pos(4)];
 %% Produce 1D figure
 print(f_1Dpdfs, '../Figures/Distributions/1D.png', '-dpng', '-r300')
 close(f_1Dpdfs)
-
+end
 %% Now the 2D pdfs:
-%Figure handle
+meandegreetoget = pars.N/5;
+
+if make2Dplots == true
 f_2Dpdfs = figure('Renderer', 'painters', 'Position', [50 800 900 400]); box on; hold on;
 
 %% A 2D fixed degree network / diracnet
@@ -162,6 +169,8 @@ if sum(randompars.P2D(1:pars.N, 1:pars.N), 'all') - pars.N < 1.e-3; disp('Sum is
 
 %%
 subplot(1,3,2); hold on; grid on; box on;
+% figure; hold on;
+
 title('Random', 'FontSize', titlefont);
 xlabel('\boldmath$k^{\rm in}$', 'Interpreter', 'latex', 'FontSize', labelfont);
 ylabel('\boldmath$k^{\rm out}$', 'Interpreter', 'latex', 'FontSize', labelfont);
@@ -169,7 +178,7 @@ ylabel('\boldmath$k^{\rm out}$', 'Interpreter', 'latex', 'FontSize', labelfont);
 view(110, 10)
 
 % The 3D histogram
-minmax = linspace(randompars.meandegree - 3*sqrt(randompars.meandegree), randompars.meandegree + 3*sqrt(randompars.meandegree), 16);
+minmax = linspace(randompars.meandegree - round(4*sqrt(randompars.meandegree)), randompars.meandegree + round(4*sqrt(randompars.meandegree)), 16);
 xlim([minmax(1), minmax(end)])
 ylim([minmax(1), minmax(end)])
 hist = histogram2(randompars.degrees_i, randompars.degrees_o, minmax, minmax, 'Normalization', 'pdf','FaceAlpha',1,'ShowEmptyBins','on'); % Normal degree vectors from before
@@ -194,7 +203,8 @@ ax.ZTick(ax.ZTick < 0) = [];
 colormap(jet)
 
 %% A 2D scalefree network 
-scalefreepars = make_scalefreeparameters(pars, 3);
+scalefreepars = make_scalefreeparameters(pars, 4.3);
+scalefreepars.meandegree
 
 scalefreepars.P2D = @(x,y) P2D(x, y, scalefreepars.kmin, scalefreepars.kmax, scalefreepars.degree, scalefreepars.N)/pars.N;
 
@@ -238,7 +248,7 @@ colormap(jet)
 %% Produce 2D figure
 print(f_2Dpdfs, '../Figures/Distributions/2D.png', '-dpng', '-r600')
 close(f_2Dpdfs)
-
+end
 %% Functions:
 function P = P2D(X,Y, kmin, kmax, degree, N)
     P = X.^(-degree) .* Y.^(-degree);
