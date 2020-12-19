@@ -100,7 +100,7 @@ odeoptions = odeset('RelTol', 1.0e-9,'AbsTol', 1.0e-9);
 % disp('Made fully connected network figure')
 
 %% 1. Perform a full scale simulation of a fixed degree network:
-netdegree = round(pars.N*0.5);
+netdegree = round(p.N*0.5);
 
 f_fixeddegree = figure('Renderer', 'painters', 'Position', [50 800 800 400]); box on; hold on;
 xlim([tnow, tend]); ylim([0, 1]);
