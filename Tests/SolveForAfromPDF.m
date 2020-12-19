@@ -20,7 +20,7 @@ networkpars = make_randomparameters(pars, 0.3);
 degrees_i = networkpars.degrees_i;
 degrees_o = networkpars.degrees_o;
 
-titlefont = 15;
+titlefont = 18;
 labelfont = 15;
 
 %% The algorithm:

@@ -38,29 +38,31 @@ Algorithms that find the largest value in a vector start from the first or the l
 \centering
 \begin{subfigure}[b]{0.32\linewidth}
    \centering
-  \includegraphics[width=\linewidth, trim={1cm 2cm 1cm 1cm },clip]{../Figures/A_fixeddegree2.pdf}
+  \includegraphics[width=\linewidth, trim={0.5cm 0.5cm 1cm 0.5cm },clip]{../Figures/Adjacency matrices/A_fixeddegree.pdf}
 %   \caption{Adjacency matrix for a fixed-degree network.}
-   \label{fig:A_fixeddegree} 
+ %  \label{fig:A_fixeddegree} 
 \end{subfigure} \hfill
 \begin{subfigure}[b]{0.32\linewidth}
    \centering
-  \includegraphics[width=\linewidth, trim={1cm 2cm 1cm 1cm },clip]{../Figures/A_random2.pdf}
+  \includegraphics[width=\linewidth, trim={0.5cm 0.5cm 1cm 0.5cm },clip]{../Figures/Adjacency matrices/A_random.pdf}
 %   \caption{Adjacency matrix for a fixed-degree network.}
-   \label{fig:MFRPSS}
+%   \label{fig:MFRPSS}
 \end{subfigure} \hfill
 \begin{subfigure}[b]{0.32\linewidth}
    \centering
-  \includegraphics[width=\linewidth, trim={1cm 2cm 1cm 1cm },clip]{../Figures/A_scalefree1.pdf}
+  \includegraphics[width=\linewidth, trim={0.5cm 0.5cm 1cm 0.5cm },clip]{../Figures/Adjacency matrices/A_scalefree.pdf}
 %   \caption{Adjacency matrix for a fixed-degree network.}
-   \label{fig:MFRCPW}
+%   \label{fig:MFRCPW}
 \end{subfigure}
-   \caption{Adjacency matrices for different types of networks. We can see }
-   \label{fig:macroscopicstatesfixeddegree}
+   \caption{Adjacency matrices for different types of networks with $N$ = 500 and $\kmean$ = 100. We can see how the fixed-degree network is quite homogeneous, while the random network shows some more clustering. The scale-free network has a low number of nodes with a very high degree, which is why we see vertical and horizontal stripes in the adjacency matrix.}
+   \label{fig:adjacencymatrices}
 \end{figure}
 
 
-\subsection{Results}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque nisl eros, 
-pulvinar facilisis justo mollis, auctor consequat urna. Morbi a bibendum metus. 
-Donec scelerisque sollicitudin enim eu venenatis. Duis tincidunt laoreet ex, 
-in pretium orci vestibulum eget.
+\subsection{Fixed-degree networks as a baseline}
+\begin{figure}[H]
+\centering
+\includegraphics[width = \textwidth]{../Figures/InspectMeanFieldFixedDegree.pdf}
+\caption{Comparison}
+\label{fig:InspectMeanFieldFixedDegree}
+\end{figure}
