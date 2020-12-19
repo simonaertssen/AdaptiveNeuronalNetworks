@@ -20,7 +20,8 @@ networkpars = make_randomparameters(pars, 0.3);
 degrees_i = networkpars.degrees_i;
 degrees_o = networkpars.degrees_o;
 
-titlefont = 20;
+titlefont = 15;
+labelfont = 15;
 
 %% The algorithm:
 clc
@@ -131,8 +132,8 @@ toc
 % accurate.
 
 %% Test a fixed degree network:
-pars.N = 500;
-netdegree = 50;
+pars.N = 500; vec = linspace(0, pars.N, 11);
+netdegree = 100;
 fdpars = make_fixeddegreeparameters(pars, netdegree); 
 
 A_fixeddegree = adjacencymatrix(fdpars.degrees_i, fdpars.degrees_o); box on;
@@ -140,70 +141,49 @@ f_fixeddegree = figure('Renderer', 'painters', 'Position', [0 800 400 400]);
 hAxes = axes(f_fixeddegree); 
 imagesc(full(A_fixeddegree), 'Parent', hAxes);
 colormap(gray);
-title(hAxes, ['Fixed degree: $$\langle k \rangle$$ = ', num2str(fdpars.meandegree)],'interpreter','latex', 'FontSize', titlefont)
-exportpdf(f_fixeddegree, '../Figures/Adjacency matrices/A_fixeddegree1.pdf', true);
 
-close(f_fixeddegree)
+title(hAxes, 'Fixed-degree', 'FontSize', titlefont)
+xticks(vec)
+xticklabels(string(vec))
+xlabel('\boldmath$k^{\rm out}$', 'Interpreter', 'latex', 'FontSize', labelfont);
+ylabel('\boldmath$k^{\rm in}$', 'Interpreter', 'latex', 'FontSize', labelfont);
 
-%%
-netdegree = 300;
-fdpars = make_fixeddegreeparameters(pars, netdegree); 
-
-A_fixeddegree = adjacencymatrix(fdpars.degrees_i, fdpars.degrees_o);
-f_fixeddegree = figure('Renderer', 'painters', 'Position', [0 800 400 400]); box on;
-hAxes = axes(f_fixeddegree); 
-imagesc(full(A_fixeddegree), 'Parent', hAxes);
-colormap(gray);
-title(hAxes, ['Fixed degree $$A_{ij}$$: $$\langle k \rangle$$ = ', num2str(fdpars.meandegree)],'interpreter','latex', 'FontSize', titlefont)
-exportpdf(f_fixeddegree, '../Figures/Adjacency matrices/A_fixeddegree2.pdf', true);
-
+exportpdf(f_fixeddegree, '../Figures/Adjacency matrices/A_fixeddegree.pdf', true);
 close(f_fixeddegree)
 
 
 %% Test using the poisson distribution of random networks
-netp = 0.10043;
+netp = 0.200402;
 rdpars = make_randomparameters(pars, netp);
 
 A_random = adjacencymatrix(rdpars.degrees_i, rdpars.degrees_o);
 f_random = figure('Renderer', 'painters', 'Position', [50 800 400 400]);
 hAxes = axes(f_random); 
-imshow(full(A_random), 'Parent', hAxes);
-title(hAxes, ['Random $$A_{ij}$$: $$N$$ = ', num2str(pars.N), ', $$\langle k \rangle$$ = ', num2str(round(rdpars.meandegree))],'interpreter','latex', 'FontSize', titlefont)
-exportpdf(f_random, '../Figures/Adjacency matrices/A_random1.pdf', true);
+imagesc(full(A_random), 'Parent', hAxes);
+colormap(gray);
 
+title(hAxes, 'Random', 'FontSize', titlefont)
+xlabel('\boldmath$k^{\rm out}$', 'Interpreter', 'latex', 'FontSize', labelfont);
+ylabel('\boldmath$k^{\rm in}$', 'Interpreter', 'latex', 'FontSize', labelfont);
+
+exportpdf(f_random, '../Figures/Adjacency matrices/A_random.pdf', true);
 close(f_random)
 
-netp = netdegree/(pars.N-1);
-rdpars = make_randomparameters(pars, netp);
-
-A_random = adjacencymatrix(rdpars.degrees_i, rdpars.degrees_o);
-f_random = figure('Renderer', 'painters', 'Position', [50 800 400 400]);
-hAxes = axes(f_random); 
-imshow(full(A_random), 'Parent', hAxes);
-title(hAxes, ['Random $$A_{ij}$$: $$N$$ = ', num2str(pars.N), ', $$\langle k \rangle$$ = ', num2str(round(rdpars.meandegree))],'interpreter','latex', 'FontSize', titlefont)
-exportpdf(f_random, '../Figures/Adjacency matrices/A_random2.pdf', true);
-close(f_random)
 
 %% Now using scale free networks:
 degree = 2.1;
-sfpars = make_scalefreeparameters(pars, degree, 100, 500);
+sfpars = make_scalefreeparameters(pars, degree, 50, 260);
+sfpars.meandegree
 
 A_scalefree = adjacencymatrix(sfpars.degrees_i, sfpars.degrees_o);
 f_scalefree = figure('Renderer', 'painters', 'Position', [50 800 400 400]);
 hAxes = axes(f_scalefree); 
-imshow(full(A_scalefree), 'Parent', hAxes);
-title(hAxes, ['Scale free $$A_{ij}$$: $$N$$ = ', num2str(pars.N), ', $$ k \in $$ [', num2str(sfpars.kmin), ',', num2str(sfpars.kmax), '], $$\gamma$$ = ', num2str(degree)],'interpreter','latex', 'FontSize', titlefont)
-exportpdf(f_scalefree, '../Figures/Adjacency matrices/A_scalefree1.pdf', true);
+imagesc(full(A_scalefree), 'Parent', hAxes);
+colormap(gray)
 
-close(f_scalefree)
+title(hAxes, 'Scale-free', 'FontSize', titlefont)
+xlabel('\boldmath$k^{\rm out}$', 'Interpreter', 'latex', 'FontSize', labelfont);
+ylabel('\boldmath$k^{\rm in}$', 'Interpreter', 'latex', 'FontSize', labelfont);
 
-degree = 10;
-sfpars = make_scalefreeparameters(pars, degree, 50, pars.N);
-
-A_scalefree = adjacencymatrix(sfpars.degrees_i, sfpars.degrees_o);
-f_scalefree = figure('Renderer', 'painters', 'Position', [50 800 400 400]);
-hAxes = axes(f_scalefree); 
-imshow(full(A_scalefree), 'Parent', hAxes);
-title(hAxes, ['Scale free $$A_{ij}$$: $$N$$ = ', num2str(pars.N), ', $$ k \in $$ [', num2str(sfpars.kmin), ',', num2str(sfpars.kmax), '], $$\gamma$$ = ', num2str(degree)],'interpreter','latex', 'FontSize', titlefont)
-exportpdf(f_scalefree, '../Figures/Adjacency matrices/A_scalefree2.pdf', true);
+exportpdf(f_scalefree, '../Figures/Adjacency matrices/A_scalefree.pdf', true);
 close(f_scalefree)
