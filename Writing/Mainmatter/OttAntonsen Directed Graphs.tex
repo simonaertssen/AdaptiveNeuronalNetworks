@@ -1,7 +1,7 @@
 % !TEX root = ../main.tex
 \newpage
 \section{\mywork Mean Field Reductions for undirected graphs}
-We will now investigate the questions that were raised after deriving the \MFR. How do we deal with the curse of dimensionality concerning the degree distribution? But there are also other questions to be answered. If the synchronisation dynamics of the network of Theta neurons \eqref{eq:thetaneuronnetwork} can be predicted by the Ott-Antonsen reductions \eqref{eq:OttAntonsenMeanField} and \eqref{eq:MeanField}, then it can also be measured by the order parameter \eqref{eq:orderparameter}. These systems describe the same quantity, but how can we show that?
+We will now investigate the questions that were raised after deriving the \MFR. How do we deal with the curse of dimensionality concerning the degree distribution? But there are also other questions to be answered. If the synchronisation dynamics of the network of Theta neurons \eqref{eq:thetaneuronnetwork} can be predicted by the Ott-Antonsen reductions \cref{eq:OttAntonsenSystemFull, eq:OttAntonsenMeanField} and \eqref{eq:MeanField}, then it can also be measured by the order parameter \eqref{eq:orderparameter}. These systems describe the same quantity, but how can we show that?
 
 
 \subsection{Directed graphs as permutations}
@@ -69,35 +69,46 @@ As the systems in \cref{eq:orderparameter,eq:OttAntonsenMeanField,eq:MeanField} 
 %  If the initial conditions of all systems are exactly the same, then we should find that they describe the exact same behaviour.
 % - macroscopically and microscopically - and this is the best way to test the \MFR theory. 
 
-When transforming between $\theta_i(t) \leftrightarrow z(\k,t) \leftrightarrow Z(t)$ we go from $\T^N \leftrightarrow \C^{M_\k} \leftrightarrow \C$. If we have the same initial conditions, then all systems will predict the same behaviour. We will only map everything to $\C$.\\
-The following maps can be used to transform the initial conditions, but as they do not give any qualitative information on the dynamics or distributions of the variables, they are not valid for transforming between dynamics. \\
+%When transforming between $\theta_i(t) \leftrightarrow z(\k,t) \leftrightarrow Z(t)$ we go from $\T^N \leftrightarrow \C^{M_\k} \leftrightarrow \C$. If we have the same initial conditions, then all systems will predict the same behaviour. We will only map everything to $\C$.\\
+As we can only really study behaviour of $Z$ and $\overline{Z}$ in the complex unit circle, the most important relation we need to find is the transformation from $\C$ to $\T^{N}$ and from $\C$ to $\C^{M_{\k}}$, which yield the phase angles $\theta(0)_i$ and the degree dynamics $z(\k,0)$ from $Z(0)$ and $\overline{Z}(0)$ respectively. \\
+% The following maps can be used to transform the initial conditions, but as they do not give any qualitative information on the dynamics or distributions of the variables, they are not valid for transforming between dynamics. \\
 
-Given an initial phase angle $\theta(0)_i$ or initial degree dynamics $z(\k, 0)$ we wish to find their resulting description in the complex uni circle. Mapping operations onto the order parameter is straightforward and happens by the definitions in  \eqref{eq:orderparameter} and \eqref{eq:OttAntonsenMeanField}:
-\begin{align*}
-\theta(0)_i \xrightarrow{\hspace*{8mm}} Z(0) &= \frac{1}{N} \sum_{j=1}^N e^{\ic\theta(0)_j} \\
-z(\k,0) \longrightarrow \overline{Z}(0) &= \frac{1}{N} \sum_{\k} P(\k) z(\k, 0)
-\end{align*}
-Starting from an initial synchronization $Z(0)$ and taking the inverse tranfsormation, we can make use of the fact that the average of a set of identical values is the value itself. This is simple for $\theta(0)_i$: all will be the same at $t = 0$. For $z(\k,0)$ we have a weighed average which we need to undo, making sure that the whole sums up to $N$.
-\begin{align*}
-Z(0) \xrightarrow{\hspace*{9mm}} \theta(0)_{i} &= -\ic \cdot \log \left( Z(0) \right) \\
-Z(0) \longrightarrow z(\k,0) &= \overline{\frac{Z(0) \cdot n(\k)}{P(\k)}}
-\end{align*}
+Let us start with the simplest transformation. Given an initial phase angle $\theta(0)_i$ or initial degree dynamics $z(\k, 0)$ we wish to find their resulting description in the complex unit circle. Mapping operations onto the order parameter is straightforward using \eqref{eq:orderparameter} and \eqref{eq:OttAntonsenMeanField}:
+\begin{align}
+\theta(0)_i \xrightarrow{\hspace*{8mm}} Z(0) &= \frac{1}{N} \sum_{j=1}^N e^{\ic\theta(0)_j} \label{eq:thetatoZ}\\
+z(\k,0) \longrightarrow \overline{Z}(0) &= \frac{1}{N} \sum_{\k \in \K} P(\k) z(\k, 0)  \label{eq:ztoZ}
+\end{align}
+Starting from an initial synchronization $Z(0)$ and taking the inverse tranfsormation, we can make use of the fact that the average of a set of identical values is the value itself. This is simple for $\theta(0)_i$: we can take all phase angles to be the same at $t = 0$. For $z(\k,0)$ we have a weighed average which we need to undo, making sure that the whole sums up to $N$.
+\begin{align}
+Z(0) \xrightarrow{\hspace*{9mm}} \theta(0)_{i} &= -\ic \cdot \log \left( Z(0) \right)  \label{eq:Ztotheta} \\
+Z(0) \longrightarrow z(\k,0) &= \frac{Z(0) \cdot n(\k)}{P(\k)} \label{eq:Ztoz}
+\end{align}
 
-Then, transferring between $\theta_i$ and $z(\k)$, we need to filter $\theta_i$ per degree:
-\begin{align*}
-z(\k) \longrightarrow \theta_i &= -\ic \cdot \log \left( \frac{z(\k)\cdot P(\k)}{n(\k)} \right) \qquad \text{ if } \degree(\theta_i) = \k \\
-\theta_i \longrightarrow z(\k) &= \sum_{\k} e^{\ic \vartheta_{\k}} \qquad \qquad \vartheta_{\k} = \sum_{i = 1}^{n(\k)} \theta_i \in 
-\left\{ \theta_i \vert \degree(\theta_i) = \k, \forall i \leq N \right\}
-\end{align*}
-%Or also $\sum_i^N A_{ij} = k^{\rm in} \cup \sum_j^N A_{ij} = \kout$. 
-
+Then, transforming between $\theta_i$ and $z(\k)$, we need to filter $\theta_i$ per degree as there exists usually more than one node with $\degree ( \theta_i ) = \k$:
+\begin{alignat}{2}
+z(\k,0) \longrightarrow \theta(0)_i &= -\ic \cdot \log \left( \frac{z(\k)\cdot P(\k)}{n(\k)} \right) \qquad \forall \: \theta \in \{ \theta \: | \: \degree(\theta) = \k \}  \label{eq:ztottheta}\\
+\theta(0)_i \longrightarrow z(\k,0) &= \sum_{\k} e^{\ic \vartheta_{\k}} \qquad \qquad \vartheta_{\k} = \sum^{n(\k)} \theta \in  \label{eq:thetatoz}
+\left\{ \theta \: | \: \degree(\theta) = \k \right\}
+\end{alignat}
 We can see how $\lim_{N \rightarrow +\infty} n(\k) = P(\k)$, which makes these maps exact for any network size. 
+
+
+\subsection{Commutativity of complex vectors} 
+It is important to notice that in \eqref{eq:OttAntonsenSystemFull} and \eqref{eq:OttAntonsenMeanField} and many other equations in this work, we compute an inner vector product, which is non-commutative for complex numbers:
+\begin{align}
+a \cdot b = \overline{b \cdot a} \qquad a, b \in \C^r
+\end{align}
+This is the result of the \textsl{Conjugate} or \textsl{Hermitian} symmetry of the inner product. This is especially important in the \matlab implementation, as one needs to remain consistent with left-hand or right-hand products.
 
 
 \subsection{Fixed-degree networks as a baseline}
 \begin{figure}[ht]
 \centering
 \includegraphics[width = \textwidth]{../Figures/InspectMeanFieldFixedDegree.pdf}
-\caption{Comparison}
+\caption{Comparison of the simulation of a fixed-degree network of Theta neurons and the Ott-Antonsen theory by the magnitude of the order parameter. We see that the same three macroscopic states are found by the three descriptions. As a matter of fact, the systems \eqref{eq:OttAntonsenMeanField} and \eqref{eq:MeanField} yield the exact same behaviour. There are small differences between simulation and theory, but these are most likely due to a finite network size and a finite integration step. This test benchmarks the lowest amount of error we can observe between simulation and theory, as for fixed-degree networks \eqref{eq:OttAntonsenSystemFull} consists of a single equation.}
 \label{fig:InspectMeanFieldFixedDegree}
 \end{figure}
+
+
+\subsection{Fixed-degree networks as a baseline}
+
