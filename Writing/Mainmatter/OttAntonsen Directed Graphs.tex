@@ -84,14 +84,13 @@ Z(0) \xrightarrow{\hspace*{9mm}} \theta(0)_{i} &= -\ic \cdot \log \left( Z(0) \r
 Z(0) \longrightarrow z(\k,0) &= \frac{Z(0) \cdot n(\k)}{P(\k)} \label{eq:Ztoz}
 \end{align}
 
-Then, transforming between $\theta_i$ and $z(\k)$, we need to filter $\theta_i$ per degree as there exists usually more than one node with $\degree ( \theta_i ) = \k$:
+Then, transforming between $\theta_i$ and $z(\k)$, we need to filter $\theta_i$ per degree as there exist $P(\k)$ number of nodes with $\degree ( \theta_i ) = \k$:
 \begin{alignat}{2}
-z(\k,0) \longrightarrow \theta(0)_i &= -\ic \cdot \log \left( \frac{z(\k)\cdot P(\k)}{n(\k)} \right) \qquad \forall \: \theta \in \{ \theta \: | \: \degree(\theta) = \k \}  \label{eq:ztottheta}\\
-\theta(0)_i \longrightarrow z(\k,0) &= \sum_{\k} e^{\ic \vartheta_{\k}} \qquad \qquad \vartheta_{\k} = \sum^{n(\k)} \theta \in  \label{eq:thetatoz}
-\left\{ \theta \: | \: \degree(\theta) = \k \right\}
+z(\k,0) \longrightarrow \theta(0)_i &= -\ic \cdot \log \left( \frac{z(\k)\cdot P(\k)}{n(\k)} \right) \qquad &&\forall \: \theta \in \{ \theta \: | \: \degree(\theta) = \k \}  \label{eq:ztottheta}\\
+\theta(0)_i \longrightarrow z(\k,0) &= \sum_{\k} e^{\ic \vartheta_{\k}} \qquad \qquad &&\forall \: \vartheta_{\k} \in \{ \vartheta_{\k} = \sum^{n(\k)} \theta \: | \: \degree(\theta) = \k \} \label{eq:thetatoz}
 \end{alignat}
-We can see how $\lim_{N \rightarrow +\infty} n(\k) = P(\k)$, which makes these maps exact for any network size. 
-
+%We can see how $\lim_{N \rightarrow +\infty} n(\k) = P(\k)$, which makes these maps exact for any network size. 
+The reason that these transformations only hold for the initial state is because it is currently unknown what distributions $\theta(t)_i$ and $z(\k,t)$ should have. That information is lost when taking the (weighed) average in \eqref{eq:orderparameter} and \eqref{eq:MeanField}.
 
 \subsection{Commutativity of complex vectors} 
 It is important to notice that in \eqref{eq:OttAntonsenSystemFull} and \eqref{eq:OttAntonsenMeanField} and many other equations in this work, we compute an inner vector product, which is non-commutative for complex numbers:
@@ -110,5 +109,5 @@ This is the result of the \textsl{Conjugate} or \textsl{Hermitian} symmetry of t
 \end{figure}
 
 
-\subsection{Fixed-degree networks as a baseline}
+\subsection{Results for arbitrary network topologies}
 
