@@ -357,7 +357,7 @@ ZOA = flip(ZOA(round(numel(T)*0.9):end,:));
 [~, pksloc] = findpeaks(abs(ZOA),'MinPeakDistance',100);
 idx = pksloc(1):pksloc(3);
 plot(real(ZOA(idx)), imag(ZOA(idx)), '-', 'LineWidth', linewidth, 'Color', col);
-plot_arrow(real(ZOA(end)), imag(ZOA(end)), real(ZOA(end-2)), imag(ZOA(end-2)),'linewidth', 2, ...
+plot_arrow(real(ZOA(end)), imag(ZOA(end)), real(ZOA(end-5)), imag(ZOA(end-5)),'linewidth', 2, ...
     'color', col,'facecolor', col,'edgecolor', col, 'headwidth',0.7,'headheight',3);
 
 phasespaceplot();
