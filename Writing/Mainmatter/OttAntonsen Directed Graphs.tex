@@ -1,7 +1,7 @@
 % !TEX root = ../main.tex
 \newpage
 \section{\mywork Mean Field Reductions for undirected graphs}
-We will now investigate the questions that were raised after deriving the \MFR. How do we deal with the curse of dimensionality concerning the degree distribution? But there are also other questions to be answered. If the synchronisation dynamics of the network of Theta neurons \eqref{eq:thetaneuronnetwork} can be predicted by the Ott-Antonsen reductions \cref{eq:OttAntonsenSystemFull, eq:OttAntonsenMeanField} and \eqref{eq:MeanField}, then it can also be measured by the order parameter \eqref{eq:orderparameter}. These systems describe the same quantity, but how can we show that?
+We will now investigate the questions that were raised after deriving the \MFR. How do we deal with the curse of dimensionality concerning the degree distribution? But there are also other questions to be answered. If the synchronisation dynamics of the network of Theta neurons \eqref{eq:thetaneuronnetwork} can be predicted by the Ott-Antonsen reductions \cref{eq:OttAntonsenSystemFull,eq:OttAntonsenMeanField,eq:MeanField}, then it can also be measured by the order parameter \eqref{eq:orderparameter}. These systems describe the same quantity, but how can we show that?
 
 
 \subsection{Directed graphs as permutations}
@@ -101,7 +101,7 @@ This is the result of the \textsl{Conjugate} or \textsl{Hermitian} symmetry of t
 
 
 \subsection{Fixed-degree networks as a baseline}
-\begin{figure}[ht]
+\begin{figure}[H]
 \centering
 \includegraphics[width = \textwidth]{../Figures/InspectMeanFieldFixedDegree.pdf}
 \caption{Comparison of the simulation of a fixed-degree network of Theta neurons and the Ott-Antonsen theory by the magnitude of the order parameter. We see that the same three macroscopic states are found by the three descriptions. As a matter of fact, the systems \eqref{eq:OttAntonsenMeanField} and \eqref{eq:MeanField} yield the exact same behaviour. There are small differences between simulation and theory, but these are most likely due to a finite network size and a finite integration step. This test benchmarks the lowest amount of error we can observe between simulation and theory, as for fixed-degree networks \eqref{eq:OttAntonsenSystemFull} consists of a single equation.}
@@ -110,4 +110,47 @@ This is the result of the \textsl{Conjugate} or \textsl{Hermitian} symmetry of t
 
 
 \subsection{Results for arbitrary network topologies}
+\begin{figure}[H]
+\centering
+\includegraphics[width = \textwidth]{../Figures/InspectMeanFieldRandom.pdf}
+\caption{Comparison of the simulation of a random network of Theta neurons and the Ott-Antonsen theory by the magnitude of the order parameter. }
+\label{fig:InspectMeanFieldRandom}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width = \textwidth]{../Figures/InspectMeanFieldScaleFree.pdf}
+\caption{Comparison of the simulation of a scale-free network of Theta neurons and the Ott-Antonsen theory by the magnitude of the order parameter.}
+\label{fig:InspectMeanFieldScaleFree}
+\end{figure}
+
+
+
+\subsection{Fixpoint iteration}
+In \cite{OttAntonsen2017} a fixpoint iteration is suggested to find attractive fixpoints of the system \eqref{eq:OttAntonsenSystemFull}. If we set $\frac{\partial z(\k, t)}{\partial t} = 0$ we can solve the following system:
+\begin{align}
+\ic \frac{(z(\k, t)-1)^{2}}{2} &= \frac{(z(\k, t)+1)^{2}}{2} \cdot I(\k) \nonumber \\
+\ic \left(\frac{z(\k, t)-1}{z(\k, t)+1}\right)^2 &= I(\k) \nonumber \\
+\frac{z(\k, t)-1}{z(\k, t)+1} &\equiv b(\k,t) \nonumber \\
+z(\k, t) - 1 &= b(\k,t) z(\k, t) + b(\k,t)  \nonumber \\
+z(\k, t) \cdot (1 - b(\k,t)) &= b(\k,t)  + 1\nonumber
+\end{align}
+We can then obtain the stable equilibria from:
+\begin{align}
+\ic b(\k,t)^2 = I(\k) \hspace{10mm} z(\k, t)_{\pm} = \frac{1 \pm b(\k,t)}{1 \mp b(\k,t)} \label{eq:fixedpointiterations} 
+\end{align}
+where the signs are chosen so that $\vert z(\k, t) \vert \leq 1$. This works well, and in general this method converges fast.
+
+
+\subsection{A Newton-Raphson iteration for all fixpoints}
+The fixpoint iteration \eqref{eq:fixedpointiterations} only gives us the stable equilibria of the \MFR. We can obtain all equilibria and their stability through the Jacobian from a Newton-Raphson iteration, which has been described in \ref{app:NewtonRaphson}. However, finding the Jacobian is a challenge, as \eqref{eq:OttAntonsenSystemFull} is non-holomorphic: $H_2(\k,t)$ does not satisfy the Cauchy-Riemann equations.
+%For \eqref{eq:OttAntonsenSystemFull}, we can compute the Jacobian for the diagonal and off-diagonal elements separately. But as $z(\k,t)$ is a complex function, first we need to understand what the derivative of a complex function is. 
+\begin{align*}
+z(\k,t) &= x(\k,t) + \ic \cdot y(\k,t) \qquad x, y \in \R^{M__{\k}}\\
+f\left( z(\k,t) \right) &= u\left(x(\k, t), y(\k, t) \right) + \ic v\left(x(\k, t), y(\k, t) \right)\\
+&= \frac{1}{\kmean} \sum_{\kacc} P\left(\kacc\right) a\left(\kacc \rightarrow \k\right) \cdot \left( 1 + \frac{z(\kacc, t)^2 + \overline{z}(\kacc, t)^2}{6} - \frac{4}{3} \Re(z(\kacc, t)) \right)\\
+&= \frac{1}{\kmean} \sum_{\kacc} P\left(\kacc\right) a\left(\kacc \rightarrow \k\right) \cdot \left( 1 + \frac{x(\kacc, t)^2}{3} - \frac{4}{3} x(\kacc, t) \right)
+\end{align*}
+This leaves us with only $u$ defined as a real-valued function, so that the Cauchy-Riemann equations do not hold as $v$ is zero.
+ 
 

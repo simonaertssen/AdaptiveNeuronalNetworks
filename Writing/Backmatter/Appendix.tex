@@ -68,6 +68,21 @@ T &= \lim_{a \rightarrow \infty} \int_{-a}^{a} \frac{I}{\left(\frac{v}{\sqrt{I}}
 \end{align*}
 So the frequency of oscillation is proportional to $\sqrt{I}$. 
 
+
+\subsection{Newton-Raphson root iteration} \label{app:NewtonRaphson}
+We define the equilibria $\boldsymbol{x^\ast} \in \R^n$ of a multivariate function $\boldsymbol{f}(\boldsymbol{x}) : \R^n \rightarrow \R^n$ with $\boldsymbol{f}(\boldsymbol{x}) = \boldsymbol{0}$. Expanding $\boldsymbol{f}$ as a Taylor series, we obtain:
+\begin{align*}
+f_i(\boldsymbol{x} + \delta \boldsymbol{x}) =f_{i}(\boldsymbol{x}) + \sum_{j=1}^{n} \frac{\partial f_{i}(\boldsymbol{x})}{\partial x_{j}} \delta x_{j}+O\left(\delta \boldsymbol{x}^{2}\right) \approx f_{i}(\boldsymbol{x})+\sum_{j=1}^{n} \frac{\partial f_{i}(\boldsymbol{x})}{\partial x_{j}} \delta x_{j}, \qquad (i=1, \cdots, n)
+\end{align*}
+We can also write this in vector notation, by setting $\boldsymbol{J}(\boldsymbol{x}) = \nabla \boldsymbol{f}(\boldsymbol{x}) = \frac{d}{d\boldsymbol{x}} \boldsymbol{f}(\boldsymbol{x}) \in \R^{n \times n}$ 
+\begin{align*}
+\boldsymbol{f}(\boldsymbol{x}+\delta \boldsymbol{x}) &\approx\left[\begin{array}{c}f_{1}(\boldsymbol{x}) \\ \vdots \\ f_{N}(\boldsymbol{x})\end{array}\right] 
++ \left[\begin{array}{ccc}\frac{\partial f_{1}}{\partial x_{1}} & \cdots & \frac{\partial f_{1}}{\partial x_{N}} \\ \vdots & \ddots & \vdots \\ \frac{\partial f_{N}}{\partial x_{1}} & \cdots & \frac{\partial f_{N}}{\partial x_{N}}\end{array}\right]
+\left[\begin{array}{c}\delta x_{1} \\ \vdots \\ \delta x_{N}\end{array}\right] 
+=\boldsymbol{f}(\boldsymbol{x})+\boldsymbol{J}(\boldsymbol{x}) \delta \boldsymbol{x} 
+\end{align*}
+By assuming $\boldsymbol{f}(\boldsymbol{x}+\delta \boldsymbol{x}) = 0$ we can find that $\delta \boldsymbol{x} = -\boldsymbol{J}^{-1}( \boldsymbol{x}) \boldsymbol{f}(\boldsymbol{x})$ so that $\boldsymbol{x} + \delta \boldsymbol{x} =  \boldsymbol{x} - \boldsymbol{J}^{-1} (\boldsymbol{x}) \boldsymbol{f}(\boldsymbol{x})$. This expression converges to $\boldsymbol{x^\ast}$. When the equations are nonlinear, the equations converge to the real root as $\boldsymbol{x}_k =  \boldsymbol{x}_k - \boldsymbol{J}^{-1} ( \boldsymbol{x}_k)\boldsymbol{f}(\boldsymbol{x}_k)$.
+
 \subsection{Jacobian of the Ott-Antonsen manifold}
 \subsection{Jacobian of the Ott-Antonsen extended manifold}
 
