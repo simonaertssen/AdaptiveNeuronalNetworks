@@ -126,11 +126,11 @@ The solution for the periodic regime $I > 0$ is :
 \begin{align}
 V(t) = -\sqrt{I} \cdot \cot (t \sqrt{I}) \label{eq:ThetaNeuronModelSolutionPeriodic}
 \end{align}
-These equations assume that at $t=0$ a spike has occured. he steps required to find \eqref{eq:ThetaNeuronModelSolutionPeriodicExcitable}-\eqref{eq:ThetaNeuronModelSolutionPeriodic} are described in \ref{app:ThetaModelSolutions}. Solutions for $\theta$ are found by taking the inverse of the transformation \eqref{eq:QIFtransformation}.
+These equations assume that at $t=0$ a spike has occured. The steps required to find \eqref{eq:ThetaNeuronModelSolutionPeriodicExcitable}-\eqref{eq:ThetaNeuronModelSolutionPeriodic} are described in \ref{app:ThetaModelSolutions}. Solutions for $\theta$ are found by taking the inverse of the transformation \eqref{eq:QIFtransformation}.
 
 
 \subsection{Numerical solutions} \label{sec:TheThetaNeuronModelODE45}
-When $I$ is not static, we need to revert to numerical solutions. For this work, a fixed-step 4-stage Runge-Kutta method was implemented (Dormand-Prince 45) to numerically solve all differential equations. A fixed-step algorithm makes it possible to finely tune the large memory demand of the systems presented in this work. 
+When $I$ is not static, we need to revert to numerical solutions. For this work, a fixed-step 4-stage Runge-Kutta method (Dormand-Prince 45) was implemented to numerically solve all differential equations. A fixed-step algorithm makes it possible to finely tune the large memory demand of the systems presented in this work. 
 
 
 \subsection{Frequency response} \label{sec:TheThetaNeuronModelFrequencyResponse}
