@@ -3,7 +3,7 @@ addpath('../Functions');
 labelfont = 15;
 titlefont = 15;
 
-make1Dplots = false;
+make1Dplots = true;
 make2Dplots = true;
 
 %% Test the different networks and their statistical properties
@@ -16,7 +16,7 @@ meandegreetoget = 100;
 
 %% Figure handle
 if make1Dplots == true
-f_1Dpdfs = figure('Renderer', 'painters', 'Position', [50 800 900 400]); box on; hold on;
+f_1Dpdfs = figure('Renderer', 'painters', 'Position', [50 800 1000 200]); box on; hold on;
 
 %% A 1D random network: CORRECT
 randompars = make_randomparameters(pars, meandegreetoget/(pars.N - 1));
@@ -26,7 +26,7 @@ if abs(randompars.meandegree - sum(randompars.degrees_i)/pars.N) < 1.0e-3*random
 
 limits = round(randompars.meandegree + sqrt(randompars.meandegree)*[-3, 3]);
 
-subplot(2,3,2); hold on; grid on; axis square; box on;
+subplot(1,3,2); hold on; grid on; axis square; box on;
 title("Random", 'FontSize', titlefont)
 xlim(limits); x = limits(1):limits(2);
 histogram(randompars.degrees_i, 'Normalization', 'pdf');
@@ -34,9 +34,9 @@ plot(x, randompars.P(x)/pars.N, 'LineWidth', 3);
 xline(randompars.meandegree, 'k--', 'LineWidth', 2)
 xlabel('Degree', 'Interpreter', 'none', 'FontSize', labelfont)
 
-subplot(2,3,5); hold on; grid on; axis square; box on;
-scatter(randompars.degrees_i, randompars.degrees_o, '.k');
-xlabel('$$k^{\rm in}$$', 'Interpreter', 'latex', 'FontSize', labelfont)
+% subplot(1,3,5); hold on; grid on; axis square; box on;
+% scatter(randompars.degrees_i, randompars.degrees_o, '.k');
+% xlabel('$$k^{\rm in}$$', 'Interpreter', 'latex', 'FontSize', labelfont)
 
 %% A 1D scale free network: CORRECT
 kmin = 68; kmax = 200;
@@ -48,7 +48,7 @@ if abs(scalefreepars.meandegree - sum(scalefreepars.degrees_i)/pars.N) < 1.0e-3*
 
 limits = [kmin, kmax];
 
-plt2 = subplot(2,3,3); hold on; grid on; axis square; box on;
+plt2 = subplot(1,3,3); hold on; grid on; axis square; box on;
 title("Scale-free", 'FontSize', titlefont)
 
 xlim([limits(1) - 10, limits(2) + 10]); x = limits(1):limits(2);
@@ -58,11 +58,11 @@ xline(scalefreepars.meandegree, 'k--', 'LineWidth', 2)
 xlabel('Degree', 'Interpreter', 'none', 'FontSize', labelfont)
 pos = plt2.Position; plt2.Position = [pos(1) - 0.09, pos(2), pos(3), pos(4)];
 
-plt2 = subplot(2,3,6); hold on; grid on; axis square; box on;
-xlim(limits); ylim(limits);
-scatter(scalefreepars.degrees_i, scalefreepars.degrees_o, '.k');
-xlabel('$$k^{\rm in}$$', 'Interpreter', 'latex', 'FontSize', labelfont)
-pos = plt2.Position; plt2.Position = [pos(1) - 0.09, pos(2), pos(3), pos(4)];
+% plt2 = subplot(2,3,6); hold on; grid on; axis square; box on;
+% xlim(limits); ylim(limits);
+% scatter(scalefreepars.degrees_i, scalefreepars.degrees_o, '.k');
+% xlabel('$$k^{\rm in}$$', 'Interpreter', 'latex', 'FontSize', labelfont)
+% pos = plt2.Position; plt2.Position = [pos(1) - 0.09, pos(2), pos(3), pos(4)];
 
 %% A 1D fixed degree network / diracnet: CORRECT
 fixeddegreepars = make_fixeddegreeparameters(pars, meandegreetoget);
@@ -72,7 +72,7 @@ if fixeddegreepars.meandegree == sum(fixeddegreepars.degrees_i)/pars.N; disp('Me
 
 limits = round(fixeddegreepars.meandegree + fixeddegreepars.meandegree*[-0.02, 0.02]);
 
-plt = subplot(2,3,1); hold on; grid on; axis square; box on;
+plt = subplot(1,3,1); hold on; grid on; axis square; box on;
 title("Fixed degree", 'FontSize', titlefont)
 xlim(limits); x = limits(1):0.01:limits(2);
 histogram(fixeddegreepars.degrees_i, 'Normalization', 'pdf');
@@ -82,15 +82,15 @@ xlabel('Degree', 'Interpreter', 'none', 'FontSize', labelfont)
 ylabel('Density [%]', 'Interpreter', 'none', 'FontSize', labelfont);
 pos = plt.Position; plt.Position = [pos(1) + 0.09, pos(2), pos(3), pos(4)];
 
-plt = subplot(2,3,4); hold on; grid on; axis square; box on;
-xlim([fixeddegreepars.meandegree-1, fixeddegreepars.meandegree+1]);
-ylim([fixeddegreepars.meandegree-1, fixeddegreepars.meandegree+1]);
-xticks([fixeddegreepars.meandegree-1, fixeddegreepars.meandegree, fixeddegreepars.meandegree+1])
-yticks([fixeddegreepars.meandegree-1, fixeddegreepars.meandegree, fixeddegreepars.meandegree+1])
-scatter(fixeddegreepars.degrees_i, fixeddegreepars.degrees_o, '.k');
-xlabel('$$k^{\rm in}$$', 'Interpreter', 'latex', 'FontSize', labelfont)
-ylabel('$$k^{\rm out}$$', 'Interpreter', 'latex', 'FontSize', labelfont)
-pos = plt.Position; plt.Position = [pos(1) + 0.09, pos(2), pos(3), pos(4)];
+% plt = subplot(2,3,4); hold on; grid on; axis square; box on;
+% xlim([fixeddegreepars.meandegree-1, fixeddegreepars.meandegree+1]);
+% ylim([fixeddegreepars.meandegree-1, fixeddegreepars.meandegree+1]);
+% xticks([fixeddegreepars.meandegree-1, fixeddegreepars.meandegree, fixeddegreepars.meandegree+1])
+% yticks([fixeddegreepars.meandegree-1, fixeddegreepars.meandegree, fixeddegreepars.meandegree+1])
+% scatter(fixeddegreepars.degrees_i, fixeddegreepars.degrees_o, '.k');
+% xlabel('$$k^{\rm in}$$', 'Interpreter', 'latex', 'FontSize', labelfont)
+% ylabel('$$k^{\rm out}$$', 'Interpreter', 'latex', 'FontSize', labelfont)
+% pos = plt.Position; plt.Position = [pos(1) + 0.09, pos(2), pos(3), pos(4)];
 
 %% Test: a 1D lognormal network - inspired by scale-free CORRECT
 % lognormpars = make_lognormparameters(pars, 3, 1, 500);
@@ -108,7 +108,9 @@ pos = plt.Position; plt.Position = [pos(1) + 0.09, pos(2), pos(3), pos(4)];
 % xline(lognormpars.meandegree, 'k--')
 
 %% Produce 1D figure
-print(f_1Dpdfs, '../Figures/Distributions/1D.png', '-dpng', '-r300')
+% print(f_1Dpdfs, '../Figures/Distributions/1D.png', '-dpng', '-r300')
+exportgraphics(f_1Dpdfs,'../Figures/Distributions/1D.pdf')
+
 close(f_1Dpdfs)
 end
 %% Now the 2D pdfs:
@@ -246,7 +248,9 @@ ax.ZTick(ax.ZTick < 0) = [];
 colormap(jet)
 
 %% Produce 2D figure
-print(f_2Dpdfs, '../Figures/Distributions/2D.png', '-dpng', '-r600')
+% print(f_2Dpdfs, '../Figures/Distributions/2D.png', '-dpng', '-r600')
+exportgraphics(f_2Dpdfs,'../Figures/Distributions/2D.pdf')
+
 close(f_2Dpdfs)
 end
 %% Functions:
