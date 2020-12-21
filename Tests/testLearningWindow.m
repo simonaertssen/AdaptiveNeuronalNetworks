@@ -3,7 +3,7 @@ clear all; close all; clc
 % properties. Make graphs.
 
 %% Setup
-%addpath('../Functions');
+addpath('../Functions');
 
 N = 1000;
 tpts = 30001;
@@ -37,8 +37,8 @@ legend("$$W(t)_S$$", 'Interpreter', 'latex', 'FontSize', labelfont, 'Orientation
 xlabel("$t$ [s]", 'Interpreter', 'latex', 'FontSize', labelfont); 
 ylabel("$W$", 'Interpreter', 'latex', 'FontSize', labelfont);
 
-% exportpdf(f_windows, '../Figures/LearningWindowsBiphasic.pdf', export);
-print(f_windows, '../Figures/LearningWindowsBiphasic.png', '-dpng', '-r400')
+% exportpdf(f_windows, '../Figures/Learning/LearningWindowsBiphasic.pdf', export);
+print(f_windows, '../Figures/Learning/LearningWindowsBiphasic.png', '-dpng', '-r400')
 
 close(f_windows)
 
@@ -60,8 +60,43 @@ legend("$$W(t)_W$$", 'Interpreter', 'latex', 'FontSize', labelfont, 'Orientation
 xlabel("$t$ [s]", 'Interpreter', 'latex', 'FontSize', labelfont); 
 ylabel("$W$", 'Interpreter', 'latex', 'FontSize', labelfont);
 
-% exportpdf(f_windows, '../Figures/LearningWindowsTriphasic.pdf', export);
-print(f_windows, '../Figures/LearningWindowsTriphasic.png', '-dpng', '-r400')
+% exportpdf(f_windows, '../Figures/Learning/LearningWindowsTriphasic.pdf', export);
+print(f_windows, '../Figures/Learning/LearningWindowsTriphasic.png', '-dpng', '-r400')
+close(f_windows)
+
+
+%% Observe function shapes: three first windows
+dt = linspace(-0.08, 0.1, tpts);
+
+f_windows = figure('Renderer', 'painters', 'Position', [50 800 1000 200]); 
+
+subplot(1,3,1); box on; hold on; xlim([dt(1), dt(end)]);
+plot(dt, Kempter1999Window(dt), 'LineWidth', 2, 'Color', '#0072BD')
+legend("$$W(t)_K$$", 'Interpreter', 'latex', 'FontSize', labelfont, 'Orientation','horizontal', 'Location', 'southeast')
+xlabel("$t$ [s]", 'Interpreter', 'latex', 'FontSize', labelfont); 
+ylabel("$W$", 'Interpreter', 'latex', 'FontSize', labelfont);
+
+subplot(1,3,2); ylim([-0.14, 0.12]); xlim([dt(1), dt(end)]); box on; hold on;
+yleft = Song2000Window(dt(dt<=0)); yright = Song2000Window(dt(dt>0));
+plot(dt(dt<=0), yleft, 'LineWidth', 2, 'Color', '#D95319'); 
+plot(dt(dt>0), yright, 'LineWidth', 2, 'Color', '#D95319', 'HandleVisibility', 'off')
+line([0, 0],[min(yleft), max(yright)],'Color','k','LineStyle','--', 'LineWidth', 1, 'HandleVisibility', 'off')
+scatter(0, Song2000Window(0), 30, [0.8500 0.3250 0.0980], 'filled', 'o')
+
+legend("$$W(t)_S$$", 'Interpreter', 'latex', 'FontSize', labelfont, 'Orientation','horizontal', 'Location', 'southeast')
+xlabel("$t$ [s]", 'Interpreter', 'latex', 'FontSize', labelfont); 
+% ylabel("$W$", 'Interpreter', 'latex', 'FontSize', labelfont);
+
+subplot(1,3,3); box on; hold on; xlim([dt(1), dt(end)]); ylim([-0.14, 0.12]);
+y = ChrolCannon2012Window(dt);
+plot(dt, y, 'LineWidth', 2, 'Color', '#77AC30')
+legend("$$W(t)_C$$", 'Interpreter', 'latex', 'FontSize', labelfont, 'Orientation','horizontal', 'Location', 'southwest')
+xlabel("$t$ [s]", 'Interpreter', 'latex', 'FontSize', labelfont); 
+% ylabel("$W$", 'Interpreter', 'latex', 'FontSize', labelfont);
+
+% print(f_windows, '../Figures/Learning/LearningWindows.png', '-dpng', '-r400')
+exportgraphics(f_windows,'../Figures/Learning/LearningWindows.pdf')
+
 close(f_windows)
 
 %% Function properties
