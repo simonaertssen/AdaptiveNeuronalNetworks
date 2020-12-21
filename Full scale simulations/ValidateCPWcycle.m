@@ -20,10 +20,10 @@ end
 initarray = make_GPUhandle();
 
 %% Theta model parameters:
-tnow = 0; tend = 10;
-h = 0.01;
+tnow = 0; tend = 50;
+h = 0.05;
 
-pars.N = 150;
+pars.N = 15000;
 pars.a_n = 0.666666666666666666667;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 
@@ -221,9 +221,9 @@ ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfo
 
 phasespaceplot();
 
-title(sprintf('\\bf Scale-free network: $$N$$ = %d, $$\\langle k \\rangle$$ = %0.1f, $$\\gamma$$ = %0.1f', pars.N, sfpars.meandegree, sfpars.degree), 'FontSize', titlefont, 'Interpreter', 'latex')
+title(sprintf('\\bf Scale-free network: $$N$$ = %d, $$\\langle k \\rangle$$ = %d, $$\\gamma$$ = %0.1f', pars.N, sfpars.meandegree, sfpars.degree), 'FontSize', titlefont, 'Interpreter', 'latex')
 legend('$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southoutside', 'Orientation','horizontal')
-% exportpdf(f_scalefree, '../Figures/InspectMeanFieldScaleFreePhaseSpace.pdf', export);
+exportpdf(f_scalefree, '../Figures/InspectMeanFieldScaleFreePhaseSpace.pdf', export);
 % print(f_scalefree, '../Figures/testScaleFree.png', '-dpng', '-r300')
 % close(f_scalefree)
 
