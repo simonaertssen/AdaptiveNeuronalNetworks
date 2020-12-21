@@ -73,22 +73,24 @@ A_{n} \cdot \exp \left(\frac{t}{\tau_n}\right)  & \text{for } s \leq 0
 \end{cases} \label{eq:learningwindowSong2000}
 \end{align}
 where we will use $A_p = 0.005$, $A_n = -0.00525$ and $\tau_p = \tau_n = 20$ ms. $\int W(\tau)_S \mathop{d \tau} = -3.70 \times 10^{-4}$ so we expect the weights to be suppressed towards a negative value. 
-\begin{figure}[H]
-\centering
-\includegraphics[width = \textwidth]{../Figures/Learning/LearningWindows.pdf}
-\caption{Two different biphasic learning windows. We can see how in $W(t)_s$ a larger weight is put on the anti-Hebbian learning.}
-\label{fig:LearningWindows}
-\end{figure}
 
 Recently, triphasic learning windows have been used to account for when it takes too long for the postsynaptic neuron to fire, and thus to decorrelate the relation between neurons. These learning windows are curves that were fitted to experimental data of the cortex and the hippocampus \cite{ChrolCannon2014}. \\
 
-Extending the work of \cite{Song2000} we can find a brief investigation of network topology and clustering using triphasic windows, \cite{ChrolCannon2012}. The method is as in \eqref{learningwindowSong2000}, with the following learning window:
+Extending the work of \cite{Song2000} we can find a brief investigation of network topology and clustering using triphasic windows, \cite{ChrolCannon2012}. The method is as in \eqref{eq:learningwindowSong2000}, with the following learning window:
 \begin{align}
 W(t)_C = A_{p} \cdot \exp \left(\frac{-\left(t - 15 \right)^{2}}{ \tau_{p}}\right) - A_{n} \cdot \exp \left(\frac{-\left(t - 20\right)^{2}}{ \tau_{n}}\right)  \label{eq:learningwindowChrolCannon2012}
 \end{align}
 where $A_{p}=0.23$, $A_{n}=0.15$, $\tau_{p}=200$ and $\tau_n = 2000$. $\int W(s)_C \mathrm{d}s = -60.0 \times 10^{-4}$.
 
+\begin{figure}[H]
+\centering
+\includegraphics[width = \textwidth]{../Figures/Learning/LearningWindows.pdf}
+\caption{Three different biphasic learning windows. Left: in $W_K$ the learning happens much slower, as the magnitude of the window is very small. Middle: we can see how in $W(t)_s$ a larger weight is put on the anti-Hebbian learning. Right: a triphasic window can punish the learning when signals arrive either too early or too late.}
+\label{fig:LearningWindows}
+\end{figure}
+
 The learning windows generally have $W(t^{\ast}) = 0$ for $t^{\ast} \geq 0$. This means that no learning will take place when the delay between neuron spikes is exactly $t^{\ast} \geq 0$. The triphasic windows show two of those points. 
+
 
 \subsection{Synaptic scaling}
 There is no upper or lower bound on the synapse strength. Also generally, connection strengths are nonzero. This means that the notion of a \textsl{network} is lost.\\
@@ -100,15 +102,20 @@ In this way, the out-degrees will remain constant. Using this approach, somethin
 
 
 \subsection{Intrinsic plasticity}
-Instead of scaling the weights to preserve a certain quantity in the network, we can allow the neurons to adjust the sensitivity to incoming signals. So when some synaptic strengths are increased, we can reduce the excitability. In \cite{Song2017} such a method is introduced in detail. We can simply update $\eta_{i} \rightarrow \eta_{i} + \eta_{\max } \cdot \phi_{i}$ where 
+Instead of scaling the weights to preserve a certain quantity in the network, we can allow the neurons to adjust their sensitivity to incoming signals. So when some synaptic strengths are increased, we can reduce the excitability, and vice-versa. In \cite{Song2017} such a method is introduced in detail. We can simply update $\eta_{i} \rightarrow \eta_{i} + \eta_{\max } \cdot \phi_{i}$, where: 
 \begin{align}
-\phi_{i} (t) =\left\{\begin{array}{l}-\alpha \cdot \exp \left(\frac{T_{\min }-t}{T_{\rm min }}\right) \text { if } t<T_{ \rm min } \\ \alpha \cdot \exp \left(\frac{t-T_{\rm max }}{T_{\max }}\right) \text { if } t >T_{\rm max } \\ 0, \text { otherwise }\end{array}\right.
+\phi_{i} (t) =
+\begin{cases}
+-\alpha \cdot \exp \left(\frac{T_{\min }-t}{T_{\rm min }}\right) &\text {for } t<T_{ \rm min } \\ 
+\alpha \cdot \exp \left(\frac{t-T_{\rm max }}{T_{\max }}\right) &\text {for } t >T_{\rm max } \\ 
+0 &\text {otherwise }
+\end{cases}
 \end{align}
 
 \begin{figure}[H]
 \centering
 \includegraphics[width = 0.5\textwidth]{../Figures/Learning/IPlearningFunction.png}
-\caption{The learning behaviour for the intrinsic plastiity.}
+\caption{The learning behaviour for intrinsic plastiity as proposed in \cite{Song2017}.}
 \label{fig:IPlearningFunction}
 \end{figure}
 

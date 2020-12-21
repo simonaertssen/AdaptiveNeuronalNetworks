@@ -12,7 +12,7 @@ set(groot,'DefaultAxesXGrid','on')
 set(groot,'DefaultAxesYGrid','on')
 
 titlefont = 15;
-labelfont = 13;
+labelfont = 15;
 export = true;
 
 %% Observe function shapes: biphasic windows
