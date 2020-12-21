@@ -22,15 +22,16 @@
 &\eta_i, I(t)_i &&\text{Excitability threshold and input current (of neuron $i$).}\\
 &g(\eta \rvert \k) \quad &&\text{Excitability threshold distribution with mean $\eta_0(\k)$ and width $\sigma(\k)$.}\\ \\
 & Z(t) &&\text{Kuramoto order parameter function.}\\
-& z(\k, t) &&\text{Order parameter function for nodes with degree $\k$.}\\
+& z(\k, t) &&\text{Synchronisation dynamics function for nodes with degree $\k$.}\\
 & \bar{Z}(t) &&\text{Mean field order parameter function for arbitrary networks.}\\ \\
-& \Sin(t)_i, \Sout(t)_i \quad &&\text{Spike trains received and emitted by neuron $i$ as a sum of delta functions in time.}\\ 
+& \Sin(t)_i, \Sout(t)_j\quad &&\text{Spike trains received and emitted by neuron $i$ as a sum of delta functions in time.}\\ 
 & K_{ij} &&\text{Synaptic connectivity matrix. Strength of the connections between neurons $i$ and $j$.}\\
 & \Delta t_{ij} &&\text{Time difference between spikes of neurons $i$ and $j$.}\\
 & W(\Delta t_{ij}) &&\text{Learning window. Models the correlation between synaptic strength and spike times.}\\ 
 & \phi(\Delta t_{ij}) &&\text{IP learning function. Models correlation between excitability strength and spike times.}\\ \\
 & \T &&\text{Set of angles in [-$\pi$, $\pi$[.}\\
 & \K &&\text{Set of unique degrees in a network, support of $P$.}\\ 
-& \R, \C &&\text{Set of real numbers. Set in the complex unit circle so that $\C = \{ z: \rvert z \rvert \leq 1 \} $.}\\ \\
+& \R &&\text{Set of real numbers.}\\ 
+&  \C && \text{Set in the complex unit circle so that $\C = \{ z: \rvert z \rvert \leq 1 \} $.} \\ \\
 & \permute(v), \permuteinv(v) &&\text{Random permutation and inverse permutation of the elements of a vector $v$.}\\ 
 \end{alignat*}
