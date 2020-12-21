@@ -14,7 +14,7 @@ One specific temporal interpretation of these ideas is \textsl{spike-timing-depe
 
 Let us say that neuron $\theta_i$ spikes at time $t_i$ and that neuron $\theta_j$ spikes at $t_j$. Taking the time difference $\Delta t_{ij}$ as $t_j - t_i$, we can say that when $\Delta t_{ij} > 0$ the spikes are correlated (there exists a temporally causal relation), and we can model an increase in synaptic strength of the connection from $\theta_i$ to $\theta_j$, which we will gather in the \textsl{coupling matrix} $K_{ij}$. In the same fashion we can decrease $K_{ji}$ when $\Delta t_{ij} < 0$ as there is no causal relation. 
 
-This means we will find an expression for $\Delta K_{ij}$ in function of $\Delta t_{ij}$ so that at each time-step we can update $K_{ij} \rightarrow K_{ij} + \Delta K_{ij}$.\\
+We will find an expression for $\Delta K_{ij}$ in function of $\Delta t_{ij}$ so that at each time-step we can update $K_{ij} \leftarrow K_{ij} + \Delta K_{ij}$.\\
 
 We can think of the coupling matrix as the continuous interpretation of $\kappa A_{ij}$, where synaptic strength and network topology go hand in hand. This also means that we need to redefine some concepts:
 \begin{alignat}{2}
@@ -56,7 +56,7 @@ A_{p} \cdot \exp \left(-\frac{t}{\tau_{p}}\right) + A_{n} \cdot \exp \left(-\fra
 Here $t$ is the delay between presynaptic spike arrival and postsynaptic firing, $\alpha$ is a small learning parameter and all $\tau$ are time constants. Numerical values are usually  $\alpha = 0.05$, $\tau_{\rm syn} = 5$ ms, $\tau_{p} = 1$ ms, $\tau_{n} = 20$ ms and $A_p = 1$ and $A_{n} = -1$. $\tilde{\tau}_{p} \equiv \tau_{\rm syn} \tau_{p} / (\tau_{\rm syn} + \tau_{p})$ and $\tilde{\tau}_{n} \equiv \tau_{\rm syn} \tau_{n} / (\tau_{\rm syn} + \tau_{n})$. \\
 $\int W(\tau)_K \mathop{d \tau} = 2.56 \times 10^{-4}$. \\
 
-Using different processes to generate spike trains, the learning equation \eqref{eq:KempterSTDPFormulation2} converges to stable fixpoints. The question will now be whether that is still the case, as changes to the coupling strength will also influence the spiking dynamics between neurons, which in turn will affect the learning again.\\
+Using different processes to generate spike trains, the learning equation \eqref{eq:KempterSTDPFormulation2} converges to a stable equilibrium \cite{Kempter1999}. The question will now be whether that is still the case when we will apply \STDP to our network of Theta neurons, as changes to the coupling strength will also influence the spiking dynamics between neurons, which in turn will affect the learning again.\\
 
 Another formulation of \STDP as a mathematical model can be found in \cite{Song2000}. It is postulated without being concerned about the biological aspect too much, simplifying some of the ideas of \cite{Kempter1999}. The synaptic strengths are simply updated with:
 \begin{align}
@@ -93,16 +93,15 @@ The learning windows generally have $W(t^{\ast}) = 0$ for $t^{\ast} \geq 0$. Thi
 
 
 \subsection{Synaptic scaling}
-There is no upper or lower bound on the synapse strength. Also generally, connection strengths are nonzero. This means that the notion of a \textsl{network} is lost.\\
-One technique we can apply to keep the strengths within a definitive range is to scale homeostatically - a method where increases in synaptic strength will balance out any decreases by scaling:
+There is no upper or lower bound on the synapse strength, and generally connection strengths are nonzero. Positive reinforcement loops might disturb the learning process, which would not be beneficial for the model. One technique we can apply to keep the strengths within a definitive range is to scale homeostatically - a method where any increases in synaptic strength will balance out any decreases by scaling:
 \begin{align}
 K_{ij}^s = K_{ij} \frac{\frac{1}{N} \sum_{i,j} K_{ij}}{\sum_{i} K_{ij}}
 \end{align}
-In this way, the out-degrees will remain constant. Using this approach, something has to remain constant, whether that is $\kmean$, or $\kmean^2$ or any other property of the adjacency matrix.
+In this way, the out-degrees will remain constant. Using this approach, something has to remain constant, whether that is $\kmean$, or $\kmean^2$ or any other property of the adjacency matrix. However, this property is not what we are after: we want a method that is able to change the network topology entirely.
 
 
 \subsection{Intrinsic plasticity}
-Instead of scaling the weights to preserve a certain quantity in the network, we can allow the neurons to adjust their sensitivity to incoming signals. So when some synaptic strengths are increased, we can reduce the excitability, and vice-versa. In \cite{Song2017} such a method is introduced in detail. We can simply update $\eta_{i} \rightarrow \eta_{i} + \eta_{\max } \cdot \phi_{i}$, where: 
+Instead of scaling the weights to preserve a certain quantity in the network, we can allow the neurons to adjust their sensitivity to incoming signals. So when some synaptic strengths are increased, we can reduce the excitability, and vice-versa. This should counteract positive feedback. In \cite{Song2017} such a method is introduced in detail. We can simply update $\eta_{i} \leftarrow \eta_{i} + \eta_{\max } \cdot \phi_{i}$, where: 
 \begin{align}
 \phi_{i} (t) =
 \begin{cases}
@@ -115,7 +114,7 @@ Instead of scaling the weights to preserve a certain quantity in the network, we
 \begin{figure}[H]
 \centering
 \includegraphics[width = 0.5\textwidth]{../Figures/Learning/IPlearningFunction.png}
-\caption{The learning behaviour for intrinsic plastiity as proposed in \cite{Song2017}.}
+\caption{The learning behaviour for intrinsic plasticity as proposed in \cite{Song2017}.}
 \label{fig:IPlearningFunction}
 \end{figure}
 
