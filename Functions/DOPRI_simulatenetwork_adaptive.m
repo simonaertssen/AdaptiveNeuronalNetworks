@@ -21,14 +21,14 @@ function [tout, xout, K, Kmeans, info] = DOPRI_simulatenetwork_adaptive(ta,tb,x0
         error("The plasticity options are not available")
     end
     
+    KMAX = plastopts.KMAX;
+    K = initarray(rand(p.N)*2*plastopts.KMAX - plastopts.KMAX);
+    
     eps = 1.0e-15;
     Kmeans = initarray(zeros(2,npts)); 
     Kmeans(1,1) = (sum(K, 'all') + eps)/N; 
     Kmeans(2,1) = (sum(abs(K), 'all') + eps)/N;
     lastspiketimes = initarray(zeros(N,1));
-        
-    KMAX = plastopts.KMAX;
-    K = initarray(rand(pars.N)*2*plastopts.KMAX - plastopts.KMAX);
     
     synaptic_plasticity = isstruct(plastopts.SP);
     intrnsic_plasticity = isfield(plastopts,'IP');

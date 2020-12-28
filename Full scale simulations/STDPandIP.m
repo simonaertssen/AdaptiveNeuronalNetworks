@@ -59,12 +59,14 @@ title('{ \boldmath $K_{ij} $}', 'Interpreter', 'latex', 'FontSize', titlefont)
 xlim([0, pars.N]); ylim([0, pars.N]);
 xlabel('Presynaptic neuron j', 'FontSize', labelfont)
 ylabel('Postynaptic neuron i', 'FontSize', labelfont)
-imagesc(K/KMAX); colormap(gray);
+K(1:pars.N+1:end) = 10;
+im = imagesc(K/plastopts.KMAX); colormap(gray);
+set(gca,'YDir','reverse');
 
 subplot(5,1,3); hold on; axis square; axis on; box on;
-histogram(K, 'Normalization', 'pdf')
+histogram(K/plastopts.KMAX, 'Normalization', 'pdf')
 title('Connectivity strength', 'FontSize', titlefont)
-xlabel('$k$','Interpreter','latex', 'FontSize', labelfont)
+xlabel('$K_{ij}/K^{\rm max}$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('Density', 'FontSize', labelfont)
 
 subplot(5,1,4); hold on; axis square; box on;
@@ -73,15 +75,16 @@ degrees_i = sum(abs(K),2);
 degrees_o = sum(abs(K),1);
 histogram(degrees_i, 'Normalization', 'pdf')
 histogram(degrees_o, 'Normalization', 'pdf')
-legend('$$k^{\rm in}$$', '$$k^{\rm out}$$', 'Interpreter', 'latex', 'FontSize', labelfont)
+
+legend('\boldmath$k^{\rm in}$', '\boldmath$k^{\rm out}$', 'Interpreter', 'latex', 'FontSize', labelfont)
 xlabel('$k$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('Density', 'FontSize', labelfont)
 
 subplot(5,1,5); hold on; axis square; box on;
 title('{ \boldmath $k^{\rm in} \leftrightarrow k^{\rm out}$ }', 'Interpreter', 'latex', 'FontSize', titlefont)
 scatter(degrees_i, degrees_o, '.k')
-xlabel('$$k^{\rm in}$$','Interpreter','latex', 'FontSize', labelfont)
-ylabel('$$k^{\rm out}$$','Interpreter','latex', 'FontSize', labelfont)
+xlabel('\boldmath$k^{\rm in}$','Interpreter','latex', 'FontSize', labelfont)
+ylabel('\boldmath$k^{\rm out}$','Interpreter','latex', 'FontSize', labelfont)
 
 MP=get(0,'MonitorPositions');
 if size(MP,1)>1
