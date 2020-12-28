@@ -37,7 +37,7 @@ function [tout, xout, K, Kmeans, p, info] = DOPRI_simulatenetwork_adaptive(ta,tb
     Kmeans = initarray(zeros(2,npts)); 
     Kmeans(1,1) = (sum(K, 'all') + eps)/N; 
     Kmeans(2,1) = (sum(abs(K), 'all') + eps)/N;
-    lastspiketimes = initarray(zeros(N,1));
+    lastspiketimes = zeros(N,1);
         
     window = plastopts.SP.window;
     Kupdate = plastopts.SP.Kupdate;
