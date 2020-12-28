@@ -208,7 +208,8 @@ colormap(jet)
 scalefreepars = make_scalefreeparameters(pars, 4.3);
 scalefreepars.meandegree
 
-scalefreepars.P2D = @(x,y) P2D(x, y, scalefreepars.kmin, scalefreepars.kmax, scalefreepars.degree, scalefreepars.N)/pars.N;
+% scalefreepars.P2D = @(x,y) P2D(x, y, scalefreepars.kmin, scalefreepars.kmax, scalefreepars.degree, scalefreepars.N)/pars.N;
+scalefreepars.P2D = @(x,y) scalefreepars.P(x) .* scalefreepars.P(y) / pars.N;
 
 if sum(scalefreepars.P2D(scalefreepars.kmin:scalefreepars.kmax,scalefreepars.kmin:scalefreepars.kmax), 'all') - pars.N < 1.e-3; disp('Sum is correct'); end
 
@@ -221,7 +222,6 @@ ylabel('\boldmath$k^{\rm out}$', 'Interpreter', 'latex', 'FontSize', labelfont);
 % zlabel('Density', 'FontSize', labelfont, 'HorizontalAlignment', 'left');
 view(110, 10)
 
-
 % The 3D histogram
 minmax = linspace(scalefreepars.kmin, scalefreepars.kmax, 16);
 hist = histogram2(scalefreepars.degrees_i, scalefreepars.degrees_o, minmax, minmax, 'Normalization', 'pdf'); % Normal degree vectors from before
@@ -233,7 +233,7 @@ colormap(jet)
 minmaxpdf = linspace(scalefreepars.kmin, scalefreepars.kmax, scalefreepars.kmax-scalefreepars.kmin+1);
 [x,y] = meshgrid(minmax, minmax);
 idx = round(linspace(1, numel(minmax), 25));
-surf(x(idx,idx),y(idx,idx),scalefreepars.P2D(x(idx,idx),y(idx,idx)),'FaceAlpha',0.5,'EdgeColor','none');
+surf(x(idx,idx),y(idx,idx),scalefreepars.P2D(x(idx,idx),y(idx,idx))/pars.N,'FaceAlpha',0.5,'EdgeColor','none');
 colormap(jet)
 
 % The 2D scatter plot underneath
