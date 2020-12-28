@@ -1,4 +1,4 @@
-function [tout, xout, K, Kmeans, info] = DOPRI_simulatenetwork_adaptive(ta,tb,x0,h,p,plastopts) 
+function [tout, xout, K, Kmeans, p, info] = DOPRI_simulatenetwork_adaptive(ta,tb,x0,h,p,plastopts) 
     initarray = make_GPUhandle();
     disp("Start simulation.")
     
@@ -21,18 +21,24 @@ function [tout, xout, K, Kmeans, info] = DOPRI_simulatenetwork_adaptive(ta,tb,x0
         error("The plasticity options are not available")
     end
     
-    KMAX = plastopts.KMAX;
-    K = initarray(rand(p.N)*2*plastopts.KMAX - plastopts.KMAX);
+    synaptic_plasticity = isstruct(plastopts.SP);
+    if synaptic_plasticity
+        KMAX = plastopts.KMAX;
+        K = initarray(rand(p.N)*2*KMAX - KMAX);
+    end
+    
+    intrnsic_plasticity = isfield(plastopts, 'IP');
+    if intrnsic_plasticity
+        etaMAX = plastopts.etaMAX;
+        p.e = initarray(rand(p.N, 1)*2*etaMAX - etaMAX);
+    end
     
     eps = 1.0e-15;
     Kmeans = initarray(zeros(2,npts)); 
     Kmeans(1,1) = (sum(K, 'all') + eps)/N; 
     Kmeans(2,1) = (sum(abs(K), 'all') + eps)/N;
     lastspiketimes = initarray(zeros(N,1));
-    
-    synaptic_plasticity = isstruct(plastopts.SP);
-    intrnsic_plasticity = isstruct(plastopts.IP);
-    
+        
     window = plastopts.SP.window;
     Kupdate = plastopts.SP.Kupdate;
     w_i = 0; w_o = 0;
@@ -70,8 +76,10 @@ function [tout, xout, K, Kmeans, info] = DOPRI_simulatenetwork_adaptive(ta,tb,x0
             K = min(KMAX, max(-KMAX, K));
         end
         
-        if intrnsic_plasticity
-            toimplement = 0;
+        if intrnsic_plasticity && any(pulse == 1)
+%             ISI = zeros(sum(pulse), 1);
+            ISI = lastspiketimes(pulse) - t;
+            p.e(pulse) = p.e(pulse) + etaMAX*Song2017IP(ISI);
         end
         
         Kmeans(1,i+1) = (sum(K, 'all') + eps)/N; 
