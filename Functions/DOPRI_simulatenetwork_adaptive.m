@@ -64,7 +64,7 @@ function [tout, xout, K, Kmeans, p, info] = DOPRI_simulatenetwork_adaptive(ta,tb
             K(pulse,:) = K(pulse,:) + w_o;
             
             lastspiketimes(pulse) = t;
-            dW = window(lastspiketimes - lastspiketimes');
+            dW = gather(window(lastspiketimes - lastspiketimes'));
             % Filter out all zeros that do not contriubute to the learning:
             % that is where lastspiketimes == 0
             nonzerotimes = find(lastspiketimes)';
