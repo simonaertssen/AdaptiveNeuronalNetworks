@@ -31,7 +31,7 @@ function [tout, xout, K, Kmeans, info] = DOPRI_simulatenetwork_adaptive(ta,tb,x0
     lastspiketimes = initarray(zeros(N,1));
     
     synaptic_plasticity = isstruct(plastopts.SP);
-    intrnsic_plasticity = isfield(plastopts,'IP');
+    intrnsic_plasticity = isstruct(plastopts.IP);
     
     window = plastopts.SP.window;
     Kupdate = plastopts.SP.Kupdate;
