@@ -29,9 +29,10 @@ IC = linspace(0, 2*pi - (2*pi)/(pars.N),pars.N)';
 pars.e = 0; %randcauchy(seed, pars.eta0, pars.delta, pars.N);
 
 %% 1. Kempter window, no IP
+KMAX = 10; etaMAX = 10;
 STDP = struct('window', @Kempter1999Window, 'Kupdate', @(K, W) K + W, 'w_i', 1.0e-5, 'w_o', - 1.0475*1.0e-5);
-% STDP = struct('window', @Song2017Window, 'Kupdate', @(K, W) K + K.*W); 
-plastopts = struct('SP', STDP, 'KMAX', 10, 'etaMAX', 10);
+STDP = struct('window', @Song2017Window, 'Kupdate', @(K, W) K + KMAX.*W); 
+plastopts = struct('SP', STDP, 'KMAX', KMAX, 'etaMAX', etaMAX);
 
 [t, thetas_full, K, Kmeans] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
 drawthetas = spikesNaN(thetas_full);

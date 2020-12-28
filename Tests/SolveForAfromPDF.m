@@ -145,8 +145,10 @@ colormap(gray);
 title(hAxes, 'Fixed-degree', 'FontSize', titlefont)
 xticks(vec)
 xticklabels(string(vec))
-xlabel('\boldmath$k^{\rm out}$', 'Interpreter', 'latex', 'FontSize', labelfont);
-ylabel('\boldmath$k^{\rm in}$', 'Interpreter', 'latex', 'FontSize', labelfont);
+% xlabel('\boldmath$k^{\rm out}$', 'Interpreter', 'latex', 'FontSize', labelfont);
+% ylabel('\boldmath$k^{\rm in}$', 'Interpreter', 'latex', 'FontSize', labelfont);
+xlabel('Presynaptic neuron j', 'FontSize', labelfont)
+ylabel('Postynaptic neuron i', 'FontSize', labelfont)
 
 exportpdf(f_fixeddegree, '../Figures/Adjacency matrices/A_fixeddegree.pdf', true);
 close(f_fixeddegree)
@@ -163,8 +165,10 @@ imagesc(full(A_random), 'Parent', hAxes);
 colormap(gray);
 
 title(hAxes, 'Random', 'FontSize', titlefont)
-xlabel('\boldmath$k^{\rm out}$', 'Interpreter', 'latex', 'FontSize', labelfont);
-ylabel('\boldmath$k^{\rm in}$', 'Interpreter', 'latex', 'FontSize', labelfont);
+% xlabel('\boldmath$k^{\rm out}$', 'Interpreter', 'latex', 'FontSize', labelfont);
+% ylabel('\boldmath$k^{\rm in}$', 'Interpreter', 'latex', 'FontSize', labelfont);
+xlabel('Presynaptic neuron j', 'FontSize', labelfont)
+% ylabel('Postynaptic neuron i', 'FontSize', labelfont)
 
 exportpdf(f_random, '../Figures/Adjacency matrices/A_random.pdf', true);
 close(f_random)
@@ -182,8 +186,10 @@ imagesc(full(A_scalefree), 'Parent', hAxes);
 colormap(gray)
 
 title(hAxes, 'Scale-free', 'FontSize', titlefont)
-xlabel('\boldmath$k^{\rm out}$', 'Interpreter', 'latex', 'FontSize', labelfont);
-ylabel('\boldmath$k^{\rm in}$', 'Interpreter', 'latex', 'FontSize', labelfont);
+% xlabel('\boldmath$k^{\rm out}$', 'Interpreter', 'latex', 'FontSize', labelfont);
+% ylabel('\boldmath$k^{\rm in}$', 'Interpreter', 'latex', 'FontSize', labelfont);
+xlabel('Presynaptic neuron j', 'FontSize', labelfont)
+% ylabel('Postynaptic neuron i', 'FontSize', labelfont)
 
 exportpdf(f_scalefree, '../Figures/Adjacency matrices/A_scalefree.pdf', true);
 close(f_scalefree)
