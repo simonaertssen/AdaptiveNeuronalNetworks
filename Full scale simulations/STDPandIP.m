@@ -152,7 +152,7 @@ ylabel('Density', 'FontSize', labelfont)
 
 subplot(5,1,5); hold on; axis square; box on;
 title('{ \boldmath $k^{\rm in} \leftrightarrow k^{\rm out}$ }', 'Interpreter', 'latex', 'FontSize', titlefont)
-scatter(degrees_i, degrees_o, '.k')
+scatter(degrees_i, degrees_o, '.', 'MarkerEdgeColor', color, 'MarkerFaceColor', color)
 xlabel('\boldmath$k^{\rm in}$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('\boldmath$k^{\rm out}$','Interpreter','latex', 'FontSize', labelfont)
 
@@ -217,7 +217,7 @@ ylabel('Density', 'FontSize', labelfont)
 
 subplot(6,1,6); hold on; axis square; box on;
 title('{ \boldmath $k^{\rm in} \leftrightarrow k^{\rm out}$ }', 'Interpreter', 'latex', 'FontSize', titlefont)
-scatter(degrees_i, degrees_o, '.k')
+scatter(degrees_i, degrees_o, '.', 'MarkerEdgeColor', color, 'MarkerFaceColor', color)
 xlabel('\boldmath$k^{\rm in}$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('\boldmath$k^{\rm out}$','Interpreter','latex', 'FontSize', labelfont)
 
