@@ -20,23 +20,20 @@ end
 initarray = make_GPUhandle();
 
 %% Theta model parameters:
-h = 0.01; tnow = h; tend = 2000;
+h = 0.01; tnow = h; tend = 1000;
 
-pars.N = 100;
+pars.N = 50;
 pars.a_n = 0.666666666666666666667;
 seed = 2; rng(seed);
 IC = linspace(0, 2*pi - (2*pi)/(pars.N),pars.N)';
 pars.e = 0; %randcauchy(seed, pars.eta0, pars.delta, pars.N);
 
-%% The simulation
-% STDP = struct('window', @Kempter1999Window, 'Kupdate', @(K, W) K + W, 'w_i', 1.0e-5, 'w_o', - 1.0475*1.0e-5);
-STDP = struct('window', @Song2017Window, 'Kupdate', @(K, W) K + K.*W); 
-KMAX = 10;
-plastopts = struct('SP', STDP, 'KMAX', KMAX);
+%% 1. Kempter window, no IP
+STDP = struct('window', @Kempter1999Window, 'Kupdate', @(K, W) K + W, 'w_i', 1.0e-5, 'w_o', - 1.0475*1.0e-5);
+% STDP = struct('window', @Song2017Window, 'Kupdate', @(K, W) K + K.*W); 
+plastopts = struct('SP', STDP, 'KMAX', 10, 'etaMAX', 10);
 
-K0 = initarray(rand(pars.N)*2 - 1);
-
-[t, thetas_full, K, Kmeans] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,K0,plastopts);
+[t, thetas_full, K, Kmeans] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
 drawthetas = spikesNaN(thetas_full);
 z = orderparameter(thetas_full);
 

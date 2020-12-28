@@ -1,4 +1,4 @@
-function [tout, xout, K, Kmeans, info] = DOPRI_simulatenetwork_adaptive(ta,tb,x0,h,p,K0,plastopts) 
+function [tout, xout, K, Kmeans, info] = DOPRI_simulatenetwork_adaptive(ta,tb,x0,h,p,plastopts) 
     initarray = make_GPUhandle();
     disp("Start simulation.")
     
@@ -16,11 +16,9 @@ function [tout, xout, K, Kmeans, info] = DOPRI_simulatenetwork_adaptive(ta,tb,x0
     xout = initarray(zeros(N,npts)); xout(:,1) = x0;
     func = @(t, x, K, Kmean) thetaneurons_full_adaptive(t, x, K, p.e, p.a_n, Kmean);
     
-    % Network parameters and handles:
-    if nargin > 6
-        K = K0;
-    else 
-        K = initarray(10*ones(N,N)); % For the learning windows
+    % Pasticity options:
+    if ~isstruct(plastopts)
+        error("The plasticity options are not available")
     end
     
     eps = 1.0e-15;
@@ -28,24 +26,18 @@ function [tout, xout, K, Kmeans, info] = DOPRI_simulatenetwork_adaptive(ta,tb,x0
     Kmeans(1,1) = (sum(K, 'all') + eps)/N; 
     Kmeans(2,1) = (sum(abs(K), 'all') + eps)/N;
     lastspiketimes = initarray(zeros(N,1));
+        
+    KMAX = plastopts.KMAX;
+    K = initarray(rand(pars.N)*2*plastopts.KMAX - plastopts.KMAX);
     
-    % Pasticity options:
-    synaptic_plasticity = false;
-    synaptic_scaling = false;
-    intrnsic_plasticity = false;
-    w_i = 0; w_o = 0; KMAX = inf;
-    if isstruct(plastopts)
-        KMAX = plastopts.KMAX;
-        synaptic_plasticity = isstruct(plastopts.SP);
-        if isfield(plastopts.SP,'window')
-            window = plastopts.SP.window;
-            Kupdate = plastopts.SP.Kupdate;
-            if isfield(plastopts.SP,'w_i'); w_i = plastopts.SP.w_i; end
-            if isfield(plastopts.SP,'w_o'); w_o = plastopts.SP.w_o; end
-        end
-        synaptic_scaling = isfield(plastopts,'SS');
-        intrnsic_plasticity = isfield(plastopts,'IP');
-    end
+    synaptic_plasticity = isstruct(plastopts.SP);
+    intrnsic_plasticity = isfield(plastopts,'IP');
+    
+    window = plastopts.SP.window;
+    Kupdate = plastopts.SP.Kupdate;
+    w_i = 0; w_o = 0;
+    if isfield(plastopts.SP,'w_i'); w_i = plastopts.SP.w_i; end
+    if isfield(plastopts.SP,'w_o'); w_o = plastopts.SP.w_o; end
     
     K7 = h*func(ta, x0, K, Kmeans(1));
     for i = 1:(npts-1)
@@ -74,9 +66,6 @@ function [tout, xout, K, Kmeans, info] = DOPRI_simulatenetwork_adaptive(ta,tb,x0
             idx = sub2ind(size(dW),combos(1,:),combos(2,:));
             %K(idx) = K(idx) + dW(idx);
             K(idx) = Kupdate(K(idx),dW(idx));
-            if synaptic_scaling
-                K = K * Kmeans(i) ./ (sum(K,1) + eps);
-            end
             % Rescale to the maximum
             K = min(KMAX, max(-KMAX, K));
         end
