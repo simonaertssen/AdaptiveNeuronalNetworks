@@ -77,7 +77,6 @@ function [tout, xout, K, Kmeans, p, info] = DOPRI_simulatenetwork_adaptive(ta,tb
         end
         
         if intrnsic_plasticity && any(pulse == 1)
-%             ISI = zeros(sum(pulse), 1);
             ISI = lastspiketimes(pulse) - t;
             p.e(pulse) = p.e(pulse) + etaMAX*Song2017IP(ISI);
         end

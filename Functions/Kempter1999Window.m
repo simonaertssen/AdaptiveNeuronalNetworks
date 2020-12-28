@@ -7,12 +7,8 @@ function dW = Kempter1999Window(dt)
     learning_rate = 1.0e-5;
     eps = 1.0e-9;
     dt = -dt * 1.0e3; % Convert to seconds
-
-    dW = zeros(size(dt));
-        
-    whos dt
-    whos dW
     
+    dW = zeros(size(dt));
     t_neg_idx = dt <= 0;
     t_pos_idx = 0 < dt;
     dW(t_neg_idx) = exp(dt(t_neg_idx)/t_syn + eps).*(A_p*(1-dt(t_neg_idx)/t_pos) + A_n*(1-dt(t_neg_idx)/t_neg));
