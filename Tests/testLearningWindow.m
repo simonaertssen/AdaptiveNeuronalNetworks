@@ -94,7 +94,7 @@ legend("$$W(t)_C$$", 'Interpreter', 'latex', 'FontSize', labelfont, 'Orientation
 xlabel("$t$ [s]", 'Interpreter', 'latex', 'FontSize', labelfont); 
 % ylabel("$W$", 'Interpreter', 'latex', 'FontSize', labelfont);
 
-% print(f_windows, '../Figures/Learning/LearningWindows.png', '-dpng', '-r400')
+set(findall(gcf,'-property','FontName'),'FontName','Avenir')
 exportgraphics(f_windows,'../Figures/Learning/LearningWindows.pdf')
 
 close(f_windows)
@@ -150,8 +150,9 @@ text(0.112, -0.04, '$$T_{ \rm max}$$', 'Interpreter', 'latex', 'VerticalAlignmen
 xlabel("$t$ [s]", 'Interpreter', 'latex', 'FontSize', labelfont); 
 ylabel("$\phi_i(t)$", 'Interpreter', 'latex', 'FontSize', labelfont);
 
-% print(f_ip, '../Figures/IPlearningFunction.png', '-dpng', '-r400')
-% close(f_ip)
+set(findall(gcf,'-property','FontName'),'FontName','Avenir')
+exportgraphics(f_ip, '../Figures/Learning/IPlearningFunction.pdf')
+close(f_ip)
 
 
 %% Functions
