@@ -23,173 +23,70 @@ degrees_o = networkpars.degrees_o;
 titlefont = 20;
 labelfont = 20;
 
-%% The algorithm:
-clc
-N = numel(degrees_i);
-if max(degrees_i) >= N
-    error('Degree too large');
-end
-numnonzeros = sum(degrees_i);
-
-% Test for laptop version or other:
-if version('-release') == "2020a"
-    numtype = 'uint16';
-else
-    numtype = 'double';
-end
-
-xidx = zeros(numnonzeros, 1, numtype);
-yidx = zeros(numnonzeros, 1, numtype);
-idxidx = cumsum([1; degrees_i]); % For indexing the idx and yidx vector
-disp(idxidx')
-
-% Adjust for zeros in first and last row
-prob_leftout = degrees_o(1);
-probs = degrees_o;
-
-din = degrees_i'
-dout = degrees_o'
-
-A = zeros(N,N);
-
-rowpermutation = randperm(N);
-for i = 1:N
-    rowindex = i;
-    numelements = degrees_i(rowindex);
-    if numelements == 0
-        continue
-    end
-    prob_leftout = probs(rowindex); % Take out diagonal element
-    probs(rowindex) = -1;
-    
-    % Permutation makes the implementation quite robust: 
-    % Don't just sample the first maximum elements 
-    probsperm = randperm(N);
-    [~, probsperminv] = sort(probsperm);
-    [chosen, chosenidx] = maxk(probs(probsperm), numelements);
-    chosenidx = probsperm(chosenidx);
-    
-    indices = idxidx(rowindex):idxidx(rowindex+1)-1;
-    xidx(indices) = rowindex;
-    yidx(indices) = chosenidx;
-    
-    probs(chosenidx) = probs(chosenidx) - 1;
-    
-    % Reset the probability vector:
-    probs(rowindex) = prob_leftout;
-
-%     A(nonzeros(xidx(indices)), nonzeros(yidx(indices))) = 1
-end
-
-A = sparse(xidx, yidx, ones(numnonzeros, 1, 'logical'));
-A(N,N) = 0;
-
-C = cat(1, full(A), degrees_o');
-C = cat(2, C, [degrees_i; -100])
-
-assert(sum(diag(A)) == 0);
-
-diffcols = degrees_o' - full(sum(A,1))
-nonzeroidx = find(diffcols)
-numel(nonzeroidx)
-if numel(nonzeroidx) > 0
-    if diffcols(nonzeroidx(1)) == -diffcols(nonzeroidx(2))
-        switchidx1 = find(A(:,nonzeroidx(1)) == 1)
-        for sw = 1:numel(switchidx1)
-            sw
-            A(sw,nonzeroidx(1)) 
-            A(sw,nonzeroidx(2)) 
-            if A(sw,nonzeroidx(2)) == 0
-                A(sw,nonzeroidx(2)) = 1;
-                A(sw,nonzeroidx(1)) = 0;
-                break
-            end
-        end
-    end
-    C = cat(1, full(A), degrees_o');
-    C = cat(2, C, [degrees_i; -100])
-end
-
-diffcols = degrees_o' - full(sum(A,1))
-
-%% Test the function:
-pars.N = 1000;
-netp = 0.60143;
-meandegree = netp*(N - 1);
-networkpars = make_randomparameters(pars, netp);
-
-assert(sum(networkpars.degrees_i) == sum(networkpars.degrees_o))
-
-tic 
-A_random = adjacencymatrix(networkpars.degrees_i, networkpars.degrees_o);
-toc
-
-tic 
-A_random = adjacencymatrix_from_sampling(networkpars.degrees_i, networkpars.degrees_o);
-toc
-
-% Lesson: faster if we just get it after one try, but it seems to be more
-% accurate.
-
+%% Function handle:
+f_A = figure('Renderer', 'painters', 'Position', [0 800 1400 400]); 
+w = 0.1;
 %% Test a fixed degree network:
+s = subplot(1, 3, 1); hold on; axis square; box on;
 pars.N = 500; vec = linspace(0, pars.N, 11);
 netdegree = 100;
 fdpars = make_fixeddegreeparameters(pars, netdegree); 
 
-A_fixeddegree = adjacencymatrix(fdpars.degrees_i, fdpars.degrees_o); box on;
-f_fixeddegree = figure('Renderer', 'painters', 'Position', [0 800 400 400]);
-hAxes = axes(f_fixeddegree); 
-imagesc(full(A_fixeddegree), 'Parent', hAxes);
-colormap(gray);
+A_fixeddegree = adjacencymatrix(fdpars.degrees_i, fdpars.degrees_o); 
 
-title(hAxes, 'Fixed-degree', 'FontSize', titlefont)
+im = imagesc(full(A_fixeddegree)); set(gca,'YDir','reverse');
+colormap(gray);
+xlim([0, pars.N]); ylim([0, pars.N]);
+
+title('Fixed-degree', 'FontSize', titlefont)
 xticks(vec)
 xticklabels(string(vec))
-% xlabel('\boldmath$k^{\rm out}$', 'Interpreter', 'latex', 'FontSize', labelfont);
-% ylabel('\boldmath$k^{\rm in}$', 'Interpreter', 'latex', 'FontSize', labelfont);
+% % xlabel('\boldmath$k^{\rm out}$', 'Interpreter', 'latex', 'FontSize', labelfont);
+% % ylabel('\boldmath$k^{\rm in}$', 'Interpreter', 'latex', 'FontSize', labelfont);
 xlabel('Presynaptic neuron j', 'FontSize', labelfont)
 ylabel('Postynaptic neuron i', 'FontSize', labelfont)
 
-exportpdf(f_fixeddegree, '../Figures/Adjacency matrices/A_fixeddegree.pdf', true);
-close(f_fixeddegree)
-
+% pos = s.Position
+% s.Position = [pos(1), pos(2),w, w];
 
 %% Test using the poisson distribution of random networks
+subplot(1, 3, 2); hold on; axis square; box on;
+
 netp = 0.200402;
 rdpars = make_randomparameters(pars, netp);
 
 A_random = adjacencymatrix(rdpars.degrees_i, rdpars.degrees_o);
-f_random = figure('Renderer', 'painters', 'Position', [50 800 400 400]);
-hAxes = axes(f_random); 
-imagesc(full(A_random), 'Parent', hAxes);
-colormap(gray);
 
-title(hAxes, 'Random', 'FontSize', titlefont)
+im = imagesc(full(A_random)); set(gca,'YDir','reverse');
+colormap(gray);
+xlim([0, pars.N]); ylim([0, pars.N]);
+
+title('Random', 'FontSize', titlefont)
 % xlabel('\boldmath$k^{\rm out}$', 'Interpreter', 'latex', 'FontSize', labelfont);
 % ylabel('\boldmath$k^{\rm in}$', 'Interpreter', 'latex', 'FontSize', labelfont);
 xlabel('Presynaptic neuron j', 'FontSize', labelfont)
 % ylabel('Postynaptic neuron i', 'FontSize', labelfont)
 
-exportpdf(f_random, '../Figures/Adjacency matrices/A_random.pdf', true);
-close(f_random)
-
-
 %% Now using scale free networks:
+subplot(1, 3, 3); hold on; axis square; box on;
+
 degree = 2.1;
 sfpars = make_scalefreeparameters(pars, degree, 50, 260);
 sfpars.meandegree
 
 A_scalefree = adjacencymatrix(sfpars.degrees_i, sfpars.degrees_o);
-f_scalefree = figure('Renderer', 'painters', 'Position', [50 800 400 400]);
-hAxes = axes(f_scalefree); 
-imagesc(full(A_scalefree), 'Parent', hAxes);
-colormap(gray)
 
-title(hAxes, 'Scale-free', 'FontSize', titlefont)
+im = imagesc(full(A_scalefree)); set(gca,'YDir','reverse');
+colormap(gray)
+xlim([0, pars.N]); ylim([0, pars.N]);
+
+title('Scale-free', 'FontSize', titlefont)
 % xlabel('\boldmath$k^{\rm out}$', 'Interpreter', 'latex', 'FontSize', labelfont);
 % ylabel('\boldmath$k^{\rm in}$', 'Interpreter', 'latex', 'FontSize', labelfont);
 xlabel('Presynaptic neuron j', 'FontSize', labelfont)
 % ylabel('Postynaptic neuron i', 'FontSize', labelfont)
 
-exportpdf(f_scalefree, '../Figures/Adjacency matrices/A_scalefree.pdf', true);
-close(f_scalefree)
+%% Save:
+set(findall(gcf,'-property','FontName'),'FontName','Avenir')
+exportgraphics(f_A,'../Figures/Adjacency_matrices.pdf', 'ContentType','vector')
+close(f_A)
