@@ -13,3 +13,7 @@
 - Write about the memory demands of the network simulation
 
 - Write about the timestep of the ode solver
+
+- Write about constraining the ISI with only positive values
+
+- Remake the phase space plots with exportgraphics

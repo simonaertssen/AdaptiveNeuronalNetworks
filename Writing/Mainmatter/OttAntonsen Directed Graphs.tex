@@ -16,7 +16,7 @@ This hypothesis can be tested: we assume that $P(\k) = P(\kin) \cdot P(\kout)$ s
 
 \begin{figure}[ht]
 \centering
-\includegraphics[trim=2.5cm 0cm 2.5cm 0cm, clip=true, width = \textwidth]{../Figures/Distributions/2D.png}
+\includegraphics[width = \textwidth]{../Figures/Distributions/2D.pdf}
 \caption{Bivariate distributions for different network topologies, using 10$^4$ number of samples. The surface given by $P(\k)$ is well approximated by the histogram of variates sampled from a univariate distribution. $\kmean =  2 \times 10^3$ for all topologies, $p \approx 0.2$ for the random network and $\gamma = 4.3$ for the scale-free network.}
 \label{fig:2Ddistributions}
 \end{figure}
@@ -38,29 +38,13 @@ This means that there are $N^2 - (3N + 1)$ variables to find. Once a solution ha
 \end{enumerate}
 Algorithms that find the largest value in a vector start from the first or the last element. The permutation allows us to find different maxima every time by shuffling the vector.
 
-\begin{figure}[ht]
+\begin{figure}[H]
 \centering
-\begin{subfigure}[b]{0.32\linewidth}
-   \centering
-  \includegraphics[width=\linewidth, trim={0.5cm 0.5cm 0.5cm 0.5cm },clip]{../Figures/Adjacency matrices/A_fixeddegree.pdf}
-%   \caption{Adjacency matrix for a fixed-degree network.}
- %  \label{fig:A_fixeddegree} 
-\end{subfigure} \hfill
-\begin{subfigure}[b]{0.32\linewidth}
-   \centering
-  \includegraphics[width=\linewidth, trim={0.5cm 0.5cm 0.5cm 0.5cm },clip]{../Figures/Adjacency matrices/A_random.pdf}
-%   \caption{Adjacency matrix for a fixed-degree network.}
-%   \label{fig:MFRPSS}
-\end{subfigure} \hfill
-\begin{subfigure}[b]{0.32\linewidth}
-   \centering
-  \includegraphics[width=\linewidth, trim={0.5cm 0.5cm 0.5cm 0.5cm },clip]{../Figures/Adjacency matrices/A_scalefree.pdf}
-%   \caption{Adjacency matrix for a fixed-degree network.}
-%   \label{fig:MFRCPW}
-\end{subfigure}
+\includegraphics[width = \textwidth]{../Figures/Adjacency_matrices.pdf}
    \caption{Adjacency matrices for different types of networks with $N$ = 500 and $\kmean$ = 100. We can see how the fixed-degree network is quite homogeneous, while the random network shows some more clustering. The scale-free network has a low number of nodes with a very high degree, which is why we see vertical and horizontal stripes in the adjacency matrix.}
    \label{fig:adjacencymatrices}
 \end{figure}
+
 
 
 \subsection{Initial conditions} \label{sec:initialconditions}
