@@ -38,7 +38,8 @@ function [tout, xout, K, Kmeans, p, info] = DOPRI_simulatenetwork_adaptive(ta,tb
     Kmeans(1,1) = (sum(K, 'all') + eps)/N; 
     Kmeans(2,1) = (sum(abs(K), 'all') + eps)/N;
     lastspiketimes = zeros(N,1);
-        
+    ISI = zeros(N,1);
+    
     window = plastopts.SP.window;
     Kupdate = plastopts.SP.Kupdate;
     w_i = 0; w_o = 0;
@@ -58,12 +59,22 @@ function [tout, xout, K, Kmeans, p, info] = DOPRI_simulatenetwork_adaptive(ta,tb
         xout(:,i+1) = wrapToPi(tmp);
         
         pulse = xout(:,i) - xout(:,i+1) > 2*pi - 0.1;
+        
+        if intrnsic_plasticity && any(pulse == 1)
+            ISIidx = ISI > 0 & pulse == 1;
+            % Only adjust the ip where a spike occured and where the ISI is positive
+            test = ISI(ISIidx);
+            test2 = etaMAX*Song2017IP(ISI(ISIidx));
+            p.e(ISIidx) =  min(etaMAX, max(-etaMAX, p.e(ISIidx) + etaMAX*Song2017IP(ISI(ISIidx))));
+        end
+        
         if synaptic_plasticity && any(pulse == 1)
             % Add weight updates if applicable (only Kempter)
             K(:,pulse) = K(:,pulse) + w_i;
             K(pulse,:) = K(pulse,:) + w_o;
             
-            lastspiketimes(pulse) = gather(t);
+            ISI(pulse) = t - lastspiketimes(pulse); % Regsister the interspikeinterval
+            lastspiketimes(pulse) = t;
             dW = window(lastspiketimes - lastspiketimes');
             % Filter out all zeros that do not contriubute to the learning:
             % that is where lastspiketimes == 0
@@ -74,11 +85,6 @@ function [tout, xout, K, Kmeans, p, info] = DOPRI_simulatenetwork_adaptive(ta,tb
             K(idx) = Kupdate(K(idx),dW(idx));
             % Rescale to the maximum
             K = min(KMAX, max(-KMAX, K));
-        end
-        
-        if intrnsic_plasticity && any(pulse == 1)
-            ISI = lastspiketimes(pulse) - t;
-            p.e(pulse) = p.e(pulse) + etaMAX*Song2017IP(ISI);
         end
         
         Kmeans(1,i+1) = (sum(K, 'all') + eps)/N; 
