@@ -91,6 +91,8 @@ where $A_{p}=0.23$, $A_{n}=0.15$, $\tau_{p}=200$ and $\tau_n = 2000$. $\int W(s)
 
 The learning windows generally have $W(t^{\ast}) = 0$ for $t^{\ast} \geq 0$. This means that no learning will take place when the delay between neuron spikes is exactly $t^{\ast} \geq 0$. The triphasic windows show two of those points. 
 
+It is important to use a time-step lower than 0.01 when implementing \STDP. Otherwise we might miss important details in the curve of the learning window.
+
 
 \subsection{Synaptic scaling}
 There is no upper or lower bound on the synapse strength, and generally connection strengths are nonzero. Positive reinforcement loops might disturb the learning process, which would not be beneficial for the model. One technique we can apply to keep the strengths within a definitive range is to scale homeostatically - a method where any increases in synaptic strength will balance out any decreases by scaling:
@@ -110,6 +112,7 @@ Instead of scaling the weights to preserve a certain quantity in the network, we
 0 &\text {otherwise }
 \end{cases}
 \end{align}
+The argument $t$ represents the time that has passed between successive spike of the same neuron, the \textsl{inter-spike interval} (\ISI). This is always a positive number.
 
 \begin{figure}[H]
 \centering

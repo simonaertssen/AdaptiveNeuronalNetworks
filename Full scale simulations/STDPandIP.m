@@ -20,7 +20,7 @@ end
 initarray = make_GPUhandle();
 
 %% Theta model parameters:
-h = 0.01; tnow = h; tend = 5000;
+h = 0.01; tnow = h; tend = 3000;
 
 pars.N = 100;
 pars.a_n = 0.666666666666666666667;
@@ -170,8 +170,8 @@ maxdegree = max([degrees_i, degrees_o]);
 dist = maxdegree - mindegree; perc = 0.05*dist;
 numbins = round(sqrt(pars.N));
 xlim([mindegree - perc, maxdegree + perc]);
-histogram(degrees_i, numbins, 'Normalization', 'pdf', 'FaceColor', '#000000', 'FaceAlpha', 0.3)
-histogram(degrees_o, numbins, 'Normalization', 'pdf', 'FaceColor', '#d8d778', 'FaceAlpha', 0.7)
+histogram(degrees_i, linspace(mindegree, maxdegree, numbins), 'Normalization', 'pdf', 'FaceColor', '#000000', 'FaceAlpha', 0.3)
+histogram(degrees_o, linspace(mindegree, maxdegree, numbins), 'Normalization', 'pdf', 'FaceColor', '#d8d778', 'FaceAlpha', 0.7)
 minx = sbplt(4).XLim(1); maxy = sbplt(4).YLim(end); dist = sbplt(4).XLim(end) - minx;
 ylim([0, 1.06*maxy]);
 t1 = text(minx + 0.02*dist, 1.04*maxy, '\boldmath$k^{\rm in}$', 'Interpreter', 'latex', 'FontSize', labelfont-2, 'Color', '#000000', 'HorizontalAlignment', 'left', 'VerticalAlignment', 'top');

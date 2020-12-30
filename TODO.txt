@@ -1,19 +1,9 @@
-- Make better figures for the learning using the order parameter
-
 - Try the 2D distribution on the ott-antonsen scale free limit cycle
 
-- Make an example of the learning
+- Make an example of the learning: how the windows change the synaptic coupling
 
 - Make a better figure of the 1D pdfs
 
 - Make an example of the initial conditions of the Ott-Antonsen ansatz
-
-- Write bout why we take the theta model and not the QIF model
-
-- Write about the memory demands of the network simulation
-
-- Write about the timestep of the ode solver
-
-- Write about constraining the ISI with only positive values
 
 - Remake the phase space plots with exportgraphics
