@@ -10,7 +10,7 @@ set(groot,'DefaultAxesYGrid','on')
 
 titlefont = 15;
 labelfont = 15;
-export = false;
+export = true;
 
 %% Make a GPU init handle:
 if gpuDeviceCount > 0
@@ -20,9 +20,9 @@ end
 initarray = make_GPUhandle();
 
 %% Theta model parameters:
-h = 0.01; tnow = h; tend = 100;
+h = 0.01; tnow = h; tend = 5000;
 
-pars.N = 25;
+pars.N = 10;
 pars.a_n = 0.666666666666666666667;
 seed = 2; rng(seed);
 IC = linspace(0, 2*pi - (2*pi)/(pars.N),pars.N)';
@@ -96,9 +96,9 @@ end
 %% Plotting the results
 clc; close all;
 
-STDPfigure(pars, plastopts, t, thetas_full, K, Kmeans, titlefont, labelfont, 'test', '#D95319', true);
+% STDPfigure(pars, plastopts, t, thetas_full, K, Kmeans, titlefont, labelfont, 'test', '#77AC30', true);
 
-% STDPfigure(pars, plastopts, t, thetas_full, K, Kmeans, titlefont, labelfont, 'STDPandIPSong', '#D95319', export);
+STDPfigure(pars, plastopts, t, thetas_full, K, Kmeans, titlefont, labelfont, 'test', '#D95319', true);
 
 function fighandle = STDPfigure(pars, plastopts, t, thetas, K, Kmeans, titlefont, labelfont, figname, color, export)
 numfigs = 5;
@@ -111,8 +111,8 @@ end
 fighandle = figure('Renderer', 'painters', 'Position', [0, 2000, 300, 1400]); hold on; box on;
 
 sbplt(1) = subplot(numfigs,1,1); hold on; axis square; box on;
-title('Simulation results', 'FontSize', titlefont)
-yyaxis left; ylim([0, 1]);
+title('Simulation results', 'FontSize', titlefont, 'FontWeight', 'normal')
+yyaxis left; ylim([0, 1]); xlim([t(1), t(end)]); 
 z = orderparameter(thetas);
 % windowSize = 500;
 % b = (1/windowSize)*ones(1,windowSize);
@@ -130,11 +130,11 @@ xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('$\langle k \rangle$','Interpreter','latex', 'FontSize', labelfont)
 ax = gca; ax.YAxis(1).Color = [0, 0, 0];
 pos = sbplt(1).Position;
-w = 0.09; y = 0.08/16; we = 0.0001;
+w = 0.09; y = 0.08/16;
 sbplt(1).Position = [pos(1), pos(2) + w/2 + 1.5*e*y, pos(3), pos(4)];
 
 sbplt(2) = subplot(numfigs,1,2); hold on; axis square; box on;
-title('{ \boldmath $K_{ij} $}', 'Interpreter', 'latex', 'FontSize', titlefont)
+title('{ \boldmath $K_{ij} $}', 'Interpreter', 'latex', 'FontSize', titlefont, 'FontWeight', 'normal')
 xlim([0, pars.N]); ylim([0, pars.N]);
 xlabel('Presynaptic neuron j', 'FontSize', labelfont)
 ylabel('Postynaptic neuron i', 'FontSize', labelfont)
@@ -145,8 +145,8 @@ pos = sbplt(2).Position;
 sbplt(2).Position = [pos(1) - w/2, pos(2) + y + w/2, pos(3) + w, pos(4)];
 
 sbplt(3) = subplot(numfigs,1,3); hold on; axis square; axis on; box on;
-histogram(K, 'Normalization', 'pdf', 'FaceColor', color, 'EdgeColor', color)
-title('Synaptic strength', 'FontSize', titlefont)
+histogram(K, 'Normalization', 'pdf', 'FaceColor', color, 'FaceAlpha', 1)
+title('Synaptic strength', 'FontSize', titlefont, 'FontWeight', 'normal')
 xlabel('$K_{ij}$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('Density', 'FontSize', labelfont)
 % set(gca,'XTick', [-plastopts.KMAX, 0, plastopts.KMAX], 'XTickLabel',{'-$$K{\rm max}$$','0','$$K{\rm max}$$'}, 'TickLabelInterpreter', 'latex', 'FontSize', labelfont)
@@ -154,7 +154,7 @@ pos = sbplt(3).Position;
 sbplt(3).Position = [pos(1), pos(2) + w/4 - 1.5*e*y, pos(3), pos(4)];
 
 sbplt(4) = subplot(numfigs,1,4); hold on; axis square; box on;
-title('Degree distributions', 'FontSize', titlefont)
+title('Degree distributions', 'FontSize', titlefont, 'FontWeight', 'normal')
 degrees_i = sum(abs(K),2)';
 degrees_o = sum(abs(K),1);
 mindegree = min([degrees_i, degrees_o]);
@@ -162,34 +162,37 @@ maxdegree = max([degrees_i, degrees_o]);
 dist = maxdegree - mindegree; perc = 0.05*dist;
 numbins = round(sqrt(pars.N));
 xlim([mindegree - perc, maxdegree + perc]);
-histogram(degrees_i, numbins, 'Normalization', 'pdf')
-histogram(degrees_o, numbins, 'Normalization', 'pdf')
-legend('\boldmath$k^{\rm in}$', '\boldmath$k^{\rm out}$', 'Interpreter', 'latex', 'FontSize', labelfont-4, 'Location', 'southoutside', 'Orientation','horizontal')
+histogram(degrees_i, numbins, 'Normalization', 'pdf', 'FaceColor', '#000000', 'FaceAlpha', 0.3)
+histogram(degrees_o, numbins, 'Normalization', 'pdf', 'FaceColor', '#d8d778', 'FaceAlpha', 0.7)
+% leg = legend('\boldmath$k^{\rm in}$', '\boldmath$k^{\rm out}$', 'Interpreter', 'latex', 'FontSize', labelfont-6, 'Location', 'northwest', 'Orientation','vertical');
+minx = sbplt(4).XLim(1); maxy = sbplt(4).YLim(end);
+t1 = text(1.1*minx, 0.9*maxy, '\boldmath$k^{\rm in}$', 'Interpreter', 'latex', 'FontSize', labelfont-2, 'Color', '#000000');
+t2 = text(t1.Position(1) + 1.5*t1.Extent(3), 0.9*maxy, '\boldmath$k^{\rm out}$', 'Interpreter', 'latex', 'FontSize', labelfont-2, 'Color', '#d8d778');
 xlabel('$k$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('Density', 'FontSize', labelfont)
 pos = sbplt(4).Position;
-h = 0.045;
-sbplt(4).Position = [pos(1), pos(2) - h/2 - 2*e*y, pos(3), pos(4) + h];
+h = 0.02;
+sbplt(4).Position = [pos(1), pos(2) + h - 2*e*y, pos(3), pos(4)];
 
 sbplt(5) = subplot(numfigs,1,5); hold on; axis square; box on;
 xlim([mindegree - perc, maxdegree + perc]);
 ylim([mindegree - perc, maxdegree + perc]);
 % title('{ \boldmath $k^{\rm in} \leftrightarrow k^{\rm out}$ }', 'Interpreter', 'latex', 'FontSize', titlefont)
-scatter(degrees_i, degrees_o, '.', 'MarkerEdgeColor', color, 'MarkerFaceColor', color)
+scatter(degrees_i, degrees_o, 15, 'MarkerEdgeColor', '#000000', 'MarkerFaceColor', color)
 xlabel('\boldmath$k^{\rm in}$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('\boldmath$k^{\rm out}$','Interpreter','latex', 'FontSize', labelfont)
 pos = sbplt(5).Position;
-sbplt(5).Position = [pos(1), pos(2) + h/4 - 4*e*y, pos(3), pos(4)];
+sbplt(5).Position = [pos(1), pos(2) + 2*h - 4*e*y, pos(3), pos(4)];
 
 if isfield(plastopts, 'IP')
 sbplt(6) = subplot(numfigs,1,6); hold on; axis square; axis on; box on;
-histogram(pars.e, 'Normalization', 'pdf', 'FaceColor', color, 'EdgeColor', color)
-title('Excitability', 'FontSize', titlefont)
+histogram(pars.e, 'Normalization', 'pdf', 'FaceColor', color, 'FaceAlpha', 1)
+title('Excitability', 'FontSize', titlefont, 'FontWeight', 'normal')
 xlabel('$\eta_{i}$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('Density', 'FontSize', labelfont)
 % set(gca,'XTick', [-plastopts.etaMAX, 0, plastopts.etaMAX], 'XTickLabel',{'-$$\eta{\rm max}$$','0','$$\eta{\rm max}$$'}, 'TickLabelInterpreter', 'latex', 'FontSize', labelfont)
 pos = sbplt(6).Position;
-sbplt(6).Position = [pos(1), pos(2) + w/4 - 5*e*y, pos(3), pos(4)];
+sbplt(6).Position = [pos(1), pos(2) + 2.5*h - 7*e*y, pos(3), pos(4)];
 end
 
 
@@ -200,8 +203,11 @@ if size(MP,1)>1
     set(fighandle,'Position',[pos(1,2)+MP(2,1:2) pos(3:4)]);
 end
 
+set(findall(gcf,'-property','FontName'),'FontName','Avenir')
+
 if export
-print(fighandle, ['../Figures/Learning/', figname, '.png'], '-dpng', '-r400')
+% print(fighandle, ['../Figures/Learning/', figname, '.png'], '-dpng', '-r400')
+exportgraphics(fighandle,['../Figures/Learning/', figname, '.pdf'], 'ContentType','vector')
 end
 disp(['Made ', figname, ' figure'])
 end

@@ -132,7 +132,7 @@ toc;
 %% Observe function shapes: ip learning
 dt = linspace(0, 0.25, tpts);
 
-f_windows = figure('Renderer', 'painters', 'Position', [50 800 300 200]); box on; hold on;
+f_ip = figure('Renderer', 'painters', 'Position', [50 800 300 200]); box on; hold on;
 y = Song2017ip(dt);
 xline(0.09, '--k')
 xline(0.11, '--k')
@@ -150,8 +150,8 @@ text(0.112, -0.04, '$$T_{ \rm max}$$', 'Interpreter', 'latex', 'VerticalAlignmen
 xlabel("$t$ [s]", 'Interpreter', 'latex', 'FontSize', labelfont); 
 ylabel("$\phi_i(t)$", 'Interpreter', 'latex', 'FontSize', labelfont);
 
-print(f_windows, '../Figures/IPlearningFunction.png', '-dpng', '-r400')
-close(f_windows)
+% print(f_ip, '../Figures/IPlearningFunction.png', '-dpng', '-r400')
+% close(f_ip)
 
 
 %% Functions
