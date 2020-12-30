@@ -7,3 +7,9 @@
 - Make a better figure of the 1D pdfs
 
 - Make an example of the initial conditions of the Ott-Antonsen ansatz
+
+- Write bout why we take the theta model and not the QIF model
+
+- Write about the memory demands of the network simulation
+
+- Write about the timestep of the ode solver

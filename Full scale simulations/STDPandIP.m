@@ -10,7 +10,7 @@ set(groot,'DefaultAxesYGrid','on')
 
 titlefont = 15;
 labelfont = 15;
-export = true;
+export = false;
 
 %% Make a GPU init handle:
 if gpuDeviceCount > 0
@@ -20,13 +20,13 @@ end
 initarray = make_GPUhandle();
 
 %% Theta model parameters:
-h = 0.01; tnow = h; tend = 2000;
+h = 0.01; tnow = h; tend = 100;
 
-pars.N = 100;
+pars.N = 25;
 pars.a_n = 0.666666666666666666667;
 seed = 2; rng(seed);
 IC = linspace(0, 2*pi - (2*pi)/(pars.N),pars.N)';
-pars.e = 0; %randcauchy(seed, pars.eta0, pars.delta, pars.N);
+pars.e = zeros(pars.N, 1); %randcauchy(seed, pars.eta0, pars.delta, pars.N);
 
 KMAX = 10; etaMAX = 10;
 
@@ -36,11 +36,9 @@ STDP = struct('window', @Kempter1999Window, 'Kupdate', @(K, W) K + W, 'w_i', 1.0
 plastopts = struct('SP', STDP, 'KMAX', KMAX, 'etaMAX', etaMAX);
 
 [t, thetas_full, K, Kmeans, pars] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
-drawthetas = spikesNaN(thetas_full);
-z = orderparameter(thetas_full);
+% drawthetas = spikesNaN(thetas_full);
 
-STDPfigure(pars, plastopts, t, drawthetas, K, Kmeans, titlefont, labelfont, 'STDPKempter', '#0072BD');
-disp('Made STDPKempter figure')
+STDPfigure(pars, plastopts, t, thetas_full, K, Kmeans, titlefont, labelfont, 'STDPKempter', '#0072BD', export);
 end
 
 %% 2. Song window, no IP
@@ -52,8 +50,7 @@ plastopts = struct('SP', STDP, 'KMAX', KMAX, 'etaMAX', etaMAX);
 drawthetas = spikesNaN(thetas_full);
 z = orderparameter(thetas_full);
 
-STDPfigure(pars, plastopts, t, drawthetas, K, Kmeans, titlefont, labelfont, 'STDPSong', '#D95319');
-disp('Made STDPSong figure')
+STDPfigure(pars, plastopts, t, thetas_full, K, Kmeans, titlefont, labelfont, 'STDPSong', '#D95319', export);
 end
 
 %% 3. ChrollCannon window, no IP
@@ -62,11 +59,8 @@ STDP = struct('window', @ChrolCannon2012Window, 'Kupdate', @(K, W) K + KMAX*W);
 plastopts = struct('SP', STDP, 'KMAX', KMAX, 'etaMAX', etaMAX);
 
 [t, thetas_full, K, Kmeans, pars] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
-drawthetas = spikesNaN(thetas_full);
-z = orderparameter(thetas_full);
 
-STDPfigure(pars, plastopts, t, drawthetas, K, Kmeans, titlefont, labelfont, 'STDPChrolCannon', '#77AC30');
-disp('Made STDPChrolCannon figure')
+STDPfigure(pars, plastopts, t, thetas_full, K, Kmeans, titlefont, labelfont, 'STDPChrolCannon', '#77AC30', export);
 end
 
 %% 4. Kempter window, with IP
@@ -75,11 +69,8 @@ STDP = struct('window', @Kempter1999Window, 'Kupdate', @(K, W) K + W, 'w_i', 1.0
 plastopts = struct('SP', STDP, 'IP', true, 'KMAX', KMAX, 'etaMAX', etaMAX);
 
 [t, thetas_full, K, Kmeans, pars] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
-drawthetas = spikesNaN(thetas_full);
-z = orderparameter(thetas_full);
 
-STDPandIPfigure(pars, plastopts, t, drawthetas, K, Kmeans, titlefont, labelfont, 'STDPandIPKempter', '#0072BD');
-disp('Made STDPandIPKempter figure')
+STDPfigure(pars, plastopts, t, thetas_full, K, Kmeans, titlefont, labelfont, 'STDPandIPKempter', '#0072BD', export);
 end
 
 %% 5. Song window, with IP
@@ -88,11 +79,8 @@ STDP = struct('window', @Song2017Window, 'Kupdate', @(K, W) K + KMAX*W);
 plastopts = struct('SP', STDP, 'IP', true, 'KMAX', KMAX, 'etaMAX', etaMAX);
 
 [t, thetas_full, K, Kmeans, pars] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
-drawthetas = spikesNaN(thetas_full);
-z = orderparameter(thetas_full);
 
-STDPandIPfigure(pars, plastopts, t, drawthetas, K, Kmeans, titlefont, labelfont, 'STDPandIPSong', '#D95319');
-disp('Made STDPandIPSong figure')
+STDPfigure(pars, plastopts, t, thetas_full, K, Kmeans, titlefont, labelfont, 'STDPandIPSong', '#D95319', export);
 end
 
 %% 6. ChrollCannon window, with IP
@@ -101,125 +89,109 @@ STDP = struct('window', @ChrolCannon2012Window, 'Kupdate', @(K, W) K + KMAX*W);
 plastopts = struct('SP', STDP, 'IP', true, 'KMAX', KMAX, 'etaMAX', etaMAX);
 
 [t, thetas_full, K, Kmeans, pars] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
-drawthetas = spikesNaN(thetas_full);
-z = orderparameter(thetas_full);
 
-STDPandIPfigure(pars, plastopts, t, drawthetas, K, Kmeans, titlefont, labelfont, 'STDPandIPChrolCannon', '#77AC30');
-disp('Made STDPandIPChrolCannon figure')
+STDPfigure(pars, plastopts, t, thetas_full, K, Kmeans, titlefont, labelfont, 'STDPandIPChrolCannon', '#77AC30', export);
 end
 
 %% Plotting the results
+clc; close all;
 
-function fighandle = STDPfigure(pars, plastopts, t, thetas, K, Kmeans, titlefont, labelfont, figname, color)
+STDPfigure(pars, plastopts, t, thetas_full, K, Kmeans, titlefont, labelfont, 'test', '#D95319', true);
+
+% STDPfigure(pars, plastopts, t, thetas_full, K, Kmeans, titlefont, labelfont, 'STDPandIPSong', '#D95319', export);
+
+function fighandle = STDPfigure(pars, plastopts, t, thetas, K, Kmeans, titlefont, labelfont, figname, color, export)
+numfigs = 5;
+e = 0;
+if isfield(plastopts, 'IP')
+    numfigs = 6;
+    e = 1;
+end
+
 fighandle = figure('Renderer', 'painters', 'Position', [0, 2000, 300, 1400]); hold on; box on;
 
-subplot(5,1,1); hold on; axis square; box on;
+sbplt(1) = subplot(numfigs,1,1); hold on; axis square; box on;
 title('Simulation results', 'FontSize', titlefont)
-yyaxis left
-rasterplot(t, thetas, labelfont, 0.1);
-
+yyaxis left; ylim([0, 1]);
+z = orderparameter(thetas);
+% windowSize = 500;
+% b = (1/windowSize)*ones(1,windowSize);
+b = normpdf(-3:0.005:3, 0, 1);
+b = b/sum(b);
+a = 1;
+zfilt = filter(b,a,z);
+ylabel('$Z(t)$','Interpreter','latex', 'FontSize', labelfont)
+plot(t, abs(zfilt), '-k', 'LineWidth', 2)
+% rasterplot(t, thetas, labelfont, 0.1);
 yyaxis right
 plot(t, Kmeans(2,:), 'LineWidth', 2, 'Color', color)
-ax = gca; ax.YAxis(1).Color = [0, 0, 1]; ax.YAxis(2).Color = "#0072BD";
+ax = gca; ax.YAxis(1).Color = [0, 0, 1]; ax.YAxis(2).Color = color;
 xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('$\langle k \rangle$','Interpreter','latex', 'FontSize', labelfont)
 ax = gca; ax.YAxis(1).Color = [0, 0, 0];
+pos = sbplt(1).Position;
+w = 0.09; y = 0.08/16; we = 0.0001;
+sbplt(1).Position = [pos(1), pos(2) + w/2 + 1.5*e*y, pos(3), pos(4)];
 
-subplot(5,1,2); hold on; axis square; box on;
+sbplt(2) = subplot(numfigs,1,2); hold on; axis square; box on;
 title('{ \boldmath $K_{ij} $}', 'Interpreter', 'latex', 'FontSize', titlefont)
 xlim([0, pars.N]); ylim([0, pars.N]);
 xlabel('Presynaptic neuron j', 'FontSize', labelfont)
 ylabel('Postynaptic neuron i', 'FontSize', labelfont)
 imagesc(K); colormap(gray);
 set(gca,'YDir','reverse');
+colorbar('Location', 'southoutside')
+pos = sbplt(2).Position;
+sbplt(2).Position = [pos(1) - w/2, pos(2) + y + w/2, pos(3) + w, pos(4)];
 
-subplot(5,1,3); hold on; axis square; axis on; box on;
-histogram(K, 'Normalization', 'pdf', 'FaceColor', color, 'EdgeColor', color)
-title('Synaptic strength', 'FontSize', titlefont)
-xlabel('$K_{ij}$','Interpreter','latex', 'FontSize', labelfont)
-ylabel('Density', 'FontSize', labelfont)
-% set(gca,'XTick', [-plastopts.KMAX, 0, plastopts.KMAX], 'XTickLabel',{'-$$K{\rm max}$$','0','$$K{\rm max}$$'}, 'TickLabelInterpreter', 'latex')
-
-subplot(5,1,4); hold on; axis square; box on;
-title('Degree distributions', 'FontSize', titlefont)
-degrees_i = sum(abs(K),2);
-degrees_o = sum(abs(K),1);
-histogram(degrees_i, 'Normalization', 'pdf')
-histogram(degrees_o, 'Normalization', 'pdf')
-legend('\boldmath$k^{\rm in}$', '\boldmath$k^{\rm out}$', 'Interpreter', 'latex', 'FontSize', labelfont)
-xlabel('$k$','Interpreter','latex', 'FontSize', labelfont)
-ylabel('Density', 'FontSize', labelfont)
-
-subplot(5,1,5); hold on; axis square; box on;
-title('{ \boldmath $k^{\rm in} \leftrightarrow k^{\rm out}$ }', 'Interpreter', 'latex', 'FontSize', titlefont)
-scatter(degrees_i, degrees_o, '.', 'MarkerEdgeColor', color, 'MarkerFaceColor', color)
-xlabel('\boldmath$k^{\rm in}$','Interpreter','latex', 'FontSize', labelfont)
-ylabel('\boldmath$k^{\rm out}$','Interpreter','latex', 'FontSize', labelfont)
-
-MP=get(0,'MonitorPositions');
-if size(MP,1)>1
-    pos=get(fighandle,'Position');
-    pause(0.01); % this seems sometimes necessary on a Mac
-    set(fighandle,'Position',[pos(1,2)+MP(2,1:2) pos(3:4)]);
-end
-
-print(fighandle, ['../Figures/Learning/', figname, '.png'], '-dpng', '-r400')
-
-end
-
-
-function fighandle = STDPandIPfigure(pars, plastopts, t, thetas, K, Kmeans, titlefont, labelfont, figname, color)
-fighandle = figure('Renderer', 'painters', 'Position', [0, 2000, 300, 1400]); hold on; box on;
-
-subplot(6,1,1); hold on; axis square; box on;
-title('Simulation results', 'FontSize', titlefont)
-yyaxis left
-rasterplot(t, thetas, labelfont, 0.1);
-
-yyaxis right
-plot(t, Kmeans(2,:), 'LineWidth', 2, 'Color', color)
-ax = gca; ax.YAxis(1).Color = [0, 0, 1]; ax.YAxis(2).Color = "#0072BD";
-xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
-ylabel('$\langle k \rangle$','Interpreter','latex', 'FontSize', labelfont)
-ax = gca; ax.YAxis(1).Color = [0, 0, 0];
-
-subplot(6,1,2); hold on; axis square; box on;
-title('{ \boldmath $K_{ij} $}', 'Interpreter', 'latex', 'FontSize', titlefont)
-xlim([0, pars.N]); ylim([0, pars.N]);
-xlabel('Presynaptic neuron j', 'FontSize', labelfont)
-ylabel('Postynaptic neuron i', 'FontSize', labelfont)
-imagesc(K/plastopts.KMAX); colormap(gray);
-set(gca,'YDir','reverse');
-
-subplot(6,1,3); hold on; axis square; axis on; box on;
+sbplt(3) = subplot(numfigs,1,3); hold on; axis square; axis on; box on;
 histogram(K, 'Normalization', 'pdf', 'FaceColor', color, 'EdgeColor', color)
 title('Synaptic strength', 'FontSize', titlefont)
 xlabel('$K_{ij}$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('Density', 'FontSize', labelfont)
 % set(gca,'XTick', [-plastopts.KMAX, 0, plastopts.KMAX], 'XTickLabel',{'-$$K{\rm max}$$','0','$$K{\rm max}$$'}, 'TickLabelInterpreter', 'latex', 'FontSize', labelfont)
+pos = sbplt(3).Position;
+sbplt(3).Position = [pos(1), pos(2) + w/4 - 1.5*e*y, pos(3), pos(4)];
 
-subplot(6,1,4); hold on; axis square; axis on; box on;
+sbplt(4) = subplot(numfigs,1,4); hold on; axis square; box on;
+title('Degree distributions', 'FontSize', titlefont)
+degrees_i = sum(abs(K),2)';
+degrees_o = sum(abs(K),1);
+mindegree = min([degrees_i, degrees_o]);
+maxdegree = max([degrees_i, degrees_o]);
+dist = maxdegree - mindegree; perc = 0.05*dist;
+numbins = round(sqrt(pars.N));
+xlim([mindegree - perc, maxdegree + perc]);
+histogram(degrees_i, numbins, 'Normalization', 'pdf')
+histogram(degrees_o, numbins, 'Normalization', 'pdf')
+legend('\boldmath$k^{\rm in}$', '\boldmath$k^{\rm out}$', 'Interpreter', 'latex', 'FontSize', labelfont-4, 'Location', 'southoutside', 'Orientation','horizontal')
+xlabel('$k$','Interpreter','latex', 'FontSize', labelfont)
+ylabel('Density', 'FontSize', labelfont)
+pos = sbplt(4).Position;
+h = 0.045;
+sbplt(4).Position = [pos(1), pos(2) - h/2 - 2*e*y, pos(3), pos(4) + h];
+
+sbplt(5) = subplot(numfigs,1,5); hold on; axis square; box on;
+xlim([mindegree - perc, maxdegree + perc]);
+ylim([mindegree - perc, maxdegree + perc]);
+% title('{ \boldmath $k^{\rm in} \leftrightarrow k^{\rm out}$ }', 'Interpreter', 'latex', 'FontSize', titlefont)
+scatter(degrees_i, degrees_o, '.', 'MarkerEdgeColor', color, 'MarkerFaceColor', color)
+xlabel('\boldmath$k^{\rm in}$','Interpreter','latex', 'FontSize', labelfont)
+ylabel('\boldmath$k^{\rm out}$','Interpreter','latex', 'FontSize', labelfont)
+pos = sbplt(5).Position;
+sbplt(5).Position = [pos(1), pos(2) + h/4 - 4*e*y, pos(3), pos(4)];
+
+if isfield(plastopts, 'IP')
+sbplt(6) = subplot(numfigs,1,6); hold on; axis square; axis on; box on;
 histogram(pars.e, 'Normalization', 'pdf', 'FaceColor', color, 'EdgeColor', color)
 title('Excitability', 'FontSize', titlefont)
 xlabel('$\eta_{i}$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('Density', 'FontSize', labelfont)
 % set(gca,'XTick', [-plastopts.etaMAX, 0, plastopts.etaMAX], 'XTickLabel',{'-$$\eta{\rm max}$$','0','$$\eta{\rm max}$$'}, 'TickLabelInterpreter', 'latex', 'FontSize', labelfont)
+pos = sbplt(6).Position;
+sbplt(6).Position = [pos(1), pos(2) + w/4 - 5*e*y, pos(3), pos(4)];
+end
 
-subplot(6,1,5); hold on; axis square; box on;
-title('Degree distributions', 'FontSize', titlefont)
-degrees_i = sum(abs(K),2);
-degrees_o = sum(abs(K),1);
-histogram(degrees_i, 'Normalization', 'pdf')
-histogram(degrees_o, 'Normalization', 'pdf')
-legend('\boldmath$k^{\rm in}$', '\boldmath$k^{\rm out}$', 'Interpreter', 'latex', 'FontSize', labelfont)
-xlabel('$k$','Interpreter','latex', 'FontSize', labelfont)
-ylabel('Density', 'FontSize', labelfont)
-
-subplot(6,1,6); hold on; axis square; box on;
-title('{ \boldmath $k^{\rm in} \leftrightarrow k^{\rm out}$ }', 'Interpreter', 'latex', 'FontSize', titlefont)
-scatter(degrees_i, degrees_o, '.', 'MarkerEdgeColor', color, 'MarkerFaceColor', color)
-xlabel('\boldmath$k^{\rm in}$','Interpreter','latex', 'FontSize', labelfont)
-ylabel('\boldmath$k^{\rm out}$','Interpreter','latex', 'FontSize', labelfont)
 
 MP=get(0,'MonitorPositions');
 if size(MP,1)>1
@@ -228,6 +200,8 @@ if size(MP,1)>1
     set(fighandle,'Position',[pos(1,2)+MP(2,1:2) pos(3:4)]);
 end
 
+if export
 print(fighandle, ['../Figures/Learning/', figname, '.png'], '-dpng', '-r400')
-
+end
+disp(['Made ', figname, ' figure'])
 end
