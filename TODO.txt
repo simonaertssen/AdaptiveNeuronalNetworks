@@ -1,3 +1,9 @@
-- Add the IP functionality to the learning
+- Make better figures for the learning using the order parameter
 
 - Try the 2D distribution on the ott-antonsen scale free limit cycle
+
+- Make an example of the learning
+
+- Make a better figure of the 1D pdfs
+
+- Make an example of the initial conditions of the Ott-Antonsen ansatz
