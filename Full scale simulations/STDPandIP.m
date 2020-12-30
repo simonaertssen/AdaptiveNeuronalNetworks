@@ -20,7 +20,7 @@ end
 initarray = make_GPUhandle();
 
 %% Theta model parameters:
-h = 0.01; tnow = h; tend = 5000;
+h = 0.01; tnow = h; tend = 100;
 
 pars.N = 10;
 pars.a_n = 0.666666666666666666667;
@@ -98,7 +98,7 @@ clc; close all;
 
 % STDPfigure(pars, plastopts, t, thetas_full, K, Kmeans, titlefont, labelfont, 'test', '#77AC30', true);
 
-STDPfigure(pars, plastopts, t, thetas_full, K, Kmeans, titlefont, labelfont, 'test', '#D95319', true);
+% STDPfigure(pars, plastopts, t, thetas_full, K, Kmeans, titlefont, labelfont, 'test', '#D95319', true);
 
 function fighandle = STDPfigure(pars, plastopts, t, thetas, K, Kmeans, titlefont, labelfont, figname, color, export)
 numfigs = 5;
@@ -206,7 +206,6 @@ end
 set(findall(gcf,'-property','FontName'),'FontName','Avenir')
 
 if export
-% print(fighandle, ['../Figures/Learning/', figname, '.png'], '-dpng', '-r400')
 exportgraphics(fighandle,['../Figures/Learning/', figname, '.pdf'], 'ContentType','vector')
 end
 disp(['Made ', figname, ' figure'])
