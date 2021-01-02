@@ -107,7 +107,9 @@ scatter(eqpt(1), eqpt(2), 150, 'or', 'filled')
 set(gcf,'color','w'); xlim([-1,1]); ylim([-1,1]);
 xlabel('Re$\left[ Z(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('Im$\left[ Z(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
-print(f_MFRPSR, '../Figures/MFRPSR.png', '-dpng', '-r300')
+set(findall(gcf,'-property','FontName'),'FontName','Avenir')
+
+exportgraphics(f_MFRPSR,'../Figures/PhaseSpace/MFRPSR.pdf')
 close(f_MFRPSR)
 
 %% 2. MFR phase space: PSS
@@ -143,7 +145,8 @@ scatter(eqpt(1), eqpt(2), 150, 'or', 'filled')
 hold off; set(gcf,'color','w'); xlim([-1,1]); ylim([-1,1]); axis square;
 xlabel('Re$\left[ Z(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('Im$\left[ Z(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
-print(f_MFRPSS, '../Figures/MFRPSS.png', '-dpng', '-r300')
+
+exportgraphics(f_MFRPSS,'../Figures/PhaseSpace/MFRPSS.pdf')
 close(f_MFRPSS)
 
 %% 3. MFR phase space: CPW
@@ -229,7 +232,8 @@ plot_arrow(curve(1,end-6), curve(2,end-6), curve(1,end), curve(2,end), 'headwidt
 hold off; set(gcf,'color','w'); xlim([-1,1]); ylim([-1,1]); axis square;
 xlabel('Re$\left[ Z(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('Im$\left[ Z(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
-print(f_MFRCPW, '../Figures/MFRCPW.png', '-dpng', '-r300')
+
+exportgraphics(f_MFRCPW,'../Figures/PhaseSpace/MFRCPW.pdf')
 close(f_MFRCPW)
 
 
@@ -253,7 +257,7 @@ for i = 1:length(startx)
     OAIC = ones(p.Mk,1)*(startx(i) + starty(i)*1i);
     [~, ZOA] = OA_simulatenetwork(0, tlengths(i), OAIC, p, odeoptions);
 
-    scatter(startx(i), starty(i), 50, col, 'filled', 'o', 'LineWidth', linewidth);% 'color', col);
+    scatter(real(ZOA(1)), imag(ZOA(1)), 50, col, 'filled', 'o', 'LineWidth', linewidth);% 'color', col);
 
     Zplot = plot(real(ZOA), imag(ZOA), 'LineWidth', linewidth, 'color', col);
     endline = ZOA(end-3) - ZOA(end);
@@ -275,7 +279,8 @@ phasespaceplot();
 hold off; set(gcf,'color','w'); xlim([-1,1]); ylim([-1,1]); axis square;
 xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
-print(f_OARPSR, '../Figures/MFOARPSR_random.png', '-dpng', '-r300')
+
+exportgraphics(f_OARPSR,'../Figures/PhaseSpace/MFOARPSR_random.pdf')
 close(f_OARPSR)
 
 %% 5. OA random phase space: PSS
@@ -290,10 +295,11 @@ col = [0.4060 0.7040 0.1280] - 0.1;
 z0s = drawOAvectors(X + 1i*Y, in, p, cm(2,:));
 
 startx = 1; starty = 0; tlength = 3.4;
-odeoptions = odeset('RelTol', 1.0e-12); odeoptions.backwards = true;
+odeoptions = odeset('RelTol', 1.0e-12); odeoptions.backwards = false;
 
 [~, ZOA] = OA_simulatenetwork(0, tlength, ones(p.Mk,1)*(startx + starty*1i), p, odeoptions);
-scatter(startx, starty, 50, col, 'filled', 'o', 'LineWidth', linewidth);% 'color', col);
+scatter(real(ZOA(1)), imag(ZOA(1)), 50, col, 'filled', 'o', 'LineWidth', linewidth);% 'color', col);
+
 Zplot = plot(real(ZOA), imag(ZOA), 'LineWidth', linewidth, 'color', col);
 endline = ZOA(end-3) - ZOA(end);
 endpoint = ZOA(end) + 0.04*endline/abs(endline);
@@ -311,7 +317,8 @@ scatter(real(eqptZ), imag(eqptZ), 150, 'or', 'filled')
 hold off; set(gcf,'color','w'); xlim([-1,1]); ylim([-1,1]); axis square;
 xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
-print(f_OARPSS, '../Figures/MFOARPSS_random.png', '-dpng', '-r300')
+
+exportgraphics(f_OARPSS,'../Figures/PhaseSpace/MFOARPSS_random.pdf')
 close(f_OARPSS)
 
 %% 6. OA random phase space: CPW
@@ -341,7 +348,7 @@ for i = 1:length(startx)-1
     OAIC = ones(p.Mk,1)*(startx(i) + starty(i)*1i);
     [~, ZOA] = OA_simulatenetwork(0, tlengths(i), OAIC, p);
 
-    scatter(startx(i), starty(i), 50, col, 'filled', 'o', 'LineWidth', linewidth);% 'color', col);
+    scatter(real(ZOA(1)), imag(ZOA(1)), 50, col, 'filled', 'o', 'LineWidth', linewidth);% 'color', col);
 
     plot(real(ZOA), imag(ZOA), 'LineWidth', linewidth, 'color', col);
     endline = ZOA(end-3) - ZOA(end);
@@ -371,7 +378,8 @@ scatter(real(eqptZ), imag(eqptZ), 150, 'or', 'filled')
 hold off; set(gcf,'color','w'); xlim([-1,1]); ylim([-1,1]); axis square;
 xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
-print(f_OARCPW, '../Figures/MFOARCPW_random.png', '-dpng', '-r300')
+
+exportgraphics(f_OARCPW,'../Figures/PhaseSpace/MFOARCPW_random.pdf')
 close(f_OARCPW)
 
 
@@ -383,7 +391,7 @@ p = prepareOAparameters(make_scalefreeparameters(pars, 3));
 close all
 f_OARPSR = figure('Renderer', 'painters', 'Position', rect); hold on; box on;
 
-drawOAvectors(X + 1i*Y, in, p, cm(2,:));
+qs = drawOAvectors(X + 1i*Y, in, p, cm(2,:));
 
 odeoptions = odeset('RelTol', 1.0e-12);
 odeoptions.backwards = false;
@@ -391,11 +399,15 @@ col = [0 0.3070 0.5010];
 startx = 0.8*cos( -pi/5:pi/5:pi); starty = 0.8*sin(-pi/5:pi/5:pi);
 startx(2) = []; starty(2) = [];
 tlengths = [0.92, 1.15, 1.2, 1.1, 0.85, 0.55];
+
+% s = streamline(X, Y, real(qs), imag(qs), startx, starty, [0.01,9000]);
 for i = 1:length(startx)
     OAIC = ones(p.Mk,1)*(startx(i) + starty(i)*1i);
+%     OAIC = map_Ztozoa(startx(i) + starty(i)*1i, p);
+    
     [~, ZOA] = OA_simulatenetwork(0, tlengths(i), OAIC, p, odeoptions);
 
-    scatter(startx(i), starty(i), 50, col, 'filled', 'o', 'LineWidth', linewidth);% 'color', col);
+    scatter(real(ZOA(1)), imag(ZOA(1)), 50, col, 'filled', 'o', 'LineWidth', linewidth);% 'color', col);
 
     Zplot = plot(real(ZOA), imag(ZOA), 'LineWidth', linewidth, 'color', col);
     endline = ZOA(end-3) - ZOA(end);
@@ -417,7 +429,7 @@ phasespaceplot();
 hold off; set(gcf,'color','w'); xlim([-1,1]); ylim([-1,1]); axis square;
 xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
-print(f_OARPSR, '../Figures/MFOARPSR_scalefree.png', '-dpng', '-r300')
+exportgraphics(f_OARPSR,'../Figures/PhaseSpace/MFOARPSR_scalefree.pdf')
 close(f_OARPSR)
 
 %% 8. OA scalefree phase space: PSS
@@ -453,9 +465,9 @@ scatter(real(eqptZ), imag(eqptZ), 150, 'or', 'filled')
 hold off; set(gcf,'color','w'); xlim([-1,1]); ylim([-1,1]); axis square;
 xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
-print(f_OARPSS, '../Figures/MFOARPSS_scalefree.png', '-dpng', '-r300')
-close(f_OARPSS)
 
+exportgraphics(f_OARPSS,'../Figures/PhaseSpace/MFOARPSS_scalefree.pdf')
+close(f_OARPSS)
 
 %% 9. OA scalefree phase space: CPW
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
@@ -477,7 +489,7 @@ for i = 1:length(startx)
     OAIC = ones(p.Mk,1)*(startx(i) + starty(i)*1i);
     [~, ZOA] = OA_simulatenetwork(0, tlengths(i), OAIC, p, odeoptions);
     
-    scatter(startx(i), starty(i), 50, col, 'filled', 'o', 'LineWidth', linewidth);% 'color', col);
+    scatter(real(ZOA(1)), imag(ZOA(1)), 50, col, 'filled', 'o', 'LineWidth', linewidth);% 'color', col);
 
     Zplot = plot(real(ZOA), imag(ZOA), 'LineWidth', linewidth, 'color', col);
     endline = ZOA(end-3) - ZOA(end);
@@ -507,7 +519,8 @@ scatter(real(eqptZ), imag(eqptZ), 150, 'or', 'filled')
 hold off; set(gcf,'color','w'); xlim([-1,1]); ylim([-1,1]); axis square;
 xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
-print(f_OARCPW, '../Figures/MFOARCPW_scalefree.png', '-dpng', '-r300')
+
+exportgraphics(f_OARCPW,'../Figures/PhaseSpace/MFOARCPW_scalefree.pdf')
 close(f_OARCPW)
 
 %% Functions:

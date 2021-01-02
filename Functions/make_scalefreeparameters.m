@@ -17,7 +17,7 @@ function scalefreepars = make_scalefreeparameters(pars, degree, kmin, kmax)
     
     scalefreepars.P = @(x) scalefreepdf(x, pars.N, degree, kmin, kmax);
     
-    scalefreepars.P2D = @(x,y) P2D(x, y, scalefreepars.kmin, scalefreepars.kmax, scalefreepars.degree, scalefreepars.N);
+%     scalefreepars.P2D = @(x,y) P2D(x, y, scalefreepars.kmin, scalefreepars.kmax, scalefreepars.degree, scalefreepars.N);
 
     % Improve the support of P for de unique degree vector k: take kmin:kmax
 %     idx = randperm(pars.N); kminmax = kmin:kmax; n = numel(kminmax);

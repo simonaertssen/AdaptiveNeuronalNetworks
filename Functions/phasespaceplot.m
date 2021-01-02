@@ -11,6 +11,7 @@ function h = phasespaceplot()
     h = plot(cos(th), sin(th), '-k', 'LineWidth', 2);
     
     % Plot options:
+    set(gca,'XTickLabel',[]); set(gca,'YTickLabel',[]); 
     grid on; box on; axis square;
 end
 
