@@ -523,6 +523,74 @@ ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfo
 exportgraphics(f_OARCPW,'../Figures/PhaseSpace/MFOARCPW_scalefree.pdf')
 close(f_OARCPW)
 
+%% Draw the problems with mappings, use PSR state:
+pars.N = 3000;
+
+pars.eta0 = -0.9; pars.delta = 0.8; pars.K = -2;
+pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
+p = prepareOAparameters(make_scalefreeparameters(pars, 3));
+
+f_mappings = figure('Renderer', 'painters', 'Position', [0,0,1600,800]); 
+Zstart = 0.8*cos(3*pi/5) + 1i*0.8*sin(3*pi/5);
+tend = 2; col = cm(3,:);
+
+nlines = 50; linalpha = 0.15; cols = zeros(nlines,3);
+idx = randi([1 p.Mk],1,nlines);
+
+% With the simple same IC
+subplot(1, 2, 1); hold on; box on; axis square;
+drawOAvectors(X + 1i*Y, in, p, cm(2,:));
+OAIC = ones(p.Mk,1)*Zstart;
+[~, ZOA, bs] = OA_simulatenetwork(0, tend, OAIC, p, odeoptions);
+
+p1 = plot(real(bs(:, idx)), imag(bs(:, idx)), 'LineWidth', linewidth);
+for i = 1:nlines; cols(i,:) = p1(i).Color; p1(i).Color(4) = linalpha; end
+s1 = scatter(real(bs(1, idx)), imag(bs(1, idx)), [], cols, 'LineWidth', linewidth, 'MarkerEdgeAlpha', linalpha);
+
+scatter(real(ZOA(1)), imag(ZOA(1)), 500, col, 'x', 'LineWidth', linewidth);
+plot(real(ZOA), imag(ZOA), 'LineWidth', linewidth, 'color', col);
+endline = ZOA(end-4) - ZOA(end);
+endpoint = ZOA(end) + 0.08*endline/abs(endline);
+plot_arrow(real(endpoint), imag(endpoint), real(ZOA(end)), imag(ZOA(end)),'linewidth', 2, ...
+    'color', col,'facecolor', col,'edgecolor', col, 'headwidth',0.7,'headheight',3);
+
+phasespaceplot();
+scatter(real(Zstart), imag(Zstart), 500, [0,0,0], '+', 'LineWidth', linewidth);
+% text(real(Zstart), imag(Zstart), '$$\bar{Z}(0)$$', 'Interpreter','latex', 'FontSize', labelfont-4);
+hold off; set(gcf,'color','w'); xlim([-1,1]); ylim([-1,1]); axis square;
+xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
+ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
+
+% With the weighed ICs:
+subplot(1, 2, 2); hold on; box on; axis square;
+drawOAvectors(X + 1i*Y, in, p, cm(2,:));
+OAIC = map_Ztozoa(conj(Zstart), p);
+[~, ZOA, bs] = OA_simulatenetwork(0, tend, OAIC, p, odeoptions);
+
+p1 = plot(real(bs(:, idx)), imag(bs(:, idx)), 'LineWidth', linewidth);
+for i = 1:nlines; cols(i,:) = p1(i).Color; p1(i).Color(4) = linalpha; end
+s1 = scatter(real(bs(1, idx)), imag(bs(1, idx)), [], cols, 'LineWidth', linewidth, 'MarkerEdgeAlpha', linalpha);
+
+scatter(real(ZOA(1)), imag(ZOA(1)), 500, col, 'x', 'LineWidth', linewidth);
+plot(real(ZOA), imag(ZOA), 'LineWidth', linewidth, 'color', col);
+endline = ZOA(end-4) - ZOA(end);
+endpoint = ZOA(end) + 0.08*endline/abs(endline);
+plot_arrow(real(endpoint), imag(endpoint), real(ZOA(end)), imag(ZOA(end)),'linewidth', 2, ...
+    'color', col,'facecolor', col,'edgecolor', col, 'headwidth',0.7,'headheight',3);
+
+line([0,real(2*Zstart)], [0, imag(2*Zstart)], 'LineStyle', ':', 'LineWidth', 3, 'Color', 'k');
+
+phasespaceplot();
+scatter(real(Zstart), imag(Zstart), 500, [0,0,0], '+', 'LineWidth', linewidth);
+% text(real(Zstart), imag(Zstart), '$$\bar{Z}(0)$$', 'Interpreter','latex', 'FontSize', labelfont-4);
+hold off; set(gcf,'color','w'); xlim([-1,1]); ylim([-1,1]); axis square;
+xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
+ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
+
+% End figure:
+exportgraphics(f_mappings,'../Figures/PhaseSpace/Mappings.pdf')
+
+
 %% Functions:
 function z0s = drawOAvectors(ICs, cond, p, col)
     [xdim, ydim] = size(ICs);

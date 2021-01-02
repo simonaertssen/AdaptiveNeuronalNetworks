@@ -3,7 +3,3 @@
 - Make an example of the learning: how the windows change the synaptic coupling
 
 - Make a better figure of the 1D pdfs
-
-- Make an example of the initial conditions of the Ott-Antonsen ansatz
-
-- Remake the phase space plots with exportgraphics
