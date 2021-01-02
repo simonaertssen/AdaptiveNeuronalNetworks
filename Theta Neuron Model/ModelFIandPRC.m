@@ -135,6 +135,7 @@ set(gca,'XTick',[0, T/2, T], 'XTickLabel',{'0','$$T/2$$','$$T$$'}, 'TickLabelInt
 
 
 %%
+set(findall(gcf,'-property','FontName'),'FontName','Avenir')
 exportgraphics(fI,'../Figures/ThetaNeuronfIandPRC.pdf')
 
 

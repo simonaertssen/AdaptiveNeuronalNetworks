@@ -43,7 +43,7 @@ for i = 1:2
     text(tend - 0.1, -eqpt(1) + 0.4, num2str(-eqpt(1)), 'HorizontalAlignment', 'right', 'FontSize', axesfont);
     
     xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
-    set(gca,'YTick',-pi:pi/2:pi, 'YTickLabel',{'-$$\pi$$','$$-\frac{\pi}{2}$$','0','$$\frac{\pi}{2}$$','$$\pi$$'}, 'TickLabelInterpreter', 'latex', 'YLim', [-pi-0.2, pi + 0.2], 'FontSize', axesfont)
+    set(gca,'YTick',-pi:pi/2:pi, 'YTickLabel',{'-$$\pi$$','$$-\frac{\pi}{2}$$','0','$$\frac{\pi}{2}$$','$$\pi$$'}, 'TickLabelInterpreter', 'latex', 'YLim', [-pi-0.2, pi + 0.2], 'FontSize', axesfont, 'FontName', 'Avenir')
     
     ylabel('$\theta$','Interpreter','latex', 'FontSize', labelfont);
   
@@ -72,6 +72,7 @@ set(gca,'YTick',-pi:pi/2:pi, 'YTickLabel',{'-$$\pi$$','$$-\frac{\pi}{2}$$','0','
 
 
 %% Save:
+set(findall(gcf,'-property','FontName'),'FontName','Avenir')
 exportgraphics(feqpts,'../Figures/ThetaModelEquilibriumPoints.pdf')
 
 %% Functions:

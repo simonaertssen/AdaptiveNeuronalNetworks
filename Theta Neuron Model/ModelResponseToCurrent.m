@@ -34,14 +34,13 @@ plot(t, thetas, ':k', 'LineWidth', 1);
 plot(t, NaNthetas, '-', 'LineWidth', 2, 'color', '#0072BD');
 ylabel('$\theta$','Interpreter','latex', 'FontSize', labelfont);
 xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
-set(gca,'YTick',-pi:pi:pi, 'YTickLabel',{'-$$\pi$$','0','$$\pi$$'}, 'TickLabelInterpreter', 'latex', 'YLim', [-pi - 1.5, pi + 0.2], 'FontSize', axesfont)
+set(gca,'YTick',-pi:pi:pi, 'YTickLabel',{'-\pi','0','\pi'}, 'TickLabelInterpreter', 'tex', 'YLim', [-pi - 1.5, pi + 0.2], 'FontSize', axesfont, 'FontName','Avenir')
     
 yyaxis right; hold on; box on;
 maxy = max(I(t));
 plot(t, I(t), '-', 'LineWidth', 1, 'color', '#A2142F');
 ax = gca; ax.YAxis(1).Color = 'k'; ax.YAxis(2).Color = '#A2142F';
-set(gca,'YTick', 0:maxy:maxy, 'YLim', [-10, maxy*8]);
-
+set(gca,'YTick', 0:maxy:maxy, 'YLim', [-10, maxy*8], 'FontName','Avenir');
 
 
 %% Spiking behaviour:
@@ -58,7 +57,7 @@ yyaxis left; hold on;
 plot(t, thetas, ':k', 'LineWidth', 1);
 plot(t, NaNthetas, '-', 'LineWidth', 2, 'color', '#0072BD');
 xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
-set(gca,'YTick',-pi:pi:pi, 'YTickLabel',{'-$$\pi$$','0','$$\pi$$'}, 'TickLabelInterpreter', 'latex', 'YLim', [-pi - 1.5, pi + 0.2], 'FontSize', axesfont)
+set(gca,'YTick',-pi:pi:pi, 'YTickLabel',{'-\pi','0','\pi'}, 'TickLabelInterpreter', 'tex', 'YLim', [-pi - 1.5, pi + 0.2], 'FontSize', axesfont, 'FontName','Avenir')
 
 yyaxis right; hold on; box on;
 maxy = max(I(t));
@@ -82,7 +81,7 @@ plot(t, thetas, ':k', 'LineWidth', 1);
 plot(t, NaNthetas, '-', 'LineWidth', 2, 'color', '#0072BD');
 xlabel('$t$','Interpreter','latex', 'FontSize', labelfont)
 %set(gca,'YTick',-pi:pi/2:pi, 'YTickLabel',{'-$$\pi$$','-$$\frac{\pi}{2}$$','0','$$\frac{\pi}{2}$$','$$\pi$$'}, 'TickLabelInterpreter', 'latex', 'YLim', [-pi - 1.5, pi + 0.2], 'FontSize', axesfont)
-set(gca,'YTick',-pi:pi:pi, 'YTickLabel',{'-$$\pi$$','0','$$\pi$$'}, 'TickLabelInterpreter', 'latex', 'YLim', [-pi - 1.5, pi + 0.2], 'FontSize', axesfont)
+set(gca,'YTick',-pi:pi:pi, 'YTickLabel',{'-\pi','0','\pi'}, 'TickLabelInterpreter', 'tex', 'YLim', [-pi - 1.5, pi + 0.2], 'FontSize', axesfont, 'FontName','Avenir')
 
 yyaxis right; hold on; box on;
 maxy = max(I(t));
@@ -94,8 +93,8 @@ set(gca,'YTick', 0:maxy:maxy, 'YLim', [-200, maxy*8])
 
 
 %% Save the figure:
+set(findall(gcf,'-property','FontName'),'FontName','Avenir')
 exportgraphics(fexcite,'../Figures/ThetaNeuronResponseToCurrent.pdf')
-
 
 %% Investigate the frequency - current curve:
 % We know that T = pi/sqrt(I)
@@ -137,7 +136,7 @@ xlabel('$I$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('$\frac{1}{T}$','Interpreter','latex','Rotation', 0, 'FontSize', labelfont*1.5, 'VerticalAlignment','middle', 'HorizontalAlignment','right')
 legend('$\frac{\sqrt{I}}{\pi}$', '$1/\hat{T}$', 'Interpreter','latex', 'FontSize', labelfont, 'Location', 'northwest')
 
-exportgraphics(fI,'../Figures/ThetaNeuronResponseToCurrentPeriod.pdf')
+% exportgraphics(fI,'../Figures/ThetaNeuronResponseToCurrentPeriod.pdf')
 
 %% Functions:
 function I = excitabilitycurrent(t)
