@@ -15,8 +15,13 @@ function [TOA, ZOA, b] = OA_simulatenetwork(tnow, tend, OAIC, p, odeoptions)
     end
 
     [TOA, b] = ode45(@(t,x) MFROA(t,x,p), [tnow, tend], gather(OAIC), odeoptions);
-%     normp = p.P2D(p.k(:,1), p.k(:,2))/p.N;
-    normp = p.P(p.k)/p.N;
+    
+    if isfield(p, 'P2D')
+        normp = p.P2D(p.k, p.k_o)/p.N;
+    else
+        normp = p.P(p.k)/p.N;
+    end
+    
     if odeoptions.backwards == true
          transientstime = find(TOA >= 0, 1, 'first') - 1;
 %          Implement a way to find the OAIC better if we're too far away

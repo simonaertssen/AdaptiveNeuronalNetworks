@@ -111,7 +111,7 @@ close(fighandle)
 
 %% Plotting the results
 
-STDPfigure(0, pars, plastopts, t, thetas_full, K, Kmeans, titlefont, labelfont, 'STDPKempter', '#0072BD', export);
+% STDPfigure(0, pars, plastopts, t, thetas_full, K, Kmeans, titlefont, labelfont, 'STDPKempter', '#0072BD', export);
 
 function fighandle = STDPfigure(idx, pars, plastopts, t, thetas, K, Kmeans, titlefont, labelfont, figname, color, export)
 numfigs = 5;

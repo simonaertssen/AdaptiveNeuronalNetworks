@@ -108,7 +108,7 @@ pos = plt.Position; plt.Position = [pos(1) + 0.09, pos(2), pos(3), pos(4)];
 % xline(lognormpars.meandegree, 'k--')
 
 %% Produce 1D figure
-% print(f_1Dpdfs, '../Figures/Distributions/1D.png', '-dpng', '-r300')
+set(findall(gcf,'-property','FontName'),'FontName','Avenir')
 exportgraphics(f_1Dpdfs,'../Figures/Distributions/1D.pdf')
 
 close(f_1Dpdfs)
@@ -163,11 +163,16 @@ colormap(jet)
 %% A 2D random network:
 randompars = make_randomparameters(pars, meandegreetoget/(pars.N - 1));
 
-randompars.P2D = @(x,y) randompars.P(x) .* randompars.P(y) / pars.N;
-Pnorm = randompars.P2D(1:pars.N,1:pars.N);
-% randompars.P2D = @(x,y) randompars.P2D(x,y)/sum(Pnorm, 'all');
+% randompars.P2D = @(x,y) randompars.P(x) .* randompars.P(y) / sum(randompars.P(x).*randompars.P(y), 'all') * pars.N;
+% Pnorm = randompars.P2D(1:pars.N,1:pars.N);
+% randompars.P2D = @(x,y) randompars.P2D(x,y)/sum(Pnorm, 'all') * pars.N;
 
-if sum(randompars.P2D(1:pars.N, 1:pars.N), 'all') - pars.N < 1.e-3; disp('Sum is correct'); end
+randompars.P2D = @(x,y) randompars.P(x).*randompars.P(y);
+Pnorm = sum(randompars.P2D(1:pars.N,1:pars.N), 'all')/pars.N; 
+randompars.P2D = @(x,y) randompars.P2D(x,y)/Pnorm;
+
+sum(randompars.P2D(1:pars.N, 1:pars.N), 'all')
+if abs(sum(randompars.P2D(1:pars.N, 1:pars.N), 'all') - pars.N) < 1.e-3; disp('Sum is correct'); end
 
 %%
 subplot(1,3,2); hold on; grid on; box on;
@@ -190,7 +195,8 @@ colormap(jet)
 vec = linspace(minmax(1), minmax(end), minmax(end) - minmax(1) + 1);
 [x,y] = meshgrid(vec, vec);
 idx = round(linspace(1, numel(vec), 25));
-surf(x(idx,idx),y(idx,idx),randompars.P2D(x(idx,idx),y(idx,idx))/pars.N,'FaceAlpha',0.5,'EdgeColor','none');
+surf(x(idx,idx),y(idx,idx),randompars.P2D(x(idx,idx),y(idx,idx))/pars.N^2*Pnorm,'FaceAlpha',0.5,'EdgeColor','none');
+
 colormap(jet)
 
 % The 2D scatter plot underneath
@@ -205,17 +211,23 @@ ax.ZTick(ax.ZTick < 0) = [];
 colormap(jet)
 
 %% A 2D scalefree network 
-scalefreepars = make_scalefreeparameters(pars, 4.3);
+scalefreepars = make_scalefreeparameters(pars, 4.305);
 scalefreepars.meandegree
 
-% scalefreepars.P2D = @(x,y) P2D(x, y, scalefreepars.kmin, scalefreepars.kmax, scalefreepars.degree, scalefreepars.N)/pars.N;
-scalefreepars.P2D = @(x,y) scalefreepars.P(x) .* scalefreepars.P(y) / pars.N;
+% scalefreepars.P2D = @(x,y) scalefreepars.P(x).*scalefreepars.P(y);
+% Pnorm = sum(scalefreepars.P2D(1:pars.N,1:pars.N), 'all')/pars.N; 
+% scalefreepars.P2D = @(x,y) scalefreepars.P2D(x,y)/Pnorm;
 
-if sum(scalefreepars.P2D(scalefreepars.kmin:scalefreepars.kmax,scalefreepars.kmin:scalefreepars.kmax), 'all') - pars.N < 1.e-3; disp('Sum is correct'); end
+scalefreepars.P2D = @(x,y) P2D(x, y, scalefreepars.kmin, scalefreepars.kmax, scalefreepars.degree, scalefreepars.N);
+
+vec = linspace(scalefreepars.kmin, scalefreepars.kmax, scalefreepars.kmax-scalefreepars.kmin+1);
+[x,y] = meshgrid(vec, vec);
+sum(scalefreepars.P2D(x,y), 'all') 
+if abs(sum(scalefreepars.P2D(x,y), 'all') - pars.N) < 1.e-3; disp('Sum is correct'); end
 
 %%
-subplot(1,3,3); hold on; grid on; box on;
-% figure; hold on; box on;
+% subplot(1,3,3); hold on; grid on; box on;
+figure; hold on; box on;
 title('Scale-free', 'FontSize', titlefont);
 xlabel('\boldmath$k^{\rm in}$', 'Interpreter', 'latex', 'FontSize', labelfont);
 ylabel('\boldmath$k^{\rm out}$', 'Interpreter', 'latex', 'FontSize', labelfont);
@@ -248,12 +260,11 @@ ax.ZTick(ax.ZTick < 0) = [];
 colormap(jet)
 
 %% Produce 2D figure
-% print(f_2Dpdfs, '../Figures/Distributions/2D.png', '-dpng', '-r600')
+set(findall(gcf,'-property','FontName'),'FontName','Avenir')
 exportgraphics(f_2Dpdfs,'../Figures/Distributions/2D.pdf')
 
 close(f_2Dpdfs)
 end
-%% Functions:
 function P = P2D(X,Y, kmin, kmax, degree, N)
     P = X.^(-degree) .* Y.^(-degree);
     
@@ -262,3 +273,4 @@ function P = P2D(X,Y, kmin, kmax, degree, N)
     Pnorm = x.^(-degree) .* y.^(-degree);
     P = P/sum(Pnorm, 'all')*N;
 end
+

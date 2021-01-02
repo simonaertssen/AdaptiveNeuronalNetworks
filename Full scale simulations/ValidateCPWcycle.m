@@ -20,10 +20,10 @@ end
 initarray = make_GPUhandle();
 
 %% Theta model parameters:
-tnow = 0; tend = 20;
-h = 0.05;
+tnow = 0; tend = 8;
+h = 0.1;
 
-pars.N = 1000;
+pars.N = 2500;
 pars.a_n = 0.666666666666666666667;
 pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
 
@@ -184,25 +184,26 @@ odeoptions = odeset('RelTol', 1.0e-9,'AbsTol', 1.0e-9);
 %% 3. Perform a full scale simulation of a scale-free network:
 % The full scale simulation using the adjacency matrix:
 degree = 3;
-IC = wrapToPi(randn(pars.N, 1)*2.0);
+% IC = wrapToPi(randn(pars.N, 1)*2.0);
 IC = pi*ones(pars.N, 1) - pi;
 
-sfpars = make_scalefreeparameters(pars, degree);
+sfpars = make_scalefreeparameters(pars, degree, 400, 700);
 [~, thetasfull, A] = DOPRI_simulatenetwork(tnow,tend,IC,h,sfpars);
 zfull = orderparameter(thetasfull);
-ts = findlimitcycle(abs(zfull));
+% ts = findlimitcycle(abs(zfull));
 disp('Full scale test done')
 
+%%
 % The OA mean field theory:
 sfpars = prepareOAparameters(sfpars);
-z0 = map_thetatozoa(gather(thetasfull(:,1)), sfpars);
+z0 = map_thetatozoa(gather(IC), sfpars);
 z0 = orderparameter(IC)*ones(sfpars.Mk,1);
 [~, ZOA] = OA_simulatenetwork(tnow, tend, z0, sfpars, odeoptions);
-TOAs = findlimitcycle(abs(ZOA));
+% TOAs = findlimitcycle(abs(ZOA));
 disp('OA mean field test done')
 
-zfull = zfull(ts(1):ts(2));
-ZOA = ZOA(TOAs(1):TOAs(2));
+% zfull = zfull(ts(1):ts(2));
+% ZOA = ZOA(TOAs(1):TOAs(2));
 
 %% Plotting the results:
 f_scalefree = figure('Renderer', 'painters', 'Position', [50 800 500 500]); box on; hold on; axis square;
