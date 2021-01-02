@@ -107,3 +107,12 @@ Z0fromtheta0 = orderparameter(theta0)
 
 map_thetatoZ(map_zoatotheta(z0, p))
 
+%% Try a better 'distribution' across the circle:
+thetas = wrapToPi(rand(p.N,1)*pi/2 + 1*pi/4);
+Zs = 0.8*cos(thetas) + 1i*0.8*sin(thetas);
+Z = orderparameter(Zs);
+hold on;
+scatter(real(Zs), imag(Zs))
+scatter(real(Z), imag(Z), 150, 'x')
+
+phasespaceplot()
