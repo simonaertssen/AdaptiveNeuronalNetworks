@@ -51,7 +51,7 @@ pars.a_n = 0.666666666666666666667;
 seed = 2; rng(seed);
 
 %% Draw the problems with mappings, use PSR state:
-pars.N = 250;
+pars.N = 1000;
 labelfont = 17;
 pars.eta0 = -0.9; pars.delta = 0.8; pars.K = -2;
 pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
