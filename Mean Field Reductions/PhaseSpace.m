@@ -105,6 +105,7 @@ scatter(eqpt(1), eqpt(2), 150, 'or', 'filled')
 
 % End figure:
 set(gcf,'color','w'); xlim([-1,1]); ylim([-1,1]);
+set(gca,'XTickLabel',[]); set(gca,'YTickLabel',[]); 
 xlabel('Re$\left[ Z(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('Im$\left[ Z(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 set(findall(gcf,'-property','FontName'),'FontName','Avenir')
@@ -143,6 +144,7 @@ scatter(eqpt(1), eqpt(2), 150, 'or', 'filled')
 
 % End figure:
 hold off; set(gcf,'color','w'); xlim([-1,1]); ylim([-1,1]); axis square;
+set(gca,'XTickLabel',[]); set(gca,'YTickLabel',[]); 
 xlabel('Re$\left[ Z(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('Im$\left[ Z(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 
@@ -230,6 +232,7 @@ plot_arrow(curve(1,end-6), curve(2,end-6), curve(1,end), curve(2,end), 'headwidt
 
 % End figure:
 hold off; set(gcf,'color','w'); xlim([-1,1]); ylim([-1,1]); axis square;
+set(gca,'XTickLabel',[]); set(gca,'YTickLabel',[]); 
 xlabel('Re$\left[ Z(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('Im$\left[ Z(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 
@@ -277,6 +280,7 @@ phasespaceplot();
 
 % End figure:
 hold off; set(gcf,'color','w'); xlim([-1,1]); ylim([-1,1]); axis square;
+set(gca,'XTickLabel',[]); set(gca,'YTickLabel',[]); 
 xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 
@@ -315,6 +319,7 @@ scatter(real(eqptZ), imag(eqptZ), 150, 'or', 'filled')
 
 % End figure:
 hold off; set(gcf,'color','w'); xlim([-1,1]); ylim([-1,1]); axis square;
+set(gca,'XTickLabel',[]); set(gca,'YTickLabel',[]); 
 xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 
@@ -376,6 +381,7 @@ scatter(real(eqptZ), imag(eqptZ), 150, 'or', 'filled')
 
 % End figure:
 hold off; set(gcf,'color','w'); xlim([-1,1]); ylim([-1,1]); axis square;
+set(gca,'XTickLabel',[]); set(gca,'YTickLabel',[]); 
 xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 
@@ -427,6 +433,7 @@ phasespaceplot();
 
 % End figure:
 hold off; set(gcf,'color','w'); xlim([-1,1]); ylim([-1,1]); axis square;
+set(gca,'XTickLabel',[]); set(gca,'YTickLabel',[]); 
 xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 exportgraphics(f_OARPSR,'../Figures/PhaseSpace/MFOARPSR_scalefree.pdf')
@@ -463,6 +470,7 @@ scatter(real(eqptZ), imag(eqptZ), 150, 'or', 'filled')
 
 % End figure:
 hold off; set(gcf,'color','w'); xlim([-1,1]); ylim([-1,1]); axis square;
+set(gca,'XTickLabel',[]); set(gca,'YTickLabel',[]); 
 xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 
@@ -517,6 +525,7 @@ scatter(real(eqptZ), imag(eqptZ), 150, 'or', 'filled')
 
 % End figure:
 hold off; set(gcf,'color','w'); xlim([-1,1]); ylim([-1,1]); axis square;
+set(gca,'XTickLabel',[]); set(gca,'YTickLabel',[]); 
 xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 
@@ -524,30 +533,51 @@ exportgraphics(f_OARCPW,'../Figures/PhaseSpace/MFOARCPW_scalefree.pdf')
 close(f_OARCPW)
 
 %% Draw the problems with mappings, use PSR state:
-pars.N = 3000;
+pars.N = 500;
 
 pars.eta0 = -0.9; pars.delta = 0.8; pars.K = -2;
 pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
 p = prepareOAparameters(make_scalefreeparameters(pars, 3));
 
-f_mappings = figure('Renderer', 'painters', 'Position', [0,0,1600,800]); 
+f_mappings = figure('Renderer', 'painters', 'Position', [0,0,900,900]); 
 Zstart = 0.8*cos(3*pi/5) + 1i*0.8*sin(3*pi/5);
-tend = 2; col = cm(3,:);
+tend = 1.2; col = cm(3,:);
 
 nlines = 50; linalpha = 0.15; cols = zeros(nlines,3);
 idx = randi([1 p.Mk],1,nlines);
 
 % With the simple same IC
-subplot(1, 2, 1); hold on; box on; axis square;
-drawOAvectors(X + 1i*Y, in, p, cm(2,:));
 OAIC = ones(p.Mk,1)*Zstart;
 [~, ZOA, bs] = OA_simulatenetwork(0, tend, OAIC, p, odeoptions);
 
+% Focus on the ICs:
+subplot(3, 3, 1); hold on; box on; axis square;
+xlim([real(Zstart) - 0.2, real(Zstart) + 0.2]) 
+ylim([imag(Zstart) - 0.2, imag(Zstart) + 0.2]) 
+drawOAvectors(X + 1i*Y, in, p, cm(2,:));
+phasespaceplot();
+
+% Show the final state:
+subplot(3, 3, 4); hold on; box on; axis square;
+xlim([real(ZOA(end)) - 0.2, real(ZOA(end)) + 0.2]) 
+ylim([imag(ZOA(end)) - 0.2, imag(ZOA(end)) + 0.2]) 
+drawOAvectors(X + 1i*Y, in, p, cm(2,:));
+phasespaceplot();
+
+% Show the full space:
+subplot(3, 3, 7); hold on; box on; axis square;
+drawOAvectors(X + 1i*Y, in, p, cm(2,:));
+phasespaceplot();
+
+%%
+drawOAvectors(X + 1i*Y, in, p, cm(2,:));
 p1 = plot(real(bs(:, idx)), imag(bs(:, idx)), 'LineWidth', linewidth);
 for i = 1:nlines; cols(i,:) = p1(i).Color; p1(i).Color(4) = linalpha; end
-s1 = scatter(real(bs(1, idx)), imag(bs(1, idx)), [], cols, 'LineWidth', linewidth, 'MarkerEdgeAlpha', linalpha);
+scatter(real(bs(1, idx)), imag(bs(1, idx)), [], cols, 'LineWidth', linewidth, 'MarkerEdgeAlpha', linalpha);
+scatter(real(bs(end, :)), imag(bs(end, :)), 25, 'k');
 
-scatter(real(ZOA(1)), imag(ZOA(1)), 500, col, 'x', 'LineWidth', linewidth);
+scatter(real(Zstart), imag(Zstart), 500, [0,0,0], '+', 'LineWidth', linewidth);
+scatter(real(ZOA(1)), imag(ZOA(1)), 500, col, '+', 'LineWidth', linewidth);
 plot(real(ZOA), imag(ZOA), 'LineWidth', linewidth, 'color', col);
 endline = ZOA(end-4) - ZOA(end);
 endpoint = ZOA(end) + 0.08*endline/abs(endline);
@@ -555,14 +585,13 @@ plot_arrow(real(endpoint), imag(endpoint), real(ZOA(end)), imag(ZOA(end)),'linew
     'color', col,'facecolor', col,'edgecolor', col, 'headwidth',0.7,'headheight',3);
 
 phasespaceplot();
-scatter(real(Zstart), imag(Zstart), 500, [0,0,0], '+', 'LineWidth', linewidth);
-% text(real(Zstart), imag(Zstart), '$$\bar{Z}(0)$$', 'Interpreter','latex', 'FontSize', labelfont-4);
 hold off; set(gcf,'color','w'); xlim([-1,1]); ylim([-1,1]); axis square;
 xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 
+%%
 % With the weighed ICs:
-subplot(1, 2, 2); hold on; box on; axis square;
+subplot(1, 3, 2); hold on; box on; axis square;
 drawOAvectors(X + 1i*Y, in, p, cm(2,:));
 OAIC = map_Ztozoa(conj(Zstart), p);
 [~, ZOA, bs] = OA_simulatenetwork(0, tend, OAIC, p, odeoptions);
@@ -570,8 +599,10 @@ OAIC = map_Ztozoa(conj(Zstart), p);
 p1 = plot(real(bs(:, idx)), imag(bs(:, idx)), 'LineWidth', linewidth);
 for i = 1:nlines; cols(i,:) = p1(i).Color; p1(i).Color(4) = linalpha; end
 s1 = scatter(real(bs(1, idx)), imag(bs(1, idx)), [], cols, 'LineWidth', linewidth, 'MarkerEdgeAlpha', linalpha);
+scatter(real(bs(end, :)), imag(bs(end, :)), 25, 'k');
 
-scatter(real(ZOA(1)), imag(ZOA(1)), 500, col, 'x', 'LineWidth', linewidth);
+scatter(real(Zstart), imag(Zstart), 500, [0,0,0], '+', 'LineWidth', linewidth);
+scatter(real(ZOA(1)), imag(ZOA(1)), 500, col, '+', 'LineWidth', linewidth);
 plot(real(ZOA), imag(ZOA), 'LineWidth', linewidth, 'color', col);
 endline = ZOA(end-4) - ZOA(end);
 endpoint = ZOA(end) + 0.08*endline/abs(endline);
@@ -581,14 +612,45 @@ plot_arrow(real(endpoint), imag(endpoint), real(ZOA(end)), imag(ZOA(end)),'linew
 line([0,real(2*Zstart)], [0, imag(2*Zstart)], 'LineStyle', ':', 'LineWidth', 3, 'Color', 'k');
 
 phasespaceplot();
+hold off; set(gcf,'color','w'); xlim([-1,1]); ylim([-1,1]); axis square;
+xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
+ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
+
+% Find ICs distributed among the circle
+subplot(3, 3, 3); hold on; box on; axis square;
+drawOAvectors(X + 1i*Y, in, p, cm(2,:));
+[OAIC, zoaIC] = findDistribution(Zstart,p);
+
+% scatter(real(Zstart), imag(Zstart), 500, [0,0,0], '+', 'LineWidth', linewidth);
+% scatter(real(zoas*p.P(p.k)/p.N), imag(zoas*p.P(p.k)/p.N), 500, [1,0,0], 'x', 'LineWidth', linewidth);
+% 
+% scatter(real(zoas), imag(zoas))
+% phasespaceplot();
+
+[~, ZOA, bs] = OA_simulatenetwork(0, tend, OAIC, p, odeoptions);
+
+p1 = plot(real(bs(:, idx)), imag(bs(:, idx)), 'LineWidth', linewidth);
+for i = 1:nlines; cols(i,:) = p1(i).Color; p1(i).Color(4) = linalpha; end
+s1 = scatter(real(bs(1, idx)), imag(bs(1, idx)), [], cols, 'LineWidth', linewidth, 'MarkerEdgeAlpha', linalpha);
+scatter(real(bs(end, :)), imag(bs(end, :)), 25, 'k');
+
+scatter(real(ZOA(1)), imag(ZOA(1)), 500, col, 'x', 'LineWidth', linewidth);
+plot(real(ZOA), imag(ZOA), 'LineWidth', linewidth, 'color', col);
+endline = ZOA(end-4) - ZOA(end);
+endpoint = ZOA(end) + 0.08*endline/abs(endline);
+plot_arrow(real(endpoint), imag(endpoint), real(ZOA(end)), imag(ZOA(end)),'linewidth', 2, ...
+    'color', col,'facecolor', col,'edgecolor', col, 'headwidth',0.7,'headheight',3);
+
+phasespaceplot();
 scatter(real(Zstart), imag(Zstart), 500, [0,0,0], '+', 'LineWidth', linewidth);
 % text(real(Zstart), imag(Zstart), '$$\bar{Z}(0)$$', 'Interpreter','latex', 'FontSize', labelfont-4);
 hold off; set(gcf,'color','w'); xlim([-1,1]); ylim([-1,1]); axis square;
 xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 
+
 % End figure:
-exportgraphics(f_mappings,'../Figures/PhaseSpace/Mappings.pdf')
+% exportgraphics(f_mappings,'../Figures/PhaseSpace/Mappings.pdf')
 
 
 %% Functions:
@@ -606,3 +668,17 @@ function z0s = drawOAvectors(ICs, cond, p, col)
     end
     q = quiver(real(ICs), imag(ICs), real(z0s), imag(z0s), 0.8, 'color', col);
 end
+
+function [res, IC] = findDistribution(target, p)
+    opts = optimoptions('fsolve','Display','off','Algorithm', 'levenberg-marquardt');
+    
+    function s = solveme(rho, theta, target, p)
+        diff = (rho.*exp(1i*wrapToPi(theta)))*p.P(p.k)/p.N - target;
+        s = abs(diff);
+    end
+
+    IC = rand(2,p.Mk).*[abs(target); angle(target)];
+    rhos_thetas = fsolve(@(rhos_thetas) solveme(rhos_thetas(1,:), rhos_thetas(2,:), target, p), IC, opts);
+    res = rhos_thetas(1,:).*exp(1i*wrapToPi(rhos_thetas(2,:)));
+end
+
