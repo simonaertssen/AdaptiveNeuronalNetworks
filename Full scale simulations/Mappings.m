@@ -12,7 +12,7 @@ cm = [1,0,0; 0, 0.7410, 0.4470; 0, 0.4470, 0.6410];
 
 titlefont = 15;
 linewidth = 4;
-linewidth_total = 2;
+linewidth_total = 2.5;
 arrowst = 12;
 
 fsolveoptions = optimset('Display','off');
@@ -51,7 +51,7 @@ pars.a_n = 0.666666666666666666667;
 seed = 2; rng(seed);
 
 %% Draw the problems with mappings, use PSR state:
-pars.N = 500;
+pars.N = 250;
 labelfont = 17;
 pars.eta0 = -0.9; pars.delta = 0.8; pars.K = -2;
 pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
@@ -61,7 +61,7 @@ f_mappings = figure('Renderer', 'painters', 'Position', [0,0,800,800]);
 Zstart = 0.8*cos(3*pi/5) + 1i*0.8*sin(3*pi/5);
 tend = 1.2; col = cm(3,:);
 
-nlines = 25; linalpha = 0.15; cols = zeros(nlines,3);
+nlines = 20; linalpha = 0.15; cols = zeros(nlines,3);
 idx = randi([1 p.Mk],1,nlines);
 
 % With the simple same IC
@@ -77,11 +77,12 @@ drawOAvectors(X + 1i*Y, in, p, cm(2,:));
 bs_plot = plot(real(bs(:, idx)), imag(bs(:, idx)), 'LineWidth', linewidth);
 for i = 1:nlines; cols(i,:) = bs_plot(i).Color; bs_plot(i).Color(4) = linalpha; end
 scatter(real(Zstart), imag(Zstart), 500, [0,0,0], 'x', 'LineWidth', linewidth);
-bsstart_scatter = scatter(real(bs(1, idx)), imag(bs(1, idx)), [], cols, 'LineWidth', linewidth, 'MarkerEdgeAlpha', linalpha);
-bsend_scatter = scatter(2, 2, 25, '*k'); 
+scatter(real(bs(1, idx)), imag(bs(1, idx)), [], cols, 'LineWidth', linewidth, 'MarkerEdgeAlpha', linalpha);
+bsstart_scatter = scatter(2, 2, [], cols(1,:), 'LineWidth', linewidth, 'MarkerEdgeAlpha', linalpha);
+bsstart_scatter.CData(1,:) = bs_plot(1).Color;
 scatter(real(ZOA(1)), imag(ZOA(1)), 500, col, '+', 'LineWidth', linewidth);
-Zstart_scatter = scatter(2, 2, 25, [0,0,0], 'x', 'LineWidth', 2);
-ZOAstart_scatter = scatter(2, 2, 25, col, '+', 'LineWidth', 2);
+Zstart_scatter = scatter(2, 2, 500, [0,0,0], 'x', 'LineWidth', 2);
+ZOAstart_scatter = scatter(2, 2, 500, col, '+', 'LineWidth', 2);
 ZOA_plot = plot(real(ZOA), imag(ZOA), 'LineWidth', linewidth, 'color', col);
 
 phasespaceplot();
@@ -90,18 +91,18 @@ ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfo
 
 % Show the final state:
 subplot(3, 3, 4); hold on; box on; axis square;
-xlim([real(ZOA(end)) - 0.2, real(ZOA(end)) + 0.2]) 
+xlim([real(ZOA(end)) - 0.3, real(ZOA(end)) + 0.1]) 
 ylim([imag(ZOA(end)) - 0.2, imag(ZOA(end)) + 0.2]) 
 drawOAvectors(X + 1i*Y, in, p, cm(2,:));
 
 bs_plot = plot(real(bs(:, idx)), imag(bs(:, idx)), 'LineWidth', linewidth);
 for i = 1:nlines; cols(i,:) = bs_plot(i).Color; bs_plot(i).Color(4) = linalpha; end
-scatter(real(bs(end, :)), imag(bs(end, :)), 25, '*k'); 
+scatter(real(bs(end, idx)), imag(bs(end, idx)), 25, '*k'); 
 plot(real(ZOA(1:end-10)), imag(ZOA(1:end-10)), 'LineWidth', linewidth, 'color', col);
 endline = ZOA(end-3) - ZOA(end);
 endpoint = ZOA(end) + 0.06*endline/abs(endline);
 ZOAend_arr = plot_arrow(real(endpoint), imag(endpoint), real(ZOA(end)), imag(ZOA(end)),'linewidth', 2, ...
-    'color', col,'facecolor', col,'edgecolor', col, 'headwidth',0.4,'headheight',2);
+    'color', col,'facecolor', col,'edgecolor', col, 'headwidth',0.5,'headheight',2);
 
 phasespaceplot();
 xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
@@ -116,8 +117,8 @@ bs_plot = plot(real(bs(:, idx)), imag(bs(:, idx)), 'LineWidth', linewidth_total)
 for i = 1:nlines; cols(i,:) = bs_plot(i).Color; bs_plot(i).Color(4) = linalpha; end
 scatter(real(bs(1, idx)), imag(bs(1, idx)), [], cols, 'LineWidth', linewidth_total, 'MarkerEdgeAlpha', linalpha);
 scatter(real(bs(end, :)), imag(bs(end, :)), 25, '*k'); 
-scatter(real(Zstart), imag(Zstart), 300, [0,0,0], 'x', 'LineWidth', linewidth_total);
-scatter(real(ZOA(1)), imag(ZOA(1)), 300, col, '+', 'LineWidth', linewidth_total);
+scatter(real(Zstart), imag(Zstart), 200, [0,0,0], 'x', 'LineWidth', linewidth_total);
+scatter(real(ZOA(1)), imag(ZOA(1)), 200, col, '+', 'LineWidth', linewidth_total);
 plot(real(ZOA), imag(ZOA), 'LineWidth', linewidth_total, 'color', col);
 endline = ZOA(end-4) - ZOA(end);
 endpoint = ZOA(end) + 0.08*endline/abs(endline);
@@ -154,18 +155,18 @@ ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfo
 
 % Show the final state:
 subplot(3, 3, 5); hold on; box on; axis square;
-xlim([real(ZOA(end)) - 0.2, real(ZOA(end)) + 0.2]) 
+xlim([real(ZOA(end)) - 0.3, real(ZOA(end)) + 0.1]) 
 ylim([imag(ZOA(end)) - 0.2, imag(ZOA(end)) + 0.2]) 
 drawOAvectors(X + 1i*Y, in, p, cm(2,:));
 
 bs_plot = plot(real(bs(:, idx)), imag(bs(:, idx)), 'LineWidth', linewidth);
 for i = 1:nlines; cols(i,:) = bs_plot(i).Color; bs_plot(i).Color(4) = linalpha; end
-scatter(real(bs(end, :)), imag(bs(end, :)), 25, '*k'); 
+scatter(real(bs(end, idx)), imag(bs(end, idx)), 25, '*k'); 
 plot(real(ZOA(1:end-10)), imag(ZOA(1:end-10)), 'LineWidth', linewidth, 'color', col);
 endline = ZOA(end-3) - ZOA(end);
 endpoint = ZOA(end) + 0.06*endline/abs(endline);
 plot_arrow(real(endpoint), imag(endpoint), real(ZOA(end)), imag(ZOA(end)),'linewidth', 2, ...
-    'color', col,'facecolor', col,'edgecolor', col, 'headwidth',0.4,'headheight',2);
+    'color', col,'facecolor', col,'edgecolor', col, 'headwidth',0.5,'headheight',2);
 
 phasespaceplot();
 xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
@@ -180,8 +181,8 @@ bs_plot = plot(real(bs(:, idx)), imag(bs(:, idx)), 'LineWidth', linewidth_total)
 for i = 1:nlines; cols(i,:) = bs_plot(i).Color; bs_plot(i).Color(4) = linalpha; end
 scatter(real(bs(1, idx)), imag(bs(1, idx)), [], cols, 'LineWidth', linewidth_total, 'MarkerEdgeAlpha', linalpha);
 scatter(real(bs(end, :)), imag(bs(end, :)), 25, '*k'); 
-scatter(real(Zstart), imag(Zstart), 300, [0,0,0], 'x', 'LineWidth', linewidth_total);
-scatter(real(ZOA(1)), imag(ZOA(1)), 300, col, '+', 'LineWidth', linewidth_total);
+scatter(real(Zstart), imag(Zstart), 200, [0,0,0], 'x', 'LineWidth', linewidth_total);
+scatter(real(ZOA(1)), imag(ZOA(1)), 200, col, '+', 'LineWidth', linewidth_total);
 plot(real(ZOA), imag(ZOA), 'LineWidth', linewidth_total, 'color', col);
 endline = ZOA(end-4) - ZOA(end);
 endpoint = ZOA(end) + 0.08*endline/abs(endline);
@@ -208,6 +209,8 @@ drawOAvectors(X + 1i*Y, in, p, cm(2,:));
 bs_plot = plot(real(bs(:, idx)), imag(bs(:, idx)), 'LineWidth', linewidth);
 for i = 1:nlines; cols(i,:) = bs_plot(i).Color; bs_plot(i).Color(4) = linalpha; end
 scatter(real(zoaIC), imag(zoaIC), 25, [0,0,0], 'o');
+zoa_est = scatter(2, 2, 100, [0,0,0], 'o');
+
 scatter(real(Zstart), imag(Zstart), 500, [0,0,0], 'x', 'LineWidth', linewidth);
 scatter(real(bs(1, idx)), imag(bs(1, idx)), [], cols, 'LineWidth', linewidth, 'MarkerEdgeAlpha', linalpha);
 scatter(real(ZOA(1)), imag(ZOA(1)), 500, col, '+', 'LineWidth', linewidth);
@@ -219,18 +222,18 @@ ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfo
 
 % Show the final state:
 subplot(3, 3, 6); hold on; box on; axis square;
-xlim([real(ZOA(end)) - 0.2, real(ZOA(end)) + 0.2]) 
+xlim([real(ZOA(end)) - 0.3, real(ZOA(end)) + 0.1]) 
 ylim([imag(ZOA(end)) - 0.2, imag(ZOA(end)) + 0.2]) 
 drawOAvectors(X + 1i*Y, in, p, cm(2,:));
 
 bs_plot = plot(real(bs(:, idx)), imag(bs(:, idx)), 'LineWidth', linewidth);
 for i = 1:nlines; cols(i,:) = bs_plot(i).Color; bs_plot(i).Color(4) = linalpha; end
-scatter(real(bs(end, :)), imag(bs(end, :)), 25, '*k'); 
+scatter(real(bs(end, idx)), imag(bs(end, idx)), 25, '*k'); 
 plot(real(ZOA(1:end-10)), imag(ZOA(1:end-10)), 'LineWidth', linewidth, 'color', col);
 endline = ZOA(end-1) - ZOA(end);
 endpoint = ZOA(end) + 0.06*endline/abs(endline);
 plot_arrow(real(endpoint), imag(endpoint), real(ZOA(end)), imag(ZOA(end)),'linewidth', 2, ...
-    'color', col,'facecolor', col,'edgecolor', col, 'headwidth',0.4,'headheight',2);
+    'color', col,'facecolor', col,'edgecolor', col, 'headwidth',0.5,'headheight',2);
 
 phasespaceplot();
 xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
@@ -245,8 +248,8 @@ bs_plot = plot(real(bs(:, idx)), imag(bs(:, idx)), 'LineWidth', linewidth_total)
 for i = 1:nlines; cols(i,:) = bs_plot(i).Color; bs_plot(i).Color(4) = linalpha; end
 scatter(real(bs(1, idx)), imag(bs(1, idx)), [], cols, 'LineWidth', linewidth_total, 'MarkerEdgeAlpha', linalpha);
 scatter(real(bs(end, :)), imag(bs(end, :)), 25, '*k'); 
-scatter(real(Zstart), imag(Zstart), 300, [0,0,0], 'x', 'LineWidth', linewidth_total);
-scatter(real(ZOA(1)), imag(ZOA(1)), 300, col, '+', 'LineWidth', linewidth_total);
+scatter(real(Zstart), imag(Zstart), 200, [0,0,0], 'x', 'LineWidth', linewidth_total);
+scatter(real(ZOA(1)), imag(ZOA(1)), 200, col, '+', 'LineWidth', linewidth_total);
 plot(real(ZOA), imag(ZOA), 'LineWidth', linewidth_total, 'color', col);
 endline = ZOA(end-2) - ZOA(end);
 endpoint = ZOA(end) + 0.08*endline/abs(endline);
@@ -257,9 +260,11 @@ phasespaceplot();
 xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 
-
-l = legend([Zstart_scatter, ZOAstart_scatter, ZOA_plot, bsstart_scatter, bs_plot(1), bsend_scatter], ...
-    {'$$Z(0)$$', '$$\bar{Z}(0)$$', '$$\bar{Z}(t)$$', '$$z($$\boldmath $$k$$, \unboldmath $$0)$$', '$$z($$\boldmath $$k$$, \unboldmath $$t)$$', '$$z($$\boldmath $$k$$, \unboldmath $$t_{\rm end})$$'}, ...
+pause(0.1);
+l = legend([Zstart_scatter, ZOAstart_scatter, ZOA_plot, zoa_est, bsstart_scatter(1), bs_plot(1), bsend_scatter], ...
+    {'$$Z(0)$$', '$$\bar{Z}(0)$$', '$$\bar{Z}(t)$$', '$$\hat{z}($$\boldmath $$k$$, \unboldmath $$0)$$',...
+    '$$z($$\boldmath $$k$$, \unboldmath $$0)$$', '$$z($$\boldmath $$k$$, \unboldmath $$t)$$', ...
+    '$$z($$\boldmath $$k$$, \unboldmath $$t_{\rm end})$$'}, ...
     'Location', 'southoutside', 'Orientation', 'horizontal', 'Interpreter', 'latex', 'FontSize', titlefont);
 
 
@@ -281,8 +286,8 @@ function [res, IC] = findDistribution(target, p)
         s = abs(diff);
     end
     
-    Xs = randn(1, p.Mk)*0.2 + real(target);
-    Ys = randn(1, p.Mk)*0.2 + imag(target);
+    Xs = randn(1, p.Mk)*0.05 + real(target);
+    Ys = randn(1, p.Mk)*0.05 + imag(target);
     
     [TH,R] = cart2pol(Xs,Ys);
 
