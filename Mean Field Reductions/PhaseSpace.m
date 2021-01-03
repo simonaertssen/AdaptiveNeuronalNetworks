@@ -533,7 +533,7 @@ exportgraphics(f_OARCPW,'../Figures/PhaseSpace/MFOARCPW_scalefree.pdf')
 close(f_OARCPW)
 
 %% Draw the problems with mappings, use PSR state:
-pars.N = 500;
+pars.N = 250;
 
 pars.eta0 = -0.9; pars.delta = 0.8; pars.K = -2;
 pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
@@ -555,28 +555,47 @@ subplot(3, 3, 1); hold on; box on; axis square;
 xlim([real(Zstart) - 0.2, real(Zstart) + 0.2]) 
 ylim([imag(Zstart) - 0.2, imag(Zstart) + 0.2]) 
 drawOAvectors(X + 1i*Y, in, p, cm(2,:));
+
+bs_plot = plot(real(bs(:, idx)), imag(bs(:, idx)), 'LineWidth', linewidth);
+for i = 1:nlines; cols(i,:) = bs_plot(i).Color; bs_plot(i).Color(4) = linalpha; end
+Zstart_scatter = scatter(real(Zstart), imag(Zstart), 500, [0,0,0], 'x', 'LineWidth', linewidth);
+bsstart_scatter = scatter(real(bs(1, idx)), imag(bs(1, idx)), [], cols, 'LineWidth', linewidth, 'MarkerEdgeAlpha', linalpha);
+ZOAstart_scatter = scatter(real(ZOA(1)), imag(ZOA(1)), 500, col, '+', 'LineWidth', linewidth);
+ZOA_plot = plot(real(ZOA), imag(ZOA), 'LineWidth', linewidth, 'color', col);
+
 phasespaceplot();
+xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
+ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 
 % Show the final state:
 subplot(3, 3, 4); hold on; box on; axis square;
 xlim([real(ZOA(end)) - 0.2, real(ZOA(end)) + 0.2]) 
 ylim([imag(ZOA(end)) - 0.2, imag(ZOA(end)) + 0.2]) 
 drawOAvectors(X + 1i*Y, in, p, cm(2,:));
+
+bs_plot = plot(real(bs(:, idx)), imag(bs(:, idx)), 'LineWidth', linewidth);
+for i = 1:nlines; cols(i,:) = bs_plot(i).Color; bs_plot(i).Color(4) = linalpha; end
+bsend_scatter = scatter(real(bs(end, :)), imag(bs(end, :)), 25, '*k'); 
+plot(real(ZOA), imag(ZOA), 'LineWidth', linewidth, 'color', col);
+endline = ZOA(end-3) - ZOA(end);
+endpoint = ZOA(end) + 0.08*endline/abs(endline);
+ZOAend_arr = plot_arrow(real(endpoint), imag(endpoint), real(ZOA(end)), imag(ZOA(end)),'linewidth', 2, ...
+    'color', col,'facecolor', col,'edgecolor', col, 'headwidth',0.7,'headheight',3);
+
 phasespaceplot();
+xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
+ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 
 % Show the full space:
 subplot(3, 3, 7); hold on; box on; axis square;
+xlim([-1, 1]); ylim([-1, 1])  
 drawOAvectors(X + 1i*Y, in, p, cm(2,:));
-phasespaceplot();
 
-%%
-drawOAvectors(X + 1i*Y, in, p, cm(2,:));
-p1 = plot(real(bs(:, idx)), imag(bs(:, idx)), 'LineWidth', linewidth);
-for i = 1:nlines; cols(i,:) = p1(i).Color; p1(i).Color(4) = linalpha; end
+bs_plot = plot(real(bs(:, idx)), imag(bs(:, idx)), 'LineWidth', linewidth);
+for i = 1:nlines; cols(i,:) = bs_plot(i).Color; bs_plot(i).Color(4) = linalpha; end
 scatter(real(bs(1, idx)), imag(bs(1, idx)), [], cols, 'LineWidth', linewidth, 'MarkerEdgeAlpha', linalpha);
-scatter(real(bs(end, :)), imag(bs(end, :)), 25, 'k');
-
-scatter(real(Zstart), imag(Zstart), 500, [0,0,0], '+', 'LineWidth', linewidth);
+bsend_scatter = scatter(real(bs(end, :)), imag(bs(end, :)), 25, '*k'); 
+scatter(real(Zstart), imag(Zstart), 500, [0,0,0], 'x', 'LineWidth', linewidth);
 scatter(real(ZOA(1)), imag(ZOA(1)), 500, col, '+', 'LineWidth', linewidth);
 plot(real(ZOA), imag(ZOA), 'LineWidth', linewidth, 'color', col);
 endline = ZOA(end-4) - ZOA(end);
@@ -585,23 +604,130 @@ plot_arrow(real(endpoint), imag(endpoint), real(ZOA(end)), imag(ZOA(end)),'linew
     'color', col,'facecolor', col,'edgecolor', col, 'headwidth',0.7,'headheight',3);
 
 phasespaceplot();
-hold off; set(gcf,'color','w'); xlim([-1,1]); ylim([-1,1]); axis square;
 xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 
-%%
-% With the weighed ICs:
-subplot(1, 3, 2); hold on; box on; axis square;
-drawOAvectors(X + 1i*Y, in, p, cm(2,:));
+
+
+% With the proposed analytical IC
 OAIC = map_Ztozoa(conj(Zstart), p);
 [~, ZOA, bs] = OA_simulatenetwork(0, tend, OAIC, p, odeoptions);
 
-p1 = plot(real(bs(:, idx)), imag(bs(:, idx)), 'LineWidth', linewidth);
-for i = 1:nlines; cols(i,:) = p1(i).Color; p1(i).Color(4) = linalpha; end
-s1 = scatter(real(bs(1, idx)), imag(bs(1, idx)), [], cols, 'LineWidth', linewidth, 'MarkerEdgeAlpha', linalpha);
-scatter(real(bs(end, :)), imag(bs(end, :)), 25, 'k');
+% Focus on the ICs:
+subplot(3, 3, 2); hold on; box on; axis square;
+xlim([real(Zstart) - 0.2, real(Zstart) + 0.2]) 
+ylim([imag(Zstart) - 0.2, imag(Zstart) + 0.2]) 
+drawOAvectors(X + 1i*Y, in, p, cm(2,:));
 
-scatter(real(Zstart), imag(Zstart), 500, [0,0,0], '+', 'LineWidth', linewidth);
+bs_plot = plot(real(bs(:, idx)), imag(bs(:, idx)), 'LineWidth', linewidth);
+for i = 1:nlines; cols(i,:) = bs_plot(i).Color; bs_plot(i).Color(4) = linalpha; end
+scatter(real(Zstart), imag(Zstart), 500, [0,0,0], 'x', 'LineWidth', linewidth);
+scatter(real(bs(1, idx)), imag(bs(1, idx)), [], cols, 'LineWidth', linewidth, 'MarkerEdgeAlpha', linalpha);
+scatter(real(ZOA(1)), imag(ZOA(1)), 500, col, '+', 'LineWidth', linewidth);
+plot(real(ZOA), imag(ZOA), 'LineWidth', linewidth, 'color', col);
+line([0,real(2*Zstart)], [0, imag(2*Zstart)], 'LineStyle', ':', 'LineWidth', 2, 'Color', 'k');
+
+phasespaceplot();
+xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
+ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
+
+% Show the final state:
+subplot(3, 3, 5); hold on; box on; axis square;
+xlim([real(ZOA(end)) - 0.2, real(ZOA(end)) + 0.2]) 
+ylim([imag(ZOA(end)) - 0.2, imag(ZOA(end)) + 0.2]) 
+drawOAvectors(X + 1i*Y, in, p, cm(2,:));
+
+bs_plot = plot(real(bs(:, idx)), imag(bs(:, idx)), 'LineWidth', linewidth);
+for i = 1:nlines; cols(i,:) = bs_plot(i).Color; bs_plot(i).Color(4) = linalpha; end
+scatter(real(bs(end, :)), imag(bs(end, :)), 25, '*k'); 
+plot(real(ZOA), imag(ZOA), 'LineWidth', linewidth, 'color', col);
+endline = ZOA(end-3) - ZOA(end);
+endpoint = ZOA(end) + 0.08*endline/abs(endline);
+plot_arrow(real(endpoint), imag(endpoint), real(ZOA(end)), imag(ZOA(end)),'linewidth', 2, ...
+    'color', col,'facecolor', col,'edgecolor', col, 'headwidth',0.7,'headheight',3);
+
+phasespaceplot();
+xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
+ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
+
+% Show the full space:
+subplot(3, 3, 8); hold on; box on; axis square;
+xlim([-1, 1]); ylim([-1, 1])  
+drawOAvectors(X + 1i*Y, in, p, cm(2,:));
+
+bs_plot = plot(real(bs(:, idx)), imag(bs(:, idx)), 'LineWidth', linewidth);
+for i = 1:nlines; cols(i,:) = bs_plot(i).Color; bs_plot(i).Color(4) = linalpha; end
+scatter(real(bs(1, idx)), imag(bs(1, idx)), [], cols, 'LineWidth', linewidth, 'MarkerEdgeAlpha', linalpha);
+scatter(real(bs(end, :)), imag(bs(end, :)), 25, '*k'); 
+scatter(real(Zstart), imag(Zstart), 500, [0,0,0], 'x', 'LineWidth', linewidth);
+scatter(real(ZOA(1)), imag(ZOA(1)), 500, col, '+', 'LineWidth', linewidth);
+plot(real(ZOA), imag(ZOA), 'LineWidth', linewidth, 'color', col);
+endline = ZOA(end-4) - ZOA(end);
+endpoint = ZOA(end) + 0.08*endline/abs(endline);
+plot_arrow(real(endpoint), imag(endpoint), real(ZOA(end)), imag(ZOA(end)),'linewidth', 2, ...
+    'color', col,'facecolor', col,'edgecolor', col, 'headwidth',0.7,'headheight',3);
+line([0,real(2*Zstart)], [0, imag(2*Zstart)], 'LineStyle', ':', 'LineWidth', 2, 'Color', 'k');
+
+phasespaceplot();
+xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
+ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
+
+
+%%
+% With the converged IC
+[OAIC, zoaIC] = findDistribution(Zstart,p);
+[~, ZOA, bs] = OA_simulatenetwork(0, tend, OAIC, p, odeoptions);
+
+% Focus on the ICs:
+subplot(3, 3, 3); hold on; box on; axis square;
+xlim([real(Zstart) - 0.2, real(Zstart) + 0.2]) 
+ylim([imag(Zstart) - 0.2, imag(Zstart) + 0.2]) 
+drawOAvectors(X + 1i*Y, in, p, cm(2,:));
+
+bs_plot = plot(real(bs(:, idx)), imag(bs(:, idx)), 'LineWidth', linewidth);
+for i = 1:nlines; cols(i,:) = bs_plot(i).Color; bs_plot(i).Color(4) = linalpha; end
+
+scatter(real(zoaIC), imag(zoaIC), 25, [0,0,0], 'o');
+line([
+
+scatter(real(Zstart), imag(Zstart), 500, [0,0,0], 'x', 'LineWidth', linewidth);
+scatter(real(bs(1, idx)), imag(bs(1, idx)), [], cols, 'LineWidth', linewidth, 'MarkerEdgeAlpha', linalpha);
+scatter(real(ZOA(1)), imag(ZOA(1)), 500, col, '+', 'LineWidth', linewidth);
+plot(real(ZOA), imag(ZOA), 'LineWidth', linewidth, 'color', col);
+
+phasespaceplot();
+xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
+ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
+
+% Show the final state:
+subplot(3, 3, 6); hold on; box on; axis square;
+xlim([real(ZOA(end)) - 0.2, real(ZOA(end)) + 0.2]) 
+ylim([imag(ZOA(end)) - 0.2, imag(ZOA(end)) + 0.2]) 
+drawOAvectors(X + 1i*Y, in, p, cm(2,:));
+
+bs_plot = plot(real(bs(:, idx)), imag(bs(:, idx)), 'LineWidth', linewidth);
+for i = 1:nlines; cols(i,:) = bs_plot(i).Color; bs_plot(i).Color(4) = linalpha; end
+scatter(real(bs(end, :)), imag(bs(end, :)), 25, '*k'); 
+plot(real(ZOA), imag(ZOA), 'LineWidth', linewidth, 'color', col);
+endline = ZOA(end-3) - ZOA(end);
+endpoint = ZOA(end) + 0.08*endline/abs(endline);
+plot_arrow(real(endpoint), imag(endpoint), real(ZOA(end)), imag(ZOA(end)),'linewidth', 2, ...
+    'color', col,'facecolor', col,'edgecolor', col, 'headwidth',0.7,'headheight',3);
+
+phasespaceplot();
+xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
+ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
+
+% Show the full space:
+subplot(3, 3, 9); hold on; box on; axis square;
+xlim([-1, 1]); ylim([-1, 1])  
+drawOAvectors(X + 1i*Y, in, p, cm(2,:));
+
+bs_plot = plot(real(bs(:, idx)), imag(bs(:, idx)), 'LineWidth', linewidth);
+for i = 1:nlines; cols(i,:) = bs_plot(i).Color; bs_plot(i).Color(4) = linalpha; end
+scatter(real(bs(1, idx)), imag(bs(1, idx)), [], cols, 'LineWidth', linewidth, 'MarkerEdgeAlpha', linalpha);
+scatter(real(bs(end, :)), imag(bs(end, :)), 25, '*k'); 
+scatter(real(Zstart), imag(Zstart), 500, [0,0,0], 'x', 'LineWidth', linewidth);
 scatter(real(ZOA(1)), imag(ZOA(1)), 500, col, '+', 'LineWidth', linewidth);
 plot(real(ZOA), imag(ZOA), 'LineWidth', linewidth, 'color', col);
 endline = ZOA(end-4) - ZOA(end);
@@ -609,47 +735,20 @@ endpoint = ZOA(end) + 0.08*endline/abs(endline);
 plot_arrow(real(endpoint), imag(endpoint), real(ZOA(end)), imag(ZOA(end)),'linewidth', 2, ...
     'color', col,'facecolor', col,'edgecolor', col, 'headwidth',0.7,'headheight',3);
 
-line([0,real(2*Zstart)], [0, imag(2*Zstart)], 'LineStyle', ':', 'LineWidth', 3, 'Color', 'k');
-
 phasespaceplot();
-hold off; set(gcf,'color','w'); xlim([-1,1]); ylim([-1,1]); axis square;
-xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
-ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
-
-% Find ICs distributed among the circle
-subplot(3, 3, 3); hold on; box on; axis square;
-drawOAvectors(X + 1i*Y, in, p, cm(2,:));
-[OAIC, zoaIC] = findDistribution(Zstart,p);
-
-% scatter(real(Zstart), imag(Zstart), 500, [0,0,0], '+', 'LineWidth', linewidth);
-% scatter(real(zoas*p.P(p.k)/p.N), imag(zoas*p.P(p.k)/p.N), 500, [1,0,0], 'x', 'LineWidth', linewidth);
-% 
-% scatter(real(zoas), imag(zoas))
-% phasespaceplot();
-
-[~, ZOA, bs] = OA_simulatenetwork(0, tend, OAIC, p, odeoptions);
-
-p1 = plot(real(bs(:, idx)), imag(bs(:, idx)), 'LineWidth', linewidth);
-for i = 1:nlines; cols(i,:) = p1(i).Color; p1(i).Color(4) = linalpha; end
-s1 = scatter(real(bs(1, idx)), imag(bs(1, idx)), [], cols, 'LineWidth', linewidth, 'MarkerEdgeAlpha', linalpha);
-scatter(real(bs(end, :)), imag(bs(end, :)), 25, 'k');
-
-scatter(real(ZOA(1)), imag(ZOA(1)), 500, col, 'x', 'LineWidth', linewidth);
-plot(real(ZOA), imag(ZOA), 'LineWidth', linewidth, 'color', col);
-endline = ZOA(end-4) - ZOA(end);
-endpoint = ZOA(end) + 0.08*endline/abs(endline);
-plot_arrow(real(endpoint), imag(endpoint), real(ZOA(end)), imag(ZOA(end)),'linewidth', 2, ...
-    'color', col,'facecolor', col,'edgecolor', col, 'headwidth',0.7,'headheight',3);
-
-phasespaceplot();
-scatter(real(Zstart), imag(Zstart), 500, [0,0,0], '+', 'LineWidth', linewidth);
-% text(real(Zstart), imag(Zstart), '$$\bar{Z}(0)$$', 'Interpreter','latex', 'FontSize', labelfont-4);
-hold off; set(gcf,'color','w'); xlim([-1,1]); ylim([-1,1]); axis square;
 xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 
 
-% End figure:
+l = legend([Zstart_scatter, ZOAstart_scatter, ZOA_plot, bsstart_scatter(1), bs_plot(1), bsend_scatter(1)], ...
+    {'$$Z(0)$$', '$$\bar{Z}(0)$$', '$$\bar{Z}(t)$$', '$$z($$\boldmath $$k$$, \unboldmath $$0)$$', '$$z($$\boldmath $$k$$, \unboldmath $$t)$$', '$$z($$\boldmath $$k$$, \unboldmath $$t_{\rm end})$$'}, ...
+    'Location', 'southoutside', 'Orientation', 'horizontal', 'Interpreter', 'latex', 'FontSize', titlefont);
+
+
+f1P = [0.5 0.02 0.03 0.03];
+set(l,'Position', f1P,'Units', 'normalized');
+
+% Export the figure:
 % exportgraphics(f_mappings,'../Figures/PhaseSpace/Mappings.pdf')
 
 
@@ -667,7 +766,9 @@ function z0s = drawOAvectors(ICs, cond, p, col)
         end
     end
     q = quiver(real(ICs), imag(ICs), real(z0s), imag(z0s), 0.8, 'color', col);
+    q.HandleVisibility = 'off';
 end
+
 
 function [res, IC] = findDistribution(target, p)
     opts = optimoptions('fsolve','Display','off','Algorithm', 'levenberg-marquardt');
@@ -676,9 +777,15 @@ function [res, IC] = findDistribution(target, p)
         diff = (rho.*exp(1i*wrapToPi(theta)))*p.P(p.k)/p.N - target;
         s = abs(diff);
     end
+    
+    Xs = randn(1, p.Mk)*0.2 + real(target);
+    Ys = randn(1, p.Mk)*0.2 + imag(target);
+    
+    [TH,R] = cart2pol(Xs,Ys);
 
-    IC = rand(2,p.Mk).*[abs(target); angle(target)];
+    IC = rand(2,p.Mk).*[abs(R); angle(TH)];
     rhos_thetas = fsolve(@(rhos_thetas) solveme(rhos_thetas(1,:), rhos_thetas(2,:), target, p), IC, opts);
     res = rhos_thetas(1,:).*exp(1i*wrapToPi(rhos_thetas(2,:)));
+    IC = Xs + 1i*Ys;
 end
 
