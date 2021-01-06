@@ -46,19 +46,19 @@ in(1, m-l:m+l) = 1; in(end, m-l:m+l) = 1; in(m-l:m+l, 1) = 1; in(m-l:m+l, end) =
 % X1start = reshape(X1(in), 5, 5); Y1start = reshape(Y1(in), 5, 5);
 
 %% Theta neurons parameters:
-pars.N = 100;
+pars.N = 1000;
 pars.a_n = 0.666666666666666666667;
 seed = 2; rng(seed);
 
 %% Draw the problems with mappings, use PSR state:
-pars.N = 1000;
 labelfont = 17;
 pars.eta0 = -0.9; pars.delta = 0.8; pars.K = -2;
 pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
 p = prepareOAparameters(make_scalefreeparameters(pars, 3));
 
 f_mappings = figure('Renderer', 'painters', 'Position', [0,0,800,800]); 
-Zstart = 0.8*cos(3*pi/5) + 1i*0.8*sin(3*pi/5);
+% Zstart = 0.8*cos(3*pi/5) + 1i*0.8*sin(3*pi/5);
+Zstart = -0.2 + 1i*0.8;
 tend = 1.2; col = cm(3,:);
 
 nlines = 20; linalpha = 0.15; cols = zeros(nlines,3);
@@ -277,8 +277,81 @@ set(findall(gcf,'-property','FontName'),'FontName','Avenir')
 exportgraphics(f_mappings,'../Figures/PhaseSpace/Mappings.pdf')
 
 
+%% Using fmincon:
+Zstart = -0.2 + 1i*0.9;
+
+[res, IC] = findDistribution(Zstart, p, 'fmincon');
+Z = res*p.P(p.k)/p.N;
+
+close all 
+
+hold on;
+phasespaceplot();
+% xlim([real(Zstart) - 0.2, real(Zstart) + 0.2]) 
+% ylim([imag(Zstart) - 0.2, imag(Zstart) + 0.2]) 
+
+scatter(real(Zstart), imag(Zstart), 100, [0,0,0], 'x', 'LineWidth', 2);
+scatter(real(IC), imag(IC), 20, [0,0,0], 'o');
+scatter(real(res), imag(res), 20, 'x');
+scatter(real(Z), imag(Z), 100, [1,0,0], '+', 'LineWidth', 2);
+
+hold off;
+
+
 %% Functions
-function [res, IC] = findDistribution(target, p)
+% function res = find(z2D, p)
+%     opts = optimoptions('fmincon','Display','off','FunValCheck','off');
+% 
+%     IC = 
+% end
+
+function [res, IC] = findDistribution(target, p, method)
+    target2D = [real(target); imag(target)];
+    
+    % Define the objective function and its bounds:
+    objfun = @(z2D) norm(z2D*p.P(p.k)/p.N - target2D);
+    onevec = ones(size(target));
+    lb = []; ub = lb;
+    
+    % Define the constraint:
+    function [c,ceq] = cnstrnt(x)
+        c = x(1,:).^2 + x(2,:).^2 - 1;
+%         c = [];
+        ceq = objfun(x);
+    end
+
+    % No other constraints, set those as empty:
+    A = []; b = []; Aeq = []; beq = [];
+
+    % Find distribution of Cartesian ICs within the unit circle
+    Xs = randn(1, p.Mk)*0.01 + real(target);
+    Ys = randn(1, p.Mk)*0.01 + imag(target);
+    magnitude = Xs.^2 + Ys.^2;
+    idx = magnitude > 1;
+    Xs(idx) = Xs(idx) ./ magnitude(idx);
+    Ys(idx) = Ys(idx) ./ magnitude(idx);
+    % Find the ICs 
+    IC = [Xs; Ys];
+    
+    % Solve:
+    if strcmp(method, 'fmincon')
+        nonlcon = @cnstrnt;
+        fminconopts = optimoptions('fmincon','Display','off','Algorithm','sqp');
+        res = fmincon(@(x)0,IC,A,b,Aeq,beq,lb,ub,nonlcon,fminconopts);
+    elseif strcmp(method, 'fsolve')
+        fsolveopts = optimoptions('fsolve','Display','iter','Algorithm','levenberg-marquardt','FunValCheck','off');
+        res = fsolve(objfun,IC,fsolveopts);        
+    end
+   
+    % Return as complex vectors
+    res = res(1,:) + 1i*res(2,:);
+    IC = Xs + 1i*Ys;
+    
+    check = norm(res*p.P(p.k)/p.N - target);
+    disp([string(method), "found solution with accuracy of", num2str(check)])
+end
+
+function [res, IC] = findDistributionOld(target, p)
     opts = optimoptions('fsolve','Display','off','Algorithm', 'levenberg-marquardt');
     
     function s = solveme(rho, theta, target, p)
@@ -288,6 +361,10 @@ function [res, IC] = findDistribution(target, p)
     
     Xs = randn(1, p.Mk)*0.05 + real(target);
     Ys = randn(1, p.Mk)*0.05 + imag(target);
+    magnitude = Xs.^2 + Ys.^2;
+    idx = magnitude > 1;
+    Xs(idx) = Xs(idx) ./ magnitude(idx);
+    Ys(idx) = Ys(idx) ./ magnitude(idx);
     
     [TH,R] = cart2pol(Xs,Ys);
 
