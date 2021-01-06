@@ -47,14 +47,21 @@ Algorithms that find the largest value in a vector start from the first or the l
 
 
 
-\subsection{Initial conditions} \label{sec:initialconditions}
-As the systems in \cref{eq:orderparameter,eq:OttAntonsenMeanField,eq:MeanField} describe the same dynamics for fully connected networks, it is important to be able to transform initial conditions between systems. If we expect their behaviour to be the same, then we need to test that by starting from the same point in time. Hence we can test whether \textsl{macroscopically} we can find the same equilibria, but we can also test \textsl{microscopically} whether the systems arrive at those points at the same time. 
+\subsection{Initial conditions: analitical versus numerical approaches} \label{sec:initialconditions}
+As our goal is to compare theory and simulations, we need to be able to start both at the exact same condition. This notion requires us to transform between the three number sets that our dynamics are described in: $\theta \in \T^N$, $z \in \C^{M_{\k}}$ and $Z, \bar{Z} \in \C$. It is really only necessary to find a transformation that holds accurately for $t=0$, as the distribution of $\theta$ and $z$ over their number set is unknown, but we assume they converge to that distribution when the systems are computed.
+
+%As the systems in \cref{eq:orderparameter,eq:OttAntonsenMeanField,eq:MeanField} describe the same dynamics for fully connected networks, it is important to be able to transform initial conditions between systems. If we expect their behaviour to be the same, then we need to test that by starting from the same point in time. Hence we can test whether \textsl{macroscopically} we can find the same equilibria, but we can also test \textsl{microscopically} whether the systems arrive at those points at the same time. 
+
+%The order parameter \ref{eq:orderparameter} and the mean-field order parameter \eqref{eq:OttAntonsenMeanField} describe the same dynamics for fully connected networks. Testing this hypothesis 
 
 %  If the initial conditions of all systems are exactly the same, then we should find that they describe the exact same behaviour.
 % - macroscopically and microscopically - and this is the best way to test the \MFR theory. 
 
 %When transforming between $\theta_i(t) \leftrightarrow z(\k,t) \leftrightarrow Z(t)$ we go from $\T^N \leftrightarrow \C^{M_\k} \leftrightarrow \C$. If we have the same initial conditions, then all systems will predict the same behaviour. We will only map everything to $\C$.\\
-As we can only really study behaviour of $Z$ and $\bar{Z}$ in the complex unit circle, the most important relation we need to find is the transformation from $\C$ to $\T^{N}$ and from $\C$ to $\C^{M_{\k}}$, which yield the phase angles $\theta_i(0)$ and the degree dynamics $z(\k,0)$ from $Z(0)$ and $\bar{Z}(0)$ respectively. \\
+As we can optimally study the behaviour of $Z$ and $\bar{Z}$ in the complex unit circle, the most important transformations are those that yield $\theta$ and $z$ from $Z$ and $\bar{Z}$ respectively. Hence, we can start our simulations anywhere in $\C$, close to the limit cycle for example, which was observed in Figure \ref{fig:MFRCPW}.
+
+%As we can study the behaviour of $Z$ and $\bar{Z}$ in the complex unit circle, the most important relation we need to find is the transformation from $\C$ to $\T^{N}$ and from $\C$ to $\C^{M_{\k}}$, which yield the phase angles $\theta_i(0)$ and the degree dynamics $z(\k,0)$ from $Z(0)$ and $\bar{Z}(0)$ respectively. \\
+
 % The following maps can be used to transform the initial conditions, but as they do not give any qualitative information on the dynamics or distributions of the variables, they are not valid for transforming between dynamics. \\
 
 Let us start with the simplest transformation. Given an initial phase angle $\theta_i(0)$ or initial degree dynamics $z(\k, 0)$ we wish to find their resulting description in the complex unit circle. Mapping operations onto the order parameter is straightforward using \eqref{eq:orderparameter} and \eqref{eq:OttAntonsenMeanField}:
@@ -62,32 +69,37 @@ Let us start with the simplest transformation. Given an initial phase angle $\th
 \theta_i(0) \xrightarrow{\hspace*{8mm}} Z(0) &= \frac{1}{N} \sum_{j=1}^N e^{\ic\theta_j(0)} \label{eq:thetatoZ}\\
 z(\k,0) \longrightarrow \bar{Z}(0) &= \frac{1}{N} \sum_{\k \in \K} P(\k) z(\k, 0)  \label{eq:ztoZ}
 \end{align}
-Starting from an initial synchronization $Z(0)$ and taking the inverse tranfsormation, we can make use of the fact that the average of a set of identical values is the value itself. This is simple for $\theta_i(0)$: we can take all phase angles to be the same at $t = 0$. For $z(\k,0)$ we have a weighed average which we need to undo, making sure that the whole sums up to $N$.
+Here we can immediately see that information about the distribution of $\theta$ and $z$ is lost when taking the (weighed) average. 
+
+Starting from an initial synchronization $Z(0)$ and taking the inverse tranfsormation, we can make use of the fact that the average of a set of identical values is the value itself. This is simple for $\theta_i(0)$: we can take all phase angles to be the same at $t = 0$. For $z(\k,0)$ we have a weighed average which we need to undo, while making sure that the whole sums up to $N$ by multiplying with the total number of neurons $n(\k)$ of degree $\k$:
 \begin{align}
 Z(0) \xrightarrow{\hspace*{8mm}} \theta_i(0) &= -\ic \cdot \log \left( Z(0) \right)  \label{eq:Ztotheta} \\
 Z(0) \longrightarrow z(\k,0) &= \frac{Z(0) \cdot n(\k)}{P(\k)} \label{eq:Ztoz}
 \end{align}
-This approach only alters the magnitude of $Z(0)$, so that $z(\k,0)$ will be distributed on a line through $Z(0)$. Then, transforming between $\theta_i$ and $z(\k)$, we need to filter $\theta_i$ per degree as there exist $P(\k)$ number of nodes with $\degree ( \theta_i ) = \k$:
+This approach only alters the magnitude of $Z(0)$, so that $z(\k,0)$ will be distributed on a line through $Z(0)$. Then, transforming between $\theta_i$ and $z(\k)$, we need to filter $\theta_i$ per degree as there exist $n(\k)$ number of nodes with $\degree ( \theta_i ) = \k$:
 \begin{alignat}{2}
 z(\k,0) \longrightarrow \theta_i(0) &= -\ic \cdot \log \left( \frac{z(\k)\cdot P(\k)}{n(\k)} \right) \qquad &&\forall \: \theta \in \{ \theta \: | \: \degree(\theta) = \k \}  \label{eq:ztottheta}\\
 \theta_i(0) \longrightarrow z(\k,0) &= \sum_{\k} e^{\ic \vartheta_{\k}} \qquad \qquad &&\forall \: \vartheta_{\k} \in \{ \vartheta_{\k} = \sum^{n(\k)} \theta \: | \: \degree(\theta) = \k \} \label{eq:thetatoz}
 \end{alignat}
 %We can see how $\lim_{N \rightarrow +\infty} n(\k) = P(\k)$, which makes these maps exact for any network size. 
-The reason that these transformations can only hold for the initial state is because it is currently unknown what distributions $\theta_i(t)$ and $z(\k,t)$ should have. That information is lost when taking the (weighed) average in \eqref{eq:orderparameter} and \eqref{eq:MeanField}. \\
+%The reason that these transformations can only hold for the initial state is because it is currently unknown what distributions $\theta_i(t)$ and $z(\k,t)$ should have. That information is lost when taking the (weighed) average in \eqref{eq:orderparameter} and \eqref{eq:MeanField}. \\
 
-The relations derived here show a disadvantage in the cases that $P(\k)$ spans over different orders of magnitude. The initial values are not bound on $\C$, so it might occur that the initial condition given through \eqref{eq:ztoZ} is exact, but that the distribution of $z(\k,t)$ leaves us with some out of the complex unit circle. Let us look at the example in Figure \ref{fig:mappings}, where we are trying to find $z(\k, 0)$ so that $\bar{Z}(0)$ is equal to our desired initial condition $Z(0) = $ -0.2 + $\ic$0.8. \\
+The relations derived here raise problems when $P(\k)$ spans different orders of magnitude. \eqref{eq:ztoZ} does not bound $z$ to its set, so it might occur that the distribution of $z$ has values outside of the complex unit circle. However, transforming back to $\bar{Z}$ will always be correct. This problem does not occur for $\theta$, as $\T$ is a one-parameter group. Let us look at the example in Figure \ref{fig:mappings}, where we are trying to find $z(\k, 0)$ so that $\bar{Z}(0)$ is equal to the desired initial condition $Z(0) = $ -0.2 + $\ic$0.8, using a scale-free topology. \\
 
-When simply taking all $z(\k, 0) = Z(0)$, there is a slight offset between $Z(0)$ and $\bar{Z}(0)$, as expected. Especially for scale-free networks, where there is a large difference between the smallest and largest degree, this offset is large. However, the dynamics are well-behaved and the end-state is almost a smooth curve. This is an easy way of quickly coming up with an initial condition. 
+%The initial values of $z$ are not bound on $\C$, so it might occur that the initial condition given through \eqref{eq:ztoZ} is exact, but that the distribution of $z(\k,t)$ leaves us with some out of the complex unit circle. Let us look at the example in Figure \ref{fig:mappings}, where we are trying to find $z(\k, 0)$ so that $\bar{Z}(0)$ is equal to our desired initial condition $Z(0) = $ -0.2 + $\ic$0.8. \\
 
-When using \eqref{eq:ztoZ}, we can see that indeed the initial conditions lie on a straight line through the origin. The dynamics are 
-When a given $\k$ yields a small $P(\k)$, $z(\k,0)$ will be scaled away from the origin by \eqref{eq:ztoZ}. This means that the dynamics of nodes of that degree are not a good representation. However, their contribution to $\bar{Z}$ in \eqref{eq:OttAntonsenMeanField} is small, so sometimes these effects cancel out.
+% Especially for scale-free networks, where there is a large difference between the smallest and largest degree, this offset is large
+ 
+When simply taking all $z(\k, 0) = Z(0)$, there is a slight offset between $Z(0)$ and $\bar{Z}(0)$. However, the dynamics are well-behaved and the end-state is almost a smooth curve. One can really interpret this curve as the attractive manifold of the Ott-Antonsen reduction. This method is an easy way of quickly coming up with an initial condition, without requiring any computation. In general, this yields quite a good approximation. \\
 
-When trying to address the problems that are encountered here, we can try and find the distribution of $z(\k,0)$ numerically by solving for the minimum of $f(z) = \| Z(0) - \bar{Z}(0) \|$ (where $\bar{Z}$ is computed from $z$) under the constraint that $\| z \| \leq 1$.
+When using \eqref{eq:ztoZ}, we can see that the initial conditions lie on a straight line through the origin indeed, and that $\bar{Z}(0)$ is exactly equal to $Z(0)$. When a given $\k$ yields a small $P(\k)$, $z(\k,0)$ will be scaled away from the origin. This means that the dynamics of nodes of that degree are not a good representation. However, their contribution to $\bar{Z}$ in \eqref{eq:OttAntonsenMeanField} is small, so sometimes these effects cancel out and the dynamics are in fact quite smooth. However, we can see that in our example the dynamics are not represented well, resulting in large errors after conception and a more random end-state. We do expect these effects to cancel out after longer periods and for larger $N$, as the manifold is attractive and larger networks cancel out outliers, but our aim is to be as precise as possible from $t=0$. \\
+
+When trying to address the problems that are encountered here, we can try and find the distribution of $z(\k,0)$ numerically by solving for the root of $f(z) = \| Z(0) - \bar{Z}(0) \|$ (where $\bar{Z}$ is computed from $z$) under the constraint that $\| z \| \leq 1$, starting from an initial guess $\hat{z}$, clustered around $Z(0)$. The resulting initial distribution is quite clustered but as it is mostly a result of the constraint, we are more interested in the end-state, which shows a lot of improvements. The initial conditions are exact (up to $10^{-6}$) and the dynamics are smooth, which makes this method the most desirable. However, convergence can be very slow for scale-free networks, and the complexity of the system to solve scales with $\sim N^2$. It is therefore necessary to judge which method to use when performing a new simulation.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width = \textwidth]{../Figures/PhaseSpace/Mappings.pdf}
-   \caption{Example on the importance of accurate initial conditions. A scalefree network is used to show the outcome of different strategies of }
+   \caption{Simulation of 1000 neurons in a scale-free network. Example on the importance of accurate initial conditions. A scalefree network is used to show the outcome of different strategies of }
    \label{fig:mappings}
 \end{figure}
 
