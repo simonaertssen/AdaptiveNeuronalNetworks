@@ -94,14 +94,14 @@ When simply taking all $z(\k, 0) = Z(0)$, there is a slight offset between $Z(0)
 
 When using \eqref{eq:ztoZ}, we can see that the initial conditions lie on a straight line through the origin indeed, and that $\bar{Z}(0)$ is exactly equal to $Z(0)$. When a given $\k$ yields a small $P(\k)$, $z(\k,0)$ will be scaled away from the origin. This means that the dynamics of nodes of that degree are not a good representation. However, their contribution to $\bar{Z}$ in \eqref{eq:OttAntonsenMeanField} is small, so sometimes these effects cancel out and the dynamics are in fact quite smooth. However, we can see that in our example the dynamics are not represented well, resulting in large errors after conception and a more random end-state. We do expect these effects to cancel out after longer periods and for larger $N$, as the manifold is attractive and larger networks cancel out outliers, but our aim is to be as precise as possible from $t=0$. \\
 
-When trying to address the problems that are encountered here, we can try and find the distribution of $z(\k,0)$ numerically by solving for the root of $f(z) = \| Z(0) - \bar{Z}(0) \|$ (where $\bar{Z}$ is computed from $z$) under the constraint that $\| z \| \leq 1$, starting from an initial guess $\hat{z}$, clustered around $Z(0)$. The resulting initial distribution is quite clustered but as it is mostly a result of the constraint, we are more interested in the end-state, which shows a lot of improvements. The initial conditions are exact (up to $10^{-6}$) and the dynamics are smooth, which makes this method the most desirable. However, convergence can be very slow for scale-free networks, and the complexity of the system to solve scales with $\sim N^2$. It is therefore necessary to judge which method to use when performing a new simulation.
-
 \begin{figure}[H]
 \centering
 \includegraphics[width = \textwidth]{../Figures/PhaseSpace/Mappings.pdf}
    \caption{Simulation of 1000 neurons in a scale-free network. Example on the importance of accurate initial conditions. A scalefree network is used to show the outcome of different strategies of }
    \label{fig:mappings}
 \end{figure}
+
+When trying to address the problems that are encountered here, we can try and find the distribution of $z(\k,0)$ numerically by solving for the root of $f(z) = \| Z(0) - \bar{Z}(0) \|$ (where $\bar{Z}$ is computed from $z$) under the constraint that $\| z \| \leq 1$, starting from an initial guess $\hat{z}$, clustered around $Z(0)$. The resulting initial distribution is quite clustered but as it is mostly a result of the constraint, we are more interested in the end-state, which shows a lot of improvements. The initial conditions are exact (up to $10^{-6}$) and the dynamics are smooth, which makes this method the most desirable. However, convergence can be very slow for scale-free networks, and the complexity of the system to solve scales with $\sim N^2$. It is therefore necessary to judge which method to use when performing a new simulation.
 
 
 \subsection{Commutativity of complex vectors} 
