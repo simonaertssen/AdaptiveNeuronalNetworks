@@ -15,6 +15,6 @@ W_C:  purple    '#BA30D9'
 
 - Write about the initial conditions
 
-- Scale the kempter window to the same. size as the other windows
+- Scale the kempter window to the same size as the other windows
 
 - Write about the STDP and IP results
