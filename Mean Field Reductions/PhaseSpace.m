@@ -258,7 +258,7 @@ startx = 0.8*cos( -pi/5:pi/5:pi); starty = 0.8*sin(-pi/5:pi/5:pi);
 startx(2) = []; starty(2) = [];
 tlengths = [0.92, 1.15, 1.2, 1.1, 0.85, 0.55];
 for i = 1:length(startx)
-    OAIC = ones(p.Mk,1)*(startx(i) + starty(i)*1i);
+    OAIC = map_Ztozoa_better(startx(i) + starty(i)*1i, p);
     [~, ZOA] = OA_simulatenetwork(0, tlengths(i), OAIC, p, odeoptions);
 
     scatter(real(ZOA(1)), imag(ZOA(1)), 50, col, 'filled', 'o', 'LineWidth', linewidth);% 'color', col);
@@ -302,7 +302,8 @@ z0s = drawOAvectors(X + 1i*Y, in, p, cm(2,:));
 startx = 1; starty = 0; tlength = 3.4;
 odeoptions = odeset('RelTol', 1.0e-12); odeoptions.backwards = false;
 
-[~, ZOA] = OA_simulatenetwork(0, tlength, ones(p.Mk,1)*(startx + starty*1i), p, odeoptions);
+OAIC = map_Ztozoa_better(startx + starty*1i, p);
+[~, ZOA] = OA_simulatenetwork(0, tlength, OAIC, p, odeoptions);
 scatter(real(ZOA(1)), imag(ZOA(1)), 50, col, 'filled', 'o', 'LineWidth', linewidth);% 'color', col);
 
 Zplot = plot(real(ZOA), imag(ZOA), 'LineWidth', linewidth, 'color', col);
@@ -337,21 +338,12 @@ f_OARCPW = figure('Renderer', 'painters', 'Position', rect); hold on; box on;
 drawfixeddegreelimitcycle();
 drawOAvectors(X + 1i*Y, in, p, cm(2,:));
 
-% %% Investigate the centre
-% [Xq,Yq] = meshgrid(-0.1:0.001:0, 0:0.001:0.2);
-% z0stight = interp2(X,Y,z0s,Xq,Yq);
-% figure
-% q = quiver(Xq, Yq, real(z0stight), imag(z0stight),  'color', cm(2,:));
-% [r,c] = find(z0stight==min(min(z0stight)));
-% 
-% % s = streamline(Xq,Yq,-real(z0stight),-imag(z0stight), -0.06, 0.1, [0.05,1000]);
-
 col = p.colorvec;
 startx = [0, -0.8, -0.6, 0, 0]; starty = [-0.4, 0.2, 0.4, -1, -0.8];
 tlengths = [1.6, 0.5, 0.65, 2.6, 2.15];
 
 for i = 1:length(startx)-1
-    OAIC = ones(p.Mk,1)*(startx(i) + starty(i)*1i);
+    OAIC = map_Ztozoa_better(startx(i) + starty(i)*1i, p);
     [~, ZOA] = OA_simulatenetwork(0, tlengths(i), OAIC, p);
 
     scatter(real(ZOA(1)), imag(ZOA(1)), 50, col, 'filled', 'o', 'LineWidth', linewidth);% 'color', col);
@@ -407,10 +399,8 @@ startx = 0.8*cos( -pi/5:pi/5:pi); starty = 0.8*sin(-pi/5:pi/5:pi);
 startx(2) = []; starty(2) = [];
 tlengths = [0.92, 1.15, 1.2, 1.1, 0.85, 0.55];
 
-% s = streamline(X, Y, real(qs), imag(qs), startx, starty, [0.01,9000]);
 for i = 1:length(startx)
-    OAIC = ones(p.Mk,1)*(startx(i) + starty(i)*1i);
-%     OAIC = map_Ztozoa(startx(i) + starty(i)*1i, p);
+    OAIC = map_Ztozoa_better(startx(i) + starty(i)*1i, p);
     
     [~, ZOA] = OA_simulatenetwork(0, tlengths(i), OAIC, p, odeoptions);
 
@@ -495,10 +485,12 @@ startx = [-0.8, 0, 0]; starty = [0.4, -1, -0.8];
 tlengths = [0.5, 0.65, 3, 1];
 bw = -0.5;
 for i = 1:length(startx)
+%     OAIC = map_Ztozoa_better(startx(i) + starty(i)*1i, p);
     OAIC = ones(p.Mk,1)*(startx(i) + starty(i)*1i);
+    
     [~, ZOA] = OA_simulatenetwork(0, tlengths(i), OAIC, p, odeoptions);
     
-    scatter(real(ZOA(1)), imag(ZOA(1)), 50, col, 'filled', 'o', 'LineWidth', linewidth);% 'color', col);
+    scatter(real(ZOA(1)), imag(ZOA(1)), 50, col, 'filled', 'o', 'LineWidth', linewidth);
 
     Zplot = plot(real(ZOA), imag(ZOA), 'LineWidth', linewidth, 'color', col);
     endline = ZOA(end-3) - ZOA(end);
@@ -509,7 +501,6 @@ end
 
 % Limit cycle:
 [T, ZOA] = OA_simulatenetwork(0, 100, ones(p.Mk,1)*(-0.2*1i), p, odeoptions);
-% Zplot = plot(real(ZOA), imag(ZOA), 'LineWidth', linewidth, 'color', col);
 ZOA = flip(ZOA(round(numel(T)*0.9):end,:));
 [~, pksloc] = findpeaks(abs(ZOA),'MinPeakDistance',100);
 idx = pksloc(1):pksloc(3);

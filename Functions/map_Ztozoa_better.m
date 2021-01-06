@@ -30,7 +30,7 @@ function [zoa, IC] = map_Ztozoa_better(Z0,p,method)
     % Solve:
     if strcmp(method, 'fmincon')
         nonlcon = @cnstrnt;
-        fminconopts = optimoptions('fmincon','Display','off','Algorithm','active-set','TypicalX',Z02D*ones(1,p.Mk));
+        fminconopts = optimoptions('fmincon','Display','off','Algorithm','active-set','MaxFunEvals',10*p.Mk,'MaxIter',200);
         zoa = fmincon(@(x)0,IC,A,b,Aeq,beq,lb,ub,nonlcon,fminconopts);
     elseif strcmp(method, 'fsolve')
         fsolveopts = optimoptions('fsolve','Display','iter','Algorithm','levenberg-marquardt','FunValCheck','off');
@@ -42,11 +42,9 @@ function [zoa, IC] = map_Ztozoa_better(Z0,p,method)
     IC = Xs + 1i*Ys;
     
     check = norm(zoa*p.P(p.k)/p.N - Z0);
-    msg = sprintf("%s found solution with accuracy of %.3e", string(method), check);
-%     if p.Mk > 800 && check > 0.001
-%         error(msg);
-%     else
-%         disp(msg);
-%     end
-    disp(msg);
+    if p.Mk > 800 && check > 0.001
+        error("%s found solution with accuracy of %.3e", string(method), check);
+    else
+        fprintf("%s found solution with accuracy of %.3e\n", string(method), check);
+    end
 end
