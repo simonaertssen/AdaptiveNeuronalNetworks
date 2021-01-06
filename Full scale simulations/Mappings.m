@@ -269,7 +269,7 @@ plot_arrow(real(endpoint), imag(endpoint), real(ZOA(end)), imag(ZOA(end)),'linew
 phasespaceplot();
 xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
-disp("T column")
+disp("Third column")
 
 pause(0.1);
 l = legend([Zstart_scatter, ZOAstart_scatter, ZOA_plot, zoa_est, bsstart_scatter(1), bs_plot(1), bsend_scatter], ...
