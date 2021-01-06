@@ -58,8 +58,7 @@ p = prepareOAparameters(make_scalefreeparameters(pars, 3));
 
 f_mappings = figure('Renderer', 'painters', 'Position', [0,0,800,800]); 
 % Zstart = 0.8*cos(3*pi/5) + 1i*0.8*sin(3*pi/5);
-Zstart = -0.2 + 1i*0.8;
-tend = 1.2; col = cm(3,:);
+Zstart = -0.2 + 1i*0.8; tend = 1.2; col = p.colorvec;
 
 nlines = min(30, p.Mk); linalpha = 0.15; cols = zeros(nlines,3);
 idx = randi([1 p.Mk],1,nlines);
@@ -84,7 +83,7 @@ bsstart_scatter.CData(1,:) = bs_plot(1).Color;
 scatter(real(ZOA(1)), imag(ZOA(1)), 500, col, '+', 'LineWidth', linewidth);
 Zstart_scatter = scatter(2, 2, 500, [0,0,0], 'x', 'LineWidth', 2);
 ZOAstart_scatter = scatter(2, 2, 500, col, '+', 'LineWidth', 2);
-ZOA_plot = plot(real(ZOA), imag(ZOA), 'LineWidth', linewidth, 'color', col);
+ZOA_plot = plot(real(ZOA), imag(ZOA), 'LineWidth', linewidth, 'color', p.color);
 
 phasespaceplot();
 xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
@@ -98,8 +97,8 @@ drawOAvectors(X + 1i*Y, in, p, cm(2,:));
 
 bs_plot = plot(real(bs(:, idx)), imag(bs(:, idx)), 'LineWidth', linewidth);
 for i = 1:nlines; cols(i,:) = bs_plot(i).Color; bs_plot(i).Color(4) = linalpha; end
-scatter(real(bs(end, idx)), imag(bs(end, idx)), 25, '*k'); 
-scatter(real(bs(end,   :)), imag(bs(end,   :)), 150, '.k', 'MarkerEdgeAlpha', linalpha); 
+scatter(real(bs(end, idx)), imag(bs(end, idx)), 125, '.k'); 
+scatter(real(bs(end,   :)), imag(bs(end,   :)), 125, '.k', 'MarkerEdgeAlpha', linalpha); 
 plot(real(ZOA(1:end-10)), imag(ZOA(1:end-10)), 'LineWidth', linewidth, 'color', col);
 endline = ZOA(end-3) - ZOA(end);
 endpoint = ZOA(end) + 0.06*endline/abs(endline);
@@ -118,8 +117,8 @@ drawOAvectors(X + 1i*Y, in, p, cm(2,:));
 bs_plot = plot(real(bs(:, idx)), imag(bs(:, idx)), 'LineWidth', linewidth_total);
 for i = 1:nlines; cols(i,:) = bs_plot(i).Color; bs_plot(i).Color(4) = linalpha; end
 scatter(real(bs(1, idx)), imag(bs(1, idx)), 100, cols, 'x', 'LineWidth', linewidth_total, 'MarkerEdgeAlpha', linalpha);
-scatter(real(bs(end, idx)), imag(bs(end, idx)), 25, '*k'); 
-scatter(real(bs(end,   :)), imag(bs(end,   :)), 150, '.k', 'MarkerEdgeAlpha', linalpha); 
+scatter(real(bs(end, idx)), imag(bs(end, idx)), 125, '.k'); 
+scatter(real(bs(end,   :)), imag(bs(end,   :)), 125, '.k', 'MarkerEdgeAlpha', linalpha); 
 scatter(real(Zstart), imag(Zstart), 200, [0,0,0], 'x', 'LineWidth', linewidth_total);
 scatter(real(ZOA(1)), imag(ZOA(1)), 200, col, '+', 'LineWidth', linewidth_total);
 plot(real(ZOA), imag(ZOA), 'LineWidth', linewidth_total, 'color', col);
@@ -165,8 +164,8 @@ drawOAvectors(X + 1i*Y, in, p, cm(2,:));
 
 bs_plot = plot(real(bs(:, idx)), imag(bs(:, idx)), 'LineWidth', linewidth);
 for i = 1:nlines; cols(i,:) = bs_plot(i).Color; bs_plot(i).Color(4) = linalpha; end
-scatter(real(bs(end, idx)), imag(bs(end, idx)), 25, '*k'); 
-scatter(real(bs(end,   :)), imag(bs(end,   :)), 150, '.k', 'MarkerEdgeAlpha', linalpha); 
+scatter(real(bs(end, idx)), imag(bs(end, idx)), 125, '.k'); 
+scatter(real(bs(end,   :)), imag(bs(end,   :)), 125, '.k', 'MarkerEdgeAlpha', linalpha); 
 plot(real(ZOA(1:end-10)), imag(ZOA(1:end-10)), 'LineWidth', linewidth, 'color', col);
 endline = ZOA(end-3) - ZOA(end);
 endpoint = ZOA(end) + 0.06*endline/abs(endline);
@@ -185,8 +184,8 @@ drawOAvectors(X + 1i*Y, in, p, cm(2,:));
 bs_plot = plot(real(bs(:, idx)), imag(bs(:, idx)), 'LineWidth', linewidth_total);
 for i = 1:nlines; cols(i,:) = bs_plot(i).Color; bs_plot(i).Color(4) = linalpha; end
 scatter(real(bs(1, idx)), imag(bs(1, idx)), 100, cols, 'x', 'LineWidth', linewidth_total, 'MarkerEdgeAlpha', linalpha);
-scatter(real(bs(end, idx)), imag(bs(end, idx)), 25, '*k'); 
-scatter(real(bs(end,   :)), imag(bs(end,   :)), 150, '.k', 'MarkerEdgeAlpha', linalpha); 
+scatter(real(bs(end, idx)), imag(bs(end, idx)), 100, '.k'); 
+scatter(real(bs(end,   :)), imag(bs(end,   :)), 100, '.k', 'MarkerEdgeAlpha', linalpha); 
 scatter(real(Zstart), imag(Zstart), 200, [0,0,0], 'x', 'LineWidth', linewidth_total);
 scatter(real(ZOA(1)), imag(ZOA(1)), 200, col, '+', 'LineWidth', linewidth_total);
 plot(real(ZOA), imag(ZOA), 'LineWidth', linewidth_total, 'color', col);
@@ -236,8 +235,8 @@ drawOAvectors(X + 1i*Y, in, p, cm(2,:));
 
 bs_plot = plot(real(bs(:, idx)), imag(bs(:, idx)), 'LineWidth', linewidth);
 for i = 1:nlines; cols(i,:) = bs_plot(i).Color; bs_plot(i).Color(4) = linalpha; end
-scatter(real(bs(end, idx)), imag(bs(end, idx)), 25, '*k'); 
-scatter(real(bs(end,   :)), imag(bs(end,   :)), 150, '.k', 'MarkerEdgeAlpha', linalpha); 
+scatter(real(bs(end, idx)), imag(bs(end, idx)), 125, '.k'); 
+scatter(real(bs(end,   :)), imag(bs(end,   :)), 125, '.k', 'MarkerEdgeAlpha', linalpha); 
 plot(real(ZOA(1:end-10)), imag(ZOA(1:end-10)), 'LineWidth', linewidth, 'color', col);
 endline = ZOA(end-1) - ZOA(end);
 endpoint = ZOA(end) + 0.06*endline/abs(endline);
@@ -256,8 +255,8 @@ drawOAvectors(X + 1i*Y, in, p, cm(2,:));
 bs_plot = plot(real(bs(:, idx)), imag(bs(:, idx)), 'LineWidth', linewidth_total);
 for i = 1:nlines; cols(i,:) = bs_plot(i).Color; bs_plot(i).Color(4) = linalpha; end
 scatter(real(bs(1, idx)), imag(bs(1, idx)), 100, cols, 'x', 'LineWidth', linewidth_total, 'MarkerEdgeAlpha', linalpha);
-bsend_scatter = scatter(real(bs(end, idx)), imag(bs(end, idx)), 25, '*k'); 
-scatter(real(bs(end,   :)), imag(bs(end,   :)), 150, '.k', 'MarkerEdgeAlpha', linalpha); 
+bsend_scatter = scatter(real(bs(end, idx)), imag(bs(end, idx)), 100, '.k'); 
+scatter(real(bs(end,   :)), imag(bs(end,   :)), 100, '.k', 'MarkerEdgeAlpha', linalpha); 
 scatter(real(Zstart), imag(Zstart), 200, [0,0,0], 'x', 'LineWidth', linewidth_total);
 scatter(real(ZOA(1)), imag(ZOA(1)), 200, col, '+', 'LineWidth', linewidth_total);
 plot(real(ZOA), imag(ZOA), 'LineWidth', linewidth_total, 'color', col);
