@@ -11,4 +11,6 @@ function z0s = drawOAvectors(ICs, cond, p, col)
         end
     end
     q = quiver(real(ICs), imag(ICs), real(z0s), imag(z0s), 0.8, 'color', col);
+    q.HandleVisibility = 'off';
 end
+

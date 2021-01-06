@@ -1,6 +1,7 @@
 function scalefreepars = make_scalefreeparameters(pars, degree, kmin, kmax)
     scalefreepars = pars;
-    scalefreepars.color = '#D95319';
+    scalefreepars.color = '#A2142F';
+    scalefreepars.colorvec = [0.6350 0.0780 0.1840];
 
     % Make the necessery parameters for the scalefree networks
     if nargin < 1; error('Not enough input arguments'); end

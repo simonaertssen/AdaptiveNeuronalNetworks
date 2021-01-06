@@ -2,6 +2,7 @@ function randompars = make_randomparameters(pars, netp)
     % Make the necessery parameters for the random networks
     randompars = pars;
     randompars.color = '#77AC30';
+    randompars.colorvec = [0.4660 0.6740 0.1880];
 
     if netp > 1
         error('The network degree is too high');

@@ -253,7 +253,7 @@ drawOAvectors(X + 1i*Y, in, p, cm(2,:));
 
 odeoptions = odeset('RelTol', 1.0e-12);
 odeoptions.backwards = false;
-col = [0.4060 0.7040 0.1280] - 0.1;
+col = p.colorvec;
 startx = 0.8*cos( -pi/5:pi/5:pi); starty = 0.8*sin(-pi/5:pi/5:pi);
 startx(2) = []; starty(2) = [];
 tlengths = [0.92, 1.15, 1.2, 1.1, 0.85, 0.55];
@@ -295,7 +295,7 @@ p = prepareOAparameters(make_randomparameters(pars, 0.3));
 
 close all
 f_OARPSS = figure('Renderer', 'painters', 'Position', rect); hold on; box on;
-col = [0.4060 0.7040 0.1280] - 0.1;
+col = p.colorvec;
 
 z0s = drawOAvectors(X + 1i*Y, in, p, cm(2,:));
 
@@ -346,7 +346,7 @@ drawOAvectors(X + 1i*Y, in, p, cm(2,:));
 % 
 % % s = streamline(Xq,Yq,-real(z0stight),-imag(z0stight), -0.06, 0.1, [0.05,1000]);
 
-col = [0.4060 0.7040 0.1280] - 0.1;
+col = p.colorvec;
 startx = [0, -0.8, -0.6, 0, 0]; starty = [-0.4, 0.2, 0.4, -1, -0.8];
 tlengths = [1.6, 0.5, 0.65, 2.6, 2.15];
 
@@ -402,7 +402,7 @@ qs = drawOAvectors(X + 1i*Y, in, p, cm(2,:));
 
 odeoptions = odeset('RelTol', 1.0e-12);
 odeoptions.backwards = false;
-col = [0 0.3070 0.5010];
+col = p.colorvec;
 startx = 0.8*cos( -pi/5:pi/5:pi); starty = 0.8*sin(-pi/5:pi/5:pi);
 startx(2) = []; starty(2) = [];
 tlengths = [0.92, 1.15, 1.2, 1.1, 0.85, 0.55];
@@ -447,7 +447,7 @@ p = prepareOAparameters(make_scalefreeparameters(pars, 3, 750, 1000));
 
 close all
 f_OARPSS = figure('Renderer', 'painters', 'Position', rect); hold on; box on;
-col = [0 0.3070 0.5010];
+col = p.colorvec;
 
 z0s = drawOAvectors(X + 1i*Y, in, p, cm(2,:));
 
@@ -489,7 +489,7 @@ drawfixeddegreelimitcycle();
 z0s = drawOAvectors(X + 1i*Y, in, p, cm(2,:));
 
 odeoptions = odeset('RelTol', 1.0e-6); odeoptions.backwards = false;
-col = [0 0.3070 0.5010];
+col = p.colorvec;
 
 startx = [-0.8, 0, 0]; starty = [0.4, -1, -0.8];
 tlengths = [0.5, 0.65, 3, 1];
@@ -532,21 +532,3 @@ ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfo
 
 exportgraphics(f_OARCPW,'../Figures/PhaseSpace/MFOARCPW_scalefree.pdf')
 close(f_OARCPW)
-
-%% Functions:
-function z0s = drawOAvectors(ICs, cond, p, col)
-    [xdim, ydim] = size(ICs);
-    z0s = zeros(xdim, ydim);
-    tic
-    for i = 1:numel(ICs)
-        [r, c] = ind2sub([xdim, ydim], i);
-        if cond(r,c) == 1
-            zoa0 = ones(p.Mk,1)*ICs(i);
-            sim1 = DOPRIstep(@(t,x) MFROA(t,x,p),0,zoa0,0.01);
-            z0s(r, c) = map_zoatoZ(conj((sim1 - zoa0)'),p);
-        end
-    end
-    q = quiver(real(ICs), imag(ICs), real(z0s), imag(z0s), 0.8, 'color', col);
-    q.HandleVisibility = 'off';
-end
-
