@@ -1,10 +1,15 @@
 - Make an example of the learning: how the windows change the synaptic coupling
 
+- Remake the time-evolution images of the different ZOAs: use the right colours,
+reformat the title, use Avenir text, reformat the legend with a \bar
+
 - Make a better figure of the 1D pdfs
 
 - Check the colours of the different pdfs and order parameters:
 thetas:            blue       '#0072BD' [0 0.4470 0.7410]
 Z_A_ij:            blue       '#0072BD' [0 0.4470 0.7410]
+Z_MF:              black      '#000000' [0 0.0000 0.0000]
+
 Z_fixeddegree:     light blue '#4DBEEE' [0.3010 0.7450 0.9330]
 Z_random:          green      '#77AC30' [0.4660 0.6740 0.1880]
 Z_scalefree:       dark red   '#A2142F' [0.6350 0.0780 0.1840]
