@@ -1,6 +1,7 @@
 function fixeddegreepars = make_fixeddegreeparameters(pars, netdegree)
     % Make the necessery parameters for the fixeddegree / fixed degree networks
     fixeddegreepars = pars;
+    fixeddegreepars.color = '#4DBEEE';
     
     if netdegree > pars.N
         error('Net degree too large')

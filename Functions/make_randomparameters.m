@@ -1,6 +1,8 @@
 function randompars = make_randomparameters(pars, netp)
     % Make the necessery parameters for the random networks
     randompars = pars;
+    randompars.color = '#77AC30';
+
     if netp > 1
         error('The network degree is too high');
     elseif netp < 0
