@@ -20,8 +20,8 @@ This hypothesis can be tested: we assume that $P(\k) = P(\kin) \cdot P(\kout)$ s
 \caption{Bivariate distributions for different network topologies, using 10$^4$ number of samples. The surface given by $P(\k)$ is well approximated by the histogram of variates sampled from a univariate distribution. $\kmean =  2 \times 10^3$ for all topologies, $p \approx 0.2$ for the random network and $\gamma = 4.3$ for the scale-free network.}
 \label{fig:2Ddistributions}
 \end{figure}
-Hence, we can use univariate distributions in our simulations of the Ott-Antonsen Mean Field \eqref{eq:OttAntonsenMeanField}.
-
+%Hence, we can use univariate distributions in our simulations of the Ott-Antonsen Mean Field \eqref{eq:OttAntonsenMeanField}.
+However, the problem remains the same: $\K$ is too large to simulate the dynamics of the network. What we can do, is use $P(k)$ in the Ott-Antonsen reduction for a symmetric network, and observe how much the dynamics of the asymmetric, simulated network differ.
 
 \subsection{Building the adjacency matrix} \label{sec:buildingA}
 If we want to simulate the network of theta neurons \eqref{eq:thetaneuronnetworkcurrent} we need to construct the adjacency matrix. We can find an exact solution for $A$ given the degree vectors in \eqref{eq:definekinkoutfromP}. $A_{ij}$ represents a directed graph, but $A_{ij} \neq A_{ji}$ is not a necessary condition. For the elements of $A_{ij}$ we need to find $N^2$ number of variables. We have the following constraints:
@@ -54,27 +54,43 @@ As the systems in \cref{eq:orderparameter,eq:OttAntonsenMeanField,eq:MeanField} 
 % - macroscopically and microscopically - and this is the best way to test the \MFR theory. 
 
 %When transforming between $\theta_i(t) \leftrightarrow z(\k,t) \leftrightarrow Z(t)$ we go from $\T^N \leftrightarrow \C^{M_\k} \leftrightarrow \C$. If we have the same initial conditions, then all systems will predict the same behaviour. We will only map everything to $\C$.\\
-As we can only really study behaviour of $Z$ and $\overline{Z}$ in the complex unit circle, the most important relation we need to find is the transformation from $\C$ to $\T^{N}$ and from $\C$ to $\C^{M_{\k}}$, which yield the phase angles $\theta(0)_i$ and the degree dynamics $z(\k,0)$ from $Z(0)$ and $\overline{Z}(0)$ respectively. \\
+As we can only really study behaviour of $Z$ and $\bar{Z}$ in the complex unit circle, the most important relation we need to find is the transformation from $\C$ to $\T^{N}$ and from $\C$ to $\C^{M_{\k}}$, which yield the phase angles $\theta_i(0)$ and the degree dynamics $z(\k,0)$ from $Z(0)$ and $\bar{Z}(0)$ respectively. \\
 % The following maps can be used to transform the initial conditions, but as they do not give any qualitative information on the dynamics or distributions of the variables, they are not valid for transforming between dynamics. \\
 
-Let us start with the simplest transformation. Given an initial phase angle $\theta(0)_i$ or initial degree dynamics $z(\k, 0)$ we wish to find their resulting description in the complex unit circle. Mapping operations onto the order parameter is straightforward using \eqref{eq:orderparameter} and \eqref{eq:OttAntonsenMeanField}:
+Let us start with the simplest transformation. Given an initial phase angle $\theta_i(0)$ or initial degree dynamics $z(\k, 0)$ we wish to find their resulting description in the complex unit circle. Mapping operations onto the order parameter is straightforward using \eqref{eq:orderparameter} and \eqref{eq:OttAntonsenMeanField}:
 \begin{align}
-\theta(0)_i \xrightarrow{\hspace*{8mm}} Z(0) &= \frac{1}{N} \sum_{j=1}^N e^{\ic\theta(0)_j} \label{eq:thetatoZ}\\
-z(\k,0) \longrightarrow \overline{Z}(0) &= \frac{1}{N} \sum_{\k \in \K} P(\k) z(\k, 0)  \label{eq:ztoZ}
+\theta_i(0) \xrightarrow{\hspace*{8mm}} Z(0) &= \frac{1}{N} \sum_{j=1}^N e^{\ic\theta_j(0)} \label{eq:thetatoZ}\\
+z(\k,0) \longrightarrow \bar{Z}(0) &= \frac{1}{N} \sum_{\k \in \K} P(\k) z(\k, 0)  \label{eq:ztoZ}
 \end{align}
-Starting from an initial synchronization $Z(0)$ and taking the inverse tranfsormation, we can make use of the fact that the average of a set of identical values is the value itself. This is simple for $\theta(0)_i$: we can take all phase angles to be the same at $t = 0$. For $z(\k,0)$ we have a weighed average which we need to undo, making sure that the whole sums up to $N$.
+Starting from an initial synchronization $Z(0)$ and taking the inverse tranfsormation, we can make use of the fact that the average of a set of identical values is the value itself. This is simple for $\theta_i(0)$: we can take all phase angles to be the same at $t = 0$. For $z(\k,0)$ we have a weighed average which we need to undo, making sure that the whole sums up to $N$.
 \begin{align}
-Z(0) \xrightarrow{\hspace*{9mm}} \theta(0)_{i} &= -\ic \cdot \log \left( Z(0) \right)  \label{eq:Ztotheta} \\
+Z(0) \xrightarrow{\hspace*{8mm}} \theta_i(0) &= -\ic \cdot \log \left( Z(0) \right)  \label{eq:Ztotheta} \\
 Z(0) \longrightarrow z(\k,0) &= \frac{Z(0) \cdot n(\k)}{P(\k)} \label{eq:Ztoz}
 \end{align}
-
-Then, transforming between $\theta_i$ and $z(\k)$, we need to filter $\theta_i$ per degree as there exist $P(\k)$ number of nodes with $\degree ( \theta_i ) = \k$:
+This approach only alters the magnitude of $Z(0)$, so that $z(\k,0)$ will be distributed on a line through $Z(0)$. Then, transforming between $\theta_i$ and $z(\k)$, we need to filter $\theta_i$ per degree as there exist $P(\k)$ number of nodes with $\degree ( \theta_i ) = \k$:
 \begin{alignat}{2}
-z(\k,0) \longrightarrow \theta(0)_i &= -\ic \cdot \log \left( \frac{z(\k)\cdot P(\k)}{n(\k)} \right) \qquad &&\forall \: \theta \in \{ \theta \: | \: \degree(\theta) = \k \}  \label{eq:ztottheta}\\
-\theta(0)_i \longrightarrow z(\k,0) &= \sum_{\k} e^{\ic \vartheta_{\k}} \qquad \qquad &&\forall \: \vartheta_{\k} \in \{ \vartheta_{\k} = \sum^{n(\k)} \theta \: | \: \degree(\theta) = \k \} \label{eq:thetatoz}
+z(\k,0) \longrightarrow \theta_i(0) &= -\ic \cdot \log \left( \frac{z(\k)\cdot P(\k)}{n(\k)} \right) \qquad &&\forall \: \theta \in \{ \theta \: | \: \degree(\theta) = \k \}  \label{eq:ztottheta}\\
+\theta_i(0) \longrightarrow z(\k,0) &= \sum_{\k} e^{\ic \vartheta_{\k}} \qquad \qquad &&\forall \: \vartheta_{\k} \in \{ \vartheta_{\k} = \sum^{n(\k)} \theta \: | \: \degree(\theta) = \k \} \label{eq:thetatoz}
 \end{alignat}
 %We can see how $\lim_{N \rightarrow +\infty} n(\k) = P(\k)$, which makes these maps exact for any network size. 
-The reason that these transformations only hold for the initial state is because it is currently unknown what distributions $\theta(t)_i$ and $z(\k,t)$ should have. That information is lost when taking the (weighed) average in \eqref{eq:orderparameter} and \eqref{eq:MeanField}.
+The reason that these transformations can only hold for the initial state is because it is currently unknown what distributions $\theta_i(t)$ and $z(\k,t)$ should have. That information is lost when taking the (weighed) average in \eqref{eq:orderparameter} and \eqref{eq:MeanField}. \\
+
+The relations derived here show a disadvantage in the cases that $P(\k)$ spans over different orders of magnitude. The initial values are not bound on $\C$, so it might occur that the initial condition given through \eqref{eq:ztoZ} is exact, but that the distribution of $z(\k,t)$ leaves us with some out of the complex unit circle. Let us look at the example in Figure \ref{fig:mappings}, where we are trying to find $z(\k, 0)$ so that $\bar{Z}(0)$ is equal to our desired initial condition $Z(0) = $ -0.2 + $\ic$0.8. \\
+
+When simply taking all $z(\k, 0) = Z(0)$, there is a slight offset between $Z(0)$ and $\bar{Z}(0)$, as expected. Especially for scale-free networks, where there is a large difference between the smallest and largest degree, this offset is large. However, the dynamics are well-behaved and the end-state is almost a smooth curve. This is an easy way of quickly coming up with an initial condition. 
+
+When using \eqref{eq:ztoZ}, we can see that indeed the initial conditions lie on a straight line through the origin. The dynamics are 
+When a given $\k$ yields a small $P(\k)$, $z(\k,0)$ will be scaled away from the origin by \eqref{eq:ztoZ}. This means that the dynamics of nodes of that degree are not a good representation. However, their contribution to $\bar{Z}$ in \eqref{eq:OttAntonsenMeanField} is small, so sometimes these effects cancel out.
+
+When trying to address the problems that are encountered here, we can try and find the distribution of $z(\k,0)$ numerically by solving for the minimum of $f(z) = \| Z(0) - \bar{Z}(0) \|$ (where $\bar{Z}$ is computed from $z$) under the constraint that $\| z \| \leq 1$.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width = \textwidth]{../Figures/PhaseSpace/Mappings.pdf}
+   \caption{Example on the importance of accurate initial conditions. A scalefree network is used to show the outcome of different strategies of }
+   \label{fig:mappings}
+\end{figure}
+
 
 \subsection{Commutativity of complex vectors} 
 It is important to notice that in \eqref{eq:OttAntonsenSystemFull} and \eqref{eq:OttAntonsenMeanField} and many other equations in this work, we compute an inner vector product, which is non-commutative for complex numbers:
@@ -83,12 +99,6 @@ a \cdot b = \overline{b \cdot a} \qquad a, b \in \C^r
 \end{align}
 This is the result of the \textsl{Conjugate} or \textsl{Hermitian} symmetry of the inner product. This is especially important in the \matlab implementation, as one needs to remain consistent with left-hand or right-hand products.
 
-\begin{figure}[H]
-\centering
-\includegraphics[width = \textwidth]{../Figures/PhaseSpace/Mappings.pdf}
-   \caption{Example of the initial conditions.}
-   \label{fig:mappings}
-\end{figure}
 
 
 \subsection{Fixpoint iteration}
@@ -113,7 +123,7 @@ The fixpoint iteration \eqref{eq:fixedpointiterations} only gives us the stable 
 \begin{align*}
 z(\k,t) &= x(\k,t) + \ic \cdot y(\k,t) \qquad x, y \in \R^{M_{\k}}\\
 f\left( z(\k,t) \right) &= u\left(x(\k, t), y(\k, t) \right) + \ic v\left(x(\k, t), y(\k, t) \right)\\
-&= \frac{1}{\kmean} \sum_{\kacc} P\left(\kacc\right) a\left(\kacc \rightarrow \k\right) \cdot \left( 1 + \frac{z(\kacc, t)^2 + \overline{z}(\kacc, t)^2}{6} - \frac{4}{3} \Re(z(\kacc, t)) \right)\\
+&= \frac{1}{\kmean} \sum_{\kacc} P\left(\kacc\right) a\left(\kacc \rightarrow \k\right) \cdot \left( 1 + \frac{z(\kacc, t)^2 + \bar{z}(\kacc, t)^2}{6} - \frac{4}{3} \Re(z(\kacc, t)) \right)\\
 &= \frac{1}{\kmean} \sum_{\kacc} P\left(\kacc\right) a\left(\kacc \rightarrow \k\right) \cdot \left( 1 + \frac{x(\kacc, t)^2}{3} - \frac{4}{3} x(\kacc, t) \right)
 \end{align*}
 This leaves us with only $u$ defined as a real-valued function, so that the Cauchy-Riemann equations do not hold as $v$ is zero. This is tricky, as expressing the Jacobian as a $M_{\k} \times M_{\k}$ matrix of complex numbers reduces the complexity. \\
