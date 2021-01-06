@@ -12,7 +12,7 @@ rect = [-50 50 800 800];
 cm = [1,0,0; 0, 0.7410, 0.4470; 0, 0.4470, 0.6410];
 
 titlefont = 15;
-labelfont = 30;
+labelfont = 50;
 linewidth = 4;
 arrowst = 12;
 
