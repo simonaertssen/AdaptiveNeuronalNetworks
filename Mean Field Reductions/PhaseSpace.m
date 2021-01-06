@@ -9,6 +9,7 @@ addpath('../Mean Field Reductions/');
 set(groot,'DefaultAxesXGrid','on')
 set(groot,'DefaultAxesYGrid','on')
 rect = [-50 50 800 800];
+fixeddegreecolor = [0.3010 0.7450 0.9330];
 cm = [1,0,0; 0, 0.7410, 0.4470; 0, 0.4470, 0.6410];
 
 titlefont = 15;
@@ -71,9 +72,9 @@ quiver(X, Y, real(complex), imag(complex), 'color', cm(2,:))
 complex = MFR(0, X + 1i*Y, pars);
 startx = 0.8*cos( -pi/5:pi/5:pi); starty = 0.8*sin(-pi/5:pi/5:pi);
 startx(2) = []; starty(2) = [];
-scatter(startx, starty, 50, cm(3,:), 'filled', 'o', 'LineWidth', linewidth);
+scatter(startx, starty, 50, fixeddegreecolor, 'filled', 'o', 'LineWidth', linewidth);
 s = streamline(X, Y, real(complex), imag(complex), startx, starty, [0.05,700]);
-set(s, 'color', cm(3,:), 'LineWidth', linewidth);
+set(s, 'color', fixeddegreecolor, 'LineWidth', linewidth);
 for i = 1:6
     dist = (s(i).XData - eqpt(1)).^2 + (s(i).YData - eqpt(2)).^2 - 0.02;
     dist(end) = -1;
@@ -81,7 +82,7 @@ for i = 1:6
     s(i).XData = s(i).XData(1:idx);
     s(i).YData = s(i).YData(1:idx);
     plot_arrow(s(i).XData(end-arrowst), s(i).YData(end-arrowst), s(i).XData(end), s(i).YData(end),'linewidth', 3, ...
-    'color', cm(3,:),'facecolor', cm(3,:),'edgecolor', cm(3,:), 'headwidth',2,'headheight',6);
+    'color', fixeddegreecolor,'facecolor', fixeddegreecolor,'edgecolor', fixeddegreecolor, 'headwidth',2,'headheight',6);
 end
 
 phasespaceplot();
@@ -130,11 +131,11 @@ quiver(X, Y, real(complex), imag(complex), 'color', cm(2,:))
 % Lines:
 complex = MFR(0, X + 1i*Y, pars);
 startx = 1; starty = 0;
-scatter(startx, starty, 50, cm(3,:), 'filled', 'o', 'LineWidth', linewidth);% 'color', cm(3,:));
+scatter(startx, starty, 50, fixeddegreecolor, 'filled', 'o', 'LineWidth', linewidth);% 'color', fixeddegreecolor);
 s = streamline(X, Y, real(complex), imag(complex), startx, starty, [0.05,1550]);
-set(s, 'color', cm(3,:), 'LineWidth', linewidth);
+set(s, 'color', fixeddegreecolor, 'LineWidth', linewidth);
 plot_arrow(s.XData(end-arrowst), s.YData(end-arrowst), s.XData(end), s.YData(end),'linewidth', 2, ...
-    'color', cm(3,:),'facecolor', cm(3,:),'edgecolor', cm(3,:), 'headwidth',0.7,'headheight',3);
+    'color', fixeddegreecolor,'facecolor', fixeddegreecolor,'edgecolor', fixeddegreecolor, 'headwidth',0.7,'headheight',3);
 
 phasespaceplot();
 
@@ -169,9 +170,9 @@ quiver(X, Y, real(complex), imag(complex), 'color', cm(2,:))
 % Lines:
 complex = MFR(0, X + 1i*Y, pars);
 startx = [0, 0, -0.6, -0.8]; starty = [-1, -0.8, 0.4, 0.2];
-scatter(startx, starty, 50, cm(3,:), 'filled', 'o', 'LineWidth', linewidth);
+scatter(startx, starty, 50, fixeddegreecolor, 'filled', 'o', 'LineWidth', linewidth);
 s = streamline(X, Y, real(complex), imag(complex), startx, starty, [0.01,9000]);
-set(s, 'color', cm(3,:), 'LineWidth', linewidth);
+set(s, 'color', fixeddegreecolor, 'LineWidth', linewidth);
 
 % Streamlines yield inexact results?
 for i = 1:4
@@ -181,7 +182,7 @@ for i = 1:4
     s(i).XData = s(i).XData(1:idx);
     s(i).YData = s(i).YData(1:idx);
     plot_arrow(s(i).XData(end-5*arrowst), s(i).YData(end-5*arrowst), s(i).XData(end), s(i).YData(end),'linewidth', 2, ...
-    'color', cm(3,:),'facecolor', cm(3,:),'edgecolor', cm(3,:), 'headwidth',0.7,'headheight',3);     
+    'color', fixeddegreecolor,'facecolor', fixeddegreecolor,'edgecolor', fixeddegreecolor, 'headwidth',0.7,'headheight',3);     
 end
 
 % Limit cycle:
@@ -190,9 +191,9 @@ Z0 = -0.2731 - 0.0092*1i;
 Z = flip(Z(round(numel(T)*0.97):end,:));
 [~, pksloc] = findpeaks(abs(Z),'MinPeakDistance',100);
 idx = pksloc(1):pksloc(3);
-plot(real(Z(idx)), imag(Z(idx)), '-', 'LineWidth', linewidth, 'Color', cm(3,:));
-plot_arrow(real(Z(end)), imag(Z(end)), real(Z(end-2)), imag(Z(end-2)),'linewidth', 2, ...
-    'color', cm(3,:),'facecolor', cm(3,:),'edgecolor', cm(3,:), 'headwidth',0.4,'headheight',1);
+plot(real(Z(idx)), imag(Z(idx)), '-', 'LineWidth', linewidth, 'Color', fixeddegreecolor);
+plot_arrow(real(Z(idx(end))), imag(Z(idx(end))), real(Z(idx(end)-8)), imag(Z(idx(end)-8)),'linewidth', 2, ...
+    'color', fixeddegreecolor,'facecolor', fixeddegreecolor,'edgecolor', fixeddegreecolor, 'headwidth',0.7,'headheight',3);
 
 phasespaceplot();
 
