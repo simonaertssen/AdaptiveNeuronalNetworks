@@ -15,7 +15,7 @@ export = true;
 
 %% Make a GPU init handle:
 if gpuDeviceCount > 0
-    d = gpuDevice(gpuDeviceCount-1);
+    d = gpuDevice(1);
 end
 initarray = make_GPUhandle();
 
@@ -86,16 +86,17 @@ for i = 1:3
     Zplot    = plot(T, abs(Z), '-k', 'LineWidth', 2);
 end
 
+set(findall(gcf,'-property','FontName'),'FontName','Avenir')
+
 text(tend*0.99, 0.99, PSRp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'top')
 text(tend*0.99, 0.20, PSSp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'middle')
 text(tend*0.99, abs(Z(end)), CPWp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'middle')
-text(tend*0.01, 0, sprintf('$$N$$ = %d  $$\\langle k \\rangle$$ = %d',pars.N,fdpars.meandegree), 'FontSize', labelfont, 'HorizontalAlignment', 'left', 'VerticalAlignment', 'bottom', 'Interpreter', 'latex', 'FontName','Avenir')
+text(tend*0.01, 0, sprintf('$$N$$ = %d  $$\\langle k \\rangle$$ = %d',pars.N,fdpars.meandegree), 'FontSize', labelfont, 'HorizontalAlignment', 'left', 'VerticalAlignment', 'bottom', 'Interpreter', 'latex')
 
 xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
 ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
 
 legend([fullplot, Zplot, ZOAplot], {'$$Z(t)_{A_{ij}}$$', '$$Z(t)_{MF}$$', '$$\bar{Z}(t)_{MF_{OA}}$$'}, 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southeast', 'Orientation','horizontal')
-set(findall(gcf,'-property','FontName'),'FontName','Avenir')
 exportpdf(f_fixeddegree, '../Figures/InspectMeanFieldFixedDegree.pdf', export);
 % if export; exportgraphics(f_fixeddegree,'../Figures/InspectMeanFieldFixedDegree.pdf'); end
 close(f_fixeddegree)
@@ -137,16 +138,17 @@ for i = 1:3
     plot(TOA, abs(ZOA), '-', 'LineWidth', 3, 'Color', rdpars.color);
 end
 
+set(findall(gcf,'-property','FontName'),'FontName','Avenir')
+
 text(tend*0.99, 0.99, PSRp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'top')
 text(tend*0.99, 0.20, PSSp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'middle')
 text(tend*0.99, abs(Z(end)), CPWp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'middle')
-text(tend*0.01, 0, sprintf('$$N$$ = %d  $$\\langle k \\rangle$$ = %d  $$p$$ = %0.1f',pars.N,round(rdpars.meandegree),rdpars.netp), 'FontSize', labelfont, 'HorizontalAlignment', 'left', 'VerticalAlignment', 'bottom', 'Interpreter', 'latex', 'FontName','Avenir')
+text(tend*0.01, 0, sprintf('$$N$$ = %d  $$\\langle k \\rangle$$ = %d  $$p$$ = %0.1f',pars.N,round(rdpars.meandegree),rdpars.netp), 'FontSize', labelfont, 'HorizontalAlignment', 'left', 'VerticalAlignment', 'bottom', 'Interpreter', 'latex')
 
 xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
 ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
 
 legend('$$Z(t)_{A_{ij}}$$', '$$\bar{Z}(t)_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southeast', 'Orientation','horizontal')
-set(findall(gcf,'-property','FontName'),'FontName','Avenir')
 exportpdf(f_random, '../Figures/InspectMeanFieldRandom.pdf', export);
 % if export; exportgraphics(f_random,'../Figures/InspectMeanFieldRandom.pdf'); end
 close(f_random)
@@ -189,16 +191,17 @@ for i = 1:3
     plot(TOA, abs(ZOA), '-k', 'LineWidth', 3, 'Color', sfpars.color);
 end
 
+set(findall(gcf,'-property','FontName'),'FontName','Avenir')
+
 text(tend*0.99, 0.99, PSRp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'top')
 text(tend*0.99, 0.20, PSSp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'middle')
 text(tend*0.99, abs(Z(end)), CPWp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'middle')
-text(tend*0.01, 0, sprintf('$$N$$ = %d  $$\\langle k \\rangle$$ = %d  $$\\gamma$$ = %0.2f',pars.N,round(sfpars.meandegree),sfpars.degree), 'FontSize', labelfont, 'HorizontalAlignment', 'left', 'VerticalAlignment', 'bottom', 'Interpreter', 'latex', 'FontName','Avenir')
+text(tend*0.01, 0, sprintf('$$N$$ = %d  $$\\langle k \\rangle$$ = %d  $$\\gamma$$ = %0.2f',pars.N,round(sfpars.meandegree),sfpars.degree), 'FontSize', labelfont, 'HorizontalAlignment', 'left', 'VerticalAlignment', 'bottom', 'Interpreter', 'latex')
 
 xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
 ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
 
 legend('$$Z(t)_{A_{ij}}$$', '$$\bar{Z}(t)_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southeast', 'Orientation','horizontal')
-set(findall(gcf,'-property','FontName'),'FontName','Avenir')
 exportpdf(f_scalefree, '../Figures/InspectMeanFieldScaleFree.pdf', export);
 % if export; exportgraphics(f_scalefree,'../Figures/InspectMeanFieldScaleFree.pdf'); end
 close(f_scalefree)
