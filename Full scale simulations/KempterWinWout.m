@@ -9,7 +9,7 @@ addpath('../Functions');
 set(groot,'DefaultAxesXGrid','on')
 set(groot,'DefaultAxesYGrid','on')
 
-titlefont = 18;
+titlefont = 15;
 labelfont = 20;
 export = true;
 
@@ -35,7 +35,7 @@ color = '#3AC1D6';
 %% Figure handle:
 f_kempter = figure('Renderer', 'painters', 'Position', [50 800 1000 200]); 
 
-weights = [1.0e-5, 1.0e-2, 1.0e-1];
+weights = [1.0e-5, 1.0e-3, 1.0e-1];
 for i = 1:3
     weight = weights(i);
     sbplt(i) = subplot(1,3,i); hold on; box on;
@@ -45,7 +45,7 @@ for i = 1:3
 
     [t, thetas_full, ~, Kmeans, pars] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
     
-    title(sprintf('$$w^{\\rm in}$$ = %0.1E', weight), 'FontSize', titlefont, 'FontWeight', 'normal', 'Interpreter','latex')
+    title(sprintf('$$w^{\\rm in}$$ = %0.1e', weight), 'FontSize', titlefont, 'FontWeight', 'normal', 'Interpreter','latex')
     yyaxis left; ylim([0, 1]); xlim([t(1), t(end)]);
     z = orderparameter(thetas_full);
     b = normpdf(-3:0.005:3, 0, 1); b = b/sum(b); a = 1; zfilt = filter(b,a,z);

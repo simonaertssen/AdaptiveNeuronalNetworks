@@ -10,7 +10,7 @@ set(groot,'DefaultAxesYGrid','on')
 
 titlefont = 18;
 labelfont = 15;
-export = false;
+export = true;
 
 %% Make a GPU init handle:
 if gpuDeviceCount > 0
@@ -36,14 +36,13 @@ if true
 fighandle = figure('Renderer', 'painters', 'Position', [0, 2000, 800, 1400]); 
 
 %% 1. Kempter window, no IP
-STDP = struct('window', @Kempter1999Window, 'Kupdate', @(K, W) K + W, 'w_i', 8.0e-3, 'w_o', - 1.0475*8.0e-3);
+STDP = struct('window', @Kempter1999Window, 'Kupdate', @(K, W) K + W, 'w_i', 1.0e-3, 'w_o', - 1.0475*1.0e-3);
 plastopts = struct('SP', STDP, 'KMAX', KMAX, 'etaMAX', etaMAX);
 
 [t, thetas_full, K, Kmeans, pars] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
 % drawthetas = spikesNaN(thetas_full);
 
 STDPfigure(0, pars, plastopts, t, thetas_full, K, Kmeans, titlefont, labelfont, 'STDPKempter', '#3AC1D6', export);
-moveFigToBigScreen();
 
 %% 2. Song window, no IP
 STDP = struct('window', @Song2012Window, 'Kupdate', @(K, W) K + KMAX*W);
@@ -61,14 +60,8 @@ plastopts = struct('SP', STDP, 'KMAX', KMAX, 'etaMAX', etaMAX);
 
 STDPfigure(2, pars, plastopts, t, thetas_full, K, Kmeans, titlefont, labelfont, 'STDPChrolCannon', '#EDB120', export);
 %% Move figure to big screen:
-MP=get(0,'MonitorPositions');
-if size(MP,1)>1
-    pos=get(fighandle,'Position');
-    pause(0.01); % this seems sometimes necessary on a Mac
-    set(fighandle,'Position',[pos(1,2)+MP(2,1:2) pos(3:4)]);
-end
+moveFigToBigScreen(fighandle);
 set(findall(gcf,'-property','FontName'),'FontName','Avenir')
-
 end
 
 %% Export figure:
@@ -83,7 +76,7 @@ if true
 fighandle = figure('Renderer', 'painters', 'Position', [0, 2000, 800, 1400]); 
 
 %% 4. Kempter window, with IP
-STDP = struct('window', @Kempter1999Window, 'Kupdate', @(K, W) K + W, 'w_i', 8.0e-2, 'w_o', - 1.0475*8.0e-2);
+STDP = struct('window', @Kempter1999Window, 'Kupdate', @(K, W) K + W, 'w_i', 1.0e-3, 'w_o', - 1.0475*1.0e-3);
 plastopts = struct('SP', STDP, 'IP', true, 'KMAX', KMAX, 'etaMAX', etaMAX);
 
 [t, thetas_full, K, Kmeans, pars] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
@@ -108,7 +101,7 @@ STDPfigure(2, pars, plastopts, t, thetas_full, K, Kmeans, titlefont, labelfont, 
 
 %% Move figure to big screen:
 set(findall(gcf,'-property','FontName'),'FontName','Avenir')
-
+moveFigToBigScreen(fighandle);
 end
 
 if export
