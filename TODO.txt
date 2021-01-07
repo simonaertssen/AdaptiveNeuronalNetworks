@@ -1,8 +1,5 @@
 - Make an example of the learning: how the windows change the synaptic coupling
 
-- Remake the time-evolution images of the different ZOAs: use the right colours,
-reformat the title, use Avenir text, reformat the legend with a \bar
-
 - Change \overlineZ to \barZ
 
 - Make a better figure of the 1D pdfs
