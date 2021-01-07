@@ -20,9 +20,9 @@ end
 initarray = make_GPUhandle();
 
 %% Theta model parameters:
-h = 0.01; tnow = h; tend = 3000;
+h = 0.01; tnow = h; tend = 1000;
 
-pars.N = 100;
+pars.N = 50;
 pars.a_n = 0.666666666666666666667;
 seed = 2; rng(seed);
 IC = linspace(0, 2*pi - (2*pi)/(pars.N),pars.N)';
@@ -37,7 +37,7 @@ fighandle = figure('Renderer', 'painters', 'Position', [0, 0, 800, 1400]);
 
 %% 1. Kempter window, no IP
 STDP = struct('window', @Kempter1999Window, 'Kupdate', @(K, W) K + W, 'w_i', 8.0e-2, 'w_o', - 1.0475*8.0e-2);
-plastopts = struct('SP', STDP, 'KMAX', KMAX, 'etaMAX', etaMAX);
+plastopts = struct('SP', STDP, 'KMAX', 100, 'etaMAX', etaMAX);
 
 [t, thetas_full, K, Kmeans, pars] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
 % drawthetas = spikesNaN(thetas_full);
@@ -49,8 +49,6 @@ STDP = struct('window', @Song2012Window, 'Kupdate', @(K, W) K + KMAX*W);
 plastopts = struct('SP', STDP, 'KMAX', KMAX, 'etaMAX', etaMAX);
 
 [t, thetas_full, K, Kmeans, pars] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
-drawthetas = spikesNaN(thetas_full);
-z = orderparameter(thetas_full);
 
 STDPfigure(1, pars, plastopts, t, thetas_full, K, Kmeans, titlefont, labelfont, 'STDPSong', '#D95319', export);
 
@@ -80,17 +78,18 @@ end
 disp('Made STDP figure')
 
 %% STDP and IP figure:
+if true
 fighandle = figure('Renderer', 'painters', 'Position', [0, 2000, 800, 1400]); 
 
 %% 4. Kempter window, with IP
-if true
 STDP = struct('window', @Kempter1999Window, 'Kupdate', @(K, W) K + W, 'w_i', 8.0e-2, 'w_o', - 1.0475*8.0e-2);
-plastopts = struct('SP', STDP, 'IP', true, 'KMAX', KMAX, 'etaMAX', etaMAX);
+plastopts = struct('SP', STDP, 'IP', true, 'KMAX', 100, 'etaMAX', etaMAX);
 
 [t, thetas_full, K, Kmeans, pars] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
 
 STDPfigure(0, pars, plastopts, t, thetas_full, K, Kmeans, titlefont, labelfont, 'STDPandIPKempter', '#3AC1D6', export);
 
+moveFigToBigScreen();
 %% 5. Song window, with IP
 STDP = struct('window', @Song2012Window, 'Kupdate', @(K, W) K + KMAX*W);
 plastopts = struct('SP', STDP, 'IP', true, 'KMAX', KMAX, 'etaMAX', etaMAX);
@@ -108,12 +107,6 @@ plastopts = struct('SP', STDP, 'IP', true, 'KMAX', KMAX, 'etaMAX', etaMAX);
 STDPfigure(2, pars, plastopts, t, thetas_full, K, Kmeans, titlefont, labelfont, 'STDPandIPChrolCannon', '#EDB120', export);
 
 %% Move figure to big screen:
-MP=get(0,'MonitorPositions');
-if size(MP,1)>1
-    pos=get(fighandle,'Position');
-    pause(0.01); % this seems sometimes necessary on a Mac
-    set(fighandle,'Position',[pos(1,2)+MP(2,1:2) pos(3:4)]);
-end
 set(findall(gcf,'-property','FontName'),'FontName','Avenir')
 
 end
@@ -166,12 +159,6 @@ if idx == 0; ylabel('Postynaptic neuron i', 'FontSize', labelfont); end
 im = imagesc(K); colormap(gray);
 xdata = im.XData; ydata = im.YData;
 im.XData = xdata - 0.5; im.YData = ydata - 0.5;
-
-
-properties(im)
-im.XData
-im.YData
-
 set(gca,'YDir','reverse');
 colorbar('Location', 'southoutside')
 pos = sbplt(2).Position;
