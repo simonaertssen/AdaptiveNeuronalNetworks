@@ -88,7 +88,7 @@ end
 
 text(tend*0.99, 1.0, PSRp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'top')
 text(tend*0.99, 0.20, PSSp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'middle')
-text(tend*0.99, abs(ZOA(end)), CPWp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'middle')
+text(tend*0.99, abs(zfull(end)), CPWp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'middle')
 text(tend*0.01, 0, sprintf('$$N$$ = %d  $$\\langle k \\rangle$$ = %d',pars.N,fdpars.meandegree), 'FontSize', labelfont, 'HorizontalAlignment', 'left', 'VerticalAlignment', 'bottom', 'Interpreter', 'latex')
 
 xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
@@ -189,7 +189,7 @@ end
 
 text(tend*0.99, 0.99, PSRp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'top')
 text(tend*0.99, 0.20, PSSp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'middle')
-text(tend*0.99, abs(Z(end)), CPWp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'middle')
+text(tend*0.99, abs(zfull(end)), CPWp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'middle')
 text(tend*0.01, 0, sprintf('$$N$$ = %d  $$\\langle k \\rangle$$ = %d  $$\\gamma$$ = %0.2f',pars.N,round(sfpars.meandegree),sfpars.degree), 'FontSize', labelfont, 'HorizontalAlignment', 'left', 'VerticalAlignment', 'bottom', 'Interpreter', 'latex')
 
 xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
