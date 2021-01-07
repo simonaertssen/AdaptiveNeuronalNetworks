@@ -91,8 +91,7 @@ ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfo
 
 % Show the final state:
 subplot(3, 3, 4); hold on; box on; axis square;
-xlim([real(ZOA(end)) - 0.3, real(ZOA(end)) + 0.1]) 
-ylim([imag(ZOA(end)) - 0.25, imag(ZOA(end)) + 0.15]) 
+xlim([-0.7, -0.3]); ylim([-0.9, -0.5]) 
 drawOAvectors(X + 1i*Y, in, p, cm(2,:));
 
 bs_plot = plot(real(bs(:, idx)), imag(bs(:, idx)), 'LineWidth', linewidth);
@@ -158,8 +157,7 @@ ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfo
 
 % Show the final state:
 subplot(3, 3, 5); hold on; box on; axis square;
-xlim([real(ZOA(end)) - 0.3, real(ZOA(end)) + 0.1]) 
-ylim([imag(ZOA(end)) - 0.25, imag(ZOA(end)) + 0.15]) 
+xlim([-0.7, -0.3]); ylim([-0.9, -0.5]) 
 drawOAvectors(X + 1i*Y, in, p, cm(2,:));
 
 bs_plot = plot(real(bs(:, idx)), imag(bs(:, idx)), 'LineWidth', linewidth);
@@ -229,8 +227,7 @@ ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfo
 
 % Show the final state:
 subplot(3, 3, 6); hold on; box on; axis square;
-xlim([real(ZOA(end)) - 0.3, real(ZOA(end)) + 0.1]) 
-ylim([imag(ZOA(end)) - 0.25, imag(ZOA(end)) + 0.15]) 
+xlim([-0.7, -0.3]); ylim([-0.9, -0.5]) 
 drawOAvectors(X + 1i*Y, in, p, cm(2,:));
 
 bs_plot = plot(real(bs(:, idx)), imag(bs(:, idx)), 'LineWidth', linewidth);
