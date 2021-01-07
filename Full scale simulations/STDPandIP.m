@@ -10,7 +10,7 @@ set(groot,'DefaultAxesYGrid','on')
 
 titlefont = 18;
 labelfont = 15;
-export = true;
+export = false;
 
 %% Make a GPU init handle:
 if gpuDeviceCount > 0
@@ -32,20 +32,20 @@ KMAX = 10; etaMAX = 10;
 
 
 %% Only STDP:
-fighandle = figure('Renderer', 'painters', 'Position', [0, 2000, 800, 1400]); 
+if true
+fighandle = figure('Renderer', 'painters', 'Position', [0, 0, 800, 1400]); 
 
 %% 1. Kempter window, no IP
-if true
-STDP = struct('window', @Kempter1999Window, 'Kupdate', @(K, W) K + W, 'w_i', 1.0e-5, 'w_o', - 1.0475*1.0e-5);
+STDP = struct('window', @Kempter1999Window, 'Kupdate', @(K, W) K + W, 'w_i', 8.0e-2, 'w_o', - 1.0475*8.0e-2);
 plastopts = struct('SP', STDP, 'KMAX', KMAX, 'etaMAX', etaMAX);
 
 [t, thetas_full, K, Kmeans, pars] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
 % drawthetas = spikesNaN(thetas_full);
 
-STDPfigure(0, pars, plastopts, t, thetas_full, K, Kmeans, titlefont, labelfont, 'STDPKempter', '#0072BD', export);
+STDPfigure(0, pars, plastopts, t, thetas_full, K, Kmeans, titlefont, labelfont, 'STDPKempter', '#3AC1D6', export);
 
 %% 2. Song window, no IP
-STDP = struct('window', @Song2017Window, 'Kupdate', @(K, W) K + KMAX*W);
+STDP = struct('window', @Song2012Window, 'Kupdate', @(K, W) K + KMAX*W);
 plastopts = struct('SP', STDP, 'KMAX', KMAX, 'etaMAX', etaMAX);
 
 [t, thetas_full, K, Kmeans, pars] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
@@ -60,32 +60,39 @@ plastopts = struct('SP', STDP, 'KMAX', KMAX, 'etaMAX', etaMAX);
 
 [t, thetas_full, K, Kmeans, pars] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
 
-STDPfigure(2, pars, plastopts, t, thetas_full, K, Kmeans, titlefont, labelfont, 'STDPChrolCannon', '#77AC30', export);
+STDPfigure(2, pars, plastopts, t, thetas_full, K, Kmeans, titlefont, labelfont, 'STDPChrolCannon', '#EDB120', export);
+%% Move figure to big screen:
+MP=get(0,'MonitorPositions');
+if size(MP,1)>1
+    pos=get(fighandle,'Position');
+    pause(0.01); % this seems sometimes necessary on a Mac
+    set(fighandle,'Position',[pos(1,2)+MP(2,1:2) pos(3:4)]);
+end
+set(findall(gcf,'-property','FontName'),'FontName','Avenir')
+
 end
 
 %% Export figure:
-set(findall(gcf,'-property','FontName'),'FontName','Avenir')
-
 if export
 exportgraphics(fighandle,'../Figures/Learning/STDP.pdf', 'ContentType','vector')
 end
-close(fighandle)
-disp(['Made STDP figure'])
+% close(fighandle)
+disp('Made STDP figure')
 
 %% STDP and IP figure:
 fighandle = figure('Renderer', 'painters', 'Position', [0, 2000, 800, 1400]); 
 
 %% 4. Kempter window, with IP
 if true
-STDP = struct('window', @Kempter1999Window, 'Kupdate', @(K, W) K + W, 'w_i', 1.0e-5, 'w_o', - 1.0475*1.0e-5);
+STDP = struct('window', @Kempter1999Window, 'Kupdate', @(K, W) K + W, 'w_i', 8.0e-2, 'w_o', - 1.0475*8.0e-2);
 plastopts = struct('SP', STDP, 'IP', true, 'KMAX', KMAX, 'etaMAX', etaMAX);
 
 [t, thetas_full, K, Kmeans, pars] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
 
-STDPfigure(0, pars, plastopts, t, thetas_full, K, Kmeans, titlefont, labelfont, 'STDPandIPKempter', '#0072BD', export);
+STDPfigure(0, pars, plastopts, t, thetas_full, K, Kmeans, titlefont, labelfont, 'STDPandIPKempter', '#3AC1D6', export);
 
 %% 5. Song window, with IP
-STDP = struct('window', @Song2017Window, 'Kupdate', @(K, W) K + KMAX*W);
+STDP = struct('window', @Song2012Window, 'Kupdate', @(K, W) K + KMAX*W);
 plastopts = struct('SP', STDP, 'IP', true, 'KMAX', KMAX, 'etaMAX', etaMAX);
 
 [t, thetas_full, K, Kmeans, pars] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
@@ -98,15 +105,23 @@ plastopts = struct('SP', STDP, 'IP', true, 'KMAX', KMAX, 'etaMAX', etaMAX);
 
 [t, thetas_full, K, Kmeans, pars] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
 
-STDPfigure(2, pars, plastopts, t, thetas_full, K, Kmeans, titlefont, labelfont, 'STDPandIPChrolCannon', '#77AC30', export);
-end
+STDPfigure(2, pars, plastopts, t, thetas_full, K, Kmeans, titlefont, labelfont, 'STDPandIPChrolCannon', '#EDB120', export);
 
+%% Move figure to big screen:
+MP=get(0,'MonitorPositions');
+if size(MP,1)>1
+    pos=get(fighandle,'Position');
+    pause(0.01); % this seems sometimes necessary on a Mac
+    set(fighandle,'Position',[pos(1,2)+MP(2,1:2) pos(3:4)]);
+end
 set(findall(gcf,'-property','FontName'),'FontName','Avenir')
+
+end
 
 if export
 exportgraphics(fighandle,'../Figures/Learning/STDPandIP.pdf', 'ContentType','vector')
 end
-disp(['Made STDP and IP figure'])
+disp('Made STDP and IP figure')
 close(fighandle)
 
 %% Plotting the results
@@ -128,6 +143,7 @@ z = orderparameter(thetas);
 b = normpdf(-3:0.005:3, 0, 1); b = b/sum(b); a = 1; zfilt = filter(b,a,z);
 if idx == 0; ylabel('$Z(t)$','Interpreter','latex', 'FontSize', labelfont); end
 plot(t, abs(zfilt), '-k', 'LineWidth', 2)
+xticks(linspace(0, t(end), 3))
 
 yyaxis right
 plot(t, Kmeans(2,:), 'LineWidth', 2, 'Color', color)
@@ -147,7 +163,15 @@ title('{ \boldmath $K_{ij} $}', 'Interpreter', 'latex', 'FontSize', titlefont, '
 xlim([0, pars.N]); ylim([0, pars.N]);
 xlabel('Presynaptic neuron j', 'FontSize', labelfont)
 if idx == 0; ylabel('Postynaptic neuron i', 'FontSize', labelfont); end
-imagesc(K); colormap(gray);
+im = imagesc(K); colormap(gray);
+xdata = im.XData; ydata = im.YData;
+im.XData = xdata - 0.5; im.YData = ydata - 0.5;
+
+
+properties(im)
+im.XData
+im.YData
+
 set(gca,'YDir','reverse');
 colorbar('Location', 'southoutside')
 pos = sbplt(2).Position;
@@ -202,12 +226,5 @@ if idx == 0; ylabel('Density', 'FontSize', labelfont); end
 pos = sbplt(6).Position;
 sbplt(6).Position = [pos(1), pos(2) + 2*h - 5*e*y, pos(3), pos(4)];
 end
-
-% MP=get(0,'MonitorPositions');
-% if size(MP,1)>1
-%     pos=get(fighandle,'Position');
-%     pause(0.01); % this seems sometimes necessary on a Mac
-%     set(fighandle,'Position',[pos(1,2)+MP(2,1:2) pos(3:4)]);
-% end
 
 end

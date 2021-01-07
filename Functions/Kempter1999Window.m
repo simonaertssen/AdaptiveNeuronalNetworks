@@ -4,7 +4,8 @@ function dW = Kempter1999Window(dt)
     t_neg = 20;
     A_p = 1;
     A_n = -1;
-    learning_rate = 1.0e-5;
+%     learning_rate = 1.0e-5; %Old
+    learning_rate = 8.0e-2;
     eps = 1.0e-9;
     dt = -dt * 1.0e3; % Convert to seconds
     
