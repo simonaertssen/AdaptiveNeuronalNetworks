@@ -63,8 +63,6 @@ function [tout, xout, K, Kmeans, p, info] = DOPRI_simulatenetwork_adaptive(ta,tb
         if intrnsic_plasticity && any(pulse == 1)
             ISIidx = ISI > 0 & pulse == 1;
             % Only adjust the ip where a spike occured and where the ISI is positive
-            test = ISI(ISIidx);
-            test2 = etaMAX*Song2017IP(ISI(ISIidx));
             p.e(ISIidx) =  min(etaMAX, max(-etaMAX, p.e(ISIidx) + etaMAX*Song2017IP(ISI(ISIidx))));
         end
         

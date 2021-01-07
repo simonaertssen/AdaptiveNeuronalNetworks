@@ -101,7 +101,7 @@ close(f_windows)
 
 %% Function properties
 clc
-integral(@Kempter1999Window, -1, 1)      % 4.7500e-08 old, 
+integral(@Kempter1999Window, -1, 1)      % 4.7500e-08 old, 3.8000e-04 new
 integral(@Song2012Window, -1, 1)         % -4.0000e-04
 integral(@Song2017Window, -1, 1)         % -5.0000e-06
 integral(@ChrolCannon2012Window, -1, 1)  % -0.0061

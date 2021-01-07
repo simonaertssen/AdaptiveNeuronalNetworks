@@ -43,7 +43,7 @@ Following the notation in \cite{Kempter1999}, we will denote the spike train com
 \label{eq:KempterSTDPFormulation1} \\
 &= \sum_{t_i^{n}\in \mathcal{T}} w^{\mathrm{out}} + \sum_{t_{j}^{f} \in \mathcal{T}} w^{\mathrm{in}} + \sum_{t_{j}^{f}, \: t_i^{n} \in \mathcal{T}} \hspace{-2mm} W (t_{j}^{f}-t_i^{n} ) \label{eq:KempterSTDPFormulation2}
 \end{align}
-with $\mathcal{T}$ the period over which learning occurs. $w^{\mathrm{in}} > 0$ and $w^{\mathrm{out}} < 0$ are small weights on the in- and outgoing action potentials and are necessary for $K_{ij}$ to reach an equilibrium. This is proven from the average learning dynamics, \cite{Kempter1999}. In \eqref{eq:KempterSTDPFormulation1} we can recognise the correlation between signals as a convolution over the learning window. \\
+with $\mathcal{T}$ the period over which learning occurs. $w^{\mathrm{in}} > 0$ and $w^{\mathrm{out}} < 0$ are small weights on the in- and outgoing action potentials. These can be used to counteract the inhibitive or excitatory nature of the results of $W$ and are necessary for $K_{ij}$ to reach an equilibrium. This is proven from the average learning dynamics, \cite{Kempter1999}. In \eqref{eq:KempterSTDPFormulation1} we can recognise the correlation between signals as a convolution over the learning window. \\
 
 The following learning window is proposed:
 \begin{align}
@@ -53,7 +53,7 @@ W(t)_K = A
  \exp \left(-\frac{t}{\tau_{p}}\right) - \cdot \exp \left(-\frac{t}{\tau_{n}} \right) & \text{for } t > 0
 \end{cases} \label{eq:learningwindowKempter1999}
 \end{align}
-Here $t$ is the delay between presynaptic spike arrival and postsynaptic firing, $A$ is a small learning parameter and all $\tau$ are time constants. The values are given in the publication as $\alpha = 10^{-5}$, $\tau_{\rm syn} = 5$ ms, $\tau_{p} = 1$ ms, $\tau_{n} = 20$ ms and $A_p = 1$ and $A_{n} = -1$. $\tilde{\tau}_{p} \equiv \tau_{\rm syn} \tau_{p} / (\tau_{\rm syn} + \tau_{p})$ and $\tilde{\tau}_{n} \equiv \tau_{\rm syn} \tau_{n} / (\tau_{\rm syn} + \tau_{n})$. \\
+Here $t$ is the delay between presynaptic spike arrival and postsynaptic firing, $A$ is a small learning parameter and all $\tau$ are time constants. The values are given as $A = 10^{-5}$, $\tau_{\rm syn} = 5$ ms, $\tau_{p} = 1$ ms and $\tau_{n} = 20$ ms. $\tilde{\tau}_{p} \equiv \tau_{\rm syn} \tau_{p} / (\tau_{\rm syn} + \tau_{p})$ and $\tilde{\tau}_{n} \equiv \tau_{\rm syn} \tau_{n} / (\tau_{\rm syn} + \tau_{n})$. \\
 $\int W(\tau)_K \mathop{d \tau} = 4.75 \times 10^{-8}$ \cite{Kempter1999}. \\
 
 Using different processes to generate spike trains, the learning equation \eqref{eq:KempterSTDPFormulation2} converges to a stable equilibrium \cite{Kempter1999}. The question will now be whether that is still the case when we will apply \STDP to our network of Theta neurons, as changes to the coupling strength will also influence the spiking dynamics between neurons, which in turn will affect the learning again.\\
@@ -72,7 +72,7 @@ A_{p} \cdot \exp \left(\frac{-t}{\tau_p}\right) & \text{for } s > 0 \\
 A_{n} \cdot \exp \left(\frac{t}{\tau_n}\right)  & \text{for } s \leq 0
 \end{cases} \label{eq:learningwindowSong2000}
 \end{align}
-where we will use $A_p = 0.005$, $A_n = -0.00525$ and $\tau_p = \tau_n = 20$ ms. $\int W(\tau)_S \mathop{d \tau} = -4.0 \times 10^{-4}$ so we expect the weights to be suppressed towards a negative value. 
+where we will use $A_p = 0.005$, $A_n = -0.00525$ and $\tau_p = \tau_n = 20$ ms. $\int W(\tau)_S \mathop{d \tau} = -5.0 \times 10^{-6}$ so we expect the weights to be suppressed towards a negative value. 
 
 Recently, triphasic learning windows have been used to account for when it takes too long for the postsynaptic neuron to fire, and thus to decorrelate the relation between neurons. These learning windows are curves that were fitted to experimental data of the cortex and the hippocampus \cite{ChrolCannon2014}. \\
 
@@ -82,7 +82,7 @@ W(t)_C = A_{p} \cdot \exp \left(\frac{-\left(t - 15 \right)^{2}}{ \tau_{p}}\righ
 \end{align}
 where $A_{p}=0.23$, $A_{n}=0.15$, $\tau_{p}=200$ and $\tau_n = 2000$. $\int W(s)_C \mathrm{d}s = -6.0 \times 10^{-3}$. \\
 
-When comparing the qualities of the different learning windows presented here, one can quickly notice the difference in magnitude between the learning windows. That does not necessarily include the results of taking the intgerals, . In \cite{ChrolCannon2012} this issue was solved by using $A Therefore we will use $\alpha = 8.0 \times 10^{-2}$
+When comparing the qualities of the different learning windows presented here, one can quickly notice the difference in magnitude between the learning windows. That does not necessarily include the magnitude of the correlation, but the magnitude of the window itself. In \eqref{eq:learningwindowKempter1999}, the learning rate is a few orders of magnitude smaller than in \eqref{eq:learningwindowChrolCannon2012}. This issue was solved by using $A _p = 0.1$ and $A_n = -0.12$ following \cite{ChrolCannon2012}. In the same spirit, we will therefore use $A = 8.0 \times 10^{-2}$ in \eqref{eq:learningwindowKempter1999}. These alterations yield $\int W(\tau)_S \mathop{d \tau} = -4.0 \times 10^{-4}$ and $\int W(\tau)_K \mathop{d \tau} = 3.8 \times 10^{-4}$.
 
 \begin{figure}[H]
 \centering

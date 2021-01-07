@@ -20,9 +20,9 @@ end
 initarray = make_GPUhandle();
 
 %% Theta model parameters:
-h = 0.01; tnow = h; tend = 2000;
+h = 0.01; tnow = h; tend = 3000;
 
-pars.N = 25;
+pars.N = 100;
 pars.a_n = 0.666666666666666666667;
 seed = 2; rng(seed);
 IC = linspace(0, 2*pi - (2*pi)/(pars.N),pars.N)';
@@ -68,7 +68,7 @@ end
 if export
 exportgraphics(fighandle,'../Figures/Learning/STDP.pdf', 'ContentType','vector')
 end
-% close(fighandle)
+close(fighandle)
 disp('Made STDP figure')
 
 %% STDP and IP figure:
