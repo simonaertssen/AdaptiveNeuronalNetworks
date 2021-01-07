@@ -20,3 +20,5 @@ W_C:  purple    '#BA30D9'
 - Write about the STDP and IP results
 
 - Write about rescaling the learning windows: difference between Carol-Cannon and Song (window parameters) and scaling of kempter window 
+
+- Write about why there is a difference between the w_in and the w_out
