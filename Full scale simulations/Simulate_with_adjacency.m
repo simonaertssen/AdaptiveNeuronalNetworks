@@ -96,8 +96,8 @@ ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
 
 legend([fullplot, Zplot, ZOAplot], {'$$Z(t)_{A_{ij}}$$', '$$Z(t)_{MF}$$', '$$\bar{Z}(t)_{MF_{OA}}$$'}, 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southeast', 'Orientation','horizontal')
 set(findall(gcf,'-property','FontName'),'FontName','Avenir')
-% exportpdf(f_fixeddegree, '../Figures/InspectMeanFieldFixedDegree.pdf', export);
-if export; exportgraphics(f_fixeddegree,'../Figures/InspectMeanFieldFixedDegree.pdf'); end
+exportpdf(f_fixeddegree, '../Figures/InspectMeanFieldFixedDegree.pdf', export);
+% if export; exportgraphics(f_fixeddegree,'../Figures/InspectMeanFieldFixedDegree.pdf'); end
 close(f_fixeddegree)
 
 disp('Made fixed degree network figure')
@@ -147,8 +147,8 @@ ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
 
 legend('$$Z(t)_{A_{ij}}$$', '$$\bar{Z}(t)_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southeast', 'Orientation','horizontal')
 set(findall(gcf,'-property','FontName'),'FontName','Avenir')
-% exportpdf(f_random, '../Figures/InspectMeanFieldRandom.pdf', export);
-if export; exportgraphics(f_random,'../Figures/InspectMeanFieldRandom.pdf'); end
+exportpdf(f_random, '../Figures/InspectMeanFieldRandom.pdf', export);
+% if export; exportgraphics(f_random,'../Figures/InspectMeanFieldRandom.pdf'); end
 close(f_random)
 
 disp('Made random network figure')
@@ -199,8 +199,8 @@ ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
 
 legend('$$Z(t)_{A_{ij}}$$', '$$\bar{Z}(t)_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southeast', 'Orientation','horizontal')
 set(findall(gcf,'-property','FontName'),'FontName','Avenir')
-% exportpdf(f_scalefree, '../Figures/InspectMeanFieldScaleFree.pdf', export);
-if export; exportgraphics(f_scalefree,'../Figures/InspectMeanFieldScaleFree.pdf'); end
+exportpdf(f_scalefree, '../Figures/InspectMeanFieldScaleFree.pdf', export);
+% if export; exportgraphics(f_scalefree,'../Figures/InspectMeanFieldScaleFree.pdf'); end
 close(f_scalefree)
 
 disp('Made scale-free network figure')
