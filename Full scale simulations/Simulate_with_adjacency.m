@@ -97,7 +97,7 @@ ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
 legend([fullplot, Zplot, ZOAplot], {'$$Z(t)_{A_{ij}}$$', '$$Z(t)_{MF}$$', '$$\bar{Z}(t)_{MF_{OA}}$$'}, 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southeast', 'Orientation','horizontal')
 exportpdf(f_fixeddegree, '../Figures/InspectMeanFieldFixedDegree.pdf', export);
 % if export; exportgraphics(f_fixeddegree,'../Figures/InspectMeanFieldFixedDegree.pdf'); end
-% close(f_fixeddegree)
+close(f_fixeddegree)
 
 disp('Made fixed degree network figure')
 
