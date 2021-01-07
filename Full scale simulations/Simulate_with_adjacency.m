@@ -88,7 +88,7 @@ end
 
 text(tend*0.99, 1.0, PSRp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'top')
 text(tend*0.99, 0.20, PSSp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'middle')
-text(tend*0.99, abs(zfull(end)), CPWp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'middle')
+text(tend*0.99, gather(abs(zfull(end))), CPWp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'middle')
 text(tend*0.01, 0, sprintf('$$N$$ = %d  $$\\langle k \\rangle$$ = %d',pars.N,fdpars.meandegree), 'FontSize', labelfont, 'HorizontalAlignment', 'left', 'VerticalAlignment', 'bottom', 'Interpreter', 'latex')
 
 xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
@@ -97,7 +97,7 @@ ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont)
 legend([fullplot, Zplot, ZOAplot], {'$$Z(t)_{A_{ij}}$$', '$$Z(t)_{MF}$$', '$$\bar{Z}(t)_{MF_{OA}}$$'}, 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southeast', 'Orientation','horizontal')
 exportpdf(f_fixeddegree, '../Figures/InspectMeanFieldFixedDegree.pdf', export);
 % if export; exportgraphics(f_fixeddegree,'../Figures/InspectMeanFieldFixedDegree.pdf'); end
-close(f_fixeddegree)
+% close(f_fixeddegree)
 
 disp('Made fixed degree network figure')
 
@@ -138,7 +138,7 @@ end
 
 text(tend*0.99, 1.0, PSRp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'top')
 text(tend*0.99, 0.20, PSSp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'middle')
-text(tend*0.99, abs(ZOA(end)), CPWp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'middle')
+text(tend*0.99, gather(abs(ZOA(end))), CPWp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'middle')
 text(tend*0.01, 0, sprintf('$$N$$ = %d  $$\\langle k \\rangle$$ = %d  $$p$$ = %0.1f',pars.N,round(rdpars.meandegree),rdpars.netp), 'FontSize', labelfont, 'HorizontalAlignment', 'left', 'VerticalAlignment', 'bottom', 'Interpreter', 'latex')
 
 xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
@@ -189,7 +189,7 @@ end
 
 text(tend*0.99, 0.99, PSRp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'top')
 text(tend*0.99, 0.20, PSSp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'middle')
-text(tend*0.99, abs(zfull(end)), CPWp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'middle')
+text(tend*0.99, gather(abs(zfull(end))), CPWp.text, 'FontSize', labelfont, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'middle')
 text(tend*0.01, 0, sprintf('$$N$$ = %d  $$\\langle k \\rangle$$ = %d  $$\\gamma$$ = %0.2f',pars.N,round(sfpars.meandegree),sfpars.degree), 'FontSize', labelfont, 'HorizontalAlignment', 'left', 'VerticalAlignment', 'bottom', 'Interpreter', 'latex')
 
 xlabel('$$t$$', 'Interpreter', 'latex', 'FontSize', labelfont);
