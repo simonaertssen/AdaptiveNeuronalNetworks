@@ -15,8 +15,6 @@ W_C:  yellow    '#EDB120' [0.9290 0.6940 0.1250]
 
 - Write about the STDP and IP results
 
-- Make a better Win-Wout figure
-
 - Write about why there is a difference between the w_in and the w_out
 
 - Make a better figure of the different limit cycles between for the scale-free network.

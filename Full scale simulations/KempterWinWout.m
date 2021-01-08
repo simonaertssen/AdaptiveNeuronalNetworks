@@ -21,9 +21,9 @@ end
 initarray = make_GPUhandle();
 
 %% Theta model parameters:
-h = 0.01; tnow = 0; tend = 100;
+h = 0.01; tnow = 0; tend = 2000;
 
-pars.N = 25;
+pars.N = 50;
 pars.a_n = 0.666666666666666666667;
 seed = 2; rng(seed);
 IC = linspace(0, 2*pi - (2*pi)/(pars.N),pars.N)';
@@ -37,7 +37,7 @@ f_kempter = figure('Renderer', 'painters', 'Position', [50 800 1000 200]);
 
 STDP = struct('window', @Kempter1999Window, 'Kupdate', @(K, W) K + W, 'w_i', 0, 'w_o', 0);
 plastopts = struct('SP', STDP, 'KMAX', KMAX, 'etaMAX', etaMAX);
-[t, thetas_full, ~, Kmeans, pars] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
+[t_org, ~, ~, Kmeans_org, ~, K_org] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
 
 weights = [1.0e-5, 1.0e-3, 1.0e-1];
 for i = 1:3
@@ -45,7 +45,7 @@ for i = 1:3
     sbplt(i) = subplot(1,3,i); hold on; box on;
     
     STDP = struct('window', @Kempter1999Window, 'Kupdate', @(K, W) K + W, 'w_i', weight, 'w_o', - 1.0475*weight);
-    plastopts = struct('SP', STDP, 'KMAX', KMAX, 'etaMAX', etaMAX);
+    plastopts = struct('SP', STDP, 'KMAX', KMAX, 'etaMAX', etaMAX, 'Kinit', K_org);
     [t, thetas_full, ~, Kmeans, pars] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
     
     title(sprintf('$$w^{\\rm in}$$ = %0.1e', weight), 'FontSize', titlefont, 'FontWeight', 'normal', 'Interpreter','latex')
@@ -56,7 +56,8 @@ for i = 1:3
     plot(t, abs(zfilt), '-k', 'LineWidth', 2)
     
     yyaxis right
-    plot(t, Kmeans(2,:), 'LineWidth', 2, 'Color', color)
+    p_org = plot(t_org, Kmeans_org(2,:), 'LineWidth', 2, 'Color', color); p_org.Color(4) = 0.5;
+    plot(t, Kmeans(2,:), '-', 'LineWidth', 2, 'Color', color)
     ax = gca; ax.YAxis(1).Color = [0, 0, 0]; ax.YAxis(2).Color = color;
     if abs(ax.YTick(2) - ax.YTick(1)) < 1
         ax.YTick = sort([Kmeans(2,1), Kmeans(2,end)]);

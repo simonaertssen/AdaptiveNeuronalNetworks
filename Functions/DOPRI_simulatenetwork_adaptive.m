@@ -26,6 +26,10 @@ function [tout, xout, K, Kmeans, p, info] = DOPRI_simulatenetwork_adaptive(ta,tb
         KMAX = plastopts.KMAX;
         K = initarray(rand(p.N)*2*KMAX - KMAX);
     end
+    if isfield(plastopts, 'Kinit')
+        K = initarray(plastopts.Kinit);
+    end
+    info = K;
     
     intrnsic_plasticity = isfield(plastopts, 'IP');
     if intrnsic_plasticity

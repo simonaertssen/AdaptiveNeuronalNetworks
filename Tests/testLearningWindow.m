@@ -71,7 +71,7 @@ dt = linspace(-0.08, 0.1, tpts);
 f_windows = figure('Renderer', 'painters', 'Position', [50 800 1000 200]); 
 
 subplot(1,3,1); box on; hold on; xlim([dt(1), dt(end)]); ylim([-0.1, 0.16]);
-plot(dt, Kempter1999Window(dt), 'LineWidth', 2, 'Color', '#3AC1D6')
+plot(dt, Kempter1999Window(dt), 'LineWidth', 2, 'Color', '#298A3E')
 legend("$$W(t)_K$$", 'Interpreter', 'latex', 'FontSize', labelfont, 'Orientation','horizontal', 'Location', 'southeast')
 xlabel("$t$ [s]", 'Interpreter', 'latex', 'FontSize', labelfont); 
 ylabel("$W$", 'Interpreter', 'latex', 'FontSize', labelfont);
