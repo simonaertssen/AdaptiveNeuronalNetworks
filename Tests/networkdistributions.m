@@ -16,7 +16,24 @@ meandegreetoget = 100;
 
 %% Figure handle
 if make1Dplots == true
-f_1Dpdfs = figure('Renderer', 'painters', 'Position', [50 800 1000 200]); box on; hold on;
+f_1Dpdfs = figure('Renderer', 'painters', 'Position', [0 80 600 200]); box on; hold on;
+
+%% A 1D fixed degree network / diracnet: CORRECT
+fixeddegreepars = make_fixeddegreeparameters(pars, meandegreetoget);
+
+if sum(fixeddegreepars.P(1:pars.N)) == pars.N; disp('Sum is correct'); end
+if fixeddegreepars.meandegree == sum(fixeddegreepars.degrees_i)/pars.N; disp('Mean degree is correct'); end
+
+limits = round(fixeddegreepars.meandegree + fixeddegreepars.meandegree*[-0.02, 0.02]);
+
+plt = subplot(1,3,1); hold on; grid on; axis square; box on;
+title("Fixed degree", 'FontSize', titlefont)
+xlim(limits); x = limits(1):0.01:limits(2);
+histogram(fixeddegreepars.degrees_i, 'Normalization', 'pdf', 'FaceColor', fixeddegreepars.colorvec);
+plot(x, fixeddegreepars.P(x)/pars.N, 'LineWidth', 3, 'Color', fixeddegreepars.colorvec);
+xline(fixeddegreepars.meandegree, 'k--', 'LineWidth', 1)
+xlabel('Degree', 'Interpreter', 'none', 'FontSize', labelfont)
+ylabel('Density', 'Interpreter', 'none', 'FontSize', labelfont);
 
 %% A 1D random network: CORRECT
 randompars = make_randomparameters(pars, meandegreetoget/(pars.N - 1));
@@ -29,14 +46,10 @@ limits = round(randompars.meandegree + sqrt(randompars.meandegree)*[-3, 3]);
 subplot(1,3,2); hold on; grid on; axis square; box on;
 title("Random", 'FontSize', titlefont)
 xlim(limits); x = limits(1):limits(2);
-histogram(randompars.degrees_i, 'Normalization', 'pdf');
-plot(x, randompars.P(x)/pars.N, 'LineWidth', 3);
+histogram(randompars.degrees_i, 'Normalization', 'pdf', 'FaceColor', randompars.colorvec);
+plot(x, randompars.P(x)/pars.N, 'LineWidth', 3, 'Color', randompars.colorvec);
 xline(randompars.meandegree, 'k--', 'LineWidth', 2)
 xlabel('Degree', 'Interpreter', 'none', 'FontSize', labelfont)
-
-% subplot(1,3,5); hold on; grid on; axis square; box on;
-% scatter(randompars.degrees_i, randompars.degrees_o, '.k');
-% xlabel('$$k^{\rm in}$$', 'Interpreter', 'latex', 'FontSize', labelfont)
 
 %% A 1D scale free network: CORRECT
 kmin = 68; kmax = 200;
@@ -52,45 +65,11 @@ plt2 = subplot(1,3,3); hold on; grid on; axis square; box on;
 title("Scale-free", 'FontSize', titlefont)
 
 xlim([limits(1) - 10, limits(2) + 10]); x = limits(1):limits(2);
-histogram(scalefreepars.degrees_i, 'Normalization', 'pdf', 'BinEdges', linspace(kmin, kmax, 20));
-plot(x, scalefreepars.P(x)/pars.N, 'LineWidth', 3);
+histogram(scalefreepars.degrees_i, 'Normalization', 'pdf', 'BinEdges', linspace(kmin, kmax, 20), 'FaceColor', scalefreepars.colorvec);
+plot(x, scalefreepars.P(x)/pars.N, 'LineWidth', 3, 'Color', scalefreepars.colorvec);
 xline(scalefreepars.meandegree, 'k--', 'LineWidth', 2)
 xlabel('Degree', 'Interpreter', 'none', 'FontSize', labelfont)
-pos = plt2.Position; plt2.Position = [pos(1) - 0.09, pos(2), pos(3), pos(4)];
-
-% plt2 = subplot(2,3,6); hold on; grid on; axis square; box on;
-% xlim(limits); ylim(limits);
-% scatter(scalefreepars.degrees_i, scalefreepars.degrees_o, '.k');
-% xlabel('$$k^{\rm in}$$', 'Interpreter', 'latex', 'FontSize', labelfont)
 % pos = plt2.Position; plt2.Position = [pos(1) - 0.09, pos(2), pos(3), pos(4)];
-
-%% A 1D fixed degree network / diracnet: CORRECT
-fixeddegreepars = make_fixeddegreeparameters(pars, meandegreetoget);
-
-if sum(fixeddegreepars.P(1:pars.N)) == pars.N; disp('Sum is correct'); end
-if fixeddegreepars.meandegree == sum(fixeddegreepars.degrees_i)/pars.N; disp('Mean degree is correct'); end
-
-limits = round(fixeddegreepars.meandegree + fixeddegreepars.meandegree*[-0.02, 0.02]);
-
-plt = subplot(1,3,1); hold on; grid on; axis square; box on;
-title("Fixed degree", 'FontSize', titlefont)
-xlim(limits); x = limits(1):0.01:limits(2);
-histogram(fixeddegreepars.degrees_i, 'Normalization', 'pdf');
-plot(x, fixeddegreepars.P(x)/pars.N, 'LineWidth', 3);
-xline(fixeddegreepars.meandegree, 'k--', 'LineWidth', 2)
-xlabel('Degree', 'Interpreter', 'none', 'FontSize', labelfont)
-ylabel('Density [%]', 'Interpreter', 'none', 'FontSize', labelfont);
-pos = plt.Position; plt.Position = [pos(1) + 0.09, pos(2), pos(3), pos(4)];
-
-% plt = subplot(2,3,4); hold on; grid on; axis square; box on;
-% xlim([fixeddegreepars.meandegree-1, fixeddegreepars.meandegree+1]);
-% ylim([fixeddegreepars.meandegree-1, fixeddegreepars.meandegree+1]);
-% xticks([fixeddegreepars.meandegree-1, fixeddegreepars.meandegree, fixeddegreepars.meandegree+1])
-% yticks([fixeddegreepars.meandegree-1, fixeddegreepars.meandegree, fixeddegreepars.meandegree+1])
-% scatter(fixeddegreepars.degrees_i, fixeddegreepars.degrees_o, '.k');
-% xlabel('$$k^{\rm in}$$', 'Interpreter', 'latex', 'FontSize', labelfont)
-% ylabel('$$k^{\rm out}$$', 'Interpreter', 'latex', 'FontSize', labelfont)
-% pos = plt.Position; plt.Position = [pos(1) + 0.09, pos(2), pos(3), pos(4)];
 
 %% Test: a 1D lognormal network - inspired by scale-free CORRECT
 % lognormpars = make_lognormparameters(pars, 3, 1, 500);
@@ -111,7 +90,7 @@ pos = plt.Position; plt.Position = [pos(1) + 0.09, pos(2), pos(3), pos(4)];
 set(findall(gcf,'-property','FontName'),'FontName','Avenir')
 exportgraphics(f_1Dpdfs,'../Figures/Distributions/1D.pdf')
 
-close(f_1Dpdfs)
+% close(f_1Dpdfs)
 end
 %% Now the 2D pdfs:
 meandegreetoget = pars.N/5;
@@ -141,20 +120,20 @@ hi = meandegreetoget + 5;
 minmax = linspace(lo, hi, hi - lo);
 xlim([minmax(1), minmax(end)])
 ylim([minmax(1), minmax(end)])
-hist = histogram2(fixeddegreepars.degrees_i, fixeddegreepars.degrees_o, minmax, minmax, 'Normalization', 'pdf','ShowEmptyBins','on'); % Normal degree vectors from before
+hist = histogram2(fixeddegreepars.degrees_i, fixeddegreepars.degrees_o, minmax, minmax, 'Normalization', 'pdf','ShowEmptyBins','on','FaceAlpha', 0.01,'FaceColor',fixeddegreepars.colorvec); % Normal degree vectors from before
 hist.FaceAlpha = 0.75;
 colormap(jet)
 
 % The pdf
-plot3([meandegreetoget, meandegreetoget], [meandegreetoget, meandegreetoget], [0, max(hist.Values, [], 'all')], 'k', 'LineWidth', 2)
+plot3([meandegreetoget, meandegreetoget], [meandegreetoget, meandegreetoget], [0, max(hist.Values, [], 'all')],'k','LineWidth',2,'Color',fixeddegreepars.colorvec)
 colormap(jet)
 
 % The 2D scatter plot underneath
 binwidth = hist.XBinEdges(2) - hist.XBinEdges(1);
 binsvalues = zeros(numel(minmax), numel(minmax));
-binsvalues(1:numel(minmax)-1, 1:numel(minmax)-1) = hist.Values;
+binsvalues(1:numel(minmax)-1, 1:numel(minmax)-1) = hist.Values./max(hist.Values, [], 'all');
 h = pcolor(minmax,minmax,binsvalues);
-h.ZData = -0.5*max(binsvalues, [], 'all')*ones(size(binsvalues));
+h.ZData = -0.5*max(hist.Values, [], 'all')*ones(size(binsvalues));
 
 ax = gca;
 ax.ZTick(ax.ZTick < 0) = [];
@@ -162,10 +141,6 @@ colormap(jet)
 
 %% A 2D random network:
 randompars = make_randomparameters(pars, meandegreetoget/(pars.N - 1));
-
-% randompars.P2D = @(x,y) randompars.P(x) .* randompars.P(y) / sum(randompars.P(x).*randompars.P(y), 'all') * pars.N;
-% Pnorm = randompars.P2D(1:pars.N,1:pars.N);
-% randompars.P2D = @(x,y) randompars.P2D(x,y)/sum(Pnorm, 'all') * pars.N;
 
 randompars.P2D = @(x,y) randompars.P(x).*randompars.P(y);
 Pnorm = sum(randompars.P2D(1:pars.N,1:pars.N), 'all')/pars.N; 
@@ -188,23 +163,23 @@ view(110, 10)
 minmax = linspace(randompars.meandegree - round(4*sqrt(randompars.meandegree)), randompars.meandegree + round(4*sqrt(randompars.meandegree)), 16);
 xlim([minmax(1), minmax(end)])
 ylim([minmax(1), minmax(end)])
-hist = histogram2(randompars.degrees_i, randompars.degrees_o, minmax, minmax, 'Normalization', 'pdf','FaceAlpha',1,'ShowEmptyBins','on'); % Normal degree vectors from before
+hist = histogram2(randompars.degrees_i, randompars.degrees_o, minmax, minmax, 'Normalization', 'pdf','FaceAlpha',1,'ShowEmptyBins','on', 'FaceColor', randompars.colorvec); % Normal degree vectors from before
 colormap(jet)
 
 % The pdf
 vec = linspace(minmax(1), minmax(end), minmax(end) - minmax(1) + 1);
 [x,y] = meshgrid(vec, vec);
 idx = round(linspace(1, numel(vec), 25));
-surf(x(idx,idx),y(idx,idx),randompars.P2D(x(idx,idx),y(idx,idx))/pars.N^2*Pnorm,'FaceAlpha',0.5,'EdgeColor','none');
+surf(x(idx,idx),y(idx,idx),randompars.P2D(x(idx,idx),y(idx,idx))/pars.N^2*Pnorm,'FaceAlpha',0.5,'FaceColor',randompars.colorvec,'EdgeColor','none');
 
 colormap(jet)
 
 % The 2D scatter plot underneath
 binwidth = hist.XBinEdges(2) - hist.XBinEdges(1);
 binsvalues = zeros(numel(minmax), numel(minmax));
-binsvalues(1:numel(minmax)-1, 1:numel(minmax)-1) = hist.Values;
+binsvalues(1:numel(minmax)-1, 1:numel(minmax)-1) = hist.Values./max(hist.Values, [], 'all');
 h = pcolor(minmax,minmax,binsvalues);
-h.ZData = -0.5*max(binsvalues, [], 'all')*ones(size(binsvalues));
+h.ZData = -0.5*max(hist.Values, [], 'all')*ones(size(binsvalues));
 
 ax = gca;
 ax.ZTick(ax.ZTick < 0) = [];
@@ -214,10 +189,6 @@ colormap(jet)
 scalefreepars = make_scalefreeparameters(pars, 4.305);
 scalefreepars.meandegree
 
-% scalefreepars.P2D = @(x,y) scalefreepars.P(x).*scalefreepars.P(y);
-% Pnorm = sum(scalefreepars.P2D(1:pars.N,1:pars.N), 'all')/pars.N; 
-% scalefreepars.P2D = @(x,y) scalefreepars.P2D(x,y)/Pnorm;
-
 scalefreepars.P2D = @(x,y) P2D(x, y, scalefreepars.kmin, scalefreepars.kmax, scalefreepars.degree, scalefreepars.N);
 
 vec = linspace(scalefreepars.kmin, scalefreepars.kmax, scalefreepars.kmax-scalefreepars.kmin+1);
@@ -226,8 +197,8 @@ sum(scalefreepars.P2D(x,y), 'all')
 if abs(sum(scalefreepars.P2D(x,y), 'all') - pars.N) < 1.e-3; disp('Sum is correct'); end
 
 %%
-% subplot(1,3,3); hold on; grid on; box on;
-figure; hold on; box on;
+subplot(1,3,3); hold on; grid on; box on;
+% figure; hold on; box on;
 title('Scale-free', 'FontSize', titlefont);
 xlabel('\boldmath$k^{\rm in}$', 'Interpreter', 'latex', 'FontSize', labelfont);
 ylabel('\boldmath$k^{\rm out}$', 'Interpreter', 'latex', 'FontSize', labelfont);
@@ -236,7 +207,7 @@ view(110, 10)
 
 % The 3D histogram
 minmax = linspace(scalefreepars.kmin, scalefreepars.kmax, 16);
-hist = histogram2(scalefreepars.degrees_i, scalefreepars.degrees_o, minmax, minmax, 'Normalization', 'pdf'); % Normal degree vectors from before
+hist = histogram2(scalefreepars.degrees_i, scalefreepars.degrees_o, minmax, minmax,'Normalization','pdf','ShowEmptyBins','on','FaceColor', scalefreepars.colorvec); % Normal degree vectors from before
 xlim([minmax(1), minmax(end)])
 ylim([minmax(1), minmax(end)])
 colormap(jet)
@@ -245,15 +216,15 @@ colormap(jet)
 minmaxpdf = linspace(scalefreepars.kmin, scalefreepars.kmax, scalefreepars.kmax-scalefreepars.kmin+1);
 [x,y] = meshgrid(minmax, minmax);
 idx = round(linspace(1, numel(minmax), 25));
-surf(x(idx,idx),y(idx,idx),scalefreepars.P2D(x(idx,idx),y(idx,idx))/pars.N,'FaceAlpha',0.5,'EdgeColor','none');
+surf(x(idx,idx),y(idx,idx),scalefreepars.P2D(x(idx,idx),y(idx,idx))/pars.N,'FaceAlpha',0.5,'FaceColor',scalefreepars.colorvec,'EdgeColor','none');
 colormap(jet)
 
 % The 2D scatter plot underneath
 binwidth = hist.XBinEdges(2) - hist.XBinEdges(1);
 binsvalues = zeros(numel(minmax), numel(minmax));
-binsvalues(1:numel(minmax)-1, 1:numel(minmax)-1) = hist.Values;
+binsvalues(1:numel(minmax)-1, 1:numel(minmax)-1) = hist.Values./max(hist.Values, [], 'all');
 h = pcolor(minmax,minmax,binsvalues);
-h.ZData = -0.5*max(binsvalues, [], 'all')*ones(size(binsvalues));
+h.ZData = -0.5*max(scalefreepars.P2D(x(idx,idx),y(idx,idx))/pars.N, [], 'all')*ones(size(binsvalues));
 
 ax = gca;
 ax.ZTick(ax.ZTick < 0) = [];
@@ -263,7 +234,7 @@ colormap(jet)
 set(findall(gcf,'-property','FontName'),'FontName','Avenir')
 exportgraphics(f_2Dpdfs,'../Figures/Distributions/2D.pdf')
 
-close(f_2Dpdfs)
+% close(f_2Dpdfs)
 end
 function P = P2D(X,Y, kmin, kmax, degree, N)
     P = X.^(-degree) .* Y.^(-degree);
