@@ -22,7 +22,7 @@ odeoptions = odeset('RelTol', 1.0e-8,'AbsTol', 1.0e-8);
 %% Grids:
 % Axis square:
 unitsquare = [-1, -1, 1, 1; 1, -1, -1, 1];
-th = 0:pi/50:2*pi;
+th = 0:pi/200:2*pi;
 unitcircle = [cos(th); sin(th)];
 drawcircle = round(unitcircle);
 
@@ -36,71 +36,86 @@ in(1, :) = 0; in(end, :) = 0; in(:, 1) = 0; in(:, end) = 0;
 in(1, m-l:m+l) = 1; in(end, m-l:m+l) = 1; in(m-l:m+l, 1) = 1; in(m-l:m+l, end) = 1;
 
 %% Theta neurons parameters:
-pars.N = 10000;
+pars.N = 1000;
 pars.a_n = 0.666666666666666666667;
-tnow = 0; tend = 200;
+tnow = 0; tend = 100;
 seed = 3; rng(seed);
 
 %% Draw the problems with mappings, use PSR state:
-f_finalcond = figure('Renderer', 'painters', 'Position', [50 800 1000 200]); 
+f_finalcond = figure('Renderer', 'painters', 'Position', [-500 1600 1000 200]); 
 Zstart = -0.2 + 1i*0.8;
 
 % Random network:
 pars.eta0 = -0.2; pars.delta = 0.1; pars.K = -2;
 pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
 p = prepareOAparameters(make_randomparameters(pars, 0.3));
-idx = 1:5:p.Mk;
+idx = round(linspace(1, p.Mk, 20));
 
 OAIC = ones(p.Mk,1)*Zstart;
 [~, ZOA, bs] = OA_simulatenetwork(0, tend, OAIC, p, odeoptions);
 
 subplot(1,4,1); hold on; box on; axis square
-xlim([min(real(bs(end,:))) - 0.05, max(real(bs(end,:))) + 0.05]);
-ylim([min(imag(bs(end,:))) - 0.05, max(imag(bs(end,:))) + 0.05]);
-plot(real(ZOA), imag(ZOA), 'LineWidth', linewidth_total, 'color', p.colorvec);
-endline = ZOA(end-4) - ZOA(end);
-endpoint = ZOA(end) + 0.03*endline/abs(endline);
-plot_arrow(real(endpoint), imag(endpoint), real(ZOA(end)), imag(ZOA(end)),'linewidth', 2, ...
-    'color', p.colorvec,'facecolor', p.colorvec,'edgecolor', p.colorvec, 'headwidth',0.7,'headheight',3);
+length = norm(bs(end,end) - bs(end,1));
+xlim([min(real(bs(end,:))) - length*0.05, max(real(bs(end,:))) + length*0.05]);
+ylim([min(imag(bs(end,:))) - length*0.05, max(imag(bs(end,:))) + length*0.05]);
 plot(real(bs(end,:)), imag(bs(end,:)), 'Color', p.colorvec)
 scatter(real(bs(end,idx)), imag(bs(end,idx)), 200, p.colorvec, '.')
+ZOA = ZOA(1:370);
+plot(real(ZOA), imag(ZOA), 'LineWidth', linewidth_total, 'color', p.colorvec);
+endline = ZOA(end-100) - ZOA(end);
+endpoint = ZOA(end) + 0.008*endline/abs(endline);
+plot_arrow(real(endpoint), imag(endpoint), real(ZOA(end)), imag(ZOA(end)),'linewidth', 2, ...
+    'color', p.colorvec,'facecolor', p.colorvec,'edgecolor', p.colorvec, 'headwidth',0.5,'headheight',2);
+h = plot(cos(th), sin(th), '-k', 'LineWidth', 2);
+xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
+ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 
 subplot(1,4,2); hold on; box on;
 [edges, counts] = projectToHist(bs(end,:));
 xlim([0, 1]);
 histogram('BinEdges',edges,'BinCounts',counts, 'Normalization', 'pdf', 'FaceColor', p.colorvec)
-
+xlabel('\boldmath $$k$$','Interpreter','latex', 'FontSize', labelfont)
+ylabel('Density', 'FontSize', labelfont)
 
 
 % Scale-free network:
 pars.eta0 = -0.2; pars.delta = 0.1; pars.K = -2;
 pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
 p = prepareOAparameters(make_scalefreeparameters(pars, 3));
-idx = 1:5:p.Mk;
+idx = round(linspace(1, p.Mk, 25));
 
 OAIC = ones(p.Mk,1)*Zstart;
 [~, ZOA, bs] = OA_simulatenetwork(0, tend, OAIC, p, odeoptions);
 
-subplot(1,4,3); hold on; box on; axis square
-xlim([min(real(bs(end,:))) - 0.05, max(real(bs(end,:))) + 0.05]);
-ylim([min(imag(bs(end,:))) - 0.05, max(imag(bs(end,:))) + 0.05]);
-plot(real(ZOA), imag(ZOA), 'LineWidth', linewidth_total, 'color', p.colorvec);
-endline = ZOA(end-4) - ZOA(end);
-endpoint = ZOA(end) + 0.03*endline/abs(endline);
-plot_arrow(real(endpoint), imag(endpoint), real(ZOA(end)), imag(ZOA(end)),'linewidth', 2, ...
-    'color', p.colorvec,'facecolor', p.colorvec,'edgecolor', p.colorvec, 'headwidth',0.7,'headheight',3);
+sp = subplot(1,4,3); hold on; box on; axis square
+xlim([min(real(bs(end,:))) - length*0.05, max(real(bs(end,:))) + length*0.05]);
+ylim([min(imag(bs(end,:))) - length*0.05, max(imag(bs(end,:))) + length*0.05]);
 plot(real(bs(end,:)), imag(bs(end,:)), 'Color', p.colorvec)
 scatter(real(bs(end,idx)), imag(bs(end,idx)), 200, p.colorvec, '.')
+ZOA = ZOA(1:350);
+plot(real(ZOA), imag(ZOA), 'LineWidth', linewidth_total, 'color', p.colorvec);
+endline = ZOA(end-50) - ZOA(end);
+endpoint = ZOA(end) + 0.02*endline/abs(endline);
+plot_arrow(real(endpoint), imag(endpoint), real(ZOA(end)), imag(ZOA(end)),'linewidth', 2, ...
+    'color', p.colorvec,'facecolor', p.colorvec,'edgecolor', p.colorvec, 'headwidth',0.5,'headheight',2);
+h = plot(cos(th), sin(th), '-k', 'LineWidth', 2);
+xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
+ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
+% pos = sp.Position
+% sp.Position = [pos(1)+0.03, pos(2)+0.015, pos(3)-0.01, pos(4)-0.01]
 
-subplot(1,4,4); hold on; box on;
+sp = subplot(1,4,4); hold on; box on;
 [edges, counts] = projectToHist(bs(end,:));
 xlim([0, 1]);
 histogram('BinEdges',edges,'BinCounts',counts, 'Normalization', 'pdf', 'FaceColor', p.colorvec)
-
+xlabel('\boldmath $$k$$','Interpreter','latex', 'FontSize', labelfont)
+ylabel('Density', 'FontSize', labelfont)
+% pos = sp.Position
+% sp.Position = [pos(1)+0.03, pos(2)+0.015, pos(3)-0.03, pos(4)-0.03]
 
 % Export the figure:
-% set(findall(gcf,'-property','FontName'),'FontName','Avenir')
-% exportgraphics(f_finalcond,'../Figures/PhaseSpace/Mappings.pdf')
+set(findall(gcf,'-property','FontName'),'FontName','Avenir')
+exportgraphics(f_finalcond,'../Figures/Distributions/FinalConditions.pdf')
 
 
 %% Functions:
