@@ -36,7 +36,7 @@ color = '#298A3E';
 f_kempter = figure('Renderer', 'painters', 'Position', [50 800 1000 200]); 
 
 K_org = initarray(rand(pars.N)*2*KMAX - KMAX);
-weights = [0, 1.0e-5, 1.0e-1];
+weights = [0, 1.0e-3, 8.0e-2];
 for i = 1:3
     weight = weights(i);
     sbplt(i) = subplot(1,3,i); hold on; box on;
