@@ -21,12 +21,12 @@ end
 initarray = make_GPUhandle();
 
 %% Theta model parameters:
-h = 0.01; tnow = 0; tend = 2000;
+h = 0.01; tnow = 0; tend = 3000;
 
-pars.N = 50;
+pars.N = 100;
 pars.a_n = 0.666666666666666666667;
 seed = 2; rng(seed);
-IC = linspace(0, 2*pi - (2*pi)/(pars.N),pars.N)';
+IC = wrapToPi(rand(pars.N,1)*1.5*pi - pi); % linspace(0, 2*pi - (2*pi)/(pars.N),pars.N)';
 pars.e = zeros(pars.N, 1); %randcauchy(seed, pars.eta0, pars.delta, pars.N);
 
 KMAX = 10; etaMAX = 10;
@@ -35,11 +35,8 @@ color = '#298A3E';
 %% Figure handle:
 f_kempter = figure('Renderer', 'painters', 'Position', [50 800 1000 200]); 
 
-STDP = struct('window', @Kempter1999Window, 'Kupdate', @(K, W) K + W, 'w_i', 0, 'w_o', 0);
-plastopts = struct('SP', STDP, 'KMAX', KMAX, 'etaMAX', etaMAX);
-[t_org, ~, ~, Kmeans_org, ~, K_org] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
-
-weights = [1.0e-5, 1.0e-3, 1.0e-1];
+K_org = initarray(rand(pars.N)*2*KMAX - KMAX);
+weights = [0, 1.0e-5, 1.0e-1];
 for i = 1:3
     weight = weights(i);
     sbplt(i) = subplot(1,3,i); hold on; box on;
@@ -54,9 +51,10 @@ for i = 1:3
     b = normpdf(-3:0.005:3, 0, 1); b = b/sum(b); a = 1; zfilt = filter(b,a,z);
     if i == 1; ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont); end
     plot(t, abs(zfilt), '-k', 'LineWidth', 2)
-    
+%     p_org = plot(t_org, abs(z_org), '--k', 'LineWidth', 2); p_org.Color(4) = 0.5;
+
     yyaxis right
-    p_org = plot(t_org, Kmeans_org(2,:), 'LineWidth', 2, 'Color', color); p_org.Color(4) = 0.5;
+%     p_org = plot(t_org, Kmeans_org(2,:), '--', 'LineWidth', 2, 'Color', color); p_org.Color(4) = 0.5;
     plot(t, Kmeans(2,:), '-', 'LineWidth', 2, 'Color', color)
     ax = gca; ax.YAxis(1).Color = [0, 0, 0]; ax.YAxis(2).Color = color;
     if abs(ax.YTick(2) - ax.YTick(1)) < 1
