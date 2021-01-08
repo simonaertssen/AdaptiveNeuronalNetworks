@@ -1,8 +1,3 @@
-- Make a better figure of the 1D pdfs with the right colours.
-
-- Remake the 2Dpdfs using the right colours as well.
-
-- Check the colours of the different pdfs and order parameters:
 thetas:            blue       '#0072BD' [0 0.4470 0.7410]
 Z_A_ij:            blue       '#0072BD' [0 0.4470 0.7410]
 Z_MF:              black      '#000000' [0 0.0000 0.0000]
@@ -15,16 +10,14 @@ W_K:  yellow    '#EDB120' [0.9290 0.6940 0.1250]
 W_S:  orange    '#D95319' [0.8500 0.3250 0.0980]
 W_C:  purple    '#BA30D9' 
 
-- Make figure on the final state and distributions.
-
 - Investigate the jacobian: can we find stable equilibria??
 
 - Write about the STDP and IP results
 
-- Check the integrals and constants of the learning windows.
-
-- Write about rescaling the learning windows: difference between Carol-Cannon and Song (window parameters) and scaling of kempter window 
+- Make a better Win-Wout figure
 
 - Write about why there is a difference between the w_in and the w_out
+
+- Make a better figure of the different limit cycles between for the scale-free network.
 
 - Maybe: Make an example of the learning: how the windows change the synaptic coupling

@@ -102,7 +102,7 @@ plot_arrow(real(endpoint), imag(endpoint), real(ZOA(end)), imag(ZOA(end)),'linew
     'color', p.colorvec,'facecolor', p.colorvec,'edgecolor', p.colorvec, 'headwidth',0.5,'headheight',2);
 h = plot(cos(th), sin(th), '-k', 'LineWidth', 2);
 text(real(bs(end,3)), imag(bs(end,5)), '1', 'FontSize', titlefont-2, 'HorizontalAlignment', 'center', 'VerticalAlignment', 'bottom')
-text(real(bs(end,end-15)), imag(bs(end,end-2)), '0', 'FontSize', titlefont-2, 'HorizontalAlignment', 'left', 'VerticalAlignment', 'middle')
+text(real(bs(end,end-20)), imag(bs(end,end-2)), '0', 'FontSize', titlefont-2, 'HorizontalAlignment', 'left', 'VerticalAlignment', 'middle')
 xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 % pos = sp.Position
