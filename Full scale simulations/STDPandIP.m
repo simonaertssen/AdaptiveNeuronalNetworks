@@ -42,7 +42,7 @@ plastopts = struct('SP', STDP, 'KMAX', KMAX, 'etaMAX', etaMAX);
 [t, thetas_full, K, Kmeans, pars] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
 % drawthetas = spikesNaN(thetas_full);
 
-STDPfigure(0, pars, plastopts, t, thetas_full, K, Kmeans, titlefont, labelfont, 'STDPKempter', '#3AC1D6', export);
+STDPfigure(0, pars, plastopts, t, thetas_full, K, Kmeans, titlefont, labelfont, 'STDPKempter', '#298A3E', export);
 
 %% 2. Song window, no IP
 STDP = struct('window', @Song2012Window, 'Kupdate', @(K, W) K + KMAX*W);
@@ -81,7 +81,7 @@ plastopts = struct('SP', STDP, 'IP', true, 'KMAX', KMAX, 'etaMAX', etaMAX);
 
 [t, thetas_full, K, Kmeans, pars] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
 
-STDPfigure(0, pars, plastopts, t, thetas_full, K, Kmeans, titlefont, labelfont, 'STDPandIPKempter', '#3AC1D6', export);
+STDPfigure(0, pars, plastopts, t, thetas_full, K, Kmeans, titlefont, labelfont, 'STDPandIPKempter', '#298A3E', export);
 
 %% 5. Song window, with IP
 STDP = struct('window', @Song2012Window, 'Kupdate', @(K, W) K + KMAX*W);
@@ -127,7 +127,7 @@ title('Simulation results', 'FontSize', titlefont, 'FontWeight', 'normal')
 yyaxis left; ylim([0, 1]); xlim([t(1), t(end)]); 
 z = orderparameter(thetas);
 b = normpdf(-3:0.005:3, 0, 1); b = b/sum(b); a = 1; zfilt = filter(b,a,z);
-if idx == 0; ylabel('$Z(t)$','Interpreter','latex', 'FontSize', labelfont); end
+if idx == 0; ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont); end
 plot(t, abs(zfilt), '-k', 'LineWidth', 2)
 xticks(linspace(0, t(end), 3))
 
