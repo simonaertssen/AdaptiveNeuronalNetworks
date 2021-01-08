@@ -61,6 +61,14 @@ which shows that there might be large differences in size between the nodes. \\
 There are constraints on $\gamma$ to yield a scale-free network. When $0 < \gamma < 2$ the largest hub grows faster than $N$, so once its degree exceeds $N-1$ there are no more new nodes to connect to and the network will not be able to grow according to \eqref{eq:scalefreepdf}. A rigorous proof is given in \cite{Bassler2011}. For $\gamma = 2$, the system grows linearly, as we can see in \eqref{eq:scalefreecutoff}. When $2 < \gamma \leq 3$ we find the most scale-free networks, as for $\gamma > 3$ hubs are not sufficiently large and numerous to have much influence on the network
 \cite{BarabasiNetworkBook2016}.
 
+\begin{figure}[H]
+\centering
+\includegraphics[width = \textwidth]{../Figures/Distributions/1D.pdf}
+\caption{Univariate fixed-degree, random and scale-free distributions. The normalised histogram of $k \in \K$ follows $P(k)$ nicely as expected. The mean degree $\ }
+\label{fig:1Dpdfs}
+\end{figure}
+
+
 \subsection{Networks of theta neurons}
 We can easily extend the model to networks of neurons:
 \begin{align}

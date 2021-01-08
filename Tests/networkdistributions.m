@@ -32,6 +32,7 @@ xlim(limits); x = limits(1):0.01:limits(2);
 histogram(fixeddegreepars.degrees_i, 'Normalization', 'pdf', 'FaceColor', fixeddegreepars.colorvec);
 plot(x, fixeddegreepars.P(x)/pars.N, 'LineWidth', 3, 'Color', fixeddegreepars.colorvec);
 xline(fixeddegreepars.meandegree, 'k--', 'LineWidth', 1)
+text(fixeddegreepars.meandegree+0.05, plt.YLim(end), '$$\langle k \rangle$$', 'Interpreter', 'latex', 'FontSize',labelfont-5, 'VerticalAlignment', 'top', 'HorizontalAlignment', 'left')
 xlabel('Degree', 'Interpreter', 'none', 'FontSize', labelfont)
 ylabel('Density', 'Interpreter', 'none', 'FontSize', labelfont);
 
@@ -43,16 +44,17 @@ if abs(randompars.meandegree - sum(randompars.degrees_i)/pars.N) < 1.0e-3*random
 
 limits = round(randompars.meandegree + sqrt(randompars.meandegree)*[-3, 3]);
 
-subplot(1,3,2); hold on; grid on; axis square; box on;
+plt = subplot(1,3,2); hold on; grid on; axis square; box on;
 title("Random", 'FontSize', titlefont)
-xlim(limits); x = limits(1):limits(2);
+xlim(limits); x = limits(1):limits(2); ylim([0, 0.05]);
 histogram(randompars.degrees_i, 'Normalization', 'pdf', 'FaceColor', randompars.colorvec);
 plot(x, randompars.P(x)/pars.N, 'LineWidth', 3, 'Color', randompars.colorvec);
-xline(randompars.meandegree, 'k--', 'LineWidth', 2)
+xline(randompars.meandegree, 'k--', 'LineWidth', 1)
+text(randompars.meandegree+0.5, plt.YLim(end), '$$\langle k \rangle$$', 'Interpreter', 'latex', 'FontSize',labelfont-5, 'VerticalAlignment', 'top', 'HorizontalAlignment', 'left')
 xlabel('Degree', 'Interpreter', 'none', 'FontSize', labelfont)
 
 %% A 1D scale free network: CORRECT
-kmin = 68; kmax = 200;
+kmin = 63; kmax = 252;
 scalefreepars = make_scalefreeparameters(pars, 3, kmin, kmax);
 scalefreepars.meandegree
 
@@ -61,13 +63,14 @@ if abs(scalefreepars.meandegree - sum(scalefreepars.degrees_i)/pars.N) < 1.0e-3*
 
 limits = [kmin, kmax];
 
-plt2 = subplot(1,3,3); hold on; grid on; axis square; box on;
+plt = subplot(1,3,3); hold on; grid on; axis square; box on;
 title("Scale-free", 'FontSize', titlefont)
 
-xlim([limits(1) - 10, limits(2) + 10]); x = limits(1):limits(2);
+xlim([limits(1) - 10, limits(2) + 10]); x = limits(1):limits(2); ylim([0, 0.035]);
 histogram(scalefreepars.degrees_i, 'Normalization', 'pdf', 'BinEdges', linspace(kmin, kmax, 20), 'FaceColor', scalefreepars.colorvec);
 plot(x, scalefreepars.P(x)/pars.N, 'LineWidth', 3, 'Color', scalefreepars.colorvec);
-xline(scalefreepars.meandegree, 'k--', 'LineWidth', 2)
+xline(scalefreepars.meandegree, 'k--', 'LineWidth', 1)
+text(scalefreepars.meandegree+1, plt.YLim(end), '$$\langle k \rangle$$', 'Interpreter', 'latex', 'FontSize',labelfont-5, 'VerticalAlignment', 'top', 'HorizontalAlignment', 'left')
 xlabel('Degree', 'Interpreter', 'none', 'FontSize', labelfont)
 % pos = plt2.Position; plt2.Position = [pos(1) - 0.09, pos(2), pos(3), pos(4)];
 
