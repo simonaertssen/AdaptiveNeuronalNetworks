@@ -1,4 +1,6 @@
-- Make a better figure of the 1D pdfs
+- Make a better figure of the 1D pdfs with the right colours.
+
+- Remake the 2Dpdfs using the right colours as well.
 
 - Check the colours of the different pdfs and order parameters:
 thetas:            blue       '#0072BD' [0 0.4470 0.7410]
@@ -9,13 +11,13 @@ Z_fixeddegree:     light blue '#4DBEEE' [0.3010 0.7450 0.9330]
 Z_random:          green      '#77AC30' [0.4660 0.6740 0.1880]
 Z_scalefree:       dark red   '#A2142F' [0.6350 0.0780 0.1840]
 
-
 W_K:  yellow    '#EDB120' [0.9290 0.6940 0.1250]
 W_S:  orange    '#D95319' [0.8500 0.3250 0.0980]
 W_C:  purple    '#BA30D9' 
 
+- Make figure on the final state and distributions.
 
-- Make an example of the learning: how the windows change the synaptic coupling
+- Investigate the jacobian: can we find stable equilibria??
 
 - Write about the STDP and IP results
 
@@ -24,3 +26,5 @@ W_C:  purple    '#BA30D9'
 - Write about rescaling the learning windows: difference between Carol-Cannon and Song (window parameters) and scaling of kempter window 
 
 - Write about why there is a difference between the w_in and the w_out
+
+- Maybe: Make an example of the learning: how the windows change the synaptic coupling
