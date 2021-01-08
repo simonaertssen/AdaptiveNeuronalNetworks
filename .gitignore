@@ -5,6 +5,7 @@
 
 # Ignore MatCont
 MatCont/
+Meetings/
 
 # No pycache and build folders, no notebook backups:
 build/
