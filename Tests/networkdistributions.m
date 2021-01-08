@@ -1,7 +1,7 @@
 close all; clear all; clc;
 addpath('../Functions');
-labelfont = 15;
-titlefont = 15;
+labelfont = 13;
+titlefont = 13;
 
 make1Dplots = true;
 make2Dplots = true;
@@ -32,7 +32,7 @@ xlim(limits); x = limits(1):0.01:limits(2);
 histogram(fixeddegreepars.degrees_i, 'Normalization', 'pdf', 'FaceColor', fixeddegreepars.colorvec);
 plot(x, fixeddegreepars.P(x)/pars.N, 'LineWidth', 3, 'Color', fixeddegreepars.colorvec);
 xline(fixeddegreepars.meandegree, 'k--', 'LineWidth', 1)
-text(fixeddegreepars.meandegree+0.05, plt.YLim(end), '$$\langle k \rangle$$', 'Interpreter', 'latex', 'FontSize',labelfont-5, 'VerticalAlignment', 'top', 'HorizontalAlignment', 'left')
+text(fixeddegreepars.meandegree+0.05, plt.YLim(end), '$$\langle k \rangle$$', 'Interpreter', 'latex', 'FontSize',labelfont-3, 'VerticalAlignment', 'top', 'HorizontalAlignment', 'left')
 xlabel('Degree', 'Interpreter', 'none', 'FontSize', labelfont)
 ylabel('Density', 'Interpreter', 'none', 'FontSize', labelfont);
 
@@ -50,7 +50,7 @@ xlim(limits); x = limits(1):limits(2); ylim([0, 0.05]);
 histogram(randompars.degrees_i, 'Normalization', 'pdf', 'FaceColor', randompars.colorvec);
 plot(x, randompars.P(x)/pars.N, 'LineWidth', 3, 'Color', randompars.colorvec);
 xline(randompars.meandegree, 'k--', 'LineWidth', 1)
-text(randompars.meandegree+0.5, plt.YLim(end), '$$\langle k \rangle$$', 'Interpreter', 'latex', 'FontSize',labelfont-5, 'VerticalAlignment', 'top', 'HorizontalAlignment', 'left')
+text(randompars.meandegree+0.5, plt.YLim(end), '$$\langle k \rangle$$', 'Interpreter', 'latex', 'FontSize',labelfont-3, 'VerticalAlignment', 'top', 'HorizontalAlignment', 'left')
 xlabel('Degree', 'Interpreter', 'none', 'FontSize', labelfont)
 
 %% A 1D scale free network: CORRECT
@@ -70,7 +70,7 @@ xlim([limits(1) - 10, limits(2) + 10]); x = limits(1):limits(2); ylim([0, 0.035]
 histogram(scalefreepars.degrees_i, 'Normalization', 'pdf', 'BinEdges', linspace(kmin, kmax, 20), 'FaceColor', scalefreepars.colorvec);
 plot(x, scalefreepars.P(x)/pars.N, 'LineWidth', 3, 'Color', scalefreepars.colorvec);
 xline(scalefreepars.meandegree, 'k--', 'LineWidth', 1)
-text(scalefreepars.meandegree+1, plt.YLim(end), '$$\langle k \rangle$$', 'Interpreter', 'latex', 'FontSize',labelfont-5, 'VerticalAlignment', 'top', 'HorizontalAlignment', 'left')
+text(scalefreepars.meandegree+1, plt.YLim(end), '$$\langle k \rangle$$', 'Interpreter', 'latex', 'FontSize',labelfont-3, 'VerticalAlignment', 'top', 'HorizontalAlignment', 'left')
 xlabel('Degree', 'Interpreter', 'none', 'FontSize', labelfont)
 % pos = plt2.Position; plt2.Position = [pos(1) - 0.09, pos(2), pos(3), pos(4)];
 

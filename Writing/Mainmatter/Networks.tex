@@ -41,6 +41,13 @@ P(k) = e^{-\kmean} \frac{\kmean^{k}}{k !} \hspace{15mm} \K = [0,N] \label{eq:poi
 \end{align}
 with a mean $\mu = \kmean$ and standard deviation $\sigma = \sqrt{\kmean}$. Both \eqref{eq:binomialpdf} and \eqref{eq:poissonpdf} describe similar quantities, but the latter is used more often due to its analytical simplicity \cite{BarabasiNetworkBook2016}.
 
+\begin{figure}[H]
+\centering
+\includegraphics[width = \textwidth]{../Figures/Distributions/1D.pdf}
+\caption{Univariate fixed-degree, random and scale-free distributions with the same average node degree $\k$ = 100. The normalised histogram of $k \in \K$ follows $P(k)$ nicely as expected. Over the course of this work the colours used to indicate the different topologies will remain constant.}
+\label{fig:1Dpdfs}
+\end{figure}
+
 
 \subsection{Scale-free networks}
 What we can often observe in nature is the preferential attachment to nodes with a high degree \cite{Bullmore2010}: the rich or famous tend to get more rich or famous. This trait is also described as the 80/20 rule by Pareto. Networks with this property consist of a small number of highly connected nodes, and a large number of low degree nodes. We can represent this with a power law distribution:
@@ -60,14 +67,6 @@ For \eqref{eq:scalefreepdf} this results in:
 which shows that there might be large differences in size between the nodes. \\
 There are constraints on $\gamma$ to yield a scale-free network. When $0 < \gamma < 2$ the largest hub grows faster than $N$, so once its degree exceeds $N-1$ there are no more new nodes to connect to and the network will not be able to grow according to \eqref{eq:scalefreepdf}. A rigorous proof is given in \cite{Bassler2011}. For $\gamma = 2$, the system grows linearly, as we can see in \eqref{eq:scalefreecutoff}. When $2 < \gamma \leq 3$ we find the most scale-free networks, as for $\gamma > 3$ hubs are not sufficiently large and numerous to have much influence on the network
 \cite{BarabasiNetworkBook2016}.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width = \textwidth]{../Figures/Distributions/1D.pdf}
-\caption{Univariate fixed-degree, random and scale-free distributions. The normalised histogram of $k \in \K$ follows $P(k)$ nicely as expected. The mean degree $\ }
-\label{fig:1Dpdfs}
-\end{figure}
-
 
 \subsection{Networks of theta neurons}
 We can easily extend the model to networks of neurons:

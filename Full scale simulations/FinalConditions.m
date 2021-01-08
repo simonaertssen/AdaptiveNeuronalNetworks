@@ -67,14 +67,16 @@ endpoint = ZOA(end) + 0.008*endline/abs(endline);
 plot_arrow(real(endpoint), imag(endpoint), real(ZOA(end)), imag(ZOA(end)),'linewidth', 2, ...
     'color', p.colorvec,'facecolor', p.colorvec,'edgecolor', p.colorvec, 'headwidth',0.5,'headheight',2);
 h = plot(cos(th), sin(th), '-k', 'LineWidth', 2);
+text(real(bs(end,1)), imag(bs(end,2)), '1', 'Interpreter', 'latex', 'FontSize', titlefont-2, 'HorizontalAlignment', 'center', 'VerticalAlignment', 'bottom')
+text(real(bs(end,end-2)), imag(bs(end,end)), '0', 'Interpreter', 'latex', 'FontSize', titlefont-2, 'HorizontalAlignment', 'left', 'VerticalAlignment', 'middle')
 xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 
 subplot(1,4,2); hold on; box on;
-[edges, counts] = projectToHist(bs(end,:));
+[edges, counts] = projectToHist(flip(bs(end,:)));
 xlim([0, 1]);
 histogram('BinEdges',edges,'BinCounts',counts, 'Normalization', 'pdf', 'FaceColor', p.colorvec)
-xlabel('\boldmath $$k$$','Interpreter','latex', 'FontSize', labelfont)
+xlabel('Curve length', 'FontSize', labelfont)
 ylabel('Density', 'FontSize', labelfont)
 
 
@@ -99,16 +101,18 @@ endpoint = ZOA(end) + 0.02*endline/abs(endline);
 plot_arrow(real(endpoint), imag(endpoint), real(ZOA(end)), imag(ZOA(end)),'linewidth', 2, ...
     'color', p.colorvec,'facecolor', p.colorvec,'edgecolor', p.colorvec, 'headwidth',0.5,'headheight',2);
 h = plot(cos(th), sin(th), '-k', 'LineWidth', 2);
+text(real(bs(end,3)), imag(bs(end,5)), '1', 'Interpreter', 'latex', 'FontSize', titlefont-2, 'HorizontalAlignment', 'center', 'VerticalAlignment', 'bottom')
+text(real(bs(end,end-15)), imag(bs(end,end-2)), '0', 'Interpreter', 'latex', 'FontSize', titlefont-2, 'HorizontalAlignment', 'left', 'VerticalAlignment', 'middle')
 xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 % pos = sp.Position
 % sp.Position = [pos(1)+0.03, pos(2)+0.015, pos(3)-0.01, pos(4)-0.01]
 
 sp = subplot(1,4,4); hold on; box on;
-[edges, counts] = projectToHist(bs(end,:));
+[edges, counts] = projectToHist(flip(bs(end,:)));
 xlim([0, 1]);
 histogram('BinEdges',edges,'BinCounts',counts, 'Normalization', 'pdf', 'FaceColor', p.colorvec)
-xlabel('\boldmath $$k$$','Interpreter','latex', 'FontSize', labelfont)
+xlabel('Curve length', 'FontSize', labelfont)
 ylabel('Density', 'FontSize', labelfont)
 % pos = sp.Position
 % sp.Position = [pos(1)+0.03, pos(2)+0.015, pos(3)-0.03, pos(4)-0.03]
