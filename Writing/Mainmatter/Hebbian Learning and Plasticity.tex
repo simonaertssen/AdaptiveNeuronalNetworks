@@ -24,6 +24,13 @@ We can think of the coupling matrix as the continuous interpretation of $\kappa 
 \end{align}
 The absolute value ensures that we capture the magnitude of the coupling strength. The reason we want to distinguish between $\kmean$ and $\hat{\kmean}$ is that for some parts of the investigation it is beneficial to study how inhibitive and excitatory coupling strengths influence each other.\\
 
+Also the network of Theta neurons needs a redefinition:
+\begin{align}
+\dot{\theta}_{i} &=\left(1-\cos \theta_{i}\right)+\left(1+\cos \theta_{i}\right) \cdot \left[\eta_{i} + I_{i}(t)\right] \qquad \theta_i \in \T^N  \label{eq:thetaneuronnetwork_adaptive} \\
+I_{i}(t) &=\frac{1}{\kmean} \sum_{j=1}^{N} K_{i j} \cdot \mathcal{P}_{n}(\theta_{j}) \label{eq:thetaneuronnetworkcurrent_adaptive}
+\end{align}
+
+
 The functions $W(t)$ that relate $\Delta t_{ij}$ to $\Delta K_{ij}$ are called \textsl{learning windows},  as they define a range in which $K_{ij}$ is able to adapt or \textsl{learn}, and also when learning is optimal. When signals between neurons show a very large time difference (negative or positive) we do not expect them to be correlated. Because the learning windows are generally not symmetrical we can also expect the coupling matrix to be asymmetrical.
 
 Another characteristic is the integral over the learning window. A window with a negative integral directs synaptic strengths mostly towards inhibitory behaviour, and vice versa with a positive integral. An integral of zero would mean that both inhibitory and excitatory synapses are stimulated equally. It has been proven that $\int W(\tau) \mathop{d\tau}$ is the magnitude of the correlation between signals \cite{Gerstner2002}. \\
@@ -41,7 +48,7 @@ Following the notation in \cite{Kempter1999}, we will denote the sequence of act
 \label{eq:KempterSTDPFormulation1} \\
 &= \sum_{t_i^{n}\in \mathcal{T}} w^{\mathrm{out}} + \sum_{t_{j}^{f} \in \mathcal{T}} w^{\mathrm{in}} + \sum_{t_{j}^{f}, \: t_i^{n} \in \mathcal{T}} \hspace{-2mm} W (t_{j}^{f}-t_i^{n} ) \label{eq:KempterSTDPFormulation2}
 \end{align}
-with $\mathcal{T}$ the period over which learning occurs. $w^{\mathrm{in}} > 0$ and $w^{\mathrm{out}} < 0$ are small weights on the in- and outgoing action potentials. These can be used to counteract the inhibitive or excitatory nature of the results of $W$ and are necessary for $K_{ij}$ to reach an equilibrium. This is proven from the average learning dynamics, \cite{Kempter1999}. In \eqref{eq:KempterSTDPFormulation1} we can recognise the correlation between signals as a convolution over the learning window. \\
+with $\mathcal{T}$ the period over which learning occurs. $w^{\mathrm{in}} > 0$ and $w^{\mathrm{out}} < 0$ are small weights on the in- and outgoing action potentials. These can be used to counteract the inhibitive or excitatory nature of the results of $W$ and are necessary for $K_{ij}$ to reach an equilibrium. This is proven from the average learning dynamics, \cite{Kempter1999}. In \eqref{eq:KempterSTDPFormulation1} we can recognise the correlation between signals as a convolution over the learning window. We will refer to \eqref{eq:KempterSTDPFormulation2} as the Kempter method. \\
 
 The following learning window is proposed:
 \begin{align}
@@ -55,13 +62,13 @@ Here $t$ is the delay between presynaptic spike arrival and postsynaptic firing,
 
 To counteract the excitatory nature of the learning window, the authors propose $w^{\mathrm{in}} = A$ and $w^{\mathrm{out}} = -1.0475 \cdot A$ so that the amplitude of these weights is on the same order as the magnitude of the learning window \cite{Kempter1999}. This is a regulatory process, as neurons are punished for sending out  many spikes over time by decreasing their influence over neighbours more than the increase in influence of their neighbours over them. This threshold can be overcome by teaching the neurons to spike at the right time (with respect to its neighbours' spikes) as then the learning window yields an increase in synaptic strength. This process is inherently asymmetric. \\
 
-Using different processes to generate spike trains, the learning equation \eqref{eq:KempterSTDPFormulation2} converges to a stable equilibrium \cite{Kempter1999}. The question will now be whether that is still the case when we will apply \STDP to our network of Theta neurons, as changes to the coupling strength will also influence the spiking dynamics between neurons, which in turn will affect the learning again.\\
+Using different probabilistic processes to generate spike trains, the learning equation \eqref{eq:KempterSTDPFormulation2} converges to a stable equilibrium \cite{Kempter1999}. The question will now be whether that is still the case when we will apply \STDP to our network of Theta neurons, as changes to the coupling strength will also influence the spiking dynamics between neurons, which in turn will affect the learning again.\\
 
 Another formulation of \STDP as a mathematical model can be found in \cite{Song2000}. It is postulated without being concerned about the biological aspect too much, simplifying some of the ideas of \cite{Kempter1999}. The synaptic strengths are simply updated with:
 \begin{align}
 \Delta K_{ij} &= K^{\rm max} \cdot \sum_{t_{j}^{f}, \: t_i^{n} \in \mathcal{T}} \hspace{-2mm} W (t_{j}^{f}-t_i^{n} ) \label{eq:SongSTDPFormulation}
 \end{align}
-where $K^{\rm max}$ is the maximum allowed synaptic strength, so that we can think of \eqref{eq:SongSTDPFormulation} as taking a percentage of the maximum coupling. The authors also constrain $0 \leq K_{ij} \leq K^{\rm max}$, as there is no regulatory process like in \eqref{eq:KempterSTDPFormulation2}. In their further work on \STDP and \IP the authors booked remarkable progress, and their work is very interesting for our application \cite{Song2017}. 
+where $K^{\rm max}$ is the maximum allowed synaptic strength, so that we can think of \eqref{eq:SongSTDPFormulation} as taking a percentage of the maximum coupling. The authors also constrain $0 \leq K_{ij} \leq K^{\rm max}$, as there is no regulatory process like in \eqref{eq:KempterSTDPFormulation2}. In their further work on \STDP and \IP the authors booked remarkable progress, and their work on the Izhikevich model is very interesting for our application \cite{Song2017}. We will refer to \eqref{eq:SongSTDPFormulation} as the Song method. 
 
 The learning window is then again defined as a discontinuous function:
 \begin{align}
@@ -81,9 +88,14 @@ Extending the work of \cite{Song2000} we can find a brief investigation of netwo
 \begin{align}
 W(t)_C = A_{p} \cdot \exp \left(\frac{-\left(t - 15 \right)^{2}}{ \tau_{p}}\right) - A_{n} \cdot \exp \left(\frac{-\left(t - 20\right)^{2}}{ \tau_{n}}\right)  \label{eq:learningwindowChrolCannon2012}
 \end{align}
-where $A_{p}=0.23$, $A_{n}=0.15$, $\tau_{p}=200$ and $\tau_n = 2000$. $\int W(s)_C \mathrm{d}s = -6.0 \times 10^{-3}$. \\
+where $A_{p}=0.23$, $A_{n}=0.15$, $\tau_{p}=200$ and $\tau_n = 2000$. $\int W(s)_C \mathop{d s} = -6.0 \times 10^{-3}$. \\
 
-When comparing the qualities of the different learning windows presented here, one can quickly notice the difference in magnitude between the learning windows. That does not necessarily include the magnitude of the correlation, but the magnitude of the window itself. In \eqref{eq:learningwindowKempter1999}, the learning rate is a few orders of magnitude smaller than in \eqref{eq:learningwindowChrolCannon2012} and this resulted in extremely slow convergence when testing. For \eqref{eq:learningwindowSong2000} this issue was solved in \cite{ChrolCannon2012} by using $A _p = 0.1$ and $A_n = -0.12$. In the same spirit, we will therefore use $A = 8.0 \times 10^{-2}$ in \eqref{eq:learningwindowKempter1999}. These alterations yield $\int W(\tau)_S \mathop{d \tau} = -4.0 \times 10^{-4}$ and $\int W(\tau)_K \mathop{d \tau} = 3.8 \times 10^{-4}$.
+When comparing the qualities of the different learning windows presented here, one can quickly notice the difference in magnitude between the learning windows. That does not necessarily include the magnitude of the correlation, but the magnitude of the window itself. In \eqref{eq:learningwindowKempter1999}, the learning rate is a few orders of magnitude smaller than in \eqref{eq:learningwindowChrolCannon2012} and this resulted in extremely slow convergence when testing. For \eqref{eq:learningwindowSong2000} this issue was solved in \cite{ChrolCannon2012} by using $A _p = 0.1$ and $A_n = -0.12$. In the same spirit, we will therefore use $A = 8.0 \times 10^{-2}$ in \eqref{eq:learningwindowKempter1999}. These alterations yield $\int W(\tau)_S \mathop{d \tau} = -4.0 \times 10^{-4}$ and $\int W(\tau)_K \mathop{d \tau} = 3.8 \times 10^{-4}$.\\
+
+%The learning windows generally have $W(t^{\ast}) = 0$ for $t^{\ast} \geq 0$. This means that no learning will take place when the delay between neuron spikes is exactly $t^{\ast} \geq 0$. The triphasic windows show two of those points. 
+
+It is important to notice that learning only occurs when neurons spike, so that equilibrium states will disturb the learning process. However, these states were rarely encountered during the testing process, and it seems like there continues to exist enough randomness in the states of $\theta_i$ to persist spiking.
+When implementing \STDP, a time-step smaller than 0.01 is necessary, otherwise important details in the learning dynamics that are captured by the shape of the learning window will be lost. 
 
 \begin{figure}[H]
 \centering
@@ -92,10 +104,6 @@ When comparing the qualities of the different learning windows presented here, o
 \label{fig:LearningWindows}
 \end{figure}
 
-%The learning windows generally have $W(t^{\ast}) = 0$ for $t^{\ast} \geq 0$. This means that no learning will take place when the delay between neuron spikes is exactly $t^{\ast} \geq 0$. The triphasic windows show two of those points. 
-
-It is important to notice that learning only occurs when neurons spike, so that equilibrium states will disturb the learning process. However, these states were rarely encountered during the testing process, and it seems like there continues to exist enough randomness in the states of $\theta_i$ to persist spiking.
-When implementing \STDP, a time-step smaller than 0.01 is necessary, otherwise important details in the learning dynamics that are captured by the shape of the learning window will be lost. \\
 
 In recent years, criticism on \STDP has been growing, as experimental data has shown that \STDP is usually accompanied by homeostatic plasticity of the neurons excitability and the synaptic strength. Basing our learning behaviour on the correlation between neuronal activity can be quite unstable: changes to the synaptic strength cause changes in the postsynaptic firing rate, which generates further changes to the synaptic strength in a positive feedback loop. Processes like \textsl{intrinsic plasticity} (\IP), where one neuron's excitability changes over time as to self-regulate sensitivity to incoming action potentials, or \textsl{synaptic scaling}, where synapse characteristics are adjusted in unison to counteract positive feedback loops, have proven to stabilise the synchronisation \cite{ChrolCannon2014, Kirkwood2019}. When \STDP and \IP are combined, it seems like the two process balance each other out and stable network topologies can be found \cite{Song2017}.
 %We can model intrinsic plasticity by adjusting the neuron's excitability as the inverse of the firing rate: he more spikes that a neuron will receive, the less affected it is \cite{Song2017}.  An observed phenomenon is that the excitability evolves together with the coupling strength, but that at the extremes this relation reverses \cite{Debanne2017, Debanne2018}.  These types of plasticities should be relatively easy to implement but have no impact on the network topology.
@@ -106,11 +114,15 @@ There is no upper or lower bound on the synapse strength, and generally connecti
 \begin{align}
 K_{ij}^s = K_{ij} \frac{\frac{1}{N} \sum_{i,j} K_{ij}}{\sum_{i} K_{ij}}
 \end{align}
-In this way, the out-degrees will remain constant. Using this approach, something has to remain constant, whether that is $\kmean$, or $\kmean^2$ or any other property of the adjacency matrix. However, this property is not what we are after: we want a method that is able to change the network topology entirely.
+In this way, the out-degrees will remain constant. Using this approach, something has to remain constant, whether that is $\kmean$, or $\kmean^2$ or any other property of the adjacency matrix. However, this property is not one we are after: we want a method that is able to change the network topology entirely.
 
 
 \subsection{Intrinsic plasticity}
-Instead of scaling the weights to preserve a certain quantity in the network, we can allow the neurons to adjust their sensitivity to incoming signals. So when some synaptic strengths are increased, we can reduce the excitability, and vice-versa. This should counteract positive feedback. In \cite{Song2017} such a method is introduced in detail. We can simply update $\eta_{i} \leftarrow \eta_{i} + \eta_{\max } \cdot \phi_{i}$, where: 
+Instead of scaling the weights to preserve a certain quantity in the network, we can allow the neurons to adjust their sensitivity to incoming signals. So when some synaptic strengths are increased, we can reduce the excitability, and vice-versa. This should counteract positive feedback. 
+
+If we look at the formulation of the network of Theta neurons \eqref{eq:thetaneuronnetworkcurrent_adaptive}, we can see that $\eta_i$ is the threshold on $I_i(t)$ for which the result of the \PRC will be positive or negative. The neuron action potentials $\mathcal{P}_n(\theta_j)$ are scaled by the coupling matrix and the mean node degree. We expect that when neurons learn to adapt $K_{ij}$ and $\eta_i$, the two will try to cancel each other out.
+
+In \cite{Song2017} an \IP method is introduced in detail. We can simply update $\eta_{i} \leftarrow \eta_{i} + \eta_{\max } \cdot \phi_{i}$, where: 
 \begin{minipage}{.45\textwidth}
    \centering
    \begin{figure}[H]
@@ -131,7 +143,9 @@ Instead of scaling the weights to preserve a certain quantity in the network, we
 \end{align}
 \vspace{10mm}
 \end{minipage}
-The argument $t$ represents the time that has passed between successive spike of the same neuron, the \textsl{inter-spike interval} (\ISI). This is always a positive number.
+The argument $t$ represents the time that has passed between successive spike of the same neuron, the \textsl{inter-spike interval} (\ISI). This is always a positive number. \\
+
+
 
 %\begin{figure}[H]
 %\centering

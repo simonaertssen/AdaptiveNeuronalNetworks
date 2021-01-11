@@ -1,27 +1,30 @@
 % !TEX root = ../main.tex
 \newpage
 \section{\mywork Emerging Network Topologies}
-\subsection{\STDP applied to networks of theta neurons}
 %\textcolor{red}{TODO}: \textsl{explain in detail how the different methods \cref{eq:KempterSTDPFormulation2,eq:SongSTDPFormulation} will be implemented, using \STDP coupled with \IP.}
 
-We will now investigate what topologies emerge from the learning procedures described in Chapter \ref{sec:HebbianLearningAndSynapticPlasticity}.
+We will now investigate what topologies emerge from the learning procedures described in Chapter \ref{sec:HebbianLearningAndSynapticPlasticity}. Are the approaches presented in \cite{Kempter1999, Song2000, Song2017, ChrolCannon2012} plausible within the context of the Theta model? Do we obtain similar results concerning synchronisation and topology? Is there a reason for only allowing the network to make excitatory ($K_{ij} \geq 0$) connections? 
 
-To reflect a more biologically plausible synaptic strength, we will constrain $-K^{\rm max}$
+\subsection{Conditions of the network}
+As we saw in Chapter \ref{sec:MFRs}, the typical range for the coupling strength $\kappa$ and the mean excitability $\eta_0$ to alter the macroscopic state of the network drastically is fairly large. Using the Kempter method \eqref{eq:KempterSTDPFormulation2}, there is no limit on the magnitude of $K$, and convergence of the node degrees was observed within the interval [-100, 100]. 
 
-\subsection{Initial conditions of the network}
-The networks of Theta neurons will be initialised as equidistantly distributed over $\T$, so that $| Z(0) |$ = 0. The excitability $\eta$ is set to zero for all neurons, and will only change when \IP is active. s
+When using the Song method \eqref{eq:SongSTDPFormulation} we will constrain $-K^{\rm max} \leq K_{ij} \leq K^{\rm max}$ to allow neurons to both exhibit exitatory and inhibitory behaviour. When testing different values of $K^{\rm max}$ no significant difference was observed in the results, except the time of reaching convergence of $\kmean$. To optimally compare the two methods we will use $K^{\rm max}$ = 100. \\
 
-\subsection{Tuning hyperparameters with \texorpdfstring{$W_K$}{TEXT}}
-We decided to scale all learning windows presented in Chapter \ref{sec:HebbianLearningAndSynapticPlasticity} to the same order of magnitude, to make for a fair comparison of the learning dynamics over time. What is left now is to tune the hyperparameters $w^{\mathrm{in}}$ and $w^{\mathrm{out}}$. Looking at Figure \ref{KempterWinWout}, we can see that we cannot simply use the same magnitude as the learning window: the dynamics are disturbed by the large discrete changes induced by $w^{\mathrm{in}}$ and $w^{\mathrm{out}}$. A better solution is obtained by using 10$^{-3}$.
+The networks of Theta neurons will be initialised with $\theta_i$ equidistantly distributed over $\T$, so that $| Z(0) |$ = 0 exactly. The excitabilities $\eta_i$ are set to zero for all neurons. 
+When investigating \STDP + \IP, the excitability is allowed to change over the same domain as $K^{\rm max}$, in accrodance to our comments on $\eta_i$ and $I_i$ cancelling each other out.
+
+\subsection{Tuning hyperparameters for \texorpdfstring{$W_K$}{TEXT}}
+We decided to scale all learning windows presented in Chapter \ref{sec:HebbianLearningAndSynapticPlasticity} to the same order of magnitude, to make for a fair comparison of the learning dynamics over time. What is left now is to tune the hyperparameters $w^{\mathrm{in}}$ and $w^{\mathrm{out}}$. Looking at Figure \ref{fig:KempterWinWout}, we can see that we cannot simply use the same magnitude as the learning window: the dynamics are disturbed by the large discrete changes induced by $w^{\mathrm{in}}$ and $w^{\mathrm{out}}$. A better solution is obtained by using 10$^{-3}$.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width = \textwidth]{../Figures/Learning/KempterWinWout.pdf}
-\caption{Tuning of the hyperparameters $w^{\mathrm{in}}$ and $w^{\mathrm{out}}$. Left: the learning dynamics with zero weights, as a benchmark. Middle: the learning dynamics for small, non-zero weights. The mean coupling strength is higher, but the overall synchronisation is lower. This might yield an interesting topological structure. Right: the learning dynamics with the same magnitude as the learning window disturb the learning process.}
+\caption{Tuning of the hyperparameters $w^{\mathrm{in}}$ and $w^{\mathrm{out}}$. The radius of the order parameter is initialised as zero and quickly becomes non-zero. When neurons start bursting we can see a big drop in synchronisation, and a large increase in $\k$, meaning that the \STDP method works. Left: the learning dynamics with zero weights, as a benchmark. Middle: the learning dynamics for small, non-zero weights. The mean coupling strength is higher, but the overall synchronisation is lower. This might yield an interesting topological structure. Right: the learning dynamics with the same magnitude as the learning window disturb the learning process.}
 \label{fig:KempterWinWout}
 \end{figure}
 
 
+\subsection{\STDP applied to networks of theta neurons}
 \subsection{Results}
 \begin{figure}[H]
 \centering
@@ -30,6 +33,7 @@ We decided to scale all learning windows presented in Chapter \ref{sec:HebbianLe
 \label{fig:STDP}
 \end{figure}
 
+\subsection{\STDP + \IP applied to networks of theta neurons}
 \begin{figure}[H]
 \centering
 \includegraphics[height = \textheight]{../Figures/Learning/STDPandIP.pdf}
