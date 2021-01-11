@@ -20,7 +20,7 @@ end
 initarray = make_GPUhandle();
 
 %% Theta model parameters:
-h = 0.01; tnow = 0; tend = 4000;
+h = 0.01; tnow = 0; tend = 5000;
 
 pars.N = 100;
 pars.a_n = 0.666666666666666666667;
@@ -126,7 +126,7 @@ sbplt(1) = subplot(numfigs,3,1+idx); hold on; axis square; box on;
 title('Simulation results', 'FontSize', titlefont, 'FontWeight', 'normal')
 yyaxis left; ylim([0, 1]); xlim([t(1), t(end)]); 
 z = orderparameter(thetas);
-b = normpdf(-3:0.005:3, 0, 1); b = b/sum(b); a = 1; zfilt = filter(b,a,z);
+b = normpdf(-3:0.001:3, 0, 1); b = b/sum(b); a = 1; zfilt = filter(b,a,z);
 if idx == 0; ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont); end
 plot(t, abs(zfilt), '-k', 'LineWidth', 2)
 xticks(linspace(0, t(end), 5))
@@ -180,6 +180,7 @@ minx = sbplt(4).XLim(1); maxy = sbplt(4).YLim(end); dist = sbplt(4).XLim(end) - 
 ylim([0, 1.06*maxy]);
 t1 = text(minx + 0.02*dist, 1.04*maxy, '\boldmath$k^{\rm in}$', 'Interpreter', 'latex', 'FontSize', labelfont-2, 'Color', '#000000', 'HorizontalAlignment', 'left', 'VerticalAlignment', 'top');
 t2 = text(t1.Position(1) + 1.5*t1.Extent(3), 1.04*maxy, '\boldmath$k^{\rm out}$', 'Interpreter', 'latex', 'FontSize', labelfont-2, 'Color', '#d8d778', 'HorizontalAlignment', 'left', 'VerticalAlignment', 'top');
+sbplt(4).YAxis.Exponent = 0;
 xlabel('$k$','Interpreter','latex', 'FontSize', labelfont)
 if idx == 0; ylabel('Density', 'FontSize', labelfont); end
 pos = sbplt(4).Position;
