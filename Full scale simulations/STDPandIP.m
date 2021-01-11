@@ -29,8 +29,6 @@ IC = linspace(0, 2*pi - (2*pi)/(pars.N),pars.N)';
 pars.e = zeros(pars.N, 1); %randcauchy(seed, pars.eta0, pars.delta, pars.N);
 
 KMAX = 100; etaMAX = 100;
-K_org = initarray(rand(pars.N)*2*KMAX - KMAX);
-
 
 %% Only STDP:
 if true
@@ -38,7 +36,7 @@ fighandle = figure('Renderer', 'painters', 'Position', [0, 2000, 800, 1400]);
 
 %% 1. Kempter window, no IP
 STDP = struct('window', @Kempter1999Window, 'Kupdate', @(K, W) K + W, 'w_i', 1.0e-3, 'w_o', - 1.0475*1.0e-3);
-plastopts = struct('Kinit', K_org, 'SP', STDP);
+plastopts = struct('SP', STDP);
 
 [t, thetas_full, K, Kmeans, pars] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
 % drawthetas = spikesNaN(thetas_full);
@@ -47,7 +45,7 @@ STDPfigure(0, pars, plastopts, t, thetas_full, K, Kmeans, titlefont, labelfont, 
 
 %% 2. Song window, no IP
 STDP = struct('window', @Song2012Window, 'Kupdate', @(K, W) K + KMAX*W);
-plastopts = struct('Kinit', K_org, 'SP', STDP, 'KMAX', KMAX, 'etaMAX', etaMAX);
+plastopts = struct('SP', STDP, 'KMAX', KMAX, 'etaMAX', etaMAX);
 
 [t, thetas_full, K, Kmeans, pars] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
 
@@ -55,7 +53,7 @@ STDPfigure(1, pars, plastopts, t, thetas_full, K, Kmeans, titlefont, labelfont, 
 
 %% 3. ChrollCannon window, no IP
 STDP = struct('window', @ChrolCannon2012Window, 'Kupdate', @(K, W) K + KMAX*W);
-plastopts = struct('Kinit', K_org, 'SP', STDP, 'KMAX', KMAX, 'etaMAX', etaMAX);
+plastopts = struct('SP', STDP, 'KMAX', KMAX, 'etaMAX', etaMAX);
 
 [t, thetas_full, K, Kmeans, pars] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
 
@@ -63,7 +61,6 @@ STDPfigure(2, pars, plastopts, t, thetas_full, K, Kmeans, titlefont, labelfont, 
 %% Move figure to big screen:
 moveFigToBigScreen(fighandle);
 set(findall(gcf,'-property','FontName'),'FontName','Avenir')
-end
 
 %% Export figure:
 if export
@@ -72,13 +69,15 @@ end
 close(fighandle)
 disp('Made STDP figure')
 
+end
+
 %% STDP and IP figure:
 if true
 fighandle = figure('Renderer', 'painters', 'Position', [0, 2000, 800, 1400]); 
 
 %% 4. Kempter window, with IP
 STDP = struct('window', @Kempter1999Window, 'Kupdate', @(K, W) K + W, 'w_i', 1.0e-3, 'w_o', - 1.0475*1.0e-3);
-plastopts = struct('Kinit', K_org, 'SP', STDP, 'IP', true, 'etaMAX', etaMAX);
+plastopts = struct('SP', STDP, 'IP', true, 'etaMAX', etaMAX);
 
 [t, thetas_full, K, Kmeans, pars] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
 
@@ -86,7 +85,7 @@ STDPfigure(0, pars, plastopts, t, thetas_full, K, Kmeans, titlefont, labelfont, 
 
 %% 5. Song window, with IP
 STDP = struct('window', @Song2012Window, 'Kupdate', @(K, W) K + KMAX*W);
-plastopts = struct('Kinit', K_org, 'SP', STDP, 'IP', true, 'KMAX', KMAX, 'etaMAX', etaMAX);
+plastopts = struct('SP', STDP, 'IP', true, 'KMAX', KMAX, 'etaMAX', etaMAX);
 
 [t, thetas_full, K, Kmeans, pars] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
 
@@ -94,7 +93,7 @@ STDPfigure(1, pars, plastopts, t, thetas_full, K, Kmeans, titlefont, labelfont, 
 
 %% 6. ChrollCannon window, with IP
 STDP = struct('window', @ChrolCannon2012Window, 'Kupdate', @(K, W) K + KMAX*W);
-plastopts = struct('Kinit', K_org, 'SP', STDP, 'IP', true, 'KMAX', KMAX, 'etaMAX', etaMAX);
+plastopts = struct('SP', STDP, 'IP', true, 'KMAX', KMAX, 'etaMAX', etaMAX);
 
 [t, thetas_full, K, Kmeans, pars] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
 
