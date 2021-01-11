@@ -17,10 +17,11 @@ Let us say that neuron $\theta_i$ spikes at time $t_i$ and that neuron $\theta_j
 We will find an expression for $\Delta K_{ij}$ in function of $\Delta t_{ij}$ so that at each time-step we can update $K_{ij} \leftarrow K_{ij} + \Delta K_{ij}$.\\
 
 We can think of the coupling matrix as the continuous interpretation of $\kappa A_{ij}$, where synaptic strength and network topology go hand in hand. This also means that we need to redefine some concepts:
-\begin{alignat}{2}
-\kinbi &= \sum_{j=1}^{N} \rvert K_{i j} \rvert &&\koutbj = \sum_{i=1}^{N} \rvert K_{i j} \rvert \label{eq:definekinkoutfromK} \\
-\kmean &= \frac{1}{N} \sum_{i,j=1}^{N} \rvert K_{i j} \rvert \hspace{15mm} && \: \:\hat{\kmean} = \frac{1}{N} \sum_{i,j=1}^{N} K_{i j}  \label{eq:kmeanfromK} 
-\end{alignat}
+\begin{align}
+\kinbi = \sum_{j=1}^{N} \rvert K_{i j} \rvert \hspace{15mm} 
+\koutbj = \sum_{i=1}^{N} \rvert K_{i j} \rvert \hspace{15mm} 
+\kmean &= \frac{1}{N} \sum_{i,j=1}^{N} \rvert K_{i j} \rvert \hspace{15mm}  \label{eq:redefineFromK}  %\hat{\kmean} = \frac{1}{N} \sum_{i,j=1}^{N} K_{i j}
+\end{align}
 The absolute value ensures that we capture the magnitude of the coupling strength. The reason we want to distinguish between $\kmean$ and $\hat{\kmean}$ is that for some parts of the investigation it is beneficial to study how inhibitive and excitatory coupling strengths influence each other.\\
 
 The functions $W(t)$ that relate $\Delta t_{ij}$ to $\Delta K_{ij}$ are called \textsl{learning windows},  as they define a range in which $K_{ij}$ is able to adapt or \textsl{learn}, and also when learning is optimal. When signals between neurons show a very large time difference (negative or positive) we do not expect them to be correlated. Because the learning windows are generally not symmetrical we can also expect the coupling matrix to be asymmetrical.
@@ -50,7 +51,7 @@ W(t)_K = A
  \exp \left(-\frac{t}{\tau_{p}}\right) - \exp \left(-\frac{t}{\tau_{n}} \right) & \text{for } t > 0
 \end{cases} \label{eq:learningwindowKempter1999}
 \end{align}
-Here $t$ is the delay between presynaptic spike arrival and postsynaptic firing, $A$ is a small learning parameter and all $\tau$ are time constants. The values are given as $A = 10^{-5}$, $\tau_{\rm syn} = 5$ ms, $\tau_{p} = 1$ ms and $\tau_{n} = 20$ ms. $\tilde{\tau}_{p} \equiv \tau_{\rm syn} \tau_{p} / (\tau_{\rm syn} + \tau_{p})$ and $\tilde{\tau}_{n} \equiv \tau_{\rm syn} \tau_{n} / (\tau_{\rm syn} + \tau_{n})$. $\int W(\tau)_K \mathop{d \tau} = 4.75 \times 10^{-8}$ so that the correlation is positive.
+Here $t$ is the delay between presynaptic spike arrival and postsynaptic firing, $A$ is a small learning parameter and all $\tau$ are time constants. The values are given as $A = 10^{-5}$, $\tau_{\rm syn} = 5$ ms, $\tau_{p} = 1$ ms and $\tau_{n} = 20$ ms. $\tilde{\tau}_{p} \equiv \tau_{\rm syn} \tau_{p} / (\tau_{\rm syn} + \tau_{p})$ and $\tilde{\tau}_{n} \equiv \tau_{\rm syn} \tau_{n} / (\tau_{\rm syn} + \tau_{n})$. $\int W(\tau)_K \mathop{d \tau} = 4.75 \times 10^{-8}$ so that the correlation is positive. \\
 
 To counteract the excitatory nature of the learning window, the authors propose $w^{\mathrm{in}} = A$ and $w^{\mathrm{out}} = -1.0475A$ so that the amplitude of these weights is on the same order as the magnitude of the learning window \cite{Kempter1999}. This is a regulatory process, as neurons are punished for sending out  many spikes over time by decreasing their influence over neighbours more than the increase in influence of their neighbours over them. This threshold can be overcome by teaching the neurons to spike at the right time (with respect to its neighbours' spikes) as then the learning window yields an increase in synaptic strength. This process is inherently asymmetric. \\
 
