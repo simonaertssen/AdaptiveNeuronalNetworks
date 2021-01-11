@@ -130,21 +130,21 @@ toc;
 
 %% Observe function shapes: ip learning
 dt = linspace(0, 0.25, tpts);
-
+labelfont = 17;
 f_ip = figure('Renderer', 'painters', 'Position', [50 800 300 200]); box on; hold on;
-y = Song2017ip(dt);
+y = Song2017IP(dt);
 xline(0.09, '--k')
 xline(0.11, '--k')
 
-yleft = Song2017ip(dt(dt<0.09)); ymiddle = Song2017ip(dt((dt>0.09) & (dt<0.11))); yright = Song2017ip(dt(dt>0.11));
+yleft = Song2017IP(dt(dt<0.09)); ymiddle = Song2017IP(dt((dt>0.09) & (dt<0.11))); yright = Song2017IP(dt(dt>0.11));
 plot(dt(dt<0.09), yleft, 'LineWidth', 2, 'Color', '#0072BD'); 
 plot(dt((dt>0.09) & (dt<0.11)), ymiddle, 'LineWidth', 2, 'Color', '#0072BD', 'HandleVisibility', 'off'); 
 plot(dt(dt>0.11), yright, 'LineWidth', 2, 'Color', '#0072BD', 'HandleVisibility', 'off')
-scatter(0.09, Song2017ip(0.09), 30, [0 0.4470 0.7410], 'filled', 'o')
-scatter(0.11, Song2017ip(0.11), 30, [0 0.4470 0.7410], 'filled', 'o')
+scatter(0.09, Song2017IP(0.09), 30, [0 0.4470 0.7410], 'filled', 'o')
+scatter(0.11, Song2017IP(0.11), 30, [0 0.4470 0.7410], 'filled', 'o')
 
-text(0.089, -0.04, '$$T_{ \rm min}$$', 'Interpreter', 'latex', 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'right')
-text(0.112, -0.04, '$$T_{ \rm max}$$', 'Interpreter', 'latex', 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left')
+text(0.089, -0.04, '$$T_{ \rm min}$$', 'Interpreter', 'latex', 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'right', 'FontSize', labelfont)
+text(0.112, -0.04, '$$T_{ \rm max}$$', 'Interpreter', 'latex', 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', labelfont)
 
 xlabel("$t$ [s]", 'Interpreter', 'latex', 'FontSize', labelfont); 
 ylabel("$\phi_i(t)$", 'Interpreter', 'latex', 'FontSize', labelfont);

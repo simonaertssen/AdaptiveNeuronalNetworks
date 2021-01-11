@@ -10,13 +10,11 @@ W_K:  green     '#298A3E'
 W_S:  orange    '#D95319' [0.8500 0.3250 0.0980]
 W_C:  yellow    '#EDB120' [0.9290 0.6940 0.1250]
 
-- Remake the IP figure with larger text
+- Write a bit more on what results are obtained in Kempter, Song and ChrolCannon
 
 - Investigate the jacobian: can we find stable equilibria??
 
 - Write about the STDP and IP results
-
-- Write about why there is a difference between the w_in and the w_out
 
 - Make a better figure of the different limit cycles between for the scale-free network.
 
