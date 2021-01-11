@@ -1,6 +1,6 @@
 % !TEX root = ../main.tex
 \newpage
-\section{Hebbian Learning and Synaptic Plasticity}
+\section{Hebbian Learning and Synaptic Plasticity} \label{sec:HebbianLearningAndSynapticPlasticity}
 \vspace{1mm}
 \begin{quote}
 \textsl{When an axon of cell A is near enough to excite a cell B and repeatedly or persistently takes part in firing it, some growth process or metabolic change takes places in one or both cells such that A's efficiency, as one of the cells firing B, is increased.}\cite{Hebb1949}
@@ -50,7 +50,7 @@ W(t)_K = A
  \exp \left(-\frac{t}{\tau_{p}}\right) - \exp \left(-\frac{t}{\tau_{n}} \right) & \text{for } t > 0
 \end{cases} \label{eq:learningwindowKempter1999}
 \end{align}
-Here $t$ is the delay between presynaptic spike arrival and postsynaptic firing, $A$ is a small learning parameter and all $\tau$ are time constants. The values are given as $A = 10^{-5}$, $\tau_{\rm syn} = 5$ ms, $\tau_{p} = 1$ ms and $\tau_{n} = 20$ ms. $\tilde{\tau}_{p} \equiv \tau_{\rm syn} \tau_{p} / (\tau_{\rm syn} + \tau_{p})$ and $\tilde{\tau}_{n} \equiv \tau_{\rm syn} \tau_{n} / (\tau_{\rm syn} + \tau_{n})$. $\int W(\tau)_K \mathop{d \tau} = 4.75 \times 10^{-8}$ so that the correlation is positive.\\
+Here $t$ is the delay between presynaptic spike arrival and postsynaptic firing, $A$ is a small learning parameter and all $\tau$ are time constants. The values are given as $A = 10^{-5}$, $\tau_{\rm syn} = 5$ ms, $\tau_{p} = 1$ ms and $\tau_{n} = 20$ ms. $\tilde{\tau}_{p} \equiv \tau_{\rm syn} \tau_{p} / (\tau_{\rm syn} + \tau_{p})$ and $\tilde{\tau}_{n} \equiv \tau_{\rm syn} \tau_{n} / (\tau_{\rm syn} + \tau_{n})$. $\int W(\tau)_K \mathop{d \tau} = 4.75 \times 10^{-8}$ so that the correlation is positive.
 
 To counteract the excitatory nature of the learning window, the authors propose $w^{\mathrm{in}} = A$ and $w^{\mathrm{out}} = -1.0475A$ so that the amplitude of these weights is on the same order as the magnitude of the learning window \cite{Kempter1999}. This is a regulatory process, as neurons are punished for sending out  many spikes over time by decreasing their influence over neighbours more than the increase in influence of their neighbours over them. This threshold can be overcome by teaching the neurons to spike at the right time (with respect to its neighbours' spikes) as then the learning window yields an increase in synaptic strength. This process is inherently asymmetric. \\
 
@@ -107,21 +107,33 @@ In this way, the out-degrees will remain constant. Using this approach, somethin
 
 \subsection{Intrinsic plasticity}
 Instead of scaling the weights to preserve a certain quantity in the network, we can allow the neurons to adjust their sensitivity to incoming signals. So when some synaptic strengths are increased, we can reduce the excitability, and vice-versa. This should counteract positive feedback. In \cite{Song2017} such a method is introduced in detail. We can simply update $\eta_{i} \leftarrow \eta_{i} + \eta_{\max } \cdot \phi_{i}$, where: 
+\begin{minipage}{.45\textwidth}
+   \centering
+   \begin{figure}[H]
+	\centering
+	\includegraphics[width = \textwidth]{../Figures/Learning/IPlearningFunction.pdf}
+	%\caption{The learning behaviour for intrinsic plasticity as proposed in \cite{Song2017}.}
+	\label{fig:IPlearningFunction}
+	\end{figure}
+\end{minipage}
+\begin{minipage}{.55\textwidth}
 \begin{align}
-\phi_{i} (t) =
-\begin{cases}
--\alpha \cdot \exp \left(\frac{T_{\min }-t}{T_{\rm min }}\right) &\text {for } t<T_{ \rm min } \\ 
-\alpha \cdot \exp \left(\frac{t-T_{\rm max }}{T_{\max }}\right) &\text {for } t >T_{\rm max } \\ 
-0 &\text {otherwise }
-\end{cases}
+	\phi_{i} (t) =
+	\begin{cases}
+	-\alpha \cdot \exp \left(\frac{T_{\min }-t}{T_{\rm min }}\right) \hspace{10mm} t<T_{ \rm min } \\ 
+	\alpha \cdot \exp \left(\frac{t-T_{\rm max }}{T_{\max }}\right) \hspace{12mm} t >T_{\rm max } \\ 
+	0 \hspace{24.5mm} T_{ \rm min } \leq t \leq T_{\rm max }
+	\end{cases}
 \end{align}
+\vspace{10mm}
+\end{minipage}
 The argument $t$ represents the time that has passed between successive spike of the same neuron, the \textsl{inter-spike interval} (\ISI). This is always a positive number.
 
-\begin{figure}[H]
-\centering
-\includegraphics[width = 0.5\textwidth]{../Figures/Learning/IPlearningFunction.pdf}
-\caption{The learning behaviour for intrinsic plasticity as proposed in \cite{Song2017}.}
-\label{fig:IPlearningFunction}
-\end{figure}
+%\begin{figure}[H]
+%\centering
+%\includegraphics[width = 0.5\textwidth]{../Figures/Learning/IPlearningFunction.pdf}
+%\caption{The learning behaviour for intrinsic plasticity as proposed in \cite{Song2017}.}
+%\label{fig:IPlearningFunction}
+%\end{figure}
 
-\textcolor{red}{QUESTION}: \textsl{is it necessary to include more background theory on Hebbian Learning?}
+%\textcolor{red}{QUESTION}: \textsl{is it necessary to include more background theory on Hebbian Learning?}
