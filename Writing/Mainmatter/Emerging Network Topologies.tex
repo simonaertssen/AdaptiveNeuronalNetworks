@@ -6,11 +6,11 @@
 We will now investigate what topologies emerge from the learning procedures described in Chapter \ref{sec:HebbianLearningAndSynapticPlasticity}. Are the approaches presented in \cite{Kempter1999, Song2000, Song2017, ChrolCannon2012} plausible within the context of the Theta model? Do we obtain similar results concerning synchronisation and topology? Is there a reason for only allowing the network to make excitatory ($K_{ij} \geq 0$) connections? 
 
 \subsection{Conditions of the network}
-As we saw in Chapter \ref{sec:MFRs}, the typical range for the coupling strength $\kappa$ and the mean excitability $\eta_0$ to alter the macroscopic state of the network drastically is fairly large. Using the Kempter method \eqref{eq:KempterSTDPFormulation2}, there is no limit on the magnitude of $K$, and convergence of the node degrees was observed within the interval [-100, 100]. 
+As we saw in Chapter \ref{sec:MFRs}, the typical range for the coupling strength $\kappa$ and the mean excitability $\eta_0$ to alter the macroscopic state of the network drastically is fairly large. Using the Kempter method \eqref{eq:KempterSTDPFormulation2}, there is no limit on the magnitude of $K$, though activity of the node degrees was observed within the interval [-100, 100]. 
 
-When using the Song method \eqref{eq:SongSTDPFormulation} we will constrain $-K^{\rm max} \leq K_{ij} \leq K^{\rm max}$ to allow neurons to both exhibit exitatory and inhibitory behaviour. When testing different values of $K^{\rm max}$ no significant difference was observed in the results, except the time of reaching convergence of $\kmean$. To optimally compare the two methods we will use $K^{\rm max}$ = 100. $K_{ij}$ is always initialised using a uniform distribution over $[-K^{\rm max}, K^{\rm max}]$, as to minimise influence of the initial distribution on the resulting topology.\\
+When using the Song method \eqref{eq:SongSTDPFormulation} we will constrain $-K^{\rm max} \leq K_{ij} \leq K^{\rm max}$ to allow neurons to both exhibit exitatory and inhibitory behaviour. When testing different values of $K^{\rm max}$ no significant difference was observed in the results, except the time of reaching convergence of $\kmean$. To optimally compare the two methods we will use $K^{\rm max}$ = 100. $K_{ij}$ is initialised using a uniform distribution over $[-K^{\rm max}, K^{\rm max}]$, as to minimise influence of the initial distribution on the resulting topology.\\
 
-The networks we will study consist of 100 Theta neurons, as the computational task of numerically solving the learning equations until convergence is a heavy one. The networks will be initialised with $\theta_i$ equidistantly distributed over $\T$, so that $| Z(0) |$ = 0 exactly. The excitabilities $\eta_i$ are set to zero for all neurons. 
+The networks we will study consist of 100 Theta neurons, as the computational task of numerically solving the learning equations until convergence is a heavy one. Larger networks are more difficult to simulate, but smaller networks might be more susceptible to the stochastic behaviour of a few neurons. The networks will be initialised with $\theta_i$ equidistantly distributed over $\T$, so that $| Z(0) |$ = 0 exactly. The excitabilities $\eta_i$ are set to zero for all neurons. 
 When investigating \STDP + \IP, the excitability is allowed to change over the same domain as $K_{ij}$, in accordance to our comments on $\eta_i$ and $I_i$ cancelling each other out. Therefore we take $\eta_{\max} = K^{\rm max}$ and just like $K_{ij}$, $\eta_i$ is using a uniform distribution over $[-\eta_{\max}, \eta_{\max}]$.
 
 
@@ -26,12 +26,21 @@ We decided to scale all learning windows presented in Chapter \ref{sec:HebbianLe
 
 
 \subsection{Results of using \STDP} %applied to networks of theta neurons
-We can now use the Kempter method and its corresponding learning window and compare it to the Song method and the bi- and triphasic learning windows. The results are shown in Figure \ref{fig:STDP}.
+We can now use the Kempter method and its corresponding learning window and compare it to the Song method and the bi- and triphasic learning windows. The results are shown in Figure \ref{fig:STDP}. It is remarkable how easily the different methods can be recognised, not to speak of the influence of the magnitude of the correlation, which using $W_C$ shows the most amount of learning. Interestingly, the networks show a high degree of symmetry. \\
 
-In the first row of plots, we can see the overall synchronisation of the network and its mean node degree as it learns over time. The Kempter method does not seem to converge
+In the first column of plots, we can see the overall synchronisation of the network and its mean node degree as it learns over time. The Kempter method does not seem to converge for any time period under th
+The coupling matrix does not seem to contain a lot of structure until we look at the histogram underneath: a lognormal shape can be identified. Remember that no constraints are applied to $K$, so its is remarkable a structure seems to appear. Looking at the distributions of the in- and out-degrees, we can see they follow a positive correlation, with a more clustered behaviour for high degrees. \\
+
+In the second column we can see the results of using the Song method with $W_S$. The learning behaviour is more regular and we can observe that with an increasing network connectivity we obtain increased synchronisation. Convergence is almost complete, and we can see the separation between two clusters of node degrees in the high-contrast image of $K$, and in all histograms and plots. Most neurons see their synaptic strength decreased by the negative correlation. There is only a small fraction of oscillators that has learned to spike at the right time and manages to keep increasing its synaptic strength and eventually ends up at $K^{\rm max}$. \\%The dichotomy may also be found in the shape of the learning window: the large difference
+
+In the third column we can see the results of using the Song method with $W_C$. Convergence to a steady-state happens much more steadily, and also the synchronisation benefits from this approach. The coupling matrix shows an even stronger partition, as even fewer neurons manage to learn to spike at the right interval.
+
 
 
 \subsection{Results of using \STDP + \IP}
+When introducing intrinsic plasticity, the expected changes to $\eta_i$ counteract $K$ as expected. The results are shown in Figure \ref{fig:STDPandIP}. \\
+
+We find the Kempter method in the middle of a 
 
 \newpage
 \begin{figure}[H]
@@ -45,7 +54,7 @@ In the first row of plots, we can see the overall synchronisation of the network
 \centering
 \includegraphics[height = \textheight]{../Figures/Learning/STDPandIP.pdf}
 \caption{Results of the \STDP learning with \IP learning.}
-\label{fig:STDP}
+\label{fig:STDPandIP}
 \end{figure}
 
 \subsection{Results}
