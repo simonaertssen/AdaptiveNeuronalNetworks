@@ -20,7 +20,7 @@ end
 initarray = make_GPUhandle();
 
 %% Theta model parameters:
-h = 0.01; tnow = 0; tend = 3000;
+h = 0.01; tnow = 0; tend = 4000;
 
 pars.N = 100;
 pars.a_n = 0.666666666666666666667;
@@ -28,7 +28,8 @@ seed = 2; rng(seed);
 IC = linspace(0, 2*pi - (2*pi)/(pars.N),pars.N)';
 pars.e = zeros(pars.N, 1); %randcauchy(seed, pars.eta0, pars.delta, pars.N);
 
-KMAX = 10; etaMAX = 10;
+KMAX = 100; etaMAX = 100;
+K_org = initarray(rand(pars.N)*2*KMAX - KMAX);
 
 
 %% Only STDP:
@@ -37,7 +38,7 @@ fighandle = figure('Renderer', 'painters', 'Position', [0, 2000, 800, 1400]);
 
 %% 1. Kempter window, no IP
 STDP = struct('window', @Kempter1999Window, 'Kupdate', @(K, W) K + W, 'w_i', 1.0e-3, 'w_o', - 1.0475*1.0e-3);
-plastopts = struct('SP', STDP, 'KMAX', KMAX, 'etaMAX', etaMAX);
+plastopts = struct('Kinit', K_org, 'SP', STDP);
 
 [t, thetas_full, K, Kmeans, pars] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
 % drawthetas = spikesNaN(thetas_full);
@@ -46,7 +47,7 @@ STDPfigure(0, pars, plastopts, t, thetas_full, K, Kmeans, titlefont, labelfont, 
 
 %% 2. Song window, no IP
 STDP = struct('window', @Song2012Window, 'Kupdate', @(K, W) K + KMAX*W);
-plastopts = struct('SP', STDP, 'KMAX', KMAX, 'etaMAX', etaMAX);
+plastopts = struct('Kinit', K_org, 'SP', STDP, 'KMAX', KMAX, 'etaMAX', etaMAX);
 
 [t, thetas_full, K, Kmeans, pars] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
 
@@ -54,7 +55,7 @@ STDPfigure(1, pars, plastopts, t, thetas_full, K, Kmeans, titlefont, labelfont, 
 
 %% 3. ChrollCannon window, no IP
 STDP = struct('window', @ChrolCannon2012Window, 'Kupdate', @(K, W) K + KMAX*W);
-plastopts = struct('SP', STDP, 'KMAX', KMAX, 'etaMAX', etaMAX);
+plastopts = struct('Kinit', K_org, 'SP', STDP, 'KMAX', KMAX, 'etaMAX', etaMAX);
 
 [t, thetas_full, K, Kmeans, pars] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
 
@@ -77,7 +78,7 @@ fighandle = figure('Renderer', 'painters', 'Position', [0, 2000, 800, 1400]);
 
 %% 4. Kempter window, with IP
 STDP = struct('window', @Kempter1999Window, 'Kupdate', @(K, W) K + W, 'w_i', 1.0e-3, 'w_o', - 1.0475*1.0e-3);
-plastopts = struct('SP', STDP, 'IP', true, 'KMAX', KMAX, 'etaMAX', etaMAX);
+plastopts = struct('Kinit', K_org, 'SP', STDP, 'IP', true, 'etaMAX', etaMAX);
 
 [t, thetas_full, K, Kmeans, pars] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
 
@@ -85,7 +86,7 @@ STDPfigure(0, pars, plastopts, t, thetas_full, K, Kmeans, titlefont, labelfont, 
 
 %% 5. Song window, with IP
 STDP = struct('window', @Song2012Window, 'Kupdate', @(K, W) K + KMAX*W);
-plastopts = struct('SP', STDP, 'IP', true, 'KMAX', KMAX, 'etaMAX', etaMAX);
+plastopts = struct('Kinit', K_org, 'SP', STDP, 'IP', true, 'KMAX', KMAX, 'etaMAX', etaMAX);
 
 [t, thetas_full, K, Kmeans, pars] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
 
@@ -93,7 +94,7 @@ STDPfigure(1, pars, plastopts, t, thetas_full, K, Kmeans, titlefont, labelfont, 
 
 %% 6. ChrollCannon window, with IP
 STDP = struct('window', @ChrolCannon2012Window, 'Kupdate', @(K, W) K + KMAX*W);
-plastopts = struct('SP', STDP, 'IP', true, 'KMAX', KMAX, 'etaMAX', etaMAX);
+plastopts = struct('Kinit', K_org, 'SP', STDP, 'IP', true, 'KMAX', KMAX, 'etaMAX', etaMAX);
 
 [t, thetas_full, K, Kmeans, pars] = DOPRI_simulatenetwork_adaptive(tnow,tend,IC,h,pars,plastopts);
 
@@ -129,7 +130,7 @@ z = orderparameter(thetas);
 b = normpdf(-3:0.005:3, 0, 1); b = b/sum(b); a = 1; zfilt = filter(b,a,z);
 if idx == 0; ylabel('$\vert Z (t) \vert$','Interpreter','latex', 'FontSize', labelfont); end
 plot(t, abs(zfilt), '-k', 'LineWidth', 2)
-xticks(linspace(0, t(end), 3))
+xticks(linspace(0, t(end), 5))
 
 yyaxis right
 plot(t, Kmeans(2,:), 'LineWidth', 2, 'Color', color)
@@ -198,7 +199,7 @@ sbplt(5).Position = [pos(1), pos(2) + 2*h - 4*e*y, pos(3), pos(4)];
 
 if isfield(plastopts, 'IP')
 sbplt(6) = subplot(numfigs,3,16+idx); hold on; axis square; axis on; box on;
-histogram(pars.e, 'Normalization', 'pdf', 'FaceColor', color, 'FaceAlpha', 1)
+histogram(pars.e, linspace(-plastopts.etaMAX, plastopts.etaMAX, 21), 'Normalization', 'pdf', 'FaceColor', color, 'FaceAlpha', 1)
 title('Excitability', 'FontSize', titlefont, 'FontWeight', 'normal')
 xlabel('$\eta_{i}$','Interpreter','latex', 'FontSize', labelfont)
 if idx == 0; ylabel('Density', 'FontSize', labelfont); end

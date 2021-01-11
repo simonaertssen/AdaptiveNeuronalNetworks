@@ -23,8 +23,13 @@ function [tout, xout, K, Kmeans, p, info] = DOPRI_simulatenetwork_adaptive(ta,tb
     
     synaptic_plasticity = isstruct(plastopts.SP);
     if synaptic_plasticity
-        KMAX = plastopts.KMAX;
-        K = initarray(rand(p.N)*2*KMAX - KMAX);
+        if isfield(plastopts, 'KMAX')
+            KMAX = plastopts.KMAX;
+            K = initarray(rand(p.N)*2*KMAX - KMAX);
+        else 
+            KMAX = Inf;
+            K = initarray(rand(p.N)*2*10 - 10);
+        end
     end
     if isfield(plastopts, 'Kinit')
         K = initarray(plastopts.Kinit);
