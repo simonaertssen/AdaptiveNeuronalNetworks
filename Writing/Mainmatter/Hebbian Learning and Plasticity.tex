@@ -31,24 +31,25 @@ I_{i}(t) &=\frac{1}{\kmean} \sum_{j=1}^{N} K_{i j} \cdot \mathcal{P}_{n}(\theta_
 \end{align}
 
 
-The functions $W(t)$ that relate $\Delta t_{ij}$ to $\Delta K_{ij}$ are called \textsl{learning windows},  as they define a range in which $K_{ij}$ is able to adapt or \textsl{learn}, and also when learning is optimal. When signals between neurons show a very large time difference (negative or positive) we do not expect them to be correlated. Because the learning windows are generally not symmetrical we can also expect the coupling matrix to be asymmetrical.
+The functions $W(t)$ that relate $\Delta t_{ij}$ to $\Delta K_{ij}$ are called \textsl{learning windows},  as they define a range in which $K_{ij}$ is able to adapt or \textsl{learn}, and also when learning is optimal. When signals between neurons show a very large time difference (negative or positive) we do not expect them to be correlated. Because the learning windows are generally not symmetrical we can also expect the coupling matrix to be asymmetrical. The magnitude of these functions is small, as it is assumed that learning dynamics happen at a slower timescale than the neuronal dynamics.
 
 Another characteristic is the integral over the learning window. A window with a negative integral directs synaptic strengths mostly towards inhibitory behaviour, and vice versa with a positive integral. An integral of zero would mean that both inhibitory and excitatory synapses are stimulated equally. It has been proven that $\int W(\tau) \mathop{d\tau}$ is the magnitude of the correlation between signals \cite{Gerstner2002}. \\
 
 %The magnitude of change is modulated by an asymmetric biphasic learning window around pulses originating from the postsynaptic neuron. Asymmetric because the peak is not situated at 0 and the integral over the window is generally positive, biphasic because this allows both to strengthen and weaken coupling strengths \cite{Gerstner2002}. 
 
-This approach simplifies modeling the neuronal back-propagation, where another pulse is generated as an echo of the action potential which travels through the neuron dendrites (so, backwards). This behavior is believed to adjust the presynaptic weights, though it is a controversial subject \cite{Gerstner2002}. 
+This approach simplifies modelling the neuronal back-propagation, where another pulse is generated as an echo of the action potential which travels through the neuron dendrites (so, backwards). This behaviour is believed to adjust the presynaptic weights, though it is a controversial subject \cite{Gerstner2002}. 
 
 
 \subsection{Formulations of \STDP as a model}
-Following the notation in \cite{Kempter1999}, we will denote the sequence of action potentials, the \textsl{spike train}, coming from each neuron $\theta_i$ as $S_i^{\rm out}(t) = \sum_{n} \delta (t-t_{i}^{n})$, where $t_{i}^{n}$ is the time that $\theta_i$ has fired. Similarly, we will denote the spike train coming into each neuron $\theta_i$ as $S_i^{\rm in}(t) = \sum_{f} \delta (t-t_{i}^{f})$ with $t_{i}^{f}$ being the time that a neighbouring neuron has spiked. Now we can say that the synaptic strengths are adjusted as:
+\subsubsection{The Kempter method}
+Analysis of a distinct \STDP model was done in \cite{Kempter1999}. Following the notation, we will denote the sequence of action potentials, the \textsl{spike train}, coming from each neuron $\theta_i$ as $S_i^{\rm out}(t) = \sum_{n} \delta (t-t_{i}^{n})$, where $t_{i}^{n}$ is the time that $\theta_i$ has fired. Similarly, we will denote the spike train coming into each neuron $\theta_i$ as $S_i^{\rm in}(t) = \sum_{f} \delta (t-t_{i}^{f})$ with $t_{i}^{f}$ being the time that a neighbouring neuron has spiked. Now we can say that the synaptic strengths are adjusted as:
 \begin{align}
 \Delta K_{ij} &= \int_{t}^{t+\mathcal{T}} w^{\rm{out}} S_i^{\rm out}(\tau) + w^{\rm{in}} S_{j}^{\rm {in}}(\tau) \mathrm{d}\tau
 + \iint_{t}^{t+\mathcal{T}} W( \tau^\prime - \tau) S_{i}^{\rm out}(\tau) S_{j}^{\rm in}( \tau^\prime) \mathrm{d} \tau \mathrm{d} \tau^\prime
 \label{eq:KempterSTDPFormulation1} \\
 &= \sum_{t_i^{n}\in \mathcal{T}} w^{\mathrm{out}} + \sum_{t_{j}^{f} \in \mathcal{T}} w^{\mathrm{in}} + \sum_{t_{j}^{f}, \: t_i^{n} \in \mathcal{T}} \hspace{-2mm} W (t_{j}^{f}-t_i^{n} ) \label{eq:KempterSTDPFormulation2}
 \end{align}
-with $\mathcal{T}$ the period over which learning occurs. $w^{\mathrm{in}} > 0$ and $w^{\mathrm{out}} < 0$ are small weights on the in- and outgoing action potentials. These can be used to counteract the inhibitive or excitatory nature of the results of $W$ and are necessary for $K_{ij}$ to reach an equilibrium. This is proven from the average learning dynamics, \cite{Kempter1999}. In \eqref{eq:KempterSTDPFormulation1} we can recognise the correlation between signals as a convolution over the learning window. We will refer to \eqref{eq:KempterSTDPFormulation2} as the Kempter method. \\
+with $\mathcal{T}$ the period over which learning occurs. $w^{\mathrm{in}} > 0$ and $w^{\mathrm{out}} < 0$ are small weights on the in- and outgoing action potentials. In \eqref{eq:KempterSTDPFormulation1} we can recognise the correlation between signals as a convolution over the learning window. We will refer to \eqref{eq:KempterSTDPFormulation2} as the Kempter method. \\
 
 The following learning window is proposed:
 \begin{align}
@@ -60,10 +61,12 @@ W(t)_K = A
 \end{align}
 Here $t$ is the delay between presynaptic spike arrival and postsynaptic firing, $A$ is a small learning parameter and all $\tau$ are time constants. The values are given as $A = 10^{-5}$, $\tau_{\rm syn} = 5$ ms, $\tau_{p} = 1$ ms and $\tau_{n} = 20$ ms. $\tilde{\tau}_{p} \equiv \tau_{\rm syn} \tau_{p} / (\tau_{\rm syn} + \tau_{p})$ and $\tilde{\tau}_{n} \equiv \tau_{\rm syn} \tau_{n} / (\tau_{\rm syn} + \tau_{n})$. $\int W(\tau)_K \mathop{d \tau} = 4.75 \times 10^{-8}$ so that the correlation is positive. \\
 
-To counteract the excitatory nature of the learning window, the authors propose $w^{\mathrm{in}} = A$ and $w^{\mathrm{out}} = -1.0475 \cdot A$ so that the amplitude of these weights is on the same order as the magnitude of the learning window \cite{Kempter1999}. This is a regulatory process, as neurons are punished for sending out  many spikes over time by decreasing their influence over neighbours more than the increase in influence of their neighbours over them. This threshold can be overcome by teaching the neurons to spike at the right time (with respect to its neighbours' spikes) as then the learning window yields an increase in synaptic strength. This process is inherently asymmetric. \\
+$w^{\mathrm{in}}$ and $w^{\mathrm{out}}$ are necessary for $K_{ij}$ to reach an equilibrium, which is proven from the average learning dynamics. Using an inhomogeneous Poisson process with time-dependent intensities to generate spike trains, the learning equation \eqref{eq:KempterSTDPFormulation2} is found to converge to a stable equilibrium, also when different types of noise are added to selections of neurons \cite{Kempter1999}. The authors do understand the concept of topology, as the variation of the coupling strength between nodes is examined, but they did not investigate the relation of coupling strength between nodes. The question will now be whether convergence of the synaptic strength still occurs when we will apply \STDP to our network of Theta neurons, as changes to the coupling strength will also influence the spiking dynamics between neurons, which in turn will affect the learning again. The distribution of spikes in each spike train might not be coming from a recognisable distribution.\\
 
-Using different probabilistic processes to generate spike trains, the learning equation \eqref{eq:KempterSTDPFormulation2} converges to a stable equilibrium \cite{Kempter1999}. The question will now be whether that is still the case when we will apply \STDP to our network of Theta neurons, as changes to the coupling strength will also influence the spiking dynamics between neurons, which in turn will affect the learning again.\\
+To counteract the excitatory nature of the learning window, the authors propose $w^{\mathrm{in}} = A$ and $w^{\mathrm{out}} = -1.0475 \cdot A$ so that the amplitude of these weights is on the same order as the magnitude of the learning window \cite{Kempter1999}. This is a regulatory process, as neurons are punished for sending out  many spikes over time by decreasing their influence over neighbours more than the increase in influence of their neighbours over them. This threshold can be overcome by teaching the neurons to spike at the right time (with respect to its neighbours' spikes) as then the learning window yields an increase in synaptic strength.%This process is inherently asymmetric. \\
 
+
+\subsubsection{The Song method}
 Another formulation of \STDP as a mathematical model can be found in \cite{Song2000}. It is postulated without being concerned about the biological aspect too much, simplifying some of the ideas of \cite{Kempter1999}. The synaptic strengths are simply updated with:
 \begin{align}
 \Delta K_{ij} &= K^{\rm max} \cdot \sum_{t_{j}^{f}, \: t_i^{n} \in \mathcal{T}} \hspace{-2mm} W (t_{j}^{f}-t_i^{n} ) \label{eq:SongSTDPFormulation}
@@ -78,10 +81,9 @@ A_{n} \cdot \exp \left(\frac{t}{\tau_n}\right)  & \text{for } s \leq 0 \\
 A_{p} \cdot \exp \left(\frac{-t}{\tau_p}\right) & \text{for } s > 0 
 \end{cases} \label{eq:learningwindowSong2000}
 \end{align}
-where we will use $A_p = 0.005$, $A_n = -0.00525$ and $\tau_p = \tau_n = 20$ ms. $\int W(\tau)_S \mathop{d \tau} = -5.0 \times 10^{-6}$ so we expect the weights to be suppressed towards a negative value. Interestingly, the line between reward and punishment is very thin, as the largest increase and largest decrease in synaptic strength lie right next to each other on the spectrum. 
+where we will use $A_p = 0.005$, $A_n = -0.00525$ and $\tau_p = \tau_n = 20$ ms. $\int W(\tau)_S \mathop{d \tau} = -5.0 \times 10^{-6}$ so we expect the weights to be suppressed towards a negative value. Interestingly, the line between reward and punishment is very thin, as the largest increase and largest decrease in synaptic strength lie right next to each other on the spectrum. \\
 
-As $K_{ij}$ is only allowed to be positive, the negative correlation of the learning window pushes most of the synaptic strengths towards zero. The range of coupling strengths is also very restricted and only allowed to change over a small interval: $K^{\rm max}$ = 0.03 \cite{Song2000, Song2017, ChrolCannon2012}
-\\
+As $K_{ij}$ is only allowed to be positive, the negative correlation of the learning window pushes most of the synaptic strengths towards zero. The range of coupling strengths is also very restricted and only allowed to change over a small interval: $K^{\rm max}$ = 0.03 \cite{Song2000, Song2017, ChrolCannon2012}. The learning dynamics, encoded into the topology of the network, show how the node degrees are pushed towards the edges $\pm K^{\rm max}$ with only a small group of neurons managing to learn the optimal spiking time. The spiking rate of all nodes in the network converges to a normal distribution. However, no mention is made of convergence of the node degrees, as the learning procedure is halted artificially.\\
 
 Recently, triphasic learning windows have been used to account for when it takes too long for the postsynaptic neuron to fire, and thus to decorrelate the relation between neurons. These learning windows are curves that were fitted to experimental data of the cortex and the hippocampus \cite{ChrolCannon2014}. 
 Extending the work of \cite{Song2000} we can find a brief investigation of network topology and clustering using triphasic windows, \cite{ChrolCannon2012}. The method is as in \eqref{eq:learningwindowSong2000}, with the following learning window:
@@ -145,6 +147,8 @@ In \cite{Song2017} an \IP method is introduced in detail. We can simply update $
 \vspace{10mm}
 \end{minipage}
 The argument $t$ represents the time that has passed between successive spike of the same neuron, the \textsl{inter-spike interval} (\ISI). This is always a positive number. \\
+
+The results of introducing \IP seem to stabilise the resulting topologies in the Song method. Many more nodes seem to survive with a node degree that is not at the extremes, and there seems to exist an interesting relation between in- and out-degree vectors.
 
 
 

@@ -28,19 +28,22 @@ We decided to scale all learning windows presented in Chapter \ref{sec:HebbianLe
 \subsection{Results of using \STDP} %applied to networks of theta neurons
 We can now use the Kempter method and its corresponding learning window and compare it to the Song method and the bi- and triphasic learning windows. The results are shown in Figure \ref{fig:STDP}. It is remarkable how easily the different methods can be recognised, not to speak of the influence of the magnitude of the correlation, which using $W_C$ shows the most amount of learning. Interestingly, the networks show a high degree of symmetry. \\
 
-In the first column of plots, we can see the overall synchronisation of the network and its mean node degree as it learns over time. The Kempter method does not seem to converge for any time period under th
+In the first column of plots, we can see the overall synchronisation of the network and its mean node degree as it learns over time. The Kempter method does not seem to converge for any time period under the circumstances described before. We find the network right before larger node degrees start taking off to higher orders, and remarkably the synchronisation is very low.
 The coupling matrix does not seem to contain a lot of structure until we look at the histogram underneath: a lognormal shape can be identified. Remember that no constraints are applied to $K$, so its is remarkable a structure seems to appear. Looking at the distributions of the in- and out-degrees, we can see they follow a positive correlation, with a more clustered behaviour for high degrees. \\
 
-In the second column we can see the results of using the Song method with $W_S$. The learning behaviour is more regular and we can observe that with an increasing network connectivity we obtain increased synchronisation. Convergence is almost complete, and we can see the separation between two clusters of node degrees in the high-contrast image of $K$, and in all histograms and plots. Most neurons see their synaptic strength decreased by the negative correlation. There is only a small fraction of oscillators that has learned to spike at the right time and manages to keep increasing its synaptic strength and eventually ends up at $K^{\rm max}$. \\%The dichotomy may also be found in the shape of the learning window: the large difference
+In the second column we can see the results of using the Song method with $W_S$. The learning behaviour is more regular and we can observe that with an increasing network connectivity we obtain increased synchronisation. Convergence is near completion, and we can see the separation between two clusters of node degrees in the high-contrast image of $K$, and in all histograms and plots. We can interpret the scatterplot of $\kin$ versus $\kout$ as a small group of nodes of varying degrees, and a large group of node degrees at the limits, as the definition of the degree vectors \eqref{eq:redefineFromK} takes only the absolute value. Most neurons see their synaptic strength decreased by the negative correlation. There is only a small fraction of oscillators that has learned to spike at the right time and manages to keep increasing its synaptic strength and eventually ends up at $K^{\rm max}$. \\%The dichotomy may also be found in the shape of the learning window: the large difference
 
 In the third column we can see the results of using the Song method with $W_C$. Convergence to a steady-state happens much more steadily, and also the synchronisation benefits from this approach. The coupling matrix shows an even stronger partition, as even fewer neurons manage to learn to spike at the right interval.
 
 
 
 \subsection{Results of using \STDP + \IP}
-When introducing intrinsic plasticity, the expected changes to $\eta_i$ counteract $K$ as expected. The results are shown in Figure \ref{fig:STDPandIP}. \\
+When introducing intrinsic plasticity, the expected changes to $\eta_i$ counteract $K$ as expected: $\eta_i$ is cranked up to the largest possible value for virtually all neurons, but it seems to have an effect. The results are shown in Figure \ref{fig:STDPandIP}. \\
 
-We find the Kempter method in the middle of a 
+We find the Kempter method again on the verge of exploding, where nodes with a large degree (both negative and positive) are about to take off to even larger orders of magnitude. The overall structure is similar as before, but the positive correlation between in- and out-degrees is stronger.\\
+
+The Song method benefits from a faster convergence, which we can see in the second and third column. This is likely due to the neurons becoming less susceptible with an increased excitability. A more uniform distribution of node degrees can be found between the two extrema, as convergence has halted. For both methods the dichotomy between low and high degree nodes is more clear, especially for $W_C$.
+
 
 \newpage
 \begin{figure}[H]
@@ -56,7 +59,4 @@ We find the Kempter method in the middle of a
 \caption{Results of the \STDP learning with \IP learning.}
 \label{fig:STDPandIP}
 \end{figure}
-
-\subsection{Results}
-\textcolor{red}{TODO}: \textsl{describe the emergent behaviour.}
 
