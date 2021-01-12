@@ -39,9 +39,8 @@ eqpts = NewtonRaphsonIterationEntangled(zoa, p);
 eqpts = eqpts(1:p.Mk) + 1i*eqpts(p.Mk+1:end);
 ZOAqp = eqpts'*p.P(p.k)/p.N;
 scatter(real(ZOAqp), imag(ZOAqp), 150, 'xb');
-text(real(ZOAqp) + 0.05, imag(ZOAqp), 'target')
+text(real(ZOAqp) + 0.05, imag(ZOAqp), 'convergence', 'HorizontalAlignment', 'right')
 
-%%
 % Normal OA integration
 [TOA, b] = ode45(@(t,z) MFROA(t,z,p), [0, 10], zoa, opts);
 Z = b*p.P(p.k)/p.N;
@@ -60,55 +59,52 @@ Zplot = plot(real(Z), imag(Z), 'LineWidth', 2);
 
 % legend([Zplot, Z2Dplot], "OA", "OA2D", "Location", "northeast")
 
-%%
+
 function dfdz = MFROAJEntangled(z,p)
-    x = z(1:2:end); y = z(2:2:end);
+    M = p.Mk;
+    x = z(1:M); y = z(1+M:end);
     dfdz = zeros(2*p.Mk, 2*p.Mk);
     
     etaH2k = p.eta0 + p.OA*(1 + (x.*x)/3 - 4.*x/3);
-        
     for r = 1:p.Mk
         xr = x(r); yr = y(r);
         for c = 1:p.Mk
             dH2k = p.OA(r,c)*(x(c)-2)*2/3;
             if r == c
                 dfdz(r + 0,c + 0) =   yr - (xr + 1)*p.delta + yr*etaH2k(r) + (xr + 1)*yr*dH2k;
-                dfdz(r + 0,c + 1) =  (xr - 1) + yr*p.delta + (xr + 1)*etaH2k(r);
-                dfdz(r + 1,c + 0) = -(xr - 1) - yr*p.delta + (xr + 1)*etaH2k(r) + 0.5*((xr+1)^2 - yr^2)*dH2k;
-                dfdz(r + 1,c + 1) =   yr - (xr + 1)*p.delta - yr*etaH2k(r);
+                dfdz(r + 0,c + M) =  (xr - 1) + yr*p.delta + (xr + 1)*etaH2k(r);
+                dfdz(r + M,c + 0) = -(xr - 1) - yr*p.delta + (xr + 1)*etaH2k(r) + 0.5*((xr+1)^2 - yr^2)*dH2k;
+                dfdz(r + M,c + M) =   yr - (xr + 1)*p.delta - yr*etaH2k(r);
             else 
-%                 dfdz(r + 0,c + 0) = (xr + 1)*yr*dH2k;
-%                 % dfdz(r + p.Mk,c + 0)    = 0;
-%                 dfdz(r + 1,c + 0) = 0.5*((xr+1)^2 - yr^2)*dH2k;
-%                 % dfdz(r + p.Mk,c + p.Mk) = 0;
+                dfdz(r + 0,c + 0) = (xr + 1)*yr*dH2k;
+                % dfdz(r + p.Mk,c + 0)    = 0;
+                dfdz(r + M, c + 0) = 0.5*((xr+1)^2 - yr^2)*dH2k;
+                % dfdz(r + p.Mk,c + p.Mk) = 0;
             end
         end
     end
 end
 
 
-function [z, zs] = NewtonRaphsonIterationEntangled(z0, p)
-
-    f = @(z, p) MFROA2D(0,z,p);    
+function [z, zs] = NewtonRaphsonIterationEntangled(z0c, p)
+%     f = @(z, p) MFROA2D(0,z,p);    
     df = @(z, p) MFROAJEntangled(z,p);
     
-    z = zeros(2*p.Mk, 1);
-    z(1:2:end) = real(z0);
-    z(2:2:end) = imag(z0);
-    
-    zc = z0';
+    z = [real(z0c), imag(z0c)]';
     zval = zeros(2*p.Mk, 1);
-        
+    zc = z0c;
+
     maxevals = 30;
-    zs = NaN(2, maxevals+1);
-    zs(1, 1) = z(1:2:end)'*p.P(p.k)/p.N;
-    zs(2, 1) = z(2:2:end)'*p.P(p.k)/p.N;
+    zs = NaN(maxevals+1, 1);
+    zs(1) = zc*p.P(p.k)/p.N;
     for evaltime = 1:maxevals
         z0 = z;
+        z0c = zc;
         
-        fval = MFROA(0,zc,p);    
-        zval(1:2:end) = real(fval);
-        zval(2:2:end) = imag(fval);
+        % Return to purely complex:
+        fval = MFROA(0,zc',p);    
+        zval(1:p.Mk) = real(fval);
+        zval(1+p.Mk:end) = imag(fval);
         
         fdiv = df(z,p)\zval;
         z = z - fdiv;
@@ -117,16 +113,21 @@ function [z, zs] = NewtonRaphsonIterationEntangled(z0, p)
         if error < 1.0e-9
             break
         end
-        zs(1, evaltime+1) = z(1:2:end)'*p.P(p.k)/p.N;
-        zs(2, evaltime+1) = z(2:2:end)'*p.P(p.k)/p.N;
-        if abs(zs(1, evaltime+1) + 1i*zs(2, evaltime+1)) > 1
+        
+        zc = z(1:p.Mk) + 1i*z(1+p.Mk:end);
+        zc = zc';
+        errorc = norm(zc*p.P(p.k)/p.N - z0c*p.P(p.k)/p.N);
+        disp([num2str(error), " == ", num2str(errorc), "?"]);
+        zs(evaltime+1) = zc*p.P(p.k)/p.N;
+        abs(zs(evaltime+1))
+        norm(zs(evaltime+1))
+        if norm(zs(evaltime+1)) > 10
             warning("Out of the complex circle");
             break
         end
         
-        zc = z(1:2:end) + 1i*z(2:2:end);
     end
-    plot(zs(1,:), zs(2,:), 'LineWidth', 2)
+    plot(real(zs), imag(zs), 'LineWidth', 2)
     disp(['Algorithm took ', num2str(evaltime), ' steps'])
 %     test = df(z0, p);
 %     det(test)
