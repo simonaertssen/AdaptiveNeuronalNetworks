@@ -83,10 +83,45 @@ We can also write this in vector notation, by setting $\boldsymbol{J}(\boldsymbo
 \end{align*}
 By assuming $\boldsymbol{f}(\boldsymbol{x}+\delta \boldsymbol{x}) = 0$ we can find that $\delta \boldsymbol{x} = -\boldsymbol{J}^{-1}( \boldsymbol{x}) \boldsymbol{f}(\boldsymbol{x})$ so that $\boldsymbol{x} + \delta \boldsymbol{x} =  \boldsymbol{x} - \boldsymbol{J}^{-1} (\boldsymbol{x}) \boldsymbol{f}(\boldsymbol{x})$. This expression converges to $\boldsymbol{x^\ast}$. When the equations are nonlinear, the equations converge to the real root as $\boldsymbol{x}_k =  \boldsymbol{x}_k - \boldsymbol{J}^{-1} ( \boldsymbol{x}_k)\boldsymbol{f}(\boldsymbol{x}_k)$.
 
-%\subsection{Jacobian of the Ott-Antonsen manifold}
-%\subsection{Jacobian of the Ott-Antonsen extended manifold}
+
+\subsection{Jacobian of the Ott-Antonsen manifold}
+Starting from \eqref{eq:OttAntonsenSystemFull}, we separate the real and imaginary parts of $z(\k, t)$ in $x_{\k} = x(\k, t)$ and $y_{\k} = y(\k, t)$:
+\begin{align*}
+\frac{\partial z_{\k}}{\partial t} &= -\frac{\ic}{2} \cdot \left( x_{\k}^2 + \ic 2x_{\k}y_{\k} - y_{\k}^2 - 2x_{\k} - \ic 2y_{\k} +1\right) + \frac{1}{2} \cdot \left( x_{\k}^2 + \ic 2x_{\k}y_{\k} - y_{\k}^2 + 2x_{\k} + \ic 2y_{\k} +1 \right) \cdot I_{\k}\\
+I_{\k} &= -\sigma_{\k} + \ic \eta_{0, \k} + \ic H_{2_{\k}} \\
+H_{2_{\k}} &= \frac{\kappa}{\kmean} \sum_{\kacc \in \K} P\left(\kacc\right) \: a\left(\kacc \rightarrow \k\right) \cdot \left( 1 + \frac{x_{\k}^2}{3} - \frac{4}{3} x_{\k} \right)
+\end{align*}
+Taking the dynamics per real and imaginary value yields:
+\begin{align*}
+\frac{\partial x_{\k}}{\partial t}
+&=f_{\k} \left(x_{\k}, y_{\k} \right) \\ 
+&=(x_{\k}-1) y_{\k}-\frac{(x_{\k}+1)^{2}-y_{\k}^{2}}{2} \sigma_{\k} + (x_{\k}+1) y_{\k} \left[\eta_{0}+ H_{2_{\k}}\right] \\ 
+\frac{\partial x_{\k}}{\partial t}
+&= g_{\k} \left(y_{\k}, y_{\k} \right) \\ 
+&=-\frac{(x_{\k}-1)^{2}-y_{\k}^{2}}{2}-(x_{\k}+1) y_{\k} \sigma_{\k} + \frac{(x_{\k}+1)^{2}-y_{\k}^{2}}{2} \cdot \left[\eta_{0} + H_{2_{\k}} \right] 
+\end{align*}
+And the Jacobian is found from the partial derivatives of $f$ and $g$:
+\begin{align*}
+\frac{\partial f_{\k}}{\partial x_{\k}} &= y_{\k}-(x_{\k}+1) \sigma_{\k}-y_{\k} \left[\eta_{0} + \kappa \cdot H_{2_{\k}} \right] + (x_{\k}+1) y_{\k} \frac{\partial H_{2_{\k}}}{\partial x_{\k}}\\
+\frac{\partial f_{\k}}{\partial y_{\k}} &= (x_{\k}-1)+y_{\k} \sigma_{\k} + (x_{\k}+1) \left[\eta_{0} + H_{2_{\k}} \right] \\
+\frac{\partial g_{\k}}{\partial x_{\k}} &= -(x_{\k} - 1) - y_{\k}  \sigma_{\k} + (x_{\k} + 1) \left[\eta_{0} + H_{2_{\k}} \right] + \left( \frac{(x_{\k} + 1)^2 - y_{\k}^2}{2} \right) \frac{\partial H_{2_{\k}}}{\partial x_{\k}} \\
+\frac{\partial g_{\k}}{\partial y_{\k}} &= y_{\k} - (x_{\k} + 1) \sigma_{\k} - y_{\k} \left[\eta_{0} + H_{2_{\k}} \right] \\
+\frac{\partial H_{2_{\k}}}{\partial x_{\k}} &= \frac{\kappa}{\langle k\rangle} P\left(\k\right) \: a\left(\k \rightarrow \k\right) (x_{\k}-2) \frac{2}{3} \\
+\frac{\partial H_{2_{\k}}}{\partial y_{\k}} &= 0 
+\end{align*}
+
+And the off-diagonal elements, the nodes represented by degree $\kacc$:
+\begin{align*}
+\frac{\partial f_{\k}}{\partial x_{\kacc}} &= (x_{\k}+1) y_{\k} \frac{\partial H_{2_{\k}}}{\partial x_{\kacc}}\\
+\frac{\partial f_{\k}}{\partial y_{\kacc}} &= 0 \\
+\frac{\partial g_{\k}}{\partial x_{\kacc}} &= \left( \frac{(x_{\k} + 1)^2 - y_{\k}^2}{2} \right) \frac{\partial H_{2_{\k}}}{\partial x_{\kacc}} \\
+\frac{\partial g_{\k}}{\partial y_{\kacc}} &= 0\\
+\frac{\partial H_{2_{\k}}}{\partial x_{\kacc}} &= \frac{\kappa}{\langle k\rangle} P\left(\kacc\right) \: a\left(\kacc \rightarrow \k\right)(x_{\kacc}-2) \frac{2}{3} \\
+\frac{\partial H_{2_{\k}}}{\partial y_{\kacc}} &= 0
+\end{align*}
 
 
+\label{LastPage}~
 
 
 
