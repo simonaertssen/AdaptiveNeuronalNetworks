@@ -1,7 +1,7 @@
 % !TEX root = ../main.tex
 \newpage
-\section{\mywork Mean Field Reductions for undirected graphs}
-We will now investigate the questions that were raised after deriving the \MFR. How do we deal with the curse of dimensionality concerning the degree distribution? But there are also other questions to be answered. If the synchronisation dynamics of the network of Theta neurons \eqref{eq:thetaneuronnetwork} can be predicted by the Ott-Antonsen reductions \cref{eq:OttAntonsenSystemFull,eq:OttAntonsenMeanField,eq:MeanField}, then it can also be measured by the order parameter \eqref{eq:orderparameter}. These systems describe the same quantity, but how can we show that?
+\section{\mywork Mean Field Reductions for undirected graphs} \label{sec:MFRSUndirected}
+We will now investigate the questions that were raised after deriving the \MFR. How do we deal with the curse of dimensionality concerning the degree distribution? There are also other questions to be answered. If the synchronisation dynamics of the network of Theta neurons \eqref{eq:thetaneuronnetwork} can be predicted by the Ott-Antonsen reductions \cref{eq:OttAntonsenSystemFull,eq:OttAntonsenMeanField,eq:MeanField}, then it can also be measured by the order parameter \eqref{eq:orderparameter}. These systems describe the same quantity, but how can we show that?
 
 
 \subsection{Directed graphs as permutations}
@@ -9,34 +9,34 @@ So how can we use the \MFR efficiently when the network is a directed graph with
 \begin{itemize}
 \item Sampling $\kinb$ and $\koutb$ from a bivariate distribution requires us to find the marginal distribution of $P$ for $\kinb$, sampling $\kinbi$, and then sampling $\koutbj$ from $P$ while keeping $\kinbi$ fixed. This is a cumbersome process. And what relation would there be between $\kinb$ and $\koutb$?
 \item However, if we assume that the marginal distributions for $\kinb$ an $\koutb$ are independent, there is a simplification to be found. We can even assume that the two marginal distributions are identical univariate distributions. 
-\item Hence, we can sample $\kinb$ from a univariate distribution and find $\koutb = \permute ( \kinb )$ so that the total number of links remains constant. 
+\item Hence, we can sample $\kinb$ from a univariate distribution and find $\koutb = \permute ( \kinb )$ so that the total number of links remains constant. This is an important trait, as we do not have to rely on the sheer size of the network to yield a constant number of links on average.
 \end{itemize}
 
-This hypothesis can be tested: we assume that $P(\k) = P(\kin) \cdot P(\kout)$ so that $P$ consists of two identical and independent distributions, given by the distributions presented in Chapter \ref{sec:NetworkTopologies}. Then, we sample $\kinb \sim P(\kin)$ and perform a permutation to find all node degrees $\k_j$. The surface given by $P$ and the histogram of $\k_j$ have been plotted in Figure \ref{fig:2Ddistributions}. As we can see, the variates follow the distribution well. 
+This hypothesis can be tested: we assume that $P(\k) = P(\kin) \cdot P(\kout)$ so that $P$ consists of two identical and independent distributions, given by the distributions presented in Chapter \ref{sec:NetworkTopologies}. Then, we sample $\kinb \sim P(\kin)$ and perform a permutation to find the in- and out-degrees $\k_j$ for each node $j$. The surface given by $P(\k)$ and the histogram of $\k_j$ have been plotted in Figure \ref{fig:2Ddistributions}. As we can see, the variates follow the distribution well. 
 
 \begin{figure}[ht]
 \centering
 \includegraphics[width = \textwidth]{../Figures/Distributions/2D.pdf}
-\caption{Bivariate distributions for different network topologies, using 10$^4$ number of samples. The surface given by $P(\k)$ is well approximated by the histogram of variates sampled from a univariate distribution. $\kmean =  2 \times 10^3$ for all topologies, $p \approx 0.2$ for the random network and $\gamma = 4.3$ for the scale-free network.}
+\caption{Bivariate distributions for different network topologies, using 10$^4$ number of samples. The surface given by $P(\k)$ is well approximated by the histogram of variates sampled from a univariate distribution, used as the marginal distribution. $\kmean =  2 \times 10^3$ for all topologies, $p \approx 0.2$ for the random network and $\gamma = 4.3$ for the scale-free network.}
 \label{fig:2Ddistributions}
 \end{figure}
 %Hence, we can use univariate distributions in our simulations of the Ott-Antonsen Mean Field \eqref{eq:OttAntonsenMeanField}.
-However, the problem remains the same: $\K$ is too large to simulate the dynamics of the network. What we can do, is use $P(k)$ in the Ott-Antonsen reduction for a symmetric network, and observe how much the dynamics of the asymmetric, simulated network differ.
+However, the problem remains the same: $\K$ is too large to simulate the dynamics of the network. What we can do, is use $P(k)$ in the Ott-Antonsen reduction for a symmetric network, and observe how much the dynamics of the asymmetric network differ.
 
 \subsection{Building the adjacency matrix} \label{sec:buildingA}
 If we want to simulate the network of theta neurons \eqref{eq:thetaneuronnetworkcurrent} we need to construct the adjacency matrix. We can find an exact solution for $A$ given the degree vectors in \eqref{eq:definekinkoutfromP}. $A_{ij}$ represents a directed graph, but $A_{ij} \neq A_{ji}$ is not a necessary condition. For the elements of $A_{ij}$ we need to find $N^2$ number of variables. We have the following constraints:
 \begin{enumerate}
 \item The column- and row-sums of $A_{ij}$ must be equal to $\kinb$ and $\koutb$, see \eqref{eq:definekinkoutfromA}. 2$N$ constraints.
-\item Self-coupling is mandatory: $A_{ii} = \boldsymbol{1}$. $N$ constraints.
+\item Self-coupling is mandatory: $A_{ii} = \boldsymbol{1}$. $N$ constraints. \cite{OttAntonsen2017}
 \item The total number of links is constant: $\sum_{i=1}^{N} \kinbi \equiv \sum_{j=1}^{N} \koutbj \equiv \sum_{i,j=1}^{N}A_{i j}$. 1 constraint.
 \end{enumerate}
-This means that there are $N^2 - (3N + 1)$ variables to find. Once a solution has been found, $A_{ij}$ can be switched with element $A_{ic}$ if $A_{ij} \neq A_{ic}$ and $A_{rj}$ with $A_{rc}$, which yields a new feasible solution. The number of switches one can make is high, and therefore we can simply try a stochastic approach to obtain $A$:
+This means that there are $N^2 - (3N + 1)$ variables to find. Once a solution has been found, $A_{ij}$ can be switched with element $A_{ic}$ if $A_{ij} \neq A_{ic}$ and $A_{rj}$ with $A_{rc}$, which yields another feasible solution. The solutions to this problem are thus bound by permutation symmetry. The number of switches one can make is high, and therefore we can simply try a stochastic approach to obtain $A$:
 \begin{enumerate}
 \item Choose a random row $i \in [1,N]$. $A_{i,i} = 1$, so we need $m = \kinbi - 1$ elements that are 1.
 \item Perform $\permute ( \koutbj, j \neq i)$ and therein find the indices $\boldsymbol{\ell}$ of the $m$ first largest elements. 
 \item Set $A_{il} = 1 \: \: \forall \: \: l \in \permuteinv (\boldsymbol{\ell})$.
 \end{enumerate}
-Algorithms that find the largest value in a vector start from the first or the last element. The permutation allows us to find different maxima every time by shuffling the vector.
+Algorithms that find the largest value in a vector start from the first or the last element. The permutation in step 2 allows us to find different maxima every time by shuffling the row, which greatly reduces the event that constraint 1 does not hold. In practice, this stochastic method finds a solution for $A$ within 5 tries.
 
 \begin{figure}[H]
 \centering
@@ -48,7 +48,7 @@ Algorithms that find the largest value in a vector start from the first or the l
 
 
 \subsection{Initial conditions: analitical versus numerical approaches} \label{sec:initialconditions}
-As our goal is to compare theory and simulations, we need to be able to start both at the exact same condition. This notion requires us to transform between the three number sets that our dynamics are described in: $\theta \in \T^N$, $z \in \C^{M_{\k}}$ and $Z, \bar{Z} \in \C$. It is really only necessary to find a transformation that holds accurately for $t=0$, as the distribution of $\theta$ and $z$ over their number set is unknown, but we assume they converge to that distribution when the systems are computed.
+As our goal is to compare theory and simulations, we need to be able to start both at the exact same condition. This notion requires us to transform between the three number sets that our dynamics are described in: $\theta \in \T^N$, $z \in \C^{M_{\k}}$ and $Z, \bar{Z} \in \C$. It is really only necessary to find a transformation that holds accurately for $t=0$, as the distribution of $\theta$ and $z$ over their number set is unknown, but we assume they converge to that distribution when the systems are computed. 
 
 %As the systems in \cref{eq:orderparameter,eq:OttAntonsenMeanField,eq:MeanField} describe the same dynamics for fully connected networks, it is important to be able to transform initial conditions between systems. If we expect their behaviour to be the same, then we need to test that by starting from the same point in time. Hence we can test whether \textsl{macroscopically} we can find the same equilibria, but we can also test \textsl{microscopically} whether the systems arrive at those points at the same time. 
 
@@ -58,7 +58,7 @@ As our goal is to compare theory and simulations, we need to be able to start bo
 % - macroscopically and microscopically - and this is the best way to test the \MFR theory. 
 
 %When transforming between $\theta_i(t) \leftrightarrow z(\k,t) \leftrightarrow Z(t)$ we go from $\T^N \leftrightarrow \C^{M_\k} \leftrightarrow \C$. If we have the same initial conditions, then all systems will predict the same behaviour. We will only map everything to $\C$.\\
-As we can optimally study the behaviour of $Z$ and $\bar{Z}$ in the complex unit circle, the most important transformations are those that yield $\theta$ and $z$ from $Z$ and $\bar{Z}$ respectively. Hence, we can start our simulations anywhere in $\C$, close to the limit cycle for example, which was observed in Figure \ref{fig:MFRCPW}.
+As we can optimally study the behaviour of $Z$ and $\bar{Z}$ in the complex unit circle, the most important transformations are those that yield $\theta$ and $z$ from $Z$ and $\bar{Z}$ respectively. Hence, we can start our simulations anywhere in $\C$, close to the limit cycle in Figure \ref{fig:MFRCPW} for example. Our analysis will benefit a great deal from this advantage. \\
 
 %As we can study the behaviour of $Z$ and $\bar{Z}$ in the complex unit circle, the most important relation we need to find is the transformation from $\C$ to $\T^{N}$ and from $\C$ to $\C^{M_{\k}}$, which yield the phase angles $\theta_i(0)$ and the degree dynamics $z(\k,0)$ from $Z(0)$ and $\bar{Z}(0)$ respectively. \\
 
@@ -71,12 +71,12 @@ z(\k,0) \longrightarrow \bar{Z}(0) &= \frac{1}{N} \sum_{\k \in \K} P(\k) z(\k, 0
 \end{align}
 Here we can immediately see that information about the distribution of $\theta$ and $z$ is lost when taking the (weighed) average. 
 
-Starting from an initial synchronization $Z(0)$ and taking the inverse tranfsormation, we can make use of the fact that the average of a set of identical values is the value itself. This is simple for $\theta_i(0)$: we can take all phase angles to be the same at $t = 0$. For $z(\k,0)$ we have a weighed average which we need to undo, while making sure that the whole sums up to $N$ by multiplying with the total number of neurons $n(\k)$ of degree $\k$:
+Starting from an initial synchronization $Z(0)$ and taking the inverse tranfsormation, we can make use of the fact that a set of identical values has an average equal to that value. This is simple for $\theta_i(0)$: we can take all phase angles to be the same at $t = 0$. For $z(\k,0)$ we have a weighed average which we need to invert, while making sure that the whole sums up to $N$ by multiplying with the total number of neurons $n(\k)$ of degree $\k$:
 \begin{align}
 Z(0) \xrightarrow{\hspace*{8mm}} \theta_i(0) &= -\ic \cdot \log \left( Z(0) \right)  \label{eq:Ztotheta} \\
 Z(0) \longrightarrow z(\k,0) &= \frac{Z(0) \cdot n(\k)}{P(\k)} \label{eq:Ztoz}
 \end{align}
-This approach only alters the magnitude of $Z(0)$, so that $z(\k,0)$ will be distributed on a line through $Z(0)$. Then, transforming between $\theta_i$ and $z(\k)$, we need to filter $\theta_i$ per degree as there exist $n(\k)$ number of nodes with $\degree ( \theta_i ) = \k$:
+It is necessary to include $n(\k)$, as $P$ is only accurate in the limit that $N \gg 1$. This approach only alters the magnitude of $Z(0)$, so that $z(\k,0)$ will be distributed on a line through $Z(0)$. Then, transforming between $\theta_i$ and $z(\k)$, we need to filter $\theta_i$ per degree as there exist $n(\k)$ number of nodes with $\degree ( \theta_i ) = \k$:
 \begin{alignat}{2}
 z(\k,0) \longrightarrow \theta_i(0) &= -\ic \cdot \log \left( \frac{z(\k)\cdot P(\k)}{n(\k)} \right) \qquad &&\forall \: \theta \in \{ \theta \: | \: \degree(\theta) = \k \}  \label{eq:ztottheta}\\
 \theta_i(0) \longrightarrow z(\k,0) &= \sum_{\k} e^{\ic \vartheta_{\k}} \qquad \qquad &&\forall \: \vartheta_{\k} \in \{ \vartheta_{\k} = \sum^{n(\k)} \theta \: | \: \degree(\theta) = \k \} \label{eq:thetatoz}
@@ -84,7 +84,7 @@ z(\k,0) \longrightarrow \theta_i(0) &= -\ic \cdot \log \left( \frac{z(\k)\cdot P
 %We can see how $\lim_{N \rightarrow +\infty} n(\k) = P(\k)$, which makes these maps exact for any network size. 
 %The reason that these transformations can only hold for the initial state is because it is currently unknown what distributions $\theta_i(t)$ and $z(\k,t)$ should have. That information is lost when taking the (weighed) average in \eqref{eq:orderparameter} and \eqref{eq:MeanField}. \\
 
-The relations derived here raise problems when $P(\k)$ spans different orders of magnitude. \eqref{eq:ztoZ} does not bound $z$ to its set, so it might occur that the distribution of $z$ has values outside of the complex unit circle. However, transforming back to $\bar{Z}$ will always be correct. This problem does not occur for $\theta$, as $\T$ is a one-parameter group. Let us look at the example in Figure \ref{fig:mappings}, where we are trying to find $z(\k, 0)$ so that $\bar{Z}(0)$ is equal to the desired initial condition $Z(0) = $ -0.2 + $\ic$0.8, using a scale-free topology. \\
+The relations derived here raise problems when $P(\k)$ spans different orders of magnitude. \eqref{eq:Ztoz} does not bound $z$ to its set, so it might occur that the distribution of $z$ has values outside of the complex unit circle. However, transforming back to $\bar{Z}$ will always be correct. This problem does not occur for $\theta$, as $\T$ is a one-parameter group because multiplication and division of elements in the group remain in the group. Let us look at the example in Figure \ref{fig:mappings}, where we are trying to find $z(\k, 0)$ so that $\bar{Z}(0)$ is equal to the desired initial condition $Z(0) = $ -0.2 + $\ic$0.8, using a scale-free topology. \\
 
 %The initial values of $z$ are not bound on $\C$, so it might occur that the initial condition given through \eqref{eq:ztoZ} is exact, but that the distribution of $z(\k,t)$ leaves us with some out of the complex unit circle. Let us look at the example in Figure \ref{fig:mappings}, where we are trying to find $z(\k, 0)$ so that $\bar{Z}(0)$ is equal to our desired initial condition $Z(0) = $ -0.2 + $\ic$0.8. \\
 
@@ -92,20 +92,20 @@ The relations derived here raise problems when $P(\k)$ spans different orders of
  
 When simply taking all $z(\k, 0) = Z(0)$, there is a slight offset between $Z(0)$ and $\bar{Z}(0)$. However, the dynamics are well-behaved and the end-state is almost a smooth curve. One can really interpret this curve as the attractive manifold of the Ott-Antonsen reduction. This method is an easy way of quickly coming up with an initial condition, without requiring any computation. In general, this yields quite a good approximation. \\
 
-When using \eqref{eq:ztoZ}, we can see that the initial conditions lie on a straight line through the origin indeed, and that $\bar{Z}(0)$ is exactly equal to $Z(0)$. When a given $\k$ yields a small $P(\k)$, $z(\k,0)$ will be scaled away from the origin. This means that the dynamics of nodes of that degree are not a good representation. However, their contribution to $\bar{Z}$ in \eqref{eq:OttAntonsenMeanField} is small, so sometimes these effects cancel out and the dynamics are in fact quite smooth. However, we can see that in our example the dynamics are not represented well, resulting in large errors after conception and a more random end-state. We do expect these effects to cancel out after longer periods and for larger $N$, as the manifold is attractive and larger networks cancel out outliers, but our aim is to be as precise as possible from $t=0$. \\
-
 \begin{figure}[H]
 \centering
 \includegraphics[width = \textwidth]{../Figures/PhaseSpace/Mappings.pdf}
-   \caption{Simulation of 1000 neurons in a scale-free network. Example on the importance of accurate initial conditions. A scalefree network is used to show the outcome of different strategies of }
+   \caption{Simulation of 1000 neurons in a scale-free network. Example on the importance of accurate initial conditions. A scalefree network is used to show the outcome of different strategies of initialising the network. Left: the initial condition is not correct, but it yields very smooth dynamics. Middle: the initial condition is correct, but it does not yield smooth dynamics. Right: the initial condition is correct, and it yields smooth dynamics.}
    \label{fig:mappings}
 \end{figure}
 
-When trying to address the problems that are encountered here, we can try and find the distribution of $z(\k,0)$ numerically by solving for the root of $f(z) = \| Z(0) - \bar{Z}(0) \|$ (where $\bar{Z}$ is computed from $z$) under the constraint that $| z | \leq 1$, starting from an initial guess $\hat{z}$, clustered around $Z(0)$. The resulting initial distribution is quite clustered but as it is mostly a result of the constraint, we are more interested in the end-state, which shows a lot of improvements. The initial conditions are exact (up to $10^{-6}$) and the dynamics are smooth, which makes this method the most desirable. However, convergence can be very slow for scale-free networks, and the complexity of the system to solve scales with $\sim N^2$ . It is therefore necessary to judge which method to use when performing a new simulation.
+When using \eqref{eq:ztoZ}, we can see that the initial conditions lie on a straight line through the origin indeed, and that $\bar{Z}(0)$ is exactly equal to $Z(0)$. When a given $\k$ yields a small $P(\k)$, $z(\k,0)$ will be scaled away from the origin. This means that the dynamics of nodes of that degree are not well represented. However, their contribution to $\bar{Z}$ in \eqref{eq:OttAntonsenMeanField} is small, so sometimes these effects cancel out and the dynamics are in fact quite smooth. However, we can see that in our example the dynamics are not represented well, resulting in large errors after conception and a more random end-state. We do expect these effects to cancel out after longer periods and for larger $N$, as the manifold is attractive and larger networks cancel out outliers, but our aim is to be as precise as possible from $t=0$. \\
+
+When trying to address the problems that are encountered here, we can try and find the distribution of $z(\k,0)$ numerically by solving for the root of $f(z) = \| Z(0) - \bar{Z}(0) \|$ (where $\bar{Z}$ is computed from $z$) under the constraint that $| z | \leq 1$, starting from an initial guess $\hat{z}$, clustered around $Z(0)$. The resulting initial distribution is also quite clustered but as it is mostly a result of the constraint, we are more interested in the end-state, which shows a lot of improvements over the second method. The initial conditions are exact (up to $10^{-6}$) and the dynamics are smooth, which makes this method the most desirable. However, convergence can be very slow for scale-free networks, and the complexity of the system to solve scales with $\sim N^2$ . It is therefore necessary to judge which of the three methods to use when performing a new simulation.
 
 
 \subsection{Final conditions}
-Given that the final condition of the system is such a particular smooth curve, we can try and understand what kind of distribution $z$ follows on that curve. In Figure \ref{fig:FinalConditions} we have made a system converge to a stable node in the \PSR state until changes to the system were smaller than a tolerance. We can see that the final condition of $z$ is close to the final condition of $\bar{Z}$. If we divide the length of the curve into equal parts, we can count how many $z$ can be found in each interval. The resulting distributions difficult to interpret: we can see some elements of their respective degree distributions, but the likeness is not very high. 
+Given that the final condition of the system is such a particular smooth curve, we can try and understand what kind of distribution $z$ follows on that curve. In Figure \ref{fig:FinalConditions} we have made a different networks converge to a stable node in the \PSR state until changes to the system were smaller than a tolerance. We can see that the final condition of $z$ is close to the final condition of $\bar{Z}$. If we divide the length of the curve into equal parts, we can count how many $z$ can be found in each interval. The resulting distributions difficult to interpret, but we can see some traits of their respective degree distributions, though the likeness is not very high. 
 \begin{figure}[H]
 \centering
 \includegraphics[width = \textwidth]{../Figures/Distributions/FinalConditions.pdf}
@@ -113,7 +113,7 @@ Given that the final condition of the system is such a particular smooth curve, 
 \label{fig:FinalConditions}
 \end{figure}
 
-For other macroscopic states the distributions of $z$ across its final condition are quite similar as presented here. However, when the scale-free network has converged to the stable focus in the \PSS state, the final condition is a highly convoluted spiral, that is difficult to interpret. What is important though, is that there is a definite structure to be found in the final condition.
+For other macroscopic states the distributions of $z$ across its final condition are quite similar as presented here. However, when the scale-free network has converged to the stable focus in the \PSS state, the final condition is a highly convoluted spiral, which is difficult to interpret. What is important though, is that there is a definite structure to be found in the final condition as well.
 
 
 \subsection{Commutativity of complex vectors} 
@@ -160,12 +160,12 @@ However, for the typologies with more than one unique degree in the network, thi
 
 
 \subsection{Fixed-degree networks as a baseline}
-Now we have all the necessary tools to simulate networks of theta neurons. First, we will use a fixed-degree network, as this is the most simple instance of the different topologies. The results are shown in Figure \ref{fig:InspectMeanFieldFixedDegree}.
-There are small differences between simulation and theory, but these are most likely due to a finite network size and a finite integration step. As a matter of fact, the systems \eqref{eq:OttAntonsenMeanField} and \eqref{eq:MeanField} yield the exact same behaviour. This test benchmarks the lowest amount of error we can observe between simulation and theory, as for fixed-degree networks \eqref{eq:OttAntonsenSystemFull} consists of a single equation.
+Now we have all the necessary tools to simulate networks of theta neurons: the adjacency matrix, and an understanding of the initial conditions. First, we will use a fixed-degree network, as this is the most simple instance of the different topologies. As all nodes have the same degree, the dynamics of a symmetric and asymmetric fixed-degree network ought to be identical. The results are shown in Figure \ref{fig:InspectMeanFieldFixedDegree}.
+There are small differences between simulation and theory, but these are most likely due to a finite network size and a finite integration step. As a matter of fact, the mean-field systems \eqref{eq:OttAntonsenMeanField} and \eqref{eq:MeanField} yield the exact same behaviour. This test benchmarks the lowest amount of error we can observe between simulation and theory, as for fixed-degree networks \eqref{eq:OttAntonsenSystemFull} consists of a single equation.
 \begin{figure}[H]
 \centering
 \includegraphics[width = \textwidth]{../Figures/InspectMeanFieldFixedDegree.pdf}
-\caption{Comparison of the simulation of a fixed-degree network of Theta neurons and the Ott-Antonsen theory by the magnitude of the order parameter. We see that the same three macroscopic states are found by the three descriptions.}
+\caption{Comparison of the simulation of a fixed-degree network of Theta neurons and the Ott-Antonsen theory by the magnitude of the order parameter. We observe that the same three macroscopic states are found by the three descriptions.}
 \label{fig:InspectMeanFieldFixedDegree}
 \end{figure}
 
@@ -193,7 +193,7 @@ The dynamics of random networks seem to be very similar to fixed-degree networks
    \caption{CPW state for $\eta_0 = 10.75, \sigma = 0.5$ and $\kappa= -9$. The mean field settles onto a stable limit cycle.}
    \label{fig:MFOARCPW_random}
 \end{subfigure}
-   \caption{Three macroscopic states observed in the \MFR inside the imaginary unit circle $|Z(t)| = 1$. Green arrows mark the phase space vector field and blue trails mark solution curves. Red points indicate equilibrium points, with black arrows marking the direction of the eigenvectors in that point, scaled according to the magnitude of the corresponding eigenvalues. The dotted line in the \CPW state is the limit cycle of the fixed-degree networks, added for reference.}
+   \caption{Three macroscopic states observed in the \MFR inside the imaginary unit circle $|Z(t)| = 1$. Green arrows mark the phase space vector field and blue trails mark solution curves. Red points indicate equilibrium points, found by the fixed-point iteration. The dotted line in the \CPW state is the limit cycle of the fixed-degree networks, added for reference.}
    \label{fig:macroscopicstatesrandomnetworks}
 \end{figure}
 
@@ -204,9 +204,11 @@ The dynamics of random networks seem to be very similar to fixed-degree networks
 \label{fig:InspectMeanFieldRandom}
 \end{figure}
 
-For scale-free networks, we can see that again the three macroscopic states continue to exist, Figure \ref{fig:macroscopicstatesscalefreenetworks}. However, it seems like there is a fairly large discrepancy between simulation and theory, in Figure \ref{fig:InspectMeanFieldScaleFree}. The stable node in the \PSR state is found at different locations, and the limit cycle in the \CPW state seems to be very different, but with a similar period. Indeed, if we look at the limit cycle to which the dynamics are attracted to in Figure \ref{fig:InspectMeanFieldScaleFreePhaseSpace} we can indeed see two distinct cycles. \\
+For scale-free networks, we can see that again the three macroscopic states continue to exist, Figure \ref{fig:macroscopicstatesscalefreenetworks}. However, it seems like there is a fairly large discrepancy between symmetric and asymmetric networks, in Figure \ref{fig:InspectMeanFieldScaleFree}. The stable node in the \PSR state is found at different locations, and the limit cycle in the \CPW state seems to be very different, but with a similar period. Indeed, if we look at the limit cycle to which the dynamics are attracted to in Figure \ref{fig:InspectMeanFieldScaleFreePhaseSpace} we can indeed see two distinct cycles. \\
 
-\textcolor{red}{TODO}: \textsl{argue why this is the case, suspicions on the assortativity function not being assortative.}
+This means that due to its topology, the scale-free network cannot be represented by a symmetric variant. The degree distribution is asymmetric, and this likely causes the asymmetry observed here. Another observation is that now the fixed-point iteration finds the centre of the limit cycle as a stable equilibrium. The limit cycle has always been observed to be attractive, so a stable equilibrium within would require another unstable limit cycle around the equilibrium. We will regard this as an error, as we do not have the Jacobian to verify the stability of the point.
+
+%\textcolor{red}{TODO}: \textsl{argue why this is the case, suspicions on the assortativity function not being assortative.}
 
 
 \begin{figure}[H]
@@ -215,21 +217,21 @@ For scale-free networks, we can see that again the three macroscopic states cont
    \centering
   \includegraphics[width=\linewidth]{../Figures/PhaseSpace/MFOARPSR_scalefree.pdf}
    \caption{PSR state for $\eta_0 = -0.9, \sigma = 0.8$ and $\kappa= -2$. The mean field settles onto a stable node.}
-   \label{fig:MFOARPSR_random} 
+   \label{fig:MFOARPSR_scalefree} 
 \end{subfigure} \hfill
 \begin{subfigure}[b]{0.32\linewidth}
    \centering
   \includegraphics[width=\linewidth]{../Figures/PhaseSpace/MFOARPSS_scalefree.pdf}
    \caption{PSS state for $\eta_0 = 0.5, \sigma = 0.7$ and $\kappa= 2$. The mean field settles onto a stable focus.}
-   \label{fig:MFOARPSS_random}
+   \label{fig:MFOARPSS_scalefree}
 \end{subfigure} \hfill
 \begin{subfigure}[b]{0.32\linewidth}
    \centering
   \includegraphics[width=\linewidth]{../Figures/PhaseSpace/MFOARCPW_scalefree.pdf}
    \caption{CPW state for $\eta_0 = 10.75, \sigma = 0.5$ and $\kappa= -9$. The mean field settles onto a stable limit cycle.}
-   \label{fig:MFOARCPW_random}
+   \label{fig:MFOARCPW_scalefree}
 \end{subfigure}
-   \caption{Three macroscopic states observed in the \MFR inside the imaginary unit circle $|Z(t)| = 1$. Green arrows mark the phase space vector field and blue trails mark solution curves. Red points indicate equilibrium points, with black arrows marking the direction of the eigenvectors in that point, scaled according to the magnitude of the corresponding eigenvalues. The dotted line in the \CPW state is the limit cycle of the fixed-degree networks, added for reference.}
+   \caption{Three macroscopic states observed in the \MFR inside the imaginary unit circle $|Z(t)| = 1$. Green arrows mark the phase space vector field and blue trails mark solution curves. Red points indicate equilibrium points, found by the fixed-point iteration. The dotted line in the \CPW state is the limit cycle of the fixed-degree networks, added for reference}
    \label{fig:macroscopicstatesscalefreenetworks}
 \end{figure}
 
