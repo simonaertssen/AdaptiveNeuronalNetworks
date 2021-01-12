@@ -77,10 +77,10 @@ function dfdz = MFROAJEntangled(z,p)
                 dfdz(r + 1,c + 0) = -(xr - 1) - yr*p.delta + (xr + 1)*etaH2k(r) + 0.5*((xr+1)^2 - yr^2)*dH2k;
                 dfdz(r + 1,c + 1) =   yr - (xr + 1)*p.delta - yr*etaH2k(r);
             else 
-                dfdz(r + 0,c + 0) = (xr + 1)*yr*dH2k;
-                % dfdz(r + p.Mk,c + 0)    = 0;
-                dfdz(r + 1,c + 0) = 0.5*((xr+1)^2 - yr^2)*dH2k;
-                % dfdz(r + p.Mk,c + p.Mk) = 0;
+%                 dfdz(r + 0,c + 0) = (xr + 1)*yr*dH2k;
+%                 % dfdz(r + p.Mk,c + 0)    = 0;
+%                 dfdz(r + 1,c + 0) = 0.5*((xr+1)^2 - yr^2)*dH2k;
+%                 % dfdz(r + p.Mk,c + p.Mk) = 0;
             end
         end
     end
