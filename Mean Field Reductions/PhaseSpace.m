@@ -523,3 +523,56 @@ ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfo
 
 exportgraphics(f_OARCPW,'../Figures/PhaseSpace/MFOARCPW_scalefree.pdf')
 close(f_OARCPW)
+
+%% 10. Difference in the limit cycles of the scale-free network
+tnow = 0; tend = 50;
+h = 0.01;
+
+pars.N = 5000;
+pars.a_n = 0.666666666666666666667;
+pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9;
+
+seed = 2; rng(seed); IC = wrapToPi(randn(pars.N, 1)*1.4);
+pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
+odeoptions = odeset('RelTol', 1.0e-9,'AbsTol', 1.0e-9);
+
+degree = 3;
+IC = pi*ones(pars.N, 1) - pi;
+
+sfpars = make_scalefreeparameters(pars, degree);
+[~, thetasfull, A] = DOPRI_simulatenetwork(tnow,tend,IC,h,sfpars);
+zfull = orderparameter(thetasfull);
+ts = findlimitcycle(abs(zfull));
+zfull = zfull(ts(1):ts(2));
+disp('Full scale test done')
+
+sfpars = prepareOAparameters(sfpars);
+z0 = orderparameter(IC)*ones(sfpars.Mk,1);
+[~, ZOA] = OA_simulatenetwork(tnow, tend, z0, sfpars, odeoptions);
+TOAs = findlimitcycle(abs(ZOA));
+ZOA = ZOA(TOAs(1):TOAs(2));
+disp('OA mean field test done')
+
+% Figure:
+labelfont = 30;
+col = sfpars.colorvec;
+f_scalefree = figure('Renderer', 'painters', 'Position', rect); hold on; box on;
+cycle = drawfixeddegreelimitcycle();
+cycle.HandleVisibility = 'off';
+z0s = drawOAvectors(X + 1i*Y, in, sfpars, cm(2,:));
+
+plot(real(zfull), imag(zfull), '-', 'LineWidth', 3, 'Color', '#0072BD');
+plot(real(ZOA), imag(ZOA), '-', 'LineWidth', 3, 'Color', col);
+    
+phasespaceplot();
+
+legend('$$Z(t)_{A_{ij}}$$', '$$\bar{Z}(t)_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'northeast', 'Orientation','horizontal')
+
+% End figure:
+hold off; set(gcf,'color','w'); xlim([-1,1]); ylim([-1,1]); axis square;
+set(gca,'XTickLabel',[]); set(gca,'YTickLabel',[]); 
+xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
+ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
+
+exportgraphics(f_scalefree,'../Figures/PhaseSpace/ScalefreeLimCycles.pdf')
+close(f_scalefree)
