@@ -7,8 +7,8 @@ addpath('../Functions');
 addpath('../Mean Field Reductions/');
 
 pars.N = 5000;
-pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9; % CPW (limit cycle)
-% pars.eta0 = 0.4; pars.delta = 0.7; pars.K = 2;    % PSS (stable spiral)
+% pars.eta0 = 10.75; pars.delta = 0.5; pars.K = -9; % CPW (limit cycle)
+pars.eta0 = 0.4; pars.delta = 0.7; pars.K = 2;    % PSS (stable spiral)
 % pars.eta0 = -0.9; pars.delta = 0.8; pars.K = -2;  % PRS (stable focus)
 
 seed = 1; rng(seed);
@@ -20,12 +20,11 @@ opts = odeset('RelTol', 1.0e-9,'AbsTol', 1.0e-9);
 %%
 clc
 
-p
-
 figure; hold on
 phasespaceplot();
 
 Z0 = -0.3 + 1i*0.9;
+text(real(Z0) + 0.05, imag(Z0), 'origin')
 % zoa = map_Ztozoa(Z0, p)';
 zoa = Z0*ones(1,p.Mk);
 scatter(real(Z0), imag(Z0), 150, '+k')
@@ -34,29 +33,32 @@ scatter(real(zoa*p.P(p.k)/p.N), imag(zoa*p.P(p.k)/p.N), 150, 'xb');
 eqpts = OA_fixedpointiteration(zoa', p);
 ZOA = eqpts'*p.P(p.k)/p.N;
 scatter(real(ZOA), imag(ZOA), 150, '+r');
+text(real(ZOA) + 0.05, imag(ZOA), 'target')
 
 eqpts = NewtonRaphsonIterationEntangled(zoa, p);
 eqpts = eqpts(1:p.Mk) + 1i*eqpts(p.Mk+1:end);
-ZOA = eqpts'*p.P(p.k)/p.N;
-% scatter(real(ZOA), imag(ZOA), 150, 'xb');
+ZOAqp = eqpts'*p.P(p.k)/p.N;
+scatter(real(ZOAqp), imag(ZOAqp), 150, 'xb');
+text(real(ZOAqp) + 0.05, imag(ZOAqp), 'target')
 
+%%
 % Normal OA integration
 [TOA, b] = ode45(@(t,z) MFROA(t,z,p), [0, 10], zoa, opts);
 Z = b*p.P(p.k)/p.N;
 scatter(real(Z(1)), imag(Z(1)), 100, 'ob');
 Zplot = plot(real(Z), imag(Z), 'LineWidth', 2);
 
-% 2D OA integration
-zoa2D = zeros(2*p.Mk, 1);
-zoa2D(1:2:end) = real(zoa);
-zoa2D(2:2:end) = imag(zoa);
+% % 2D OA integration
+% zoa2D = zeros(2*p.Mk, 1);
+% zoa2D(1:2:end) = real(zoa);
+% zoa2D(2:2:end) = imag(zoa);
+% 
+% [TOA, b] = ode45(@(t,z) MFROA2D(t,z,p), [0, 10], zoa2D, opts);
+% Z2D = b(:, 1:2:end)*p.P(p.k)/p.N + 1i*b(:, 2:2:end)*p.P(p.k)/p.N;
+% scatter(real(Z2D(1)), imag(Z2D(1)), 100, 'ob');
+% Z2Dplot = plot(real(Z2D), imag(Z2D), 'LineWidth', 2);
 
-[TOA, b] = ode45(@(t,z) MFROA2D(t,z,p), [0, 10], zoa2D, opts);
-Z2D = b(:, 1:2:end)*p.P(p.k)/p.N + 1i*b(:, 2:2:end)*p.P(p.k)/p.N;
-scatter(real(Z2D(1)), imag(Z2D(1)), 100, 'ob');
-Z2Dplot = plot(real(Z2D), imag(Z2D), 'LineWidth', 2);
-
-legend([Zplot, Z2Dplot], "OA", "OA2D", "Location", "northeast")
+% legend([Zplot, Z2Dplot], "OA", "OA2D", "Location", "northeast")
 
 %%
 function dfdz = MFROAJEntangled(z,p)
@@ -70,12 +72,12 @@ function dfdz = MFROAJEntangled(z,p)
         for c = 1:p.Mk
             dH2k = p.OA(r,c)*(x(c)-2)*2/3;
             if r == c
-                dfdz(r + 0,c + 0) =   yr - (xr + 1)*p.delta - yr*etaH2k(r) - (xr + 1)*yr*dH2k;
-                dfdz(r + 0,c + 1) =  (xr - 1) + yr*p.delta - (xr + 1)*etaH2k(r);
+                dfdz(r + 0,c + 0) =   yr - (xr + 1)*p.delta + yr*etaH2k(r) + (xr + 1)*yr*dH2k;
+                dfdz(r + 0,c + 1) =  (xr - 1) + yr*p.delta + (xr + 1)*etaH2k(r);
                 dfdz(r + 1,c + 0) = -(xr - 1) - yr*p.delta + (xr + 1)*etaH2k(r) + 0.5*((xr+1)^2 - yr^2)*dH2k;
                 dfdz(r + 1,c + 1) =   yr - (xr + 1)*p.delta - yr*etaH2k(r);
             else 
-                dfdz(r + 0,c + 0) = -(xr + 1)*yr*dH2k;
+                dfdz(r + 0,c + 0) = (xr + 1)*yr*dH2k;
                 % dfdz(r + p.Mk,c + 0)    = 0;
                 dfdz(r + 1,c + 0) = 0.5*((xr+1)^2 - yr^2)*dH2k;
                 % dfdz(r + p.Mk,c + p.Mk) = 0;
@@ -104,7 +106,7 @@ function [z, zs] = NewtonRaphsonIterationEntangled(z0, p)
     for evaltime = 1:maxevals
         z0 = z;
         
-        fval = MFROA(0,zc',p);    
+        fval = MFROA(0,zc,p);    
         zval(1:2:end) = real(fval);
         zval(2:2:end) = imag(fval);
         
