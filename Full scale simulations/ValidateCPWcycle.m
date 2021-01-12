@@ -190,7 +190,7 @@ IC = pi*ones(pars.N, 1) - pi;
 sfpars = make_scalefreeparameters(pars, degree, 400, 700);
 [~, thetasfull, A] = DOPRI_simulatenetwork(tnow,tend,IC,h,sfpars);
 zfull = orderparameter(thetasfull);
-% ts = findlimitcycle(abs(zfull));
+ts = findlimitcycle(abs(zfull));
 disp('Full scale test done')
 
 %%
@@ -199,23 +199,22 @@ sfpars = prepareOAparameters(sfpars);
 z0 = map_thetatozoa(gather(IC), sfpars);
 z0 = orderparameter(IC)*ones(sfpars.Mk,1);
 [~, ZOA] = OA_simulatenetwork(tnow, tend, z0, sfpars, odeoptions);
-% TOAs = findlimitcycle(abs(ZOA));
+TOAs = findlimitcycle(abs(ZOA));
 disp('OA mean field test done')
 
-% zfull = zfull(ts(1):ts(2));
-% ZOA = ZOA(TOAs(1):TOAs(2));
+zfull = zfull(ts(1):ts(2));
+ZOA = ZOA(TOAs(1):TOAs(2));
 
 %% Plotting the results:
+col = p.colorvec;
+
 f_scalefree = figure('Renderer', 'painters', 'Position', [50 800 500 500]); box on; hold on; axis square;
 
 cycle = drawfixeddegreelimitcycle();
 cycle.HandleVisibility = 'off';
 
-% scatter(real(zfull(1)), imag(zfull(1)), 50, 'x', 'MarkerEdgeColor', '#0072BD', 'LineWidth', 1, 'HandleVisibility', 'off');
-plot(real(zfull), imag(zfull), '-', 'LineWidth', 2, 'Color', '#0072BD');
-
-% scatter(real(ZOA(1)), imag(ZOA(1)), 50, 'o', 'MarkerEdgeColor', '#000000', 'LineWidth', 1, 'HandleVisibility', 'off');
-plot(real(ZOA), imag(ZOA), '-', 'LineWidth', 2, 'Color', '#000000');
+plot(real(zfull), imag(zfull), '-', 'LineWidth', 2, 'Color', col);
+plot(real(ZOA), imag(ZOA), '-', 'LineWidth', 2, 'Color', col);
 
 xlabel('Re$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
 ylabel('Im$\left[ \bar{Z}(t)\right]$','Interpreter','latex', 'FontSize', labelfont)
@@ -224,8 +223,8 @@ phasespaceplot();
 
 title(sprintf('\\bf Scale-free: $$N$$ = %d, $$\\langle k \\rangle$$ = %.1f, $$\\gamma$$ = %0.1f', pars.N, sfpars.meandegree, sfpars.degree), 'FontSize', titlefont, 'Interpreter', 'latex')
 legend('$$Z(t)_{A_{ij}}$$', '$$\overline{Z(t)}_{MF_{OA}}$$', 'Interpreter', 'latex', 'FontSize', labelfont, 'Location', 'southoutside', 'Orientation','horizontal')
-% exportpdf(f_scalefree, '../Figures/PhaseSpace/InspectMeanFieldScaleFreePhaseSpace.pdf', export);
-print(f_scalefree, '../Figures/testScaleFree.png', '-dpng', '-r300')
+exportpdf(f_scalefree, '../Figures/PhaseSpace/InspectMeanFieldScaleFreePhaseSpace.pdf', export);
+% print(f_scalefree, '../Figures/testScaleFree.png', '-dpng', '-r300')
 % close(f_scalefree)
 
 disp('Made scale-free network figure')
