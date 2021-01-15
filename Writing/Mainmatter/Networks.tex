@@ -69,7 +69,7 @@ There are constraints on $\gamma$ to yield a scale-free network. When $0 < \gamm
 \cite{BarabasiNetworkBook2016}.
 
 \subsection{Networks of theta neurons}
-We can easily extend the model to networks of neurons:
+The human brain can be seen as a graph, with neurons as graph nodes, where the pre- to postsynaptic relation models a directional edge in the network. These edges are usually unidirectional though it can happen that the post- reconnects to the presynaptic neuron. Using this knowledge, we can easily extend the model to networks of neurons:
 \begin{align}
 \dot{\theta}_{i} &=\left(1-\cos \theta_{i}\right)+\left(1+\cos \theta_{i}\right) \cdot \left[\eta_{i} + I_{i}(t)\right] \qquad \theta_i \in \T^N  \label{eq:thetaneuronnetwork} \\
 I_{i}(t) &=\frac{\kappa}{\kmean} \sum_{j=1}^{N} A_{i j} \cdot \mathcal{P}_{n}(\theta_{j}) \label{eq:thetaneuronnetworkcurrent}

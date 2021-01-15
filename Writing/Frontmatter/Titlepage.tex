@@ -1,48 +1,66 @@
+% !TEX root = ../main.tex
 
 \begin{titlepage} % Suppresses displaying the page number on the title page and the subsequent page counts as page 1
 	\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for horizontal lines, change thickness here
 	
-	\center % Centre everything on the page
+	%\center % Centre everything on the page
 	
 	%------------------------------------------------
 	%	Headings
 	%------------------------------------------------
+	\begin{minipage}{\linewidth}
+   	\begin{flushright}
+	Msc thesis\\ Mathematical Modelling and Computation
+    	\end{flushright}
+ 	\end{minipage}
 	
-	{\Large \department}\\[1.5cm] % Main heading such as the name of your university/college
+	\begin{center} \begin{minipage}{0.87\linewidth}
+	\begin{tikzpicture}[remember picture,overlay]
+    		\node[anchor=south west,yshift=64pt,xshift=55pt]%
+        		at (current page.south west)
+        		{\includegraphics[height=14mm]{../Figures/Logos/ComputeLogo.png}};
+	\end{tikzpicture}
+	\begin{tikzpicture}[remember picture,overlay]
+    		\node[anchor=south east,yshift=64pt,xshift=-55pt]%
+        		at (current page.south east)
+        		{\includegraphics[height=14mm]{../Figures/Logos/DTUlogoRed.png}};
+	\end{tikzpicture}
+
+	\end{minipage} \end{center}
+	\vspace{100mm}
 	
-	{\large \departmentdescriber}\\[0.5cm] % Major heading such as course name
+	
+	%{\Large \department}\\[1.5cm] % Main heading such as the name of your university/college
+	
+	%{\large \departmentdescriber}\\[0.5cm] % Major heading such as course name
 		
 	%------------------------------------------------
 	%	Title
 	%------------------------------------------------
 	
-	\HRule\\[0.4cm]
+	%\HRule\\[0.4cm]
 	
-	{\Large \bfseries \thesistitle}\\[0.4cm] % Title of your document
-	{\Large \bfseries \thesissubtitle}\\ % Title of your document
+	{\Huge \thesistitle: \\ \thesissubtitle}\\% Title of your document
 	
-	\HRule\\[1.5cm]
+	%\HRule\\[1.5cm]
 	
 	%------------------------------------------------
 	%	Author(s)
 	%------------------------------------------------
 	
-	\begin{minipage}{0.4\textwidth}
+	\begin{minipage}{0.5\textwidth}
 		\begin{flushleft}
 			\large
-			\textit{Author}\\
-			\thesisauthor \\ % Your name
-			\studentnumber
+			\thesisauthor, \studentnumber
 		\end{flushleft}
-	\end{minipage}
-	~
-	\begin{minipage}{0.4\textwidth}
-		\begin{flushright}
+	\end{minipage} \\[15mm]
+	\begin{minipage}{0.5\textwidth}
+		\begin{flushleft}
 			\large
 			\textit{Supervisors}\\
 			\thesissupervisorI \\
 			\thesissupervisorII % Supervisor's name
-		\end{flushright}
+		\end{flushleft}
 	\end{minipage}
 	
 	% If you don't want a supervisor, uncomment the two lines below and comment the code above
@@ -53,7 +71,7 @@
 	%	Date
 	%------------------------------------------------
 	
-	\vfill\vfill\vfill % Position the date 3/4 down the remaining page
+	\vfill\vfill % Position the date 3/4 down the remaining page
 	
 	{\large\thedate} % Date, change the \today to a set date if you want to be precise
 	
