@@ -4,34 +4,34 @@
 \vspace{-.5cm}
 \begin{alignat*}{2}
 & \ic, e \text{ (or} \exp\text{)} &&\text{Imaginary unit. Euler's number.}\\ \\
-& n, \degree(n) &&\text{Network node. Degree of node $n$.}\\
+& n&&\text{Network node}\\
 & N &&\text{Network degree. The number of neurons in the network.}\\
 & A_{ij} &&\text{Adjacency matrix. Models which neuron $i$ is connected to neuron $j$ and vice-versa.}\\
 & \kmean &&\text{Average node degree in the network.}\\
-& \k &&\text{Node degree. Vector of the in- and out-degree of a single node as $\left(\kin, \kout \right)$.}\\
+& \degree(n) = \k &&\text{Degree of node $n$, as a vector of the in- and out-degree of a single node as $\left(\kin, \kout \right)$.}\\
 & \kinb, \koutb && \text{Node degree vector of all in- and out degrees of the network.} \\
 & M_{\k} &&\text{Number of unique node degrees in the network.}\\
 & P(k), P(\k) &&\text{Univariate and bivariate network degree distribution.}\\
-&\kmin, \kmax &&\text{Smallest and largest degree found in a network.}\\ 
+&\kmin, \kmax &&\text{Smallest and largest degree in a network.}\\ 
 &\gamma &&\text{Degree exponent of a scale-free network.}\\ 
 &p &&\text{Probability threshold of forming a link in random networks.}\\ 
 &c &&\text{Assortativity of the network.}\\ \\
-&\theta(t)_i &&\text{Phase variable function of the theta model (of neuron $i$).}\\
-& \Pulse_n (\theta)&&\text{Pulse shaped synaptic coupling function.}\\
+&\theta_i(t) &&\text{Phase variable function of the theta model (of neuron $i$).}\\
+& \Pulse_n (\theta)&&\text{Pulse-shaped synaptic coupling function.}\\
 &\kappa &&\text{Macroscopic coupling strength.}\\
-&\eta_i, I(t)_i &&\text{Excitability threshold and input current (of neuron $i$).}\\
+&\eta_i, I_i(t) &&\text{Excitability threshold and input current (of neuron $i$).}\\
 &g(\eta \rvert \k) \quad &&\text{Excitability threshold distribution with mean $\eta_0(\k)$ and width $\sigma(\k)$.}\\ \\
 & Z(t) &&\text{Kuramoto order parameter function.}\\
 & z(\k, t) &&\text{Synchronisation dynamics function for nodes with degree $\k$.}\\
 & \bar{Z}(t) &&\text{Mean field order parameter function for arbitrary networks.}\\ \\
-& \Sin(t)_i, \Sout(t)_j\quad &&\text{Spike trains received and emitted by neuron $i$ as a sum of delta functions in time.}\\ 
+& S_i^{\rm in}(t), S_i^{\rm out}(t)\quad &&\text{Spike trains received and emitted by neuron $i$ as a sum of delta functions in time.}\\ 
 & K_{ij} &&\text{Synaptic connectivity matrix. Strength of the connections between neurons $i$ and $j$.}\\
 & \Delta t_{ij} &&\text{Time difference between spikes of neurons $i$ and $j$.}\\
-& W(\Delta t_{ij}) &&\text{Learning window. Models the correlation between synaptic strength and spike times.}\\ 
-& \phi(\Delta t_{ij}) &&\text{IP learning function. Models correlation between excitability strength and spike times.}\\ \\
+& W(t) &&\text{Learning window. Models the correlation between synaptic strength and spike times.}\\ 
+& \phi(t) &&\text{IP learning function. Models correlation between excitability strength and spike times.}\\ \\
 & \T &&\text{Set of angles in [-$\pi$, $\pi$[.}\\
 & \K &&\text{Set of unique degrees in a network, support of $P$.}\\ 
-& \R &&\text{Set of real numbers.}\\ 
-&  \C && \text{Set in the complex unit circle so that $\C = \{ z: \rvert z \rvert \leq 1 \} $.} \\ \\
+& \R, \c &&\text{Set of real and complex numbers.}\\ 
+&  \C && \text{Set in the complex unit circle so that $\C = \{ z \in \c : \: \rvert z \rvert \leq 1 \} $.} \\ \\
 & \permute(v), \permuteinv(v) &&\text{Random permutation and inverse permutation of the elements of a vector $v$.}\\ 
 \end{alignat*}
