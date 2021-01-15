@@ -71,11 +71,11 @@ with $I$ a bifurcation parameter on the supplied current. We can visualise the d
     \draw[black, ->] (-0.5,-0.866)to[out=-30,in=180](0,-1);
 \end{tikzpicture}
 \endminipage
-\caption{SNIC bifurcation of the theta neuron model. A spike occurs when $\theta = \pi$. For $I < 0$, the neuron is in a rest state but \textsl{excitable}. For $I > 0$, $\dot{\theta} > 0$ so that $\theta$ moves continuously around the circle and we can observe \textsl{periodic} sustained spiking. The saddle-node bifurcation occurs at $I = 0$, so that $\theta$ will spike when it is larger than 0.}
+\caption{SNIC bifurcation of the theta neuron model. A spike occurs when $\theta = \pi$. For $I < 0$, the neuron is in a rest state but \textsl{excitable} and we observe one stable and one unstable equilibrium point. For $I > 0$, $\dot{\theta} > 0$ so that $\theta$ moves continuously around the circle and we can observe \textsl{periodic} sustained spiking. The saddle-node bifurcation occurs at $I = 0$, so that $\theta$ will spike when it is larger than 0.}
 \label{fig:thetaneuronbifurcationtikz}
 \end{figure}
 
-We can recognise the features of the class 1 model in Figure \ref{fig:ThetaNeuronResponseToCurrent}. This makes \eqref{eq:thetaneuron} the normal form of the \textit{saddle-node-on-invariant-circle} ($\SNIC$) bifurcation \cite{Luke2013}.
+We can recognise the features of the class 1 model in Figure \ref{fig:ThetaNeuronResponseToCurrent}. This makes \eqref{eq:thetaneuron} the normal form of the \textit{saddle-node-on-invariant-circle} ($\SNIC$) bifurcation \cite{Luke2013}, as it collapses $\R$ to $\T$.
 
 \begin{figure}[H]
 \centering
@@ -95,9 +95,9 @@ We can find the stability of the equilibria through:
 \end{align*}
 In the equilibria this yields:
 \begin{align*}
-\frac{\mathop{d}}{\mathop{d \theta}}\left( \theta^{\ast}_{1, 2} \right) &= \pm(1-I) \cdot \sqrt{1-\frac{I+1}{1-I}}=\pm(1-I) \cdot \frac{2 \sqrt{-I}}{1-I} = \pm2 \sqrt{-I}
+\frac{\mathop{d}}{\mathop{d \theta}}\left( \theta^{\ast}_{1, 2} \right) &= \pm(1-I) \cdot \sqrt{1 - \left( \frac{I+1}{1-I} \right)^2 } = \pm(1-I) \cdot \frac{2 \sqrt{-I}}{1-I} = \pm2 \sqrt{-I}
 \end{align*}
-This yields a stable equilibrium point for $\theta^{\ast}_{1}$ and an unstable for $\theta^{\ast}_{2}$. This means that as $\theta$ gets perturbed above $\theta^{\ast}_{2}$, a spike occurs and $\theta$ converges to $\theta^{\ast}_{1}$. This is demonstrated in Figure \ref{fig:ThetaModelEquilibriumPoints}.
+This yields an unstable equilibrium point for $\theta^{\ast}_{1}$ and a stable for $\theta^{\ast}_{2}$. This means that as $\theta$ gets perturbed above $\theta^{\ast}_{1}$, a spike occurs and $\theta$ converges to $\theta^{\ast}_{2}$. This is demonstrated in Figure \ref{fig:ThetaModelEquilibriumPoints}.
 \begin{figure}[H]
 \centering
 \includegraphics[width = \textwidth]{../Figures/ThetaModelEquilibriumPoints.pdf}
@@ -112,7 +112,7 @@ Gaining insight into \eqref{eq:thetaneuron} is hard, due to the difficulty of fi
 V &\equiv \tan \left( \frac{\theta}{2} \right) \label{eq:QIFtransformation} \\
 \dot{V} &= V^2 + I \label{eq:QIFmodel}
 \end{align}
-This model is called the \textsl{Quadratic Integrate and Fire model} (\QIF). \eqref{eq:QIFmodel} models the membrane potential of a neuron, which spikes to $=\infty$ when the neuron spikes and is reset at $-\infty$. The transformation \eqref{eq:QIFtransformation} is continuous between spikes, so insights from a solution for $V$ can be transformed directly. The equilibria of the \QIF model are simply $\pm \sqrt{I}$ so that we can express $\theta^{\ast}_{1, 2} = 2 \cdot\arctan \left( \mp \sqrt{I} \right)$, from \cite{Gutkin2014}. \\
+This model is called the \textsl{Quadratic Integrate and Fire model} (\QIF). \eqref{eq:QIFmodel} models the membrane potential of a neuron, which spikes to $=\infty$ when the neuron spikes and is reset at $-\infty$. The transformation \eqref{eq:QIFtransformation} is continuous between spikes, so insights from a solution for $V$ can be transformed directly. The equilibria of the \QIF model are simply $\pm \sqrt{-I}$ (as $I < 0$) so that we can express $\theta^{\ast}_{1, 2} = 2 \cdot\arctan \left( \pm \sqrt{-I} \right)$, from \cite{Gutkin2014}. \\
 
 The solution for the excitable regime $I < 0$ is :
 \begin{align}
@@ -128,7 +128,7 @@ V(t) = -\sqrt{I} \cdot \cot (t \sqrt{I}) \label{eq:ThetaNeuronModelSolutionPerio
 \end{align}
 These equations assume that at $t=0$ a spike has occured. The steps required to find \eqref{eq:ThetaNeuronModelSolutionPeriodicExcitable}-\eqref{eq:ThetaNeuronModelSolutionPeriodic} are described in \ref{app:ThetaModelSolutions}. Solutions for $\theta$ are found by taking the inverse of the transformation \eqref{eq:QIFtransformation}.
 
-If the \QIF model is so much simpler, then why bother using the Theta Model? Simulating the \QIF model requires an artificial reset threshold, because we cannot expect a computer to represent infinity that easily. Finite thresholds make the analytical solutions more difficult and convoluted. By using the Theta Model we do not have to worry about these problems.\\
+If the \QIF model is so much simpler, then why bother using the Theta model? Simulating the \QIF model requires an artificial reset threshold, because we cannot expect a computer to represent infinity easily. Finite thresholds make the analytical solutions more difficult and convoluted. By using the Theta model the dynamics remain smooth and bounded on $\T$.\\
 
 \subsection{Numerical solutions} \label{sec:TheThetaNeuronModelODE45}
 When $I$ is not static, we need to revert to numerical solutions. For this work, a fixed-step 4-stage Runge-Kutta method (Dormand-Prince 45) was implemented to numerically solve all differential equations. A fixed-step algorithm makes it possible to finely tune the large memory demand of the systems presented in this work. 
@@ -137,7 +137,7 @@ When $I$ is not static, we need to revert to numerical solutions. For this work,
 \subsection{Frequency response} \label{sec:TheThetaNeuronModelFrequencyResponse}
 As we already saw in Figure \ref{fig:ThetaNeuronResponseToCurrent}, an increasing current increases the spiking frequency. We can compute this relationship by measuring how long it takes for $V$ to reach a spike: we solve \eqref{eq:ThetaNeuronModelSolutionPeriodic} for $t$ at $V(t) = +\infty$ in \ref{app:ThetaModelFrequencyResponse}. This yields the oscillation period $T = \frac{\pi}{\sqrt{I}}$ which we can see in Figure \ref{fig:ThetaNeuronfIandPRC}. 
 
-We know that when $\theta > \theta^{\ast}_{2}$ a spike occurs in the excitable regime, or in any case in the periodic regime. But the time that it takes to reach the spike can be arbitrarily long, depending on how far we are over $\theta^{\ast}_{2}$. So, spikes will occur, but after a delay that is dependant on the stimulus. Explicitly, if we perturb $\theta(0) = \theta^{\ast}_{2} + \varepsilon$ we obtain from \cite{Gutkin2014}:
+We know that when $\theta > \theta^{\ast}_{1}$ a spike occurs in the excitable regime, or in any case in the periodic regime. But the time that it takes to reach the spike can be arbitrarily long, depending on how close we are over $\theta^{\ast}_{1}$. So, spikes will occur, but after a delay that is dependant on the stimulus. Explicitly, if we perturb $\theta(0) = \theta^{\ast}_{1} + \varepsilon$ we obtain from \cite{Gutkin2014}:
 \begin{align*}
 T_{\text {spike}} = \frac{-\tanh ^{-1}\left(1+\frac{\epsilon}{\sqrt{I}}\right)}{\sqrt{I}}
 \end{align*}
@@ -148,14 +148,14 @@ In most of our future work, $I$ will not be a static current. We ask ourselves: 
 \left| \frac{dT}{dI} \frac{I}{T} \right| &= \left| \frac{dT / T}{dI / I}\right| 
 = \left|- \frac{\pi}{2} \left(\frac{1}{\sqrt{I}}\right)^3 \frac{I}{T} \right| 
 = \left| \frac{\pi}{2} \left(\frac{T}{\pi}\right)^3 \frac{I}{T} \right| 
-= \frac{1}{2} \left|\left(\frac{T}{\pi}\right)^2 \cdot \left(\frac{\pi}{T}\right)^2 \right| = \frac{1}{2}
+= \frac{1}{2} \left|\left(\frac{T}{\pi}\right)^2 \left(\frac{\pi}{T}\right)^2 \right| = \frac{1}{2}
 \end{align*}
 Hence, a 1\% change in $I$ will result in a 0.5 \% change in the period.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width = \textwidth]{../Figures/ThetaNeuronfIandPRC.pdf}
-\caption{Response of the theta model to bifurcations on the frequency and the phase. Left: Frequency response of the theta model. For $I \leq 0$ the spike period is infinite, which is why we see the solutions to \eqref{eq:thetaneuron} approach $\theta = 0$ for $I = 0$. Middle: a bifurcation $\varepsilon$ at time $\phi$ perturbs $\theta(t)$ (in blue) which results in a delayed spike (trajectory in red). Right: The \PRC, \eqref{eq:PRC2} in red, with a solution for $\theta$ (in blue), to show when the model is the most susceptible to bifurcations.}
+\caption{Response of the theta model to bifurcations on the frequency and the phase. Left: Frequency response of the theta model, experimentally verified. For $I \leq 0$ the spike period is infinite, which is why we see the solutions to \eqref{eq:thetaneuron} approach $\theta = 0$ for $I = 0$ in Figure \ref{fig:ThetaNeuronResponseToCurrent}. Middle: a bifurcation $\varepsilon  < 0 $ at time $\phi$ perturbs $\theta(t)$ (in blue) which results in a delayed spike (trajectory in red). Right: The \PRC, \eqref{eq:PRC2} in red, with a solution for $\theta$ (in blue), to show when the model is the most susceptible to bifurcations.}
 \label{fig:ThetaNeuronfIandPRC}
 \end{figure}
 
@@ -163,7 +163,7 @@ Hence, a 1\% change in $I$ will result in a 0.5 \% change in the period.
 \subsection{Phase response} \label{sec:TheThetaNeuronModelPhaseResponse}
 Perturbations on the period can also be understood from the perspective of the phase. Changes to the phase $\theta$ can delay or advance the event of a spike, and in general this depends on exactly when the stimulus occurs. The phase response curve (\PRC) gives us exactly that relation \cite{Perez2020, Gutkin2014}.
 
-Let us define $\phi \in [0, T[$, which represents the time since the last event of a spike. When we add a small bifurcation $\varepsilon < 0 $ to $\theta$ at time $\phi$, a spike will occur at $T_{\phi}$, and we have that $\theta(\phi_{\rm new}) = \theta(\phi) + \varepsilon$. The time to the new spike is $T_{\phi} = T + (\phi - \phi_{\text{new}})$. The \PRC can then be defined as:
+Let us define $\phi \in [0, T[$, which represents the time since the last event of a spike. When we add a small bifurcation $\varepsilon$ to $\theta$ at time $\phi$, a spike will occur at $T_{\phi}$, and we have that $\theta(\phi_{\rm new}) = \theta(\phi) + \varepsilon$. The time to the new spike is $T_{\phi} = T + (\phi - \phi_{\text{new}})$. The \PRC can then be defined as:
 \begin{align}
 \PRC(\phi) =T_{\phi} - T \label{eq:PRC1}
 \end{align}
@@ -177,5 +177,5 @@ We can use $\phi \in [0, T[$ and $\theta \in \T$ to see that \eqref{eq:PRC2} can
 \end{align}
 which is the magnitude with which $I$ excites the model \eqref{eq:thetaneuron}, \cite{Ermentrout1996}. Analysis of the \PRC thus allows us to study how the bifurcation of $\theta$ with magnitude $I$ occurs.\\
 
-The \PRC is always positive, which indicates that a positive bifurcation will advance the time of the spike, and vice versa. This has also been reported as a distinguishing feature of Class 1 models, \cite{Ermentrout1996}.
+The \PRC is always positive, which indicates that a positive bifurcation will advance the time of the spike, and vice versa. This has also been reported as a distinguishing feature of Class 1 models \cite{Ermentrout1996}.
 
