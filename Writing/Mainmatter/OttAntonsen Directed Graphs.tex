@@ -5,14 +5,15 @@ We will now investigate the questions that were raised after deriving the \MFR. 
 
 
 \subsection{Directed graphs as permutations}
-So how can we use the \MFR efficiently when the network is a directed graph with an asymmetrical adjacency matrix? Let's investigate.
+%So how can we use the \MFR efficiently when the network is a directed graph with an asymmetrical adjacency matrix? Let us investigate.
+So how can we use the \MFR when the network is a directed graph?
 \begin{itemize}
 \item Sampling $\kinb$ and $\koutb$ from a bivariate distribution requires us to find the marginal distribution of $P$ for $\kinb$, sampling $\kinbi$, and then sampling $\koutbj$ from $P$ while keeping $\kinbi$ fixed. This is a cumbersome process. And what relation would there be between $\kinb$ and $\koutb$?
 \item However, if we assume that the marginal distributions for $\kinb$ an $\koutb$ are independent, there is a simplification to be found. We can even assume that the two marginal distributions are identical univariate distributions. 
 \item Hence, we can sample $\kinb$ from a univariate distribution and find $\koutb = \permute ( \kinb )$ so that the total number of links remains constant. This is an important trait, as we do not have to rely on the sheer size of the network to yield a constant number of links on average.
 \end{itemize}
 
-This hypothesis can be tested: we assume that $P(\k) = P(\kin) \cdot P(\kout)$ so that $P$ consists of two identical and independent distributions, given by the distributions presented in Chapter \ref{sec:NetworkTopologies}. Then, we sample $\kinb \sim P(\kin)$ and perform a permutation to find the in- and out-degrees $\k_j$ for each node $j$. The surface given by $P(\k)$ and the histogram of $\k_j$ have been plotted in Figure \ref{fig:2Ddistributions}. As we can see, the variates follow the distribution well. 
+This hypothesis can be tested: we assume that $P(\k) = P(\kin) \cdot P(\kout)$ so that $P$ consists of two identical and independent distributions, given by the distributions presented in Chapter \ref{sec:NetworkTopologies}. Then, we sample $\kinb \sim P(\kin)$ and perform a permutation to find $\koutb$. The surface given by $P(\k)$ and the histogram of $\k_j$ have been plotted in Figure \ref{fig:2Ddistributions}. As we can see, the variates follow the distribution well. 
 
 \begin{figure}[ht]
 \centering
@@ -21,7 +22,9 @@ This hypothesis can be tested: we assume that $P(\k) = P(\kin) \cdot P(\kout)$ s
 \label{fig:2Ddistributions}
 \end{figure}
 %Hence, we can use univariate distributions in our simulations of the Ott-Antonsen Mean Field \eqref{eq:OttAntonsenMeanField}.
-However, the problem remains the same: $\K$ is too large to simulate the dynamics of the network. What we can do, is use $P(k)$ in the Ott-Antonsen reduction for a symmetric network, and observe how much the dynamics of the asymmetric network differ.
+However, the problem remains the same: $\K$ is too large to simulate the dynamics of the network. 
+
+What we can do, is use $P(k)$ in the Ott-Antonsen reduction for a symmetric network, and observe how much the solution of the asymmetric network differs from the reduction of the symmetric network.
 
 \subsection{Building the adjacency matrix} \label{sec:buildingA}
 If we want to simulate the network of theta neurons \eqref{eq:thetaneuronnetworkcurrent} we need to construct the adjacency matrix. We can find an exact solution for $A$ given the degree vectors in \eqref{eq:definekinkoutfromP}. $A_{ij}$ represents a directed graph, but $A_{ij} \neq A_{ji}$ is not a necessary condition. For the elements of $A_{ij}$ we need to find $N^2$ number of variables. We have the following constraints:
@@ -119,24 +122,23 @@ For other macroscopic states the distributions of $z$ across its final condition
 \subsection{Commutativity of complex vectors} 
 It is important to notice that in \eqref{eq:OttAntonsenSystemFull} and \eqref{eq:OttAntonsenMeanField} and many other equations in this work, we compute an inner vector product, which is non-commutative for complex numbers:
 \begin{align}
-a \cdot b = \overline{b \cdot a} \qquad a, b \in \C^r
+a \cdot b = (b \cdot a)^c \qquad a, b \in \c^r
 \end{align}
-This is the result of the \textsl{Conjugate} or \textsl{Hermitian} symmetry of the inner product. This is especially important in the \matlab implementation, as one needs to remain consistent with left-hand or right-hand products.
-
+This is the result of the \textsl{Conjugate} or \textsl{Hermitian} symmetry of the inner product. This is especially important in the implementation, as one needs to be consistent with left- or right-hand products.
 
 
 \subsection{Fixpoint iteration}
 In \cite{OttAntonsen2017} a fixpoint iteration is suggested to find attractive fixpoints of the system \eqref{eq:OttAntonsenSystemFull}. If we set $\frac{\partial z(\k, t)}{\partial t} = 0$ we can solve the following system:
 \begin{align}
-\ic \frac{(z(\k, t)-1)^{2}}{2} &= \frac{(z(\k, t)+1)^{2}}{2} \cdot I(\k) \nonumber \\
-\ic \left(\frac{z(\k, t)-1}{z(\k, t)+1}\right)^2 &= I(\k) \nonumber \\
+\ic \frac{(z(\k, t)-1)^{2}}{2} &= \frac{(z(\k, t)+1)^{2}}{2} \cdot I(\k, t) \nonumber \\
+\ic \left(\frac{z(\k, t)-1}{z(\k, t)+1}\right)^2 &= I(\k, t) \nonumber \\
 \frac{z(\k, t)-1}{z(\k, t)+1} &\equiv b(\k,t) \nonumber \\
 z(\k, t) - 1 &= b(\k,t) z(\k, t) + b(\k,t)  \nonumber \\
 z(\k, t) \cdot (1 - b(\k,t)) &= b(\k,t)  + 1\nonumber
 \end{align}
 We can then obtain the stable equilibria from:
 \begin{align}
-\ic b(\k,t)^2 = I(\k) \hspace{10mm} z(\k, t)_{\pm} = \frac{1 \pm b(\k,t)}{1 \mp b(\k,t)} \label{eq:fixedpointiterations} 
+\ic b(\k,t)^2 = I(\k, t) \hspace{10mm} z(\k, t)_{\pm} = \frac{1 \pm b(\k,t)}{1 \mp b(\k,t)} \label{eq:fixedpointiterations} 
 \end{align}
 where the signs are chosen so that $\vert z(\k, t) \vert \leq 1$. This works well, and in general this method converges fast.
 
@@ -145,10 +147,10 @@ where the signs are chosen so that $\vert z(\k, t) \vert \leq 1$. This works wel
 The fixpoint iteration \eqref{eq:fixedpointiterations} only gives us the stable equilibria of the \MFR. We can obtain all equilibria and their stability through the Jacobian from a Newton-Raphson iteration, which has been described in \ref{app:NewtonRaphson}. The Jacobian would be a $M_{\k} \times M_{\k}$ matrix, as we have $M_{\k}$ unique degrees in the network, and we need to take the derivate of one with respect to each other. However, finding the Jacobian is a challenge, as \eqref{eq:OttAntonsenSystemFull} is non-holomorphic: $H_2(\k,t)$ does not satisfy the Cauchy-Riemann equations. We can show this by separating $z$ into its real and imaginary part and expressing $H_2(\k,t)$ as two real-valued functions $u$ and $v$:
 %For \eqref{eq:OttAntonsenSystemFull}, we can compute the Jacobian for the diagonal and off-diagonal elements separately. But as $z(\k,t)$ is a complex function, first we need to understand what the derivative of a complex function is. 
 \begin{align*}
-z(\k,t) &= x(\k,t) + \ic \cdot y(\k,t) \qquad x, y \in \R^{M_{\k}}\\
+z(\k,t) &= x(\k,t) + \ic y(\k,t) \qquad x, y \in \R^{M_{\k}}\\
 f\left( z(\k,t) \right) &= u\left(x(\k, t), y(\k, t) \right) + \ic v\left(x(\k, t), y(\k, t) \right)\\
-&= \frac{\kappa}{\kmean} \sum_{\kacc} P\left(\kacc\right) a\left(\kacc \rightarrow \k\right) \cdot \left( 1 + \frac{z(\kacc, t)^2 + (z(\kacc, t)^c )^2}{6} - \frac{4}{3} \Re(z(\kacc, t)) \right)\\
-&= \frac{\kappa}{\kmean} \sum_{\kacc} P\left(\kacc\right) a\left(\kacc \rightarrow \k\right) \cdot \left( 1 + \frac{x(\kacc, t)^2}{3} - \frac{4}{3} x(\kacc, t) \right)
+&= \frac{\kappa}{\kmean} \sum_{\kacc} P\left(\kacc\right) a\left(\kacc \rightarrow \k\right) \left( 1 + \frac{z(\kacc, t)^2 + (z(\kacc, t)^c )^2}{6} - \frac{4}{3} \Re(z(\kacc, t)) \right)\\
+&= \frac{\kappa}{\kmean} \sum_{\kacc} P\left(\kacc\right) a\left(\kacc \rightarrow \k\right) \left( 1 + \frac{x(\kacc, t)^2}{3} - \frac{4}{3} x(\kacc, t) \right)
 \end{align*}
 This leaves us with only $u$ defined as a real-valued function, so that the Cauchy-Riemann equations do not hold as $v$ is zero. Thus we cannot express the Jacobian as a matrix of complex numbers. \\
 
@@ -164,7 +166,7 @@ Now we have all the necessary tools to simulate networks of theta neurons: the a
 There are small differences between simulation and theory, but these are most likely due to a finite network size and a finite integration step. As a matter of fact, the mean-field systems \eqref{eq:OttAntonsenMeanField} and \eqref{eq:MeanField} yield the exact same behaviour. This test benchmarks the lowest amount of error we can observe between simulation and theory, as for fixed-degree networks \eqref{eq:OttAntonsenSystemFull} consists of a single equation.
 \begin{figure}[H]
 \centering
-\includegraphics[width = \textwidth]{../Figures/InspectMeanFieldFixedDegree.pdf}
+\includegraphics[width = \textwidth, trim={0 3mm 0 3mm},clip]{../Figures/InspectMeanFieldFixedDegree.pdf}
 \caption{Comparison of the simulation of a fixed-degree network of Theta neurons and the Ott-Antonsen theory by the magnitude of the order parameter. We observe that the same three macroscopic states are found by the three descriptions.}
 \label{fig:InspectMeanFieldFixedDegree}
 \end{figure}
@@ -172,7 +174,6 @@ There are small differences between simulation and theory, but these are most li
 
 \subsection{Results for arbitrary network topologies}
 The dynamics of random networks seem to be very similar to fixed-degree networks, when looking at the unit circle. We can see in Figure \ref{fig:MFOARCPW_random} that the limit cycle is a little larger. When looking at the dynamics over time the results in Figure \ref{fig:InspectMeanFieldRandom} are also consistent, with a little more deviation between simulation and theory in the \CPW state.
-
 \begin{figure}[H]
 \centering
 \begin{subfigure}[b]{0.32\linewidth}
@@ -193,13 +194,13 @@ The dynamics of random networks seem to be very similar to fixed-degree networks
    \caption{CPW state for $\eta_0 = 10.75, \sigma = 0.5$ and $\kappa= -9$. The mean field settles onto a stable limit cycle.}
    \label{fig:MFOARCPW_random}
 \end{subfigure}
-   \caption{Three macroscopic states observed in the \MFR inside the imaginary unit circle $|Z(t)| = 1$. Green arrows mark the phase space vector field and blue trails mark solution curves. Red points indicate equilibrium points, found by the fixed-point iteration. The dotted line in the \CPW state is the limit cycle of the fixed-degree networks, added for reference.}
+   \caption{Three macroscopic states observed in the \MFR using a random network, inside the imaginary unit circle $|Z(t)| = 1$. Green arrows mark the phase space vector field and green trails mark solution curves. The dotted line in the \CPW state is the limit cycle of the fixed-degree networks, added for reference.}
    \label{fig:macroscopicstatesrandomnetworks}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\includegraphics[width = \textwidth]{../Figures/InspectMeanFieldRandom.pdf}
+\includegraphics[width = \textwidth, trim={0 3mm 0 3mm},clip]{../Figures/InspectMeanFieldRandom.pdf}
 \caption{Comparison of the simulation of a random network of Theta neurons and the Ott-Antonsen theory by the magnitude of the order parameter. }
 \label{fig:InspectMeanFieldRandom}
 \end{figure}
@@ -237,7 +238,7 @@ This means that due to its topology, the scale-free network cannot be represente
 
 \begin{figure}[H]
 \centering
-\includegraphics[width = \textwidth]{../Figures/InspectMeanFieldScaleFree.pdf}
+\includegraphics[width = \textwidth, trim={0 3mm 0 3mm},clip]{../Figures/InspectMeanFieldScaleFree.pdf}
 \caption{Comparison of the simulation of a scale-free network of Theta neurons and the Ott-Antonsen theory by the magnitude of the order parameter.}
 \label{fig:InspectMeanFieldScaleFree}
 \end{figure}
