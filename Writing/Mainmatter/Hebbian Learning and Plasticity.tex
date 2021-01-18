@@ -119,7 +119,7 @@ K_{ij}^s = K_{ij} \frac{\frac{1}{N} \sum_{i,j} K_{ij}}{\sum_{i} K_{ij}}
 In this way, the out-degrees will remain constant. Using this approach, something has to remain constant, whether that is $\kmean$, or $\kmean^2$ or any other property of the adjacency matrix. However, this property is not one we are after: we want a method that is able to change the network topology entirely.
 
 
-\subsection{Intrinsic plasticity}
+\subsection{Intrinsic plasticity} \label{sec:IP}
 Instead of scaling the weights to preserve a certain quantity in the network, we can allow the neurons to adjust their sensitivity to incoming signals. So when some synaptic strengths are increased, we can reduce the excitability, and vice-versa. This should counteract positive feedback. 
 
 If we look at the formulation of the network of Theta neurons \eqref{eq:thetaneuronnetworkcurrent_adaptive}, we can see that $\eta_i$ is the threshold on $I_i(t)$ for which the result of the \PRC will be positive or negative. The neuron action potentials $\mathcal{P}_n(\theta_j)$ are scaled by the coupling matrix and the mean node degree. We expect that when neurons learn to adapt $K_{ij}$ and $\eta_i$, the two will try to cancel each other out.

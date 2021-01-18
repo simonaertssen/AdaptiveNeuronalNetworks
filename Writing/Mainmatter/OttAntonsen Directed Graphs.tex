@@ -163,7 +163,8 @@ However, for the typologies with more than one unique degree in the network, thi
 
 \subsection{Fixed-degree networks as a baseline}
 Now we have all the necessary tools to simulate networks of theta neurons: the adjacency matrix, and an understanding of the initial conditions. First, we will use a fixed-degree network, as this is the most simple instance of the different topologies. As all nodes have the same degree, the dynamics of a symmetric and asymmetric fixed-degree network ought to be identical. The results are shown in Figure \ref{fig:InspectMeanFieldFixedDegree}.
-There are small differences between simulation and theory, but these are most likely due to a finite network size and a finite integration step. As a matter of fact, the mean-field systems \eqref{eq:OttAntonsenMeanField} and \eqref{eq:MeanField} yield the exact same behaviour. This test benchmarks the lowest amount of error we can observe between simulation and theory, as for fixed-degree networks \eqref{eq:OttAntonsenSystemFull} consists of a single equation.
+
+There are small differences between $Z$ measured by the whole network and $\bar{Z}$ predicted by the \MFR, but these are most likely due to a finite network size and a finite integration step. As a matter of fact, the mean-field systems \eqref{eq:OttAntonsenMeanField} and \eqref{eq:MeanField} yield the exact same behaviour. This test benchmarks the lowest amount of error we can observe between simulation and theory, as for fixed-degree networks \eqref{eq:OttAntonsenSystemFull} consists of a single equation.
 \begin{figure}[H]
 \centering
 \includegraphics[width = \textwidth, trim={0 3mm 0 3mm},clip]{../Figures/InspectMeanFieldFixedDegree.pdf}
@@ -172,7 +173,7 @@ There are small differences between simulation and theory, but these are most li
 \end{figure}
 
 
-\subsection{Results for arbitrary network topologies}
+\subsection{Results for arbitrary network topologies} \label{sec:resArbNetw}
 The dynamics of random networks seem to be very similar to fixed-degree networks, when looking at the unit circle. We can see in Figure \ref{fig:MFOARCPW_random} that the limit cycle is a little larger. When looking at the dynamics over time the results in Figure \ref{fig:InspectMeanFieldRandom} are also consistent, with a little more deviation between simulation and theory in the \CPW state.
 \begin{figure}[H]
 \centering

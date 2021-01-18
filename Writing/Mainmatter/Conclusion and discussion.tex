@@ -3,10 +3,43 @@
 \section{Conclusion and Discussion} \label{sec:ConclusionAndDiscussion}
 %\textcolor{red}{TODO}: \textsl{what did we achieve with this work?}
 
-\subsection{Further investigation of initial and final conditions}
+Starting from the Theta neuron model, we have holistically discussed its use in directed networks and described synchronisation of different network topologies, simplifying the analysis with the \MFR. We have proven that from random initial topological conditions, a regular network structure can appear. Obtaining these results is the first step towards a unification in the theory of the dynamics \textsl{on} and \textsl{of} networks. \\
 
-\subsection{Achievements of the learning process}
+Even though both fields have been well-established, currently there exists no theory that takes both approaches into account. The science of the different fields is scattered, a schism that is represented by the structure of this report. The only constant is the description of the behaviour of networks, which was rigorously adapted for this work. Going forward, it would be interesting to see whether a similar approach as in the \MFR can be taken: if the network dynamics can be represented per node degree, then why not find a learning strategy that allows for a coupling matrix defined on $\mathbb{N}^{N \times N}$? Or can we perhaps bin the node degrees so that even less equations are necessary for the \MFR to function? \\
+
+These questions are the seed for a future investigation.
+
+
+\subsection{Further investigation of initial and final conditions}
+The initial conditions of the different systems obtained in Chapter \ref{sec:initialconditions} by numerically solving for $f(z) = \| Z(0) - \bar{Z}(0) \|$ are satisfactory, but can be improved upon. The distribution of degrees over the attractive manifold can be taken into account by further analysis on the final conditions, and we should obtain a better understanding of the location of the manifold with respect to the resulting point in $\bar{Z}$. Then, a second condition can be added so that the numerical solution of $f$ converges to the manifold. 
+
+In the current implementation, there is no objective function for the optimisation. $f$ is solved as an equality constraint so that the solution is exact and not just a minimum, and the constraint $| z | \leq 1$ is solved as an inequality. This leaves the objective function free to take the manifold into account: a metric like the Kullback-Leibler divergence can be introduced to take the target distribution into account. 
+
+
+\subsection{A learning strategy with desirable properties}
+In Chapter \ref{sec:HebbianLearningAndSynapticPlasticity}, two different learning strategies were presented, and in Chapter \ref{sec:EmergingNetworkTopologies} their functionality was discussed. The feedback loops between $W$ and $\Delta K$ make it hard to find a formulation that would guarantee a stable network topology, without the artificial bounds on $K$.
+A constant in the description is the spike train $\Delta K_{ij} \sim \sum_{t_{j}^{f}, \: t_i^{n} \in \mathcal{T}} \hspace{-2mm} W (t_{j}^{f}-t_i^{n} )$
+
+\subsection{Symmetry of the learned degree distributions}
+The degree distributions resulting from the learning procedure in Chapters \ref{sec:STDPlearning} and \ref{sec:STDPandIPlearning} should be investigated further, as it appears that $\kinb$ and $\koutb$ are variates from the same univariate distribution. The impact of using a bimodal degree distribution, which was the result of using $W_C$, is currently unknown.
+
+Perhaps the differences we observed between the \MFR and the solutions of the whole network in Chapter \ref{sec:resArbNetw} can be explained by the fact that fixed-degree and random networks have a degree distribution with $\kmean$ as the axis of symmetry, which the scale-free distribution does not have. The latter showed large differences between the two approaches.
+
 
 \subsection{Synchronisation and spiking rate}
+In accordance with most of the work conducted on the \MFR, the order parameter was used to measure synchrony in the network. In the context of \STDP and \IP, a better metric could have been the mean firing rate, the average neural activity of a node in the past:
+\begin{align}
+\rho(t)=\frac{1}{N} \sum_{j=1}^{N} \sum_{n} \delta\left(t-t_{j}^{n}\right)
+\end{align}
+The mean firing rate is related to the order parameter through:
+\begin{align}
+\rho(t) = \frac{1}{\pi} \Re \left(\frac{1-Z(t)^c}{1+Z(t)^c}\right)
+\end{align}
+In \cite{Montbrio2015}, a firing rate \MFR for networks of the Theta model was proposed, yielding a different light on the firing dynamics. This metric could easily be introduced in the analysis of the \MFR in Chapter \ref{sec:MFRSUndirected} and the learning procedures in Chapter \ref{sec:EmergingNetworkTopologies}.
 
-\subsection{An \IP method tailored t the neuron model}
+
+\subsection{An \IP method tailored to the neuron model}
+Concerns were raised about \IP facilitating faster convergence of $\kmean$ in Chapter \ref{sec:IP}. In \cite{Zhang2019}
+
+
+
