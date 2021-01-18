@@ -17,8 +17,18 @@ In the current implementation, there is no objective function for the optimisati
 
 
 \subsection{A learning strategy with desirable properties}
-In Chapter \ref{sec:HebbianLearningAndSynapticPlasticity}, two different learning strategies were presented, and in Chapter \ref{sec:EmergingNetworkTopologies} their functionality was discussed. The feedback loops between $W$ and $\Delta K$ make it hard to find a formulation that would guarantee a stable network topology, without the artificial bounds on $K$.
-A constant in the description is the spike train $\Delta K_{ij} \sim \sum_{t_{j}^{f}, \: t_i^{n} \in \mathcal{T}} \hspace{-2mm} W (t_{j}^{f}-t_i^{n} )$
+In Chapter \ref{sec:HebbianLearningAndSynapticPlasticity}, two different learning strategies were presented, and in Chapter \ref{sec:EmergingNetworkTopologies} their functionality was discussed. The feedback loops between $W$ and $\Delta K$ make it hard to find a formulation that would guarantee a stable network topology, without the artificial bounds on $K$. Another challenge is allowing inhibitive \textsl{and} excitatory coupling, which no other work has touched upon.
+
+A constant in the formulation of a learning strategy is the in- and outgoing spike trains: 
+\begin{align}
+\Delta K_{ij} \sim \sum_{t_{j}^{f}, \: t_i^{n} \in \mathcal{T}} \hspace{-2mm} W (t_{j}^{f}-t_i^{n} )
+\end{align}
+We can then easily punish nodes with large degrees by postulating:
+\begin{align}
+\Delta K_{ij} \sim - (K_{ij}) \circ \rvert K_{ij} \rvert
+\end{align}
+The Hadamard product $\circ$ ensures that the sign of the coupling strength is preserved, so that the restraint to halt the continuous potentiation works symmetrically, inspired by Oja's rule\cite{ChrolCannon2014}. We might also direct nodes with a low degree towards zero, or stimulate them to grow. The options explored by the machine learning community can be an inspiration for future research.
+
 
 \subsection{Symmetry of the learned degree distributions}
 The degree distributions resulting from the learning procedure in Chapters \ref{sec:STDPlearning} and \ref{sec:STDPandIPlearning} should be investigated further, as it appears that $\kinb$ and $\koutb$ are variates from the same univariate distribution. The impact of using a bimodal degree distribution, which was the result of using $W_C$, is currently unknown.
@@ -37,9 +47,6 @@ The mean firing rate is related to the order parameter through:
 \end{align}
 In \cite{Montbrio2015}, a firing rate \MFR for networks of the Theta model was proposed, yielding a different light on the firing dynamics. This metric could easily be introduced in the analysis of the \MFR in Chapter \ref{sec:MFRSUndirected} and the learning procedures in Chapter \ref{sec:EmergingNetworkTopologies}.
 
-
-\subsection{An \IP method tailored to the neuron model}
-Concerns were raised about \IP facilitating faster convergence of $\kmean$ in Chapter \ref{sec:IP}. In \cite{Zhang2019}
 
 
 
