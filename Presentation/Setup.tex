@@ -1,0 +1,150 @@
+%% ------ Packages ------ %%
+% Related to the document setup:
+\documentclass[9pt]{beamer}
+\setbeamertemplate{navigation symbols}{}
+%\usepackage[top = 2.4cm, bottom = 2.4 cm, right= 2.1cm, left= 2.1cm]{geometry}
+%\usepackage[english]{babel}
+\renewcommand\familydefault{\sfdefault}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+
+%\usepackage[T1]{fontenc}
+\setlength\parindent{0pt}
+%\usepackage{multicol}
+%\usepackage{xspace}
+%
+%\usepackage{tocloft}
+
+% Colouring the references
+%\usepackage{hyperref}
+%\usepackage{cleveref}
+%\usepackage[dvipsnames]{xcolor}
+%\pagecolor{white}
+%\newcommand\myshade{85}
+%\colorlet{mylinkcolor}{violet}
+%\colorlet{mycitecolor}{YellowOrange}
+%\definecolor{myurlcolor}{rgb}{ 0, 0.4470, 0.6410}
+%
+%\hypersetup{
+%  linkcolor  = mylinkcolor!\myshade!black,
+%  citecolor  = mycitecolor!\myshade!black,
+%  urlcolor   = myurlcolor!\myshade!black,
+%  colorlinks = true,
+%}
+
+% Section properties redefinitions
+%\makeatletter
+%\renewcommand\section{\@startsection {section}{1}{\z@}{3ex }{0.7ex } {\normalfont\large\bfseries}}
+%\renewcommand\subsection{\@startsection{subsection}{1}{\z@}{2ex }{0.1ex } {\normalfont \bfseries}}
+%\renewcommand\subsubsection{\@startsection{subsubsection}{3}{\z@}{-1.5ex\@plus -1ex \@minus -.2ex}{.5ex}{\normalfont}}
+%\makeatother
+
+% Graphics interfaces:
+\usepackage{graphicx}
+\usepackage{tikz}
+%\tikzset{every picture/.style={line width=1pt}}
+%\usepackage{float}
+%\usepackage{subcaption} 
+%\usepackage[font=small,aboveskip=3pt, belowskip=-0pt]{caption}
+%
+
+% Headers and footers:
+%\usepackage{url}
+%\usepackage{footnote}
+%\usepackage{fancyhdr}
+%\pagestyle{fancy} 
+%\fancyhf{} 
+%\renewcommand{\headrulewidth}{0pt}
+%\newcommand{\mainmatter}{\clearpage \cfoot{\thepage\ of \pageref{LastPage}}
+%\setcounter{page}{1}
+%\pagenumbering{arabic}}
+
+%\lfoot{\footnotesize \textcolor{Gray}{\thesistitle.}}
+%\rfoot{\footnotesize \textcolor{Gray}{\thesisauthor, \studentnumber. \thedate.}}
+%\fancyhfoffset{0pt}
+
+
+% Sort the bibliography and add to the table of contents
+%\usepackage[sort]{cite}
+%\setlength\columnsep{15pt}
+%\usepackage[nottoc,numbib]{tocbibind}
+
+% Redefine the \left and \right operators:
+%\let\originalleft\left
+%\let\originalright\right
+%\renewcommand{\left}{\mathopen{}\mathclose\bgroup\originalleft}
+%\renewcommand{\right}{\aftergroup\egroup\originalright}
+
+
+% Command definitions and macros:
+%\newcommand{\ic}{{\rm{i}}\xspace}
+%\renewcommand{\Re}{{\operatorname{Re}}\xspace}
+%\renewcommand{\Im}{{\operatorname{Im}}\xspace}
+%
+%\newcommand{\Pulse}{{\mathcal{P}}\xspace}
+%\newcommand{\kmean}{{\langle k\rangle}\xspace}
+%\renewcommand{\k}{{\boldsymbol{k}}\xspace}
+%\newcommand{\kacc}{{\boldsymbol{k'}}\xspace}
+%\newcommand{\kin}{{k^{\rm in}}\xspace}
+%\newcommand{\kout}{{k^{\rm out}}\xspace}
+%\newcommand{\kinb}{{\boldsymbol{k^{\rm in}}}}
+%\newcommand{\koutb}{\boldsymbol{{k^{\rm out}}}}
+%\newcommand{\kinbi}{{\boldsymbol{k}_i^{\bf in}}}
+%\newcommand{\koutbj}{{\boldsymbol{k}_j^{\bf out}}}
+%\newcommand{\degree}{{\rm deg}\xspace}
+%\newcommand{\kmin}{k_{\text{min}}\xspace}
+%\newcommand{\kmax}{k_{\text{max}}\xspace}
+%
+%\newcommand{\Sin}{{S^{\rm in}}\xspace}
+%\newcommand{\Sout}{{S^{\rm out}}\xspace}
+%
+%\newcommand{\dtheta}{{\dot{\theta}}\xspace}
+%
+%\newcommand{\permute}{{\digamma}\xspace}
+%\newcommand{\permuteinv}{{\digamma^{-1}}\xspace}
+%
+%%\newcommand{\R}{{\rm I\!R}\xspace}
+%\newcommand{\R}{{\mathbb{R}}\xspace}
+%\renewcommand{\c}{{\mathbb{C}}\xspace}
+%\newcommand{\C}{\mathbb{C}_\circ}
+%\newcommand{\T}{{\mathbb{T}}\xspace}
+%\newcommand{\K}{{\mathbb{K}}\xspace}
+%
+%\newcommand{\tp}{{t^{\prime}}\xspace}
+%\newcommand{\tpp}{{t^{\prime \prime}}\xspace}
+%
+%\newcommand{\QIF}{{\textsl{QIF}}\xspace}
+%\newcommand{\PRC}{{\textsl{PRC}}\xspace}
+%\newcommand{\pdf}{{\textsl{pdf}}\xspace}
+%\newcommand{\MFR}{{\textsl{MFR}}\xspace}
+%\newcommand{\SNIC}{{\textsl{SNIC}}\xspace}
+%\newcommand{\PSR}{{\textsl{PSR}}\xspace}
+%\newcommand{\PSS}{{\textsl{PSS}}\xspace}
+%\newcommand{\CPW}{{\textsl{CPW}}\xspace}
+%\newcommand{\STDP}{{\textsl{STDP}}\xspace}
+%\newcommand{\ISI}{{\textsl{ISI}}\xspace}
+%\newcommand{\IP}{{\textsl{IP}}\xspace}
+
+%\def\matlab{\textsc{Matlab}\xspace}
+
+% Author macros:
+\newcommand{\thesistitle}{The dynamics of adaptive neuronal networks}
+\newcommand{\thesissubtitle}{influence of topology on synchronisation }
+\newcommand{\mywork}{{\textsl{Investigation:}}\xspace}
+
+\newcommand{\thesisauthor}{Simon Aertssen} % Your name :) 
+\newcommand{\studentnumber}{s181603}
+\newcommand{\thedate}{February 1$^{\text{st}}$ 2021} 
+\newcommand{\thesissupervisorI}{Erik Martens} 
+\newcommand{\thesissupervisorII}{Poul Hjorth} 
+
+\newcommand{\department}{DTU Compute}
+\newcommand{\departmentdescriber}{Department of Applied Mathematics and Computer Science}
+\newcommand{\addressI}{Richard Petersens Plads, Building 324}
+\newcommand{\addressII}{2800 Kgs. Lyngby, DK}
+\newcommand{\departmentwebsite}{www.compute.dtu.dk}
+
+
+%% ------ Front page ------ %%
