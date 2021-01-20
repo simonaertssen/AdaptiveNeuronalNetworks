@@ -56,15 +56,18 @@
 		}
 		{ %
 			\hbox{ %
-				\hspace{\dimTextLeftMargin}\hspace{-1.5pt}\insertframenumber %
-				\setlength{\widthframenumber}{2em + \widthof{\insertframenumber}} %
+				\hspace{\dimTextLeftMargin}\hspace{-1.5pt} %
+				\setlength{\widthframenumber}{1em + \widthof{\insertframenumber}} %
 				\setlength{\widthdepartment}{1em + \widthof{\insertdepartmentandinstitute}} %
-				\setlength{\widthdate}{1em + \widthof{00 00 0000}} %
-				\setlength{\widthtitle}{\textwidth-\widthframenumber-\widthdepartment-\widthdate-\dimTextLeftMargin-\dimTextLeftMargin} %
-				%\parbox[t]{\widthframenumber}{\insertframenumber} %
-				\parbox[t]{\widthdepartment}{\insertdepartmentandinstitute} %
-				\parbox[t]{\widthtitle}{\raggedleft\insertshorttitleinfooter} %
-				\parbox[t]{\widthdate}{\raggedleft\DTUDateFormat\insertdate} %
+				\setlength{\widthdate}{1em + \widthof{\thedate}} %
+				\setlength{\widthauthor}{1em + \widthof{\thesisauthor}} %
+				\setlength{\widthtitle}{\textwidth-\widthframenumber-\widthdepartment-\widthdate-\widthauthor-\dimTextLeftMargin-\dimTextLeftMargin} %
+
+				\parbox[t]{\widthframenumber}{\textcolor{Gray}{\insertframenumber}} %
+				\parbox[t]{\widthdepartment}{\textcolor{Gray}{\insertdepartmentandinstitute}} %
+				\parbox[t]{\widthauthor}{\textcolor{Gray}{\thesisauthor}} %
+				\parbox[t]{\widthtitle}{\textcolor{Gray}{\raggedleft\insertshorttitleinfooter}} %
+				\parbox[t]{\widthdate}{\textcolor{Gray}{\raggedleft\DTUDateFormat\insertdate}} %
 				\vspace{\dimFootlineYOffset} %
 			}
 		}
