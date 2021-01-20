@@ -2,15 +2,23 @@
 % See https://tex.stackexchange.com/questions/67211/use-texshop-preview-window-when-different-output-dir-is-set
 
 \input{Setup.tex}
-\begin{document}
-%\mainmatter
+%\title{\thesistitle.}
+%\subtitle{\thesissubtitle}
+%\author{\thesisauthor, \studentnumber}
+%\institute{Danmarks Tekniske Universitet}
+%\date{\thedate}
 
+\begin{document}
 %\pagenumbering{Roman}
 \input{Slides/Titleslide}
-%\tableofcontents
+
+\begin{frame}
+\frametitle{Contents}
+\tableofcontents
+\end{frame}
 
 %\renewcommand{\thepage}{\arabic{page}}
 
-%\input{Slides/Content}
+\input{Slides/Content}
 
 \end{document}
