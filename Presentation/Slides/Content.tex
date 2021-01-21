@@ -115,9 +115,9 @@ How can we capture this behaviour? \\
 \dot{\theta}_{i} &=\left(1-\cos \theta_{i}\right)+\left(1+\cos \theta_{i}\right) \cdot \left[\eta_{i} + I_{i}(t)\right] \qquad \theta_i \in \T^N \\
 I_{i}(t) &=\frac{\kappa}{\kmean} \sum_{j=1}^{N} A_{i j} \cdot \mathcal{P}_{n}(\theta_{j}) 
 \end{align*}
-\tabitem Capture synchronisation
+\tabitem Capture average/mean synchronisation 
 \begin{align*}
-Z(t) = \frac{1}{N} \sum_{j=1}^N e^{\ic\theta_j}  \qquad Z(t) \in \C 
+Z(t) = \frac{1}{N} \sum_{j=1}^N e^{\ic\theta_j}  \qquad Z \in \C 
 \end{align*}
 \end{frame}
 
@@ -125,7 +125,18 @@ Z(t) = \frac{1}{N} \sum_{j=1}^N e^{\ic\theta_j}  \qquad Z(t) \in \C
 
 \section{Mean Field Reductions}
 \begin{frame}
-\frametitle{Predict synchronisation dynamics}
+\frametitle{Predict synchronisation dynamics} 
+The \MFR yields a solution for $Z(t)$\\
+\tabitem $N$ neurons in the network \\
+\tabitem $M_{\k}$ unique node degrees \\[0.5cm]
+
+Then rewrite $Z(t)$ per degree!\\
+\tabitem Only $M_{\k}$ equations \\
+\tabitem Weighed by $P(\k)$ \\
+\end{frame}
+
+\begin{frame}
+\frametitle{Fixed-degree networks}
 \begin{figure}[H]
 \centering
 \begin{subfigure}[b]{0.32\linewidth}
@@ -149,8 +160,50 @@ Z(t) = \frac{1}{N} \sum_{j=1}^N e^{\ic\theta_j}  \qquad Z(t) \in \C
 
 \section{\mywork Mean Field Reductions for undirected graphs} 
 \begin{frame}
-\frametitle{\mywork Mean Field Reductions for undirected graphs} 
+\frametitle{Goals} 
+$Z(t)$ can be measured and predicted: are they the same? \\
+\tabitem Formulate directed networks \\
+\tabitem Construct adjacency matrix from degree distribution \\
+\tabitem Initial conditions \\
+\tabitem Results \\
 \end{frame}
+
+\begin{frame}
+\frametitle{Directed networks} 
+Use a bivariate degree distribution\\
+\tabitem Use identical and independant distributions \\
+\tabitem In- and outdegrees are found as a permutation
+\end{frame}
+
+\begin{frame}
+\frametitle{Directed networks} 
+\begin{figure}[ht]
+\centering
+\includegraphics[width = 0.9\textwidth]{../Figures/Distributions/2D.pdf}
+\label{fig:2Ddistributions}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Adjacency matrix} 
+Find a probable solution by sampling from the in- and outdegrees
+\begin{figure}[H]
+\centering
+\includegraphics[width = \textwidth]{../Figures/Adjacency_matrices.pdf}
+\label{fig:adjacencymatrices}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Initial conditions} 
+\begin{figure}[H]
+\centering
+\includegraphics[trim=0cm 8.5cm 0cm 0cm, clip=true, width = 0.75\textwidth]{../Figures/PhaseSpace/Mappings.pdf}
+   \label{fig:mappings}
+\end{figure}
+\end{frame}
+
+
 
 
 \section{Hebbian Learning and Synaptic Plasticity} 
