@@ -2,22 +2,28 @@
 
 \section{Introduction}
 \begin{frame}
-\frametitle{Neuronal activity}
+\frametitle{Neuron dynamics}
+How do neurons communicate? \\
 \tabitem Neurons receive neurotransmitters \\
-\tabitem Stimuli control the neurons' membrane potential \\
 \tabitem Action potential = explosion of electrical activity \\
-\tabitem Synapse releases the neurons' neurotransmitter
+\tabitem Synapse releases the neurons' neurotransmitter \\ [0.5cm]
+
+How can we capture this behaviour? \\
+\tabitem Human brain consists of $\sim$ 100 billion neurons \\
+\tabitem The \MFR yields the average dynamics of the network 
 \end{frame}
+
 
 
 \section{The Theta Neuron Model}
 \begin{frame}
-\frametitle{Model formulation}
-\begin{align}
-\dot{\theta} = (1-\cos \theta)+(1+\cos \theta) \cdot I \qquad \theta \in \T \label{eq:thetaneuron}
-\end{align}
+\frametitle{Model Description}
+\tabitem Formulation
+\begin{align*}
+\dot{\theta} = (1-\cos \theta)+(1+\cos \theta) \cdot I \qquad \theta \in \T 
+\end{align*}
 
-\tabitem SNIC bifurcation
+\tabitem Normal form of SNIC bifurcation
 \begin{figure}[H]
 \minipage{0.33\linewidth}
 \centering
@@ -81,7 +87,8 @@
 \end{frame}
 
 \begin{frame}
-\frametitle{The Theta Neuron Model}
+\frametitle{Response}
+\tabitem Formulate bifurcations in terms of spiking frequency or phase angle
 \begin{figure}[H]
 \centering
 \includegraphics[width = \textwidth]{../Figures/ThetaNeuronfIandPRC.pdf}
@@ -93,13 +100,51 @@
 
 \section{Network Topologies}
 \begin{frame}
-\frametitle{Network Topologies}
+\frametitle{Three basic networks}
+\begin{figure}[H]
+\centering
+\includegraphics[width = \textwidth]{../Figures/Distributions/1D.pdf}
+\label{fig:1Dpdfs}
+\end{figure}
 \end{frame}
+
+\begin{frame}
+\frametitle{Networks of Theta neurons}
+\tabitem For an arbitrary network topology:
+\begin{align*}
+\dot{\theta}_{i} &=\left(1-\cos \theta_{i}\right)+\left(1+\cos \theta_{i}\right) \cdot \left[\eta_{i} + I_{i}(t)\right] \qquad \theta_i \in \T^N \\
+I_{i}(t) &=\frac{\kappa}{\kmean} \sum_{j=1}^{N} A_{i j} \cdot \mathcal{P}_{n}(\theta_{j}) 
+\end{align*}
+\tabitem Capture synchronisation
+\begin{align*}
+Z(t) = \frac{1}{N} \sum_{j=1}^N e^{\ic\theta_j}  \qquad Z(t) \in \C 
+\end{align*}
+\end{frame}
+
 
 
 \section{Mean Field Reductions}
 \begin{frame}
-\frametitle{Mean Field Reductions}
+\frametitle{Predict synchronisation dynamics}
+\begin{figure}[H]
+\centering
+\begin{subfigure}[b]{0.32\linewidth}
+   \centering
+  \includegraphics[width=\linewidth]{../Figures/PhaseSpace/MFRPSR.pdf}
+   \label{fig:MFRPSR} 
+\end{subfigure} \hfill
+\begin{subfigure}[b]{0.32\linewidth}
+   \centering
+  \includegraphics[width=\linewidth]{../Figures/PhaseSpace/MFRPSS.pdf}
+   \label{fig:MFRPSS}
+\end{subfigure} \hfill
+\begin{subfigure}[b]{0.32\linewidth}
+   \centering
+  \includegraphics[width=\linewidth]{../Figures/PhaseSpace/MFRCPW.pdf}
+   \label{fig:MFRCPW}
+\end{subfigure}
+   \label{fig:macroscopicstatesfixeddegree}
+\end{figure}
 \end{frame}
 
 \section{\mywork Mean Field Reductions for undirected graphs} 
