@@ -2,13 +2,21 @@
 
 \section{Introduction}
 \begin{frame}
-\frametitle{Introduction}
+\frametitle{Neuronal activity}
+\tabitem Neurons receive neurotransmitters \\
+\tabitem Stimuli control the neurons' membrane potential \\
+\tabitem Action potential = explosion of electrical activity \\
+\tabitem Synapse releases the neurons' neurotransmitter
 \end{frame}
 
 
 \section{The Theta Neuron Model}
 \begin{frame}
-\frametitle{The Theta Neuron Model}
+\frametitle{Model formulation}
+\begin{align}
+\dot{\theta} = (1-\cos \theta)+(1+\cos \theta) \cdot I \qquad \theta \in \T \label{eq:thetaneuron}
+\end{align}
+
 \tabitem SNIC bifurcation
 \begin{figure}[H]
 \minipage{0.33\linewidth}
@@ -38,7 +46,7 @@
 \begin{tikzpicture}
     \draw[thick] (0,0) circle [radius=1];
     \draw (0,-1.2) node[below]{Bifurcation: $I = 0$};
-    \draw (1,0) node[right]{0};
+    \draw (1.1,0) node[right]{0};
     \draw[fill=red, red] (-1,0) circle [radius=0.05];
     \draw (-1,0) node[right]{spike};
     \draw (-1,0) node[left]{$\pi$};
@@ -70,21 +78,14 @@
 \endminipage
 \label{fig:thetaneuronbifurcationtikz}
 \end{figure}
-
-Features of the model
-\begin{figure}[H]
-\centering
-\includegraphics[width = \textwidth]{../Figures/ThetaNeuronResponseToCurrent.pdf}
-\label{fig:ThetaNeuronResponseToCurrent}
-\end{figure}
 \end{frame}
 
 \begin{frame}
 \frametitle{The Theta Neuron Model}
 \begin{figure}[H]
 \centering
-\includegraphics[width = \textwidth]{../Figures/ThetaNeuronResponseToCurrent.pdf}
-\label{fig:ThetaNeuronResponseToCurrent}
+\includegraphics[width = \textwidth]{../Figures/ThetaNeuronfIandPRC.pdf}
+\label{fig:ThetaNeuronfIandPRC}
 \end{figure}
 \end{frame}
 
