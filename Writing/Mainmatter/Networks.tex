@@ -86,7 +86,7 @@ In \eqref{eq:thetaneuronnetwork} we see everything come together: changes to the
 
 Studying a set of differential equations like \eqref{eq:thetaneuronnetworkcurrent} is not feasible, as we are quickly approaching thousands of neurons. And in the end, the dynamics of a single neuron are not of interest. Instead, we wish to capture and study how the network behaves as a whole. One aspect, synchrony, can be captured by the Kuramoto order parameter:
 \begin{align}
-Z(t) = \frac{1}{N} \sum_{j=1}^N e^{\ic\theta_j}  \qquad Z(t) \in \C \label{eq:orderparameter}
+Z(t) = \frac{1}{N} \sum_{j=1}^N e^{\ic\theta_j}  \qquad Z \in \C \label{eq:orderparameter}
 \end{align}
 $Z$ is a complex variable, consisting of a radius $r = \rvert Z \rvert$ and argument $\psi = \arg \left( Z \right)$, so that $Z(t) = r(t) e^{\ic \psi(t)}$. When all phases are uniformly distributed across the unit circle $\T$, then $\rvert Z \rvert = 0$, resulting in a network with no synchronisation. When all phases are exactly the same, $\rvert Z \rvert = 1$ and the network is fully scynchronised. \eqref{eq:orderparameter} describes the \textsl{mean-field} of the network, a simpler model that describes the average behaviour of the whole network. Analysis is simply conducted either on $ \rvert Z(t) \rvert$ versus time, or in the complex unit circle as $\Re (Z(t))$ versus $\Im (Z(t))$.
 
