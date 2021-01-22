@@ -44,7 +44,7 @@ H_2(\k,t) &= \frac{\kappa}{\kmean} \sum_{\kacc \in \K} P\left(\kacc\right) \: a\
 with $z^c$ the complex conjugate. $H$ is a legacy term and has been computed in \cite{Martens2020}.
 The mean-field order parameter can now be expressed in terms of $z(\k,t)$. Using the constraints on $f$ and $g$ we can now solve \eqref{eq:meanfieldorderparameter} as:
 \begin{align}
-\bar{Z}(t) &= \frac{1}{N} \sum_{\k} P(\k) z(\k, t) \qquad \bar{Z} \in \C \label{eq:OttAntonsenMeanField}
+\bar{Z}(t) &= \frac{1}{N} \sum_{\k \in \K} P(\k) z(\k, t) \qquad \bar{Z} \in \C \label{eq:OttAntonsenMeanField}
 \end{align}
 which clearly reflects the network architecture through $P(\k)$, as in the limit, this is the number of neurons of degree $\k$ that are present in the network. The mean-field dynamics of the whole network are thus equal to a weighed average of the degree dynamics of each node with unique degree $\k \in \K$. 
 
