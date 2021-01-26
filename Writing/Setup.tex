@@ -87,6 +87,10 @@
 \renewcommand{\left}{\mathopen{}\mathclose\bgroup\originalleft}
 \renewcommand{\right}{\aftergroup\egroup\originalright}
 
+% Redefine \eqref environment
+\usepackage{letltxmacro}
+\LetLtxMacro{\originaleqref}{\eqref}
+\renewcommand{\eqref}{Equation~\originaleqref}
 
 % Command definitions and macros:
 \newcommand{\ic}{{\rm{i}}\xspace}
