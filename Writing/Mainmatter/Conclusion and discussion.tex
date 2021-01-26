@@ -8,7 +8,9 @@ Even though both fields have been well-established, currently there exists no th
 These questions are the seed for a future investigation.
 
 \subsection{Computational challenges of neuronal modelling and the \MFR}
-The biggest challenge 
+Writing the software for simulating large networks of neurons and the \MFR was the biggest challenge in this work. A trade-off had to be made between speed and accuracy: testing a hypothesis is difficult when the simulation takes a long time. Therefore, the subject of the first exploration phase was all about which software to use. Extensions to Python written in \texttt{c} were found to run incredibly fast, though the framework for documentation of Matlab was eventually preferred for its
+All code for this work is available on \href{https://github.com/simonaertssen/AdaptiveNeuronalNetworks}{GitHub} to promote future research.
+
 
 \subsection{Further investigation of initial and final conditions}
 The initial conditions of the different systems obtained in Chapter \ref{sec:initialconditions} by numerically solving for $f(z) = \| Z(0) - \bar{Z}(0) \|$ are satisfactory, but can be improved upon. The distribution of degrees over the attractive manifold can be taken into account by further analysis on the final conditions, and we should obtain a better understanding of the location of the manifold with respect to the resulting point in $\bar{Z}$. Then, a second condition can be added so that the numerical solution of $f$ converges to the manifold. 

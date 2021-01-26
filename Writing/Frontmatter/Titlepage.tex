@@ -54,12 +54,12 @@
 			\thesisauthor, \studentnumber
 		\end{flushleft}
 	\end{minipage} \\[15mm]
-	\begin{minipage}{0.5\textwidth}
+	\begin{minipage}{\textwidth}
 		\begin{flushleft}
 			\large
 			\textit{Supervisors}\\
 			\thesissupervisorI \\
-			\thesissupervisorII % Supervisor's name
+			\thesissupervisorII
 		\end{flushleft}
 	\end{minipage}
 	
@@ -71,7 +71,7 @@
 	%	Date
 	%------------------------------------------------
 	
-	\vfill\vfill % Position the date 3/4 down the remaining page
+	\vfill % Position the date 3/4 down the remaining page
 	
 	{\large\thedate} % Date, change the \today to a set date if you want to be precise
 	
@@ -84,6 +84,15 @@
 	 
 	%----------------------------------------------------------------------------------------
 	
-	\vfill % Push the date up 1/4 of the remaining page
+	\vfill
+	\begin{minipage}{\textwidth}
+		\begin{flushleft}
+			\small
+			\department. \departmentdescriber. 
+			\addressI, 	\addressII. \departmentwebsite	\\[0.2cm]
+		\end{flushleft}
+	\end{minipage}
 	
+	\vfill % Push the date up 1/4 of the remaining page
+
 \end{titlepage}
