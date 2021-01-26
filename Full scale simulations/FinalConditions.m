@@ -49,7 +49,7 @@ Zstart = -0.2 + 1i*0.8;
 pars.eta0 = -0.2; pars.delta = 0.1; pars.K = -2;
 pars.e = randcauchy(seed, pars.eta0, pars.delta, pars.N);
 p = prepareOAparameters(make_randomparameters(pars, 0.3));
-idx = round(linspace(1, p.Mk, 20));
+idx = round(linspace(1, p.Mk, 40));
 
 OAIC = ones(p.Mk,1)*Zstart;
 [~, ZOA, bs] = OA_simulatenetwork(0, tend, OAIC, p, odeoptions);
