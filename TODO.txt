@@ -11,3 +11,7 @@ W_S:  orange    '#D95319' [0.8500 0.3250 0.0980]
 W_C:  yellow    '#EDB120' [0.9290 0.6940 0.1250]
 
 - Maybe: Make an example of the learning: how the windows change the synaptic coupling
+
+
+Questions to Mads:
+- What about adding 'Theory' before all theory chapters?
