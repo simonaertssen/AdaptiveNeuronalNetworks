@@ -1,16 +1,11 @@
 % !TEX root = ../main.tex
 \newpage
-\section{Conclusion and Discussion} \label{sec:ConclusionAndDiscussion}
+\section{Conclusions and Future Work} \label{sec:ConclusionAndDiscussion}
 Starting from the Theta neuron model, we have holistically discussed its use in directed networks and described synchronisation of different network topologies, simplifying the analysis with the \MFR. We have proven that from random initial topological conditions, a regular network structure can appear. Obtaining these results is the first step towards a unification in the theory of the dynamics \textsl{on} and \textsl{of} networks. \\
 
 Even though both fields have been well-established, currently there exists no theory that takes both approaches into account. The science of the different fields is scattered, a schism that is represented by the structure of this report. The only constant is the description of the behaviour of networks, which was rigorously adapted for this work. Going forward, it would be interesting to see whether a similar approach as in the \MFR can be taken: if the network dynamics can be represented per node degree, then why not find a learning strategy that allows for a coupling matrix defined on $\mathbb{N}^{N \times N}$? Or can we perhaps bin the node degrees so that even less equations are necessary for the \MFR to function? \\
 
 These questions are the seed for a future investigation.
-
-\subsection{Computational challenges of neuronal modelling and the \MFR}
-Writing the software for simulating large networks of neurons and the \MFR was the biggest challenge in this work. A trade-off had to be made between speed and accuracy: testing a hypothesis is difficult when the simulation takes a long time. Therefore, the subject of the first exploration phase was all about which software to use. Extensions to Python written in \texttt{c} were found to run incredibly fast, though the framework for documentation of Matlab was eventually preferred for its
-All code for this work is available on \href{https://github.com/simonaertssen/AdaptiveNeuronalNetworks}{GitHub} to promote future research.
-
 
 \subsection{Further investigation of initial and final conditions}
 The initial conditions of the different systems obtained in Chapter \ref{sec:initialconditions} by numerically solving for $f(z) = \| Z(0) - \bar{Z}(0) \|$ are satisfactory, but can be improved upon. The distribution of degrees over the attractive manifold can be taken into account by further analysis on the final conditions, and we should obtain a better understanding of the location of the manifold with respect to the resulting point in $\bar{Z}$. Then, a second condition can be added so that the numerical solution of $f$ converges to the manifold. 
@@ -50,5 +45,10 @@ The mean firing rate is related to the order parameter through:
 In \cite{Montbrio2015}, a firing rate \MFR for networks of the Theta model was proposed, yielding a different light on the firing dynamics. This metric could easily be introduced in the analysis of the \MFR in Chapter \ref{sec:MFRSUndirected} and the learning procedures in Chapter \ref{sec:EmergingNetworkTopologies}.
 
 
+\subsection{Computational challenges of neuronal modelling and the \MFR}
+Writing the software for simulating large networks of neurons and the \MFR was the biggest challenge in this work. A whole different treatise can be written concerning the efficient computation of these models, though a small mention of this is certainly not out of place here.
+
+A trade-off had to be made between speed and accuracy: testing a hypothesis is difficult when the simulation takes a long time. Therefore, the subject of the first exploration phase was all about which software to use. Extensions to Python written in \texttt{c++} were found to run incredibly fast, though the Matlab™ framework was eventually preferred for its versatile plotting functions and its simple extension to GPU computations. 
+All code for this work is available on \href{https://github.com/simonaertssen/AdaptiveNeuronalNetworks}{GitHub} to promote future research. 
 
 
