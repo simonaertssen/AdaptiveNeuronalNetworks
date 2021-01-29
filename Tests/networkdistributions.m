@@ -10,7 +10,7 @@ make2Dplots = true;
 % We need to evaluate whether some of the random numbers we are pulling are
 % actually following the right pdf.
 
-pars.N = 10000;
+pars.N = 100000;
 
 meandegreetoget = 100;
 
@@ -37,7 +37,7 @@ xlabel('Degree', 'Interpreter', 'none', 'FontSize', labelfont)
 ylabel('Density', 'Interpreter', 'none', 'FontSize', labelfont);
 
 %% A 1D random network: CORRECT
-randompars = make_randomparameters(pars, meandegreetoget/(pars.N - 1));
+randompars = make_randomparameters(pars, meandegreetoget/pars.N);
 
 if round(sum(randompars.P(1:pars.N))) == pars.N; disp('Sum is correct'); end
 if abs(randompars.meandegree - sum(randompars.degrees_i)/pars.N) < 1.0e-3*randompars.meandegree; disp('Mean degree is correct'); end
