@@ -2,11 +2,11 @@
 \newpage
 \section{\theory Network Topologies} \label{sec:NetworkTopologies}
 
-Networks consists of \textsl{nodes} connected by \textsl{links}. They arise in any context where objects are \textsl{related} to each other. In this section, we will look at the notation that is needed to represent networks, and properties of different network topologies.
+Networks consists of \textsl{nodes} connected by \textsl{links}. They arise in any context where objects are related to each other. In this section, we will look at the notation that is needed to represent networks, and properties of different network topologies.
 
 \subsection{Representations and properties}
-We represent a finite network through the adjacency matrix $A$: if there exists a relation from node $j$ to node $i$ we set $A_{ij} $ = 1, and 0 otherwise. This means that $A_{ij}$ can be \textsl{undirected} (symmetric) or \textsl{undirected}. If we think of the relations between guests at a party, then the social network is directed, as people might not know each other mutually. However, the network of people having shaken hands is symmetric. Self-links are an edge-case that depends on the context, as one generally does not shake hands with himself. \\
-%The number of links that a node has is denoted as the \textsl{degree}. 
+We represent a finite network through the adjacency matrix $A$: if there exists a relation from node $j$ to node $i$ we set $A_{ij} $ = 1, and 0 otherwise. This means that $A_{ij}$ can be \textsl{undirected} (symmetric) or \textsl{directed} (asymmetric). If we think of the relations between guests at a party, then the social network is directed: people might not mutually recognise others from previous parties. However, the network of people having shaken hands is symmetric. Self-links and multilinks form edge-cases that depend on the context, as one generally does not shake hands with oneself, nor twice with the same person. Here we will only allow self-links, so that the number of links a node can make is not larger than $N$, the number of nodes in the network.\\
+
 The \textsl{degree} $\k$ of a node $n$  is a two-vector of the number of links coming in to and going out of the node, ($\kin, \kout$). From $A_{ij}$ we can compute the in- and out-degree vectors, which show how many links a node has coming in and out:
 \begin{align}
 \kinbi = \sum_{j=1}^{N} A_{i j} \hspace{15mm} \koutbj = \sum_{i=1}^{N} A_{i j}  \hspace{15mm} \degree(n_j) = \k_j = (\boldsymbol{k}_j^{\bf in}, \koutbj) \in \K \subset \mathbb{N} \label{eq:definekinkoutfromA} 
@@ -19,19 +19,18 @@ The distribution of $\kinb$ and $\koutb$ is the most defining property of the ne
 \begin{align}
 (\kinb, \koutb) \sim P(\degree(n) = \k) \label{eq:definekinkoutfromP} 
 \end{align}
-The support of $P$ is the set of unique degrees $\K$ with cardinality $M_\k$. As we do not allow multilinks, the largest number of links a node can make is $N$. $\K$ is thus in principle always defined on the interval $[0,N]$. For symmetric networks, $\kinb = \koutb$, so that $P$ is really a univariate distribution. In this case, much of the coming analysis is heavily simplified, so we will start with univariate distributions.
-
+The support of $P$ is the set of unique degrees $\K$ with cardinality $M_\k$. For symmetric networks, $\kinb = \koutb$, so that $P$ is really a univariate distribution. In this case, much of the coming analysis is heavily simplified, so we will start with univariate distributions. $\K$ is then in principle always defined on the interval $\{0, ... ,N \}$ but in practice we define $\K = \{\kmin, ... , \kmax \}$ using the lowest and highest sampled degree. 
 
 \subsection{Fixed-degree networks}
-\noindent A network consists of nodes, connected by links. The most simple network is one where all the nodes are connected, and so all nodes have a degree of $N$. In general, we can make networks where all nodes have the same degree, $\kmean$:
+The most simple network is one where all the nodes are interconnected: all nodes have a degree of $N$ and we speak of a \textsl{fully-connected} network. In general, we can make networks where all nodes have the same degree, which is thus the average degree $\kmean$:
 \begin{align}
-P(k) = \left\{\begin{array}{ll}\kmean & \text{if } k=\kmean \\0 & \text{otherwise}\end{array}\right. \hspace{15mm} \K = \{ \kmean \} \label{eq:diracpdf}
+P(k) = \left\{\begin{array}{ll}1 & \text{if } k=\kmean \\0 & \text{otherwise}\end{array}\right. \hspace{15mm} \K = \{ \kmean \} \label{eq:diracpdf}
 \end{align}
-We will refer to these networks as \textsl{fixed-degree} networks. When $\kmean = N$, all nodes are self-coupled and connected to all other nodes in the network, so we speak of a \textsl{fully connected} network. 
+We will refer to these networks as \textsl{fixed-degree} networks. 
 
 
 \subsection{Random / Erd{\"o}s-R{\'e}ny networks}
-In 1959 Erd{\"o}s and R{\'e}ny published their work on random graphs\cite{RandomGraphs1959}, where links are established if a random uniformly distributed number is higher than a threshold $p$. The degrees follow a binomial distribution: 
+In 1959 Erd{\"o}s and R{\'e}ny published their work on random graphs \cite{RandomGraphs1959}, where the probability of forming a link is given by $p$, the threshold on sampling links from a uniform distribution. There is the probability $p^k$ that a node has degree $k$, chosen from $N-1$, which requires $N-1-k$ links to be missing \cite{BarabasiNetworkBook2016}. Hence, the degree vectors follow a binomial distribution:
 \begin{align}
 P(k)=\left(\begin{array}{c}N-1 \\ k\end{array}\right) p^{k}(1-p)^{N-1-k} \label{eq:binomialpdf}
 \end{align}
@@ -40,8 +39,7 @@ with a mean $\mu = p(N-1)$ and standard deviation $\sigma = \mu(1-p)$. For netwo
 P(k) = e^{-\kmean} \frac{\kmean^{k}}{k !} \hspace{15mm} \label{eq:poissonpdf}
 \end{align}
 with a mean $\mu = \kmean$ and standard deviation $\sigma = \sqrt{\kmean}$. Both \eqref{eq:binomialpdf} and \eqref{eq:poissonpdf} describe similar quantities, but the latter is used more often due to its analytical simplicity \cite{BarabasiNetworkBook2016}. 
-
-Even though \eqref{eq:poissonpdf} is theoretically defined over the entirety of $\mathbb{N}$, in practice, the probability of observing degrees not close to $\kmean$ quickly drops to zero. For large random networks, we can define $\K$ under the assumption that 99\% of the degrees fall within the interval $\kmean \pm 2.58 \sqrt{\kmean}$.
+In theory \eqref{eq:poissonpdf} is defined over the entirety of $\mathbb{N}$, but in practice the probability of observing degrees not close to $\kmean$ quickly drops to zero. For large random networks, we can define $\K$ under the assumption that 99\% of the degrees fall within the interval $\kmean \pm 2.58 \sqrt{\kmean}$.
 
 \begin{figure}[H]
 \centering
@@ -52,24 +50,29 @@ Even though \eqref{eq:poissonpdf} is theoretically defined over the entirety of 
 
 
 \subsection{Scale-free networks}
-What we can often observe in nature is the preferential attachment to nodes with a high degree \cite{Bullmore2010}: the rich or famous tend to get more rich or famous. This trait is also described as the 80/20 rule by Pareto. Networks with this property consist of a small number of highly connected nodes, and a large number of low degree nodes. We can represent this with a power law distribution:
+What we can often observe in nature is the preferential attachment to nodes with a high degree \cite{Bullmore2010}: the rich or famous tend to get more rich or famous. This trait is also described as the 80/20 rule by Pareto. Networks with this property consist of a small number of highly connected nodes, the \textsl{hubs}, and a large number of low degree nodes. We can represent this with a power law distribution:
 \begin{align}
-P(k) = A k^{-\gamma} \hspace{15mm} \K = [\kmin, \kmax] \label{eq:scalefreepdf}
+P(k) = C k^{-\gamma} \label{eq:scalefreepdf}
 \end{align}
-with $A$ is a constant so that $\sum_{k=1}^{\infty} P(k) = 1$. We can also see that $A \sum_{k=1}^{\infty} k^{-\gamma} = 1$ so that $A = \sum_{k=1}^{\infty} k^{\gamma} = 1/\zeta(k)$, the Riemann Z{\'e}ta function \cite{BarabasiNetworkBook2016}. 
+with $C$ a constant so that $\sum_{k=1}^{\infty} P(k) = 1$. We can also see that $C \cdot \sum_{k=1}^{\infty} k^{-\gamma} = 1$ so that $C = \sum_{k=1}^{\infty} k^{\gamma} = 1/\zeta(k)$, the Riemann Z{\`e}ta function \cite{BarabasiNetworkBook2016}. \\
 
-Networks with a distribution like \eqref{eq:scalefreepdf} are called \textit{scale-free} networks, as they lack an internal scale to represent the magnitude of the network: we can observe \eqref{eq:scalefreepdf} on different scales like the probability of two Hollywood actors appearing in a movie, or the connections between web pages on the internet \cite{Barabasi2003}. One description that comes close is the \textit{natural cutoff} $k_{\text{max}}$, the expected degree of the largest degree in the network. As we only expect the largest hub to be the only hub in the domain $[k_{\text{max}}, +\infty]$:
+To understand the scale of a distribution like \eqref{eq:scalefreepdf} we first ask ourselves how the size of the network affects the hubs. We can easily calculate the \textit{natural cutoff} $k_{\text{max}}$, the highest expected degree in the network. We only expect the largest hub to be the only hub in the domain $[k_{\text{max}}, +\infty[$:
 \begin{align*}
 \int_{k_{\text{max}}}^{\infty} P(k) dk=\frac{1}{N}
 \end{align*}
-For \eqref{eq:scalefreepdf} this results in:
+Following \cite{BarabasiNetworkBook2016} for \eqref{eq:scalefreepdf} this results in:
 \begin{align}
 \kmax = \kmin \cdot N^{\frac{1}{\gamma-1}} \label{eq:scalefreecutoff}
 \end{align}
-which shows that there might be very large differences in size between the nodes. In practice, it is better to choose $\kmin$ and $\kmax$ and set $P$ to zero outside of $\K$. \\
+So: larger networks yield larger hubs, and we can see there might be very large differences between the node degrees. In practice, it is better to choose $\kmin$ and $\kmax$ and set $P$ to zero outside of $\K$. \\
+
+
 
 There are constraints on $\gamma$ to yield a scale-free network. When $0 < \gamma < 2$ the largest hub grows faster than $N$, so once its degree exceeds $N-1$ there are no more new nodes to connect to and the network will not be able to grow according to \eqref{eq:scalefreepdf}. A rigorous proof is given in \cite{Bassler2011}. For $\gamma = 2$, the system grows linearly, as we can see in \eqref{eq:scalefreecutoff}. When $2 < \gamma \leq 3$ we find the most scale-free networks, as for $\gamma > 3$ hubs are not sufficiently large and numerous to have much influence on the network
 \cite{BarabasiNetworkBook2016}.
+
+Networks with a distribution like \eqref{eq:scalefreepdf} are called \textit{scale-free} networks, as they lack an internal scale to represent the magnitude of the network. We can observe \eqref{eq:scalefreepdf} on different scales like the probability of two Hollywood actors appearing in a movie, or the connections between web pages on the internet \cite{Barabasi2003}.
+
 
 \subsection{Networks of theta neurons}
 The human brain can be seen as a graph, with neurons as graph nodes, where the pre- to postsynaptic relation models a directional edge in the network. These edges are usually unidirectional though it can happen that the post- reconnects to the presynaptic neuron. Using this knowledge, we can easily extend the model to networks of neurons:
