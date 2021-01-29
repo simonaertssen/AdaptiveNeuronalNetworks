@@ -10,7 +10,7 @@ make2Dplots = true;
 % We need to evaluate whether some of the random numbers we are pulling are
 % actually following the right pdf.
 
-pars.N = 100000;
+pars.N = 10000;
 
 meandegreetoget = 100;
 
@@ -106,6 +106,7 @@ fixeddegreepars = make_fixeddegreeparameters(pars, meandegreetoget);
 
 fixeddegreepars.P2D = @(x,y) fixeddegreepars.P(x) .* fixeddegreepars.P(y) / pars.N;
 
+sum(fixeddegreepars.P2D(meandegreetoget,meandegreetoget), 'all')
 if sum(fixeddegreepars.P2D(1:pars.N, 1:pars.N), 'all') == pars.N; disp('Sum is correct'); end
 
 %%
@@ -143,14 +144,15 @@ ax.ZTick(ax.ZTick < 0) = [];
 colormap(jet)
 
 %% A 2D random network:
-randompars = make_randomparameters(pars, meandegreetoget/(pars.N - 1));
+randompars = make_randomparameters(pars, meandegreetoget/pars.N);
 
 randompars.P2D = @(x,y) randompars.P(x).*randompars.P(y);
-Pnorm = sum(randompars.P2D(1:pars.N,1:pars.N), 'all')/pars.N; 
+[x,y] = meshgrid(1:pars.N, 1:pars.N);
+Pnorm = sum(randompars.P2D(x,y), 'all')/pars.N; 
 randompars.P2D = @(x,y) randompars.P2D(x,y)/Pnorm;
 
-sum(randompars.P2D(1:pars.N, 1:pars.N), 'all')
-if abs(sum(randompars.P2D(1:pars.N, 1:pars.N), 'all') - pars.N) < 1.e-3; disp('Sum is correct'); end
+sum(randompars.P2D(x,y), 'all')
+if abs(sum(randompars.P2D(x,y), 'all') - pars.N) < 1.e-3; disp('Sum is correct'); end
 
 %%
 subplot(1,3,2); hold on; grid on; box on;
