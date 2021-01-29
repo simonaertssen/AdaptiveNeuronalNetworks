@@ -72,12 +72,13 @@ The term \textsl{scale-free} can be even better understood from the moments of t
 \left\langle k^{n}\right\rangle=\int_{\kmin}^{\kmax} k^{n} P(k) d k=C \frac{\kmax^{n-\gamma+1} - \kmin^{n-\gamma+1}}{n-\gamma+1}
 \end{align}
 The degree exponent $\gamma$ constrains the properties of the network as follows:
-\begin{itemize}
+\begin{list}{$\bullet$}{}  
 \item 1 $< \gamma <$ 2: $\kmean$ diverges as the largest hub grows faster than $N$. Once $\kmax$ exceeds $N$ there are no more new nodes to connect to and the network is not able to continue to grow. Therefore these networks can not exist \cite{Bassler2011, BarabasiNetworkBook2016}.
 \item $\gamma =$ 2: all nodes are connected to the same node, as the largest hub grows linearly with $N$.
 \item 2 $< \gamma < $ 3: $\kmean$ is finite and positive, though the variance $\left\langle k^{2}\right\rangle$ is still divergent. This means that the node degrees can be arbitrarily far away from the average: when choosing a random node there is no limit on its degree. Hence, we call these networks \textsl{scale-free}.
 \item $ \gamma = $ 3: the variance $\left\langle k^{2}\right\rangle$ stops diverging, and network properties like the average distance between nodes start converging towards those of a random network \cite{BarabasiNetworkBook2016}.
-\item 3 $< \gamma$: as the degree distribution decays quickly, the hubs are not sufficiently large and numerous to have much influence on the network. \end{itemize}
+\item 3 $< \gamma$: as the degree distribution decays quickly, the hubs are not sufficiently large and numerous to have much influence on the network. 
+\end{list}
 
 %$\kmean$ is thus only finite and positive for $\gamma > 2$. When $0 < \gamma < 2$, the largest hub grows faster than $N$, so once its degree exceeds $N-1$ there are no more new nodes to connect to and the network will not be able to grow according to \eqref{eq:scalefreepdf}. A rigorous proof is given in \cite{Bassler2011}. For $\gamma = 2$, the system grows linearly, as we can see in \eqref{eq:scalefreecutoff}. The variance $\left\langle k^{2}\right\rangle$ is only finite and positive for $\gamma > 2$. For $\gamma > 3$ hubs are not sufficiently large and numerous to have much influence on the network \cite{BarabasiNetworkBook2016}.
 
