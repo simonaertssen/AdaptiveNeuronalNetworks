@@ -22,7 +22,7 @@ The distribution of $\kinb$ and $\koutb$ is the most defining property of the ne
 The support of $P$ is the set of unique degrees $\K$ with cardinality $M_\k$. For symmetric networks, $\kinb = \koutb$, so that $P$ is really a univariate distribution. In this case, much of the coming analysis is heavily simplified, so we will start with univariate distributions. $\K$ is then in principle always defined on the interval $\{0, ... ,N \}$ but in practice we define $\K = \{\kmin, ... , \kmax \}$ using the lowest and highest sampled degree. 
 
 \subsection{Fixed-degree networks}
-The most simple network is one where all the nodes are interconnected: all nodes have a degree of $N$ and we speak of a \textsl{fully-connected} network. In general, we can make networks where all nodes have the same degree, which is thus the average degree $\kmean$:
+The most simple network is one where all the nodes are interconnected: all nodes have degree $N$ and we speak of a \textsl{fully-connected} network. In general, we can make networks where all nodes have the same degree, which is thus the average degree $\kmean$:
 \begin{align}
 P(k) = \left\{\begin{array}{ll}1 & \text{if } k=\kmean \\0 & \text{otherwise}\end{array}\right. \hspace{15mm} \K = \{ \kmean \} \label{eq:diracpdf}
 \end{align}
@@ -30,11 +30,11 @@ We will refer to these networks as \textsl{fixed-degree} networks.
 
 
 \subsection{Random / Erd{\"o}s-R{\'e}ny networks}
-In 1959 Erd{\"o}s and R{\'e}ny published their work on random graphs \cite{RandomGraphs1959}, where the probability of forming a link is given by $p$, the threshold on sampling links from a uniform distribution. The probability that a node has degree $k$ includes the probability $p^k$ that $k$ links are present, as a combination of $N$ links, which requires $N-k$ links to be missing \cite{BarabasiNetworkBook2016}. Hence, the degree vectors follow a binomial distribution:
+In 1959, Erd{\"o}s and R{\'e}ny published their work on random graphs \cite{RandomGraphs1959}, where the probability of forming a link is given by $p$, the threshold on sampling links from a uniform distribution. The probability that a node has degree $k$ includes the probability $p^k$ that $k$ links are present, as a combination of $N$ candidate links, which requires $N-k$ links to be missing \cite{BarabasiNetworkBook2016}. Hence, the degree vectors follow a binomial distribution:
 \begin{align}
 P(k)=\left(\begin{array}{c}N \\ k\end{array}\right) p^{k}(1-p)^{N-k} \label{eq:binomialpdf}
 \end{align}
-with a mean $\mu = pN$ and standard deviation $\sigma = \sqrt{\mu(1-p)}$. For networks where $\kmean \ll N$, the network can be well approximated by a Poisson distribution:
+with mean $\mu = pN$ and standard deviation $\sigma = \sqrt{\mu(1-p)}$. For networks where $\kmean \ll N$, the network can be well approximated by a Poisson distribution:
 \begin{align}
 P(k) = e^{-\kmean} \frac{\kmean^{k}}{k !} \hspace{15mm} \label{eq:poissonpdf}
 \end{align}

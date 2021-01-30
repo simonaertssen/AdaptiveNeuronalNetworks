@@ -136,13 +136,14 @@ When $I$ is not static, we need to revert to numerical solutions. A fixed-step 4
 
 
 \subsection{Frequency response} \label{sec:TheThetaNeuronModelFrequencyResponse}
-\setlength\intextsep{0pt}
 \begin{wrapfigure}{r}{0.39\textwidth}
 \centering
+\vspace{-\baselineskip}
 \includegraphics[width = \linewidth]{../Figures/ThetaNeuronfI.pdf}
 \caption{Frequency response of the Theta model. For $I \leq 0$ the spike period is infinite, which is why we see the solutions to (\ref{eq:thetaneuron}) approach $\theta = 0$ for $I = 0$ in Figure \ref{fig:ThetaNeuronResponseToCurrent}. }
 \label{fig:ThetaNeuronfI}
 \end{wrapfigure}
+
 As we already saw in Figure \ref{fig:ThetaNeuronResponseToCurrent}, an increasing current increases the spiking frequency. We can compute this relationship by measuring how long it takes for $V$ to reach a spike: we solve \eqref{eq:ThetaNeuronModelSolutionPeriodic} for $t$ at $V(t) = +\infty$ in \ref{app:ThetaModelFrequencyResponse}. This yields the oscillation period $T = \frac{\pi}{\sqrt{I}}$, which we can see in Figure \ref{fig:ThetaNeuronfI}. 
 
 We know that when $\theta > \theta^{\ast}_{1}$ a spike occurs in the excitable regime, or in any case in the periodic regime. But the time that it takes to reach the spike can be arbitrarily long, depending on how far we are over $\theta^{\ast}_{1}$. So, spikes will occur, but after a delay that is dependant on the stimulus. Explicitly, if we perturb $\theta(0) = \theta^{\ast}_{1} + \varepsilon$ we obtain from \cite{Gutkin2014}:
@@ -168,7 +169,7 @@ Let us define $\phi \in [0, T[$, which represents the time since the last event 
 \begin{align}
 \PRC(\phi) = T - T_{\phi} \label{eq:PRC1}
 \end{align}
-The \PRC is thus the expected delay of the period in function of the timing of the delay. This process has been visualised in Figure \ref{fig:ThetaNeuronPRC}, after \cite{Perez2020}. For infinitesimally small perturbations to the phase, we can find the \PRC as the \textsl{adjoint} of the solution \cite{Gutkin2014}:
+The \PRC is thus the expected delay of the period in function of the timing of that delay. This process has been visualised in Figure \ref{fig:ThetaNeuronPRC}, after \cite{Perez2020}. For infinitesimally small perturbations to the phase, we can find the \PRC as the \textsl{adjoint} of the solution \cite{Gutkin2014}:
 \begin{align}
 \PRC(\phi) = \frac{1}{d V(\phi) / d \phi} = \frac{1}{2 \sqrt{I}} \left(1-\cos \left( \frac{2 \pi}{T} \phi \right) \right) \label{eq:PRC2}
 \end{align}
@@ -176,7 +177,7 @@ We can use $\phi \in [0, T[$ and $\theta \in \T$ to see that \eqref{eq:PRC2} can
 \begin{align}
 \PRC(\theta) \sim 1 + \cos \theta  \label{eq:PRC3}
 \end{align}
-which is the magnitude with which $I$ excites the model, see \eqref{eq:thetaneuron} \cite{Ermentrout1996}. Analysis of the \PRC thus allows us to study how the bifurcation of $\theta$ with magnitude $I$ occurs. The \PRC is always positive, which indicates that a positive bifurcation will accelerate the time of the spike, and vice versa. This has also been reported as a distinguishing feature of Class 1 models \cite{Ermentrout1996}. \\
+which is the magnitude with which $I$ excites the model, see \eqref{eq:thetaneuron} \cite{Ermentrout1996}. Analysis of the \PRC thus also allows us to study how the bifurcation of $\theta$ with magnitude $I$ occurs. The \PRC is always positive, which indicates that a positive bifurcation will accelerate the time of the spike, and vice versa. This has also been reported as a distinguishing feature of Class 1 models \cite{Ermentrout1996}. \\
 
 As bifurcations are not always small, we need to dig a little deeper. An exact formulation for $T_{\phi}$ can be obtained by integrating after the bifurcation, see \ref{app:ThetaModelPhaseResponse}. The \PRC then becomes:
 \begin{align}
