@@ -164,11 +164,11 @@ Hence, a 1\% change in $I$ will result in a 0.5 \% change in the period.
 \subsection{Phase response} \label{sec:TheThetaNeuronModelPhaseResponse}
 Perturbations on the period can also be understood from the perspective of the phase. Changes to the phase $\theta$ can delay or advance the event of a spike, and in general this depends on exactly when the stimulus occurs. The phase response curve (\PRC) gives us exactly that relation \cite{Perez2020, Gutkin2014}.
 
-Let us define $\phi \in [0, T[$, which represents the time since the last event of a spike. When we add a small bifurcation $\varepsilon$ to $\theta$ at time $\phi$, a spike will occur at $T_{\phi}$, and we have that $\theta(\phi_{\rm new}) = \theta(\phi) + \varepsilon$. The time to the new spike is $T_{\phi} = T + (\phi - \phi_{\text{new}})$. The \PRC can then be defined as:
+Let us define $\phi \in [0, T[$, which represents the time since the last event of a spike. When we add a small bifurcation $\varepsilon$ to $\theta$ at time $\phi$, a spike will occur at $T_{\phi}$, and we have that $\theta(\phi_{\rm new}) = \theta(\phi) + \varepsilon$. The time to the new spike is now $T_{\phi} = T + (\phi - \phi_{\text{new}})$. The \PRC can then be defined as:
 \begin{align}
 \PRC(\phi) = T - T_{\phi} \label{eq:PRC1}
 \end{align}
-The \PRC is thus the expected delay of the the phase period in function of the timing of the delay. This process has been visualised in Figure \ref{fig:ThetaNeuronPRC}, after \cite{Perez2020}. For infinitesimally small perturbations to the phase, we can find the \PRC as the \textsl{adjoint} of the solution \cite{Gutkin2014}:
+The \PRC is thus the expected delay of the period in function of the timing of the delay. This process has been visualised in Figure \ref{fig:ThetaNeuronPRC}, after \cite{Perez2020}. For infinitesimally small perturbations to the phase, we can find the \PRC as the \textsl{adjoint} of the solution \cite{Gutkin2014}:
 \begin{align}
 \PRC(\phi) = \frac{1}{d V(\phi) / d \phi} = \frac{1}{2 \sqrt{I}} \left(1-\cos \left( \frac{2 \pi}{T} \phi \right) \right) \label{eq:PRC2}
 \end{align}
@@ -176,18 +176,18 @@ We can use $\phi \in [0, T[$ and $\theta \in \T$ to see that \eqref{eq:PRC2} can
 \begin{align}
 \PRC(\theta) \sim 1 + \cos \theta  \label{eq:PRC3}
 \end{align}
-which is the magnitude with which $I$ excites the model \eqref{eq:thetaneuron}, \cite{Ermentrout1996}. Analysis of the \PRC thus allows us to study how the bifurcation of $\theta$ with magnitude $I$ occurs. The \PRC is always positive, which indicates that a positive bifurcation will advance the time of the spike, and vice versa. This has also been reported as a distinguishing feature of Class 1 models \cite{Ermentrout1996}. \\
+which is the magnitude with which $I$ excites the model, see \eqref{eq:thetaneuron} \cite{Ermentrout1996}. Analysis of the \PRC thus allows us to study how the bifurcation of $\theta$ with magnitude $I$ occurs. The \PRC is always positive, which indicates that a positive bifurcation will accelerate the time of the spike, and vice versa. This has also been reported as a distinguishing feature of Class 1 models \cite{Ermentrout1996}. \\
 
-A formulation for $T_{\phi}$ is obtained by integrating after the bifurcation. The \PRC then becomes:
+As bifurcations are not always small, we need to dig a little deeper. An exact formulation for $T_{\phi}$ can be obtained by integrating after the bifurcation, see \ref{app:ThetaModelPhaseResponse}. The \PRC then becomes:
 \begin{align}
 \PRC(\phi, \varepsilon) = \frac{1}{\sqrt{I}}\left(\frac{\pi}{2} + \arctan \left(\frac{\varepsilon}{\sqrt{I}} - \cot \left(\phi\sqrt{I} )\right)\right)\right) - \phi \label{eq:PRCepsilon}
 \end{align}
-When plotting \eqref{eq:PRCepsilon} for different values of $\varepsilon$ in Figure \ref{fig:ThetaNeuronPRC}, we can see that larger bifurcations yield larger delays on the phase. For infinitesimally small bifurcations the response in \eqref{eq:PRC2} is symmetric about the middle of the period. Here we see that for larger bifurcations the \PRC is skewed to the left, which means that the point where perturbation of the neuron is greatest is briefly after a spike. This tendency continues to skew left, and the \PRC converges to a value of $T$ at $\phi = 0$, as a delay with $T$ is really the largest delay we can achieve with one bifurcation.
+When plotting \eqref{eq:PRCepsilon} for different values of $\varepsilon$ in Figure \ref{fig:ThetaNeuronPRC}, we can see that larger bifurcations yield larger delays on the phase. For infinitesimally small bifurcations the response of \eqref{eq:PRC2} is symmetric about the middle of the period. However, here we see that with increasing $\varepsilon$ the \PRC loses symmetry and skews to the left. For large bifurcations, we can expect the greatest perturbation of the phase briefly after the action potential. This tendency continues to skew to the left for increasing $I$, and the \PRC converges to a value of $T$ at $\phi = 0$. A delay with magnitude $T$ is really the largest delay we can achieve with a single bifurcation. The effect of a bifurcation diminishes over the period: as $\theta$ approaches $\pi$, the ability to advance a spike in time disappears.\\
 
 \begin{figure}[H]
 \centering
 \includegraphics[width = \textwidth]{../Figures/ThetaNeuronPRC.pdf}
-\caption{Response of the Theta model to bifurcations on the phase. Left: a bifurcation $\varepsilon  < 0 $ at time $\phi$ perturbs $\theta(t)$ (in blue) which results in a delayed spike (trajectory in red). Right: the \PRC, given by \eqref{eq:PRCepsilon}, plotted for in orange for $\varepsilon$ ranging from 0.1 to 1 - a weak bifurcation is more transluscent. A solution for $\theta$ (in blue) shows when the model is the most susceptible to bifurcations over the course of one period.}
+\caption{Response of the Theta model to bifurcations on the phase. Left: a bifurcation $\varepsilon < 0$ at time $\phi$ perturbs $\theta(t)$ (in blue) which results in a delayed spike (trajectory in red). For $\varepsilon > 0$ spikes are advanced in time. Right: the \PRC, given by \eqref{eq:PRCepsilon}, plotted in orange for $\varepsilon$ ranging from 0.1 to 1 - a weak bifurcation is more translucent. A solution for $\theta$ (in blue) shows when the model is the most susceptible to bifurcations over the course of one period.}
 \label{fig:ThetaNeuronPRC}
 \end{figure}
 
