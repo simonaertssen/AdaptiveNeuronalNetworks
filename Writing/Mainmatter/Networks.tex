@@ -51,13 +51,13 @@ In theory, \eqref{eq:poissonpdf} is defined over the entirety of $\mathbb{N}$, b
 
 
 \subsection{Scale-free networks}
-What we can often observe in nature is the preferential attachment to nodes with a high degree \cite{Bullmore2010}: the rich and famous tend to get more rich and famous. This trait is also described as the 80/20 rule by Pareto, who saw that 80\% of the land in Italy was owned by 20\% of the population \cite{BarabasiNetworkBook2016}. Networks with this property consist of a small number of highly connected nodes, the \textsl{hubs}, and a large number of low degree nodes. We can represent this with a power law distribution:
+What we can observe in nature is the preferential attachment to nodes with a high degree \cite{Bullmore2010}: the rich and famous tend to get more rich and famous. This trait is also described as the 80/20 rule by Pareto, who saw that 80\% of the land in Italy was owned by 20\% of the population \cite{BarabasiNetworkBook2016}. Networks with this property consist of a small number of highly connected nodes, the \textsl{hubs}, and a large number of low degree nodes. We can represent this with a power law distribution:
 \begin{align}
 P(k) = C k^{-\gamma} \label{eq:scalefreepdf}
 \end{align}
-with $\gamma > 1$ and $C$ a constant so that $\sum_{k=1}^{\infty} P(k) = 1$. We can also see that $C \cdot \sum_{k=1}^{\infty} k^{-\gamma} = 1$ so that $C = \sum_{k=1}^{\infty} k^{\gamma} = 1/\zeta(k)$, the Riemann Z{\`e}ta function \cite{BarabasiNetworkBook2016}. As \eqref{eq:scalefreepdf} diverges for $k = 0$, $\kmin$ is usually fixed at 1.\\
+with $\gamma > 1$ and $C$ a constant so that $\sum_{k=1}^{\infty} P(k) = 1$. We can see that $C \cdot \sum_{k=1}^{\infty} k^{-\gamma} = 1$ so that $C = \sum_{k=1}^{\infty} k^{\gamma} = 1/\zeta(k)$, the Riemann Z{\`e}ta function \cite{BarabasiNetworkBook2016}. As \eqref{eq:scalefreepdf} diverges for $k = 0$, $\kmin$ is usually fixed at 1.\\
 
-To understand the scale of a distribution like \eqref{eq:scalefreepdf} we first ask ourselves how the size of the network affects the hubs. We can easily calculate the \textit{natural cutoff} $k_{\text{max}}$, the highest degree in the network. We only expect the largest hub to be the only hub in the domain $[k_{\text{max}}, +\infty[$:
+To understand the scale of a distribution like \eqref{eq:scalefreepdf} we first ask ourselves how the size of the network affects the degree of the hubs. We can easily calculate the \textit{natural cutoff} $k_{\text{max}}$, the highest degree in the network. We only expect the largest hub to be the only hub in the domain $[k_{\text{max}}, +\infty[$:
 \begin{align*}
 \int_{k_{\text{max}}}^{\infty} P(k) dk=\frac{1}{N}
 \end{align*}
@@ -73,7 +73,7 @@ The term \textsl{scale-free} can be even better understood from the moments of t
 \end{align}
 The degree exponent $\gamma$ constrains the properties of the network as follows:
 \begin{list}{$\bullet$}{}  
-\item 1 $< \gamma <$ 2: $\kmean$ diverges as the largest hub grows faster than $N$. Once $\kmax$ exceeds $N$ there are no more new nodes to connect to and the network is not able to continue to grow. Therefore these networks can not exist \cite{Bassler2011, BarabasiNetworkBook2016}.
+\item 1 $< \gamma <$ 2: $\kmean$ diverges as the largest hub grows faster than $N$. Once $\kmax$ exceeds $N$ there are no more new nodes to connect to and the network is not able to continue to grow. Therefore, these networks can not exist \cite{Bassler2011, BarabasiNetworkBook2016}.
 \item $\gamma =$ 2: all nodes are connected to the same node, as the largest hub grows linearly with $N$.
 \item 2 $< \gamma < $ 3: $\kmean$ is finite and positive, though the variance $\left\langle k^{2}\right\rangle$ is still divergent. This means that the node degrees can be arbitrarily far away from the average: when choosing a random node there is no limit on its degree. Hence, we call these networks \textsl{scale-free}.
 \item $ \gamma = $ 3: the variance $\left\langle k^{2}\right\rangle$ stops diverging, and network properties like the average distance between nodes start converging towards those of a random network \cite{BarabasiNetworkBook2016}.
@@ -91,14 +91,16 @@ The human brain can be seen as a graph, with neurons as graph nodes, where the p
 \dot{\theta}_{i} &=\left(1-\cos \theta_{i}\right)+\left(1+\cos \theta_{i}\right) \cdot \left[\eta_{i} + I_{i}(t)\right] \qquad \theta_i \in \T^N  \label{eq:thetaneuronnetwork} \\
 I_{i}(t) &=\frac{\kappa}{\kmean} \sum_{j=1}^{N} A_{i j} \cdot \mathcal{P}_{s}(\theta_{j}) \label{eq:thetaneuronnetworkcurrent}
 \end{align}
-The excitability $\eta_i \sim g(\eta \rvert \k)$ allows each neuron to attain an excitable or periodic regime. The interneuronal communication is modelled by the synaptic strength $\kappa$ and modulated by $\mathcal{P}_s(\theta)$, a pulse-shaped signal that is emitted when a neuron fires. As discussed in Chapter \ref{sec:Introduction}, there are conversions from the action potential to a neurotransmitter and back, but this process will be captured by using only $\mathcal{P}$ as the action potential and $\kappa$ as the "efficiency" of the conversions. $s$ models the sharpness of the pulse so that $\mathcal{P}_s = a_s(1 - \cos \theta)^s$, with $a_s$ a normalisation constant so that $\int_{\T} \mathcal{P}_{s} d \theta=2 \pi$. We will take $s=2$ from here, as in\cite{Luke2013, OttAntonsen2017, Martens2020}. 
+The excitability $\eta_i \sim g(\eta \rvert \k)$ allows each neuron to attain an excitable or periodic regime. The interneuronal communication is modelled by the synaptic strength $\kappa$ and modulated by $\mathcal{P}_s(\theta)$, a pulse-shaped signal that is emitted when a neuron fires. As discussed in Chapter \ref{sec:Introduction}, there are conversions from the action potential to neurotransmitters and back, but this process will be captured by using only $\mathcal{P}$ as the action potential and $\kappa$ as the "efficiency" of the conversions. 
+
+$s$ models the sharpness of the pulse $\mathcal{P}_s = a_s(1 - \cos \theta)^s$, with $a_s$ a normalisation constant so that $\int_{\T} \mathcal{P}_{s} d \theta=2 \pi$. We will take $s=2$ from here, as in\cite{Luke2013, OttAntonsen2017, Martens2020}. 
 %Note that for a fully connected network, $A_{ij} = 1$ so that \eqref{eq:thetaneuronnetworkcurrent} reduces to the work in \cite{Luke2013} and \cite{Martens2020}. \\
 
-In \eqref{eq:thetaneuronnetwork} we can see everything come together: changes to the phase $\theta_i$ are induced by $\dtheta_i$ which in turn depends on the bifurcation of $\theta$ with magnitude $I_i$ which depends on all neurons in the network. \\
+In \eqref{eq:thetaneuronnetwork} we can see everything come together: changes to the phase $\theta_i$ are induced by $\dtheta_i$ which in turn depends on the bifurcation of $\theta$ with magnitude $I_i$ which depends on all neurons in the network.\\
 
 %We can also understand why a fixed time-step solver is useful here: the memory demand of storing \eqref{eq:thetaneuronnetworkcurrent} as double precision floating point numbers is about $ \frac{t_b - t_a}{h+1} \cdot N \cdot 8 $ for $\theta$, $N^2 \cdot 8$ for $A_ij$. For 10.000 neurons integrated over 100 seconds at a time-step $h$ of 0.005 that is and 762.9 Mb respectively.
 
-Studying a set of differential equations like \eqref{eq:thetaneuronnetworkcurrent} is not feasible, as we are quickly approaching thousands of neurons. And in the end, the dynamics of a single neuron are not of interest. Instead, we wish to capture and study how the network behaves as a whole. When events are experienced by the neurons in unison we say that they are \textsl{synchronised}. This concept can be captured by the Kuramoto order parameter:
+Studying a set of differential equations like \eqref{eq:thetaneuronnetworkcurrent} analytically is not feasible, as we are quickly approaching thousands of neurons. And in the end, the dynamics of a single neuron are not of interest. Instead, we wish to capture and study how the network behaves as a whole. When events are experienced by the neurons in unison we say that they are \textsl{synchronised}. This concept can be captured by the Kuramoto order parameter:
 \begin{align}
 Z(t) = \frac{1}{N} \sum_{j=1}^N e^{\ic\theta_j}  \qquad Z \in \C \label{eq:orderparameter}
 \end{align}
