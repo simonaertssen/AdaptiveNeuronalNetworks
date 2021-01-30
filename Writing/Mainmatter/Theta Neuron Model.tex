@@ -1,7 +1,7 @@
 % !TEX root = ../main.tex
 \newpage
 \section{\theory The Theta Neuron Model} \label{TheThetaNeuronModel}
-\subsection{Canonical neuron models}
+%\subsection{Canonical neuron models}
 A number of neuron model families have been identified, and often there exists a continuous change of variables from models of the same family into a \textit{canonical} model that can represent the whole family \cite{Hoppensteadt2001CanonicalNM}. As the transformation is not required to be invertible, we can study the universal neurocomputational properties of the family in a low dimensional model.
 It was Hodgkin \cite{Hodgkin1948} who classified neurons into two types based on their excitability, upon experimenting with the electrical stimulation of cells. Class 1 models begin to spike at an arbitrarily slow rate, and the spiking frequency increases when the applied current is increased. Class 2 models spike as soon as their internal threshold is exceeded and the spiking frequency stays relatively constant within a certain frequency band \cite{Hoppensteadt2001CanonicalNM}.
 
@@ -112,7 +112,7 @@ Gaining insight into \eqref{eq:thetaneuron} is hard, due to the difficulty of fi
 V &\equiv \tan \left( \frac{\theta}{2} \right) \label{eq:QIFtransformation} \\
 \dot{V} &= V^2 + I \label{eq:QIFmodel}
 \end{align}
-This model is called the \textsl{Quadratic Integrate and Fire model} (\QIF). \eqref{eq:QIFmodel} models the membrane potential of a neuron, which spikes to $=\infty$ when the neuron spikes and is reset at $-\infty$. The transformation \eqref{eq:QIFtransformation} is continuous between spikes, so insights from a solution for $V$ can be transformed directly to $\theta$. The equilibria of the \QIF model are simply $\pm \sqrt{-I}$ (as $I < 0$) so that we can express $\theta^{\ast}_{1, 2} = 2 \cdot\arctan \left( \pm \sqrt{-I} \right)$ \cite{Gutkin2014}. \\
+This model is called the \textsl{Quadratic Integrate and Fire model} (\QIF). \eqref{eq:QIFmodel} models the membrane potential of a neuron, which spikes at $V=\infty$ and resets to $V \leftarrow -\infty$. The transformation \eqref{eq:QIFtransformation} is continuous between spikes, so insights from a solution for $V$ can be transformed directly to $\theta$. The equilibria of the \QIF model are simply $\pm \sqrt{-I}$ (as $I < 0$) so that we can express $\theta^{\ast}_{1, 2} = 2 \arctan \left( \pm \sqrt{-I} \right)$ \cite{Gutkin2014}. \\
 
 The solution for the excitable regime $I < 0$ is :
 \begin{align}
@@ -126,9 +126,9 @@ The solution for the periodic regime $I > 0$ is :
 \begin{align}
 V(t) = -\sqrt{I} \cdot \cot (t \sqrt{I}) \label{eq:ThetaNeuronModelSolutionPeriodic}
 \end{align}
-These equations assume that at $t=0$ a spike has occured. The steps required to find \eqref{eq:ThetaNeuronModelSolutionPeriodicExcitable} to \eqref{eq:ThetaNeuronModelSolutionPeriodic} are described in \ref{app:ThetaModelSolutions}. Solutions for $\theta$ are found by taking the inverse of the transformation \eqref{eq:QIFtransformation}.
+These equations assume that at $t=0$ a spike has occured. The steps required to find the solutions (\ref{eq:ThetaNeuronModelSolutionPeriodicExcitable}) to (\ref{eq:ThetaNeuronModelSolutionPeriodic}) are described in \ref{app:ThetaModelSolutions}. Solutions for $\theta$ are found by simply taking the inverse of the transformation in \eqref{eq:QIFtransformation}.
 
-If the \QIF model is so much simpler, then why bother using the Theta model? Simulating the \QIF model requires an artificial reset threshold, because we cannot expect a computer to represent infinity easily. Finite thresholds make the analytical solutions more difficult and convoluted. By using the Theta model the dynamics remain smooth and bounded on $\T$.
+If the \QIF model is so much simpler, then why bother using the Theta model? Simulating the \QIF model requires an artificial reset threshold, because we cannot expect a computer to represent infinity easily. Finite thresholds make the analytical solutions more difficult and convoluted. By using the Theta model the dynamics remain smooth and bounded on $\T$. %Since we take the cosine of the phase angle in \eqref{eq:thetaneuron}, we do not even
 
 
 \subsection{Numerical solutions} \label{sec:TheThetaNeuronModelODE45}
@@ -156,7 +156,7 @@ Hence, a 1\% change in $I$ will result in a 0.5 \% change in the period.
 \begin{figure}[H]
 \centering
 \includegraphics[width = \textwidth]{../Figures/ThetaNeuronfIandPRC.pdf}
-\caption{Response of the theta model to bifurcations on the frequency and the phase. Left: Frequency response of the theta model, experimentally verified. For $I \leq 0$ the spike period is infinite, which is why we see the solutions to \eqref{eq:thetaneuron} approach $\theta = 0$ for $I = 0$ in Figure \ref{fig:ThetaNeuronResponseToCurrent}. Middle: a bifurcation $\varepsilon  < 0 $ at time $\phi$ perturbs $\theta(t)$ (in blue) which results in a delayed spike (trajectory in red). Right: The \PRC, \eqref{eq:PRC2} in orange, with a solution for $\theta$ (in blue), to show when the model is the most susceptible to bifurcations over the course of one period.}
+\caption{Response of the Theta model to bifurcations on the frequency and the phase. Left: Frequency response of the Theta model, experimentally verified. For $I \leq 0$ the spike period is infinite, which is why we see the solutions to \eqref{eq:thetaneuron} approach $\theta = 0$ for $I = 0$ in Figure \ref{fig:ThetaNeuronResponseToCurrent}. Middle: a bifurcation $\varepsilon  < 0 $ at time $\phi$ perturbs $\theta(t)$ (in blue) which results in a delayed spike (trajectory in red). Right: The \PRC, \eqref{eq:PRC2} in orange, with a solution for $\theta$ (in blue), to show when the model is the most susceptible to bifurcations over the course of one period.}
 \label{fig:ThetaNeuronfIandPRC}
 \end{figure}
 
@@ -168,7 +168,7 @@ Let us define $\phi \in [0, T[$, which represents the time since the last event 
 \begin{align}
 \PRC(\phi) =T_{\phi} - T \label{eq:PRC1}
 \end{align}
-This process has been visualised in Figure \ref{fig:ThetaNeuronfIandPRC}, after \cite{Perez2020}. For infinitesimally small perturbations to the phase, we can find the \PRC as the \textsl{adjoint} of the solution \cite{Gutkin2014}:
+The \PRC is thus the expected delay of the the phase period in function of the timing of the delay. This process has been visualised in Figure \ref{fig:ThetaNeuronfIandPRC}, after \cite{Perez2020}. For infinitesimally small perturbations to the phase, we can find the \PRC as the \textsl{adjoint} of the solution \cite{Gutkin2014}:
 \begin{align}
 \PRC(\phi) = \frac{1}{d V(\phi) / d \phi} = \frac{1}{2 \sqrt{I}} \left(1-\cos \left( \frac{2 \pi}{T} \phi \right) \right) \label{eq:PRC2}
 \end{align}
