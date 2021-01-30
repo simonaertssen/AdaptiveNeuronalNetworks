@@ -100,6 +100,7 @@ set(gca,'YTick',[-pi, -pi/2, replacedvalue, 0, pi/2, pi], 'YTickLabel',{'-$$\pi$
 
 
 %% Draw the PRC itself:
+close all
 imrow(2) = subplot(m,n,2); hold on; box on;
 
 I = 0.1; T = pi/sqrt(I);
@@ -112,8 +113,7 @@ realdthetas = @(t) 2*I*csc(t*sqrt(I)).^2./(I*cot(t*sqrt(I)).^2 + 1);
 yyaxis right;
 es = 0.1:0.1:1;
 for e = es
-    Tf = 1/sqrt(I)*(pi/2 - atan(-e/sqrt(I) + cot(t*sqrt(I)))) - t;
-    PRC = Tf*(2*I);
+    PRC = 1/sqrt(I)*(pi/2 + atan(e/sqrt(I) - cot(t*sqrt(I)))) - t;
     plts = plot(t, PRC, '-', 'LineWidth', 2, 'Color', '#D95319');
     plts.Color=[0.8500 0.3250 0.0980, e];
 end

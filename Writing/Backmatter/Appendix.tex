@@ -52,21 +52,36 @@ V(t) &= \lim_{V(t_0) \rightarrow - \infty} \frac{V(t_0)}{1-V(t_0)(t - t_0)} \und
 &= \frac{1}{\sqrt{I}} \left( \arctan \left( \frac{V(t)}{\sqrt{I}} \right) - \arctan \left( \frac{V(t_0)}{\sqrt{I}} \right) \right) = 
 \int_{t_0}^t \mathop{d\tau} = t - t_0 \\
 V(t) &= \lim_{V(t_0) \rightarrow -\infty} \sqrt{I} \cdot \tan \left( (t - t_0) \sqrt{I} + \arctan \left( \frac{V(t_0)}{\sqrt{I}} \right) \right) = \sqrt{I} \cdot \tan \left( (t - t_0) \sqrt{I} - \frac{\pi}{2} \right) \\
-&=  \sqrt{I} \cdot \cot \left( (t - t_0) \sqrt{I} \right) 
+&=  -\sqrt{I} \cdot \cot \left( (t - t_0) \sqrt{I} \right) 
 \end{align*}
 
 
-\subsection{Frequency response of the neuron models} \label{app:ThetaModelFrequencyResponse}
-The integral is solved like before, but now with the conditions of the spike:
+\subsection{Frequency response of the Theta model} \label{app:ThetaModelFrequencyResponse}
+What is the relation between spiking period and input current? The integral is solved like before, but now with the conditions of the spike:
 \begin{align*}
-T &= \lim_{a \rightarrow \infty} \int_{-a}^{a} \frac{I}{\left(\frac{v}{\sqrt{I}}\right)^2 + 1} \mathop{dv} 
+T - t_0&= \lim_{a \rightarrow \infty} \int_{-a}^{a} \frac{I}{\left(\frac{v}{\sqrt{I}}\right)^2 + 1} \mathop{dv} 
 \overset{x = \frac{v}{\sqrt{I}}}{\underset{\mathop{dx} = \frac{dv}{\sqrt{I}}}{=}} 
 \lim_{a \rightarrow \infty} \int_{\frac{-a}{\sqrt{I}}}^{\frac{a}{\sqrt{I}}} \frac{I}{x^2 + 1} \mathop{dx}
 = \lim_{a \rightarrow \infty} \frac{1}{\sqrt{I}} \arctan(x) \Big \rvert_{\frac{-a}{\sqrt{I}}}^{\frac{a}{\sqrt{I}}} \\
 &= \frac{1}{\sqrt{I}} \left( \frac{\pi}{2} - \left( - \frac{\pi}{2} \right) \right)
 = \frac{\pi}{\sqrt{I}}
 \end{align*}
-So the frequency of oscillation is proportional to $\sqrt{I}$. 
+So the spiking frequency is proportional to $\sqrt{I}$. 
+
+
+\subsection{Phase response of the Theta model} \label{app:ThetaModelPhaseResponse}
+Here we will find an exact expression for the \PRC. Starting from the analysis in \ref{app:ThetaModelFrequencyResponse}, we first look for an expression for $T_{\phi}$. We can resume our normal integration at $\phi$ with $V \left( \phi \right) + \varepsilon$:
+\begin{align*}
+T_{\phi}=\frac{1}{\sqrt{I}}\left(\frac{\pi}{2}-\arctan \left(\frac{V(\phi)+\varepsilon}{\sqrt{I}}\right)\right)+\phi
+\end{align*}
+As $V(\phi)$ is given by \eqref{eq:ThetaNeuronModelSolutionPeriodic}, we can find:
+\begin{align*}
+T_{\phi} = \frac{1}{\sqrt{I}}\left(\frac{\pi}{2} - \arctan \left(\frac{\varepsilon}{\sqrt{I}} - \cot \left(\phi\sqrt{I})\right)\right)\right)+\phi
+\end{align*}
+The \PRC is then simply:
+\begin{align*}
+\PRC(\phi, \varepsilon) = \frac{1}{\sqrt{I}}\left(\frac{\pi}{2} + \arctan \left(\frac{\varepsilon}{\sqrt{I}} - \cot \left(\phi \sqrt{I})\right)\right)\right) - \phi
+\end{align*}
 
 
 \subsection{Newton-Raphson root iteration} \label{app:NewtonRaphson}
