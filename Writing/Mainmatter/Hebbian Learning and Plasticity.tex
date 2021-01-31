@@ -6,13 +6,13 @@
 \textsl{When an axon of cell A is near enough to excite a cell B and repeatedly or persistently takes part in firing it, some growth process or metabolic change takes places in one or both cells such that A's efficiency, as one of the cells firing B, is increased.}\cite{Hebb1949}
 \end{quote}
 
-This quote from psychologist Donald Hebb has influenced the neuroscientific community since 1949. In its essence, Hebb postulated that neurons that \textsl{fire together, wire together}. It has since become known as \textsl{Hebbian learning}, and is simply modelled as a positive correlation between the action potentials of spiking neurons. It has been proven in vivo in many studies \cite{ChrolCannon2014}, just like its counterpart, \textsl{anti-Hebbian learning}, where a negative correlation can be found.
+This quote from psychologist Donald Hebb has influenced the neuroscientific community since 1949. In its essence, Hebb postulated that neurons that \textsl{fire together, wire together}. It has since become known as \textsl{Hebbian learning}, and is simply modelled as a positive correlation between the action potentials of spiking neurons. It has been proven in vivo in many studies \cite{ChrolCannon2014}, just like its counterpart, \textsl{anti-Hebbian learning}, where a negative correlation can be found. In many applications, both processes are present. 
 
 
 \subsection{Spike-timing dependant plasticity}
-One specific temporal interpretation of these ideas is \textsl{spike-timing-dependent plasticity} (\STDP), where the relative timing of action potentials from the pre- and postsynaptic neuron determine causality \cite{Kempter1999, Gerstner2002}. If the postsynaptic neuron fires right after the presynaptic neuron, then we can expect the synaptic strength from post- to presynaptic neuron to increase, and vice versa. 
+One specific temporal interpretation of these ideas is \textsl{spike-timing-dependent plasticity} (\STDP), where the relative timing of action potentials from the pre- and postsynaptic neuron determine causality \cite{Kempter1999, Gerstner2002}. If the postsynaptic neuron B fires right after the presynaptic neuron A, then we can expect the synaptic strength from post- to presynaptic neuron to increase, and vice versa. Whether A pushes B or B listens to A  is trivial.
 
-Let us say that neuron $\theta_i$ spikes at time $t_i$ and that neuron $\theta_j$ spikes at $t_j$. Taking the time difference $\Delta t_{ij}$ as $t_j - t_i$, we can say that when $\Delta t_{ij} > 0$ the spikes are correlated (there exists a temporally causal relation), and we can model an increase in synaptic strength of the connection from $\theta_i$ to $\theta_j$, which we will gather in the \textsl{coupling matrix} $K_{ij}$. In the same fashion we can decrease $K_{ji}$ when $\Delta t_{ij} < 0$ as there is no causal relation. We will find an expression for $\Delta K_{ij}$ in function of $\Delta t_{ij}$ so that at each time-step we can update $K_{ij} \leftarrow K_{ij} + \Delta K_{ij}$.\\
+Let us say that neuron $\theta_i$ spikes at time $t_i$ and that neuron $\theta_j$ spikes at $t_j$. Taking the time difference $\Delta t_{ij}$ as $t_j - t_i$, we can say that when $\Delta t_{ij} > 0$ the spikes are correlated (there exists a temporally causal relation), and we can model an increase in synaptic strength of the connection from $\theta_i$ to $\theta_j$, which we will gather in the \textsl{coupling matrix} $K_{ij}$. In the light of anti-Hebbian learning we can decrease $K_{ij}$ when $\Delta t_{ij} < 0$, as there is no causal relation. We will find an expression for $\Delta K_{ij}$ in function of $\Delta t_{ij}$ so that at each time-step we can update $K_{ij} \leftarrow K_{ij} + \Delta K_{ij}$.\\
 
 We can think of the coupling matrix as the continuous interpretation of $\kappa A_{ij}$, where synaptic strength and network topology go hand in hand. This also means that we need to redefine some concepts:
 \begin{align}
@@ -36,12 +36,15 @@ Another characteristic is the integral over the learning window. A window with a
 
 %The magnitude of change is modulated by an asymmetric biphasic learning window around pulses originating from the postsynaptic neuron. Asymmetric because the peak is not situated at 0 and the integral over the window is generally positive, biphasic because this allows both to strengthen and weaken coupling strengths \cite{Gerstner2002}. 
 
-This approach simplifies modelling the neuronal back-propagation, where another pulse is generated as an echo of the action potential which travels through the neuron dendrites (so, backwards). This behaviour is believed to adjust the presynaptic weights, though it is a controversial subject \cite{Gerstner2002}. 
+This approach simplifies modelling the neuronal back-propagation, where another pulse is generated as an echo of the action potential which travels through the neuron dendrites (so, backwards). This behaviour is believed to adjust the presynaptic weights, though it is a controversial subject \cite{Gerstner2002}. \\
+
+In recent years, criticism on \STDP has been growing, as experimental data has shown that \STDP is usually accompanied by homeostatic plasticity of the neurons excitability and the synaptic strength. Basing our learning behaviour on the correlation between neuronal activity can be quite unstable: changes to the synaptic strength cause changes in the postsynaptic firing rate, which generates further changes to the synaptic strength in a positive feedback loop. Processes like \textsl{intrinsic plasticity} (\IP), where one neuron's excitability changes over time as to self-regulate sensitivity to incoming action potentials, or \textsl{synaptic scaling}, where synapse characteristics are adjusted in unison to counteract positive feedback loops, have proven to stabilise the synchronisation \cite{ChrolCannon2014, Kirkwood2019}. When \STDP and \IP are combined, it seems like the two process balance each other out and stable network topologies can be found \cite{Song2017}.
 
 
 \subsection{Formulations of \STDP as a model}
 \subsubsection{The Kempter method}
-Analysis of a distinct \STDP model was done in \cite{Kempter1999}. Following the notation, we will denote the sequence of action potentials, the \textsl{spike train}, coming from each neuron $\theta_i$ as $S_i^{\rm out}(t) = \sum_{n} \delta (t-t_{i}^{n})$, where $t_{i}^{n}$ is the time that $\theta_i$ has fired. Similarly, we will denote the spike train coming into each neuron $\theta_i$ as $S_i^{\rm in}(t) = \sum_{f} \delta (t-t_{i}^{f})$ with $t_{i}^{f}$ being the time that a neighbouring neuron has spiked. Now we can say that the synaptic strengths are adjusted as:
+%Analysis of a distinct \STDP model was done in \cite{Kempter1999}. 
+\cite{Kempter1999} proposed a distinct \STDP model. Following the notation, we will denote the sequence of action potentials, the \textsl{spike train}, coming from each neuron $\theta_i$ as $S_i^{\rm out}(t) = \sum_{n} \delta (t-t_{i}^{n})$, where $t_{i}^{n}$ is the time that $\theta_i$ has fired. Similarly, we will denote the spike train coming into each neuron $\theta_i$ as $S_i^{\rm in}(t) = \sum_{f} \delta (t-t_{i}^{f})$ with $t_{i}^{f}$ being the time that a neighbouring neuron has spiked. Now we can say that the synaptic strengths are adjusted as:
 \begin{align}
 \Delta K_{ij} &= \int_{t}^{t+\mathcal{T}} w^{\rm{out}} S_i^{\rm out}(\tau) + w^{\rm{in}} S_{j}^{\rm {in}}(\tau) \mathrm{d}\tau
 + \iint_{t}^{t+\mathcal{T}} W( \tau^\prime - \tau) S_{i}^{\rm out}(\tau) S_{j}^{\rm in}( \tau^\prime) \mathrm{d} \tau \mathrm{d} \tau^\prime
@@ -82,9 +85,9 @@ A_{p} \cdot \exp \left(\frac{-t}{\tau_p}\right) & \text{for } s > 0
 \end{align}
 where $A_p = 0.005$, $A_n = -0.00525$ and $\tau_p = \tau_n = 20$ ms. $\int W(\tau)_S \mathop{d \tau} = -5.0 \times 10^{-6}$ so we expect the weights to be suppressed towards a negative value. Interestingly, the line between reward and punishment is very thin, as the largest increase and largest decrease in synaptic strength lie right next to each other on the spectrum. \\
 
-As $K_{ij}$ is only allowed to be positive, the negative correlation of the learning window pushes most of the synaptic strengths towards zero. The range of coupling strengths is also very restricted and only allowed to change over a small interval: $K^{\rm max}$ = 0.03 \cite{Song2000, Song2017, ChrolCannon2012}. The learning dynamics, encoded into the topology of the network, show how the node degrees are pushed towards the edges $\pm K^{\rm max}$ with only a small group of neurons managing to learn the optimal spiking time. The spiking rate of all nodes in the network converges to a normal distribution. However, no mention is made of convergence of the node degrees, as the learning procedure is halted artificially.\\
+As $K_{ij}$ is only allowed to be positive, the negative correlation of the learning window pushes most of the synaptic strengths towards zero. The range of coupling strengths is also very restricted and only allowed to change over a small interval: $K^{\rm max}$ = 0.03 \cite{Song2000, Song2017, ChrolCannon2012}. The learning dynamics, encoded into the topology of the network, show how the node degrees are pushed towards 0, with only a small group of neurons managing to learn the optimal spike timing. The spiking rate of all nodes in the network converges to a normal distribution. However, no mention is made of convergence of the node degrees, as the learning procedure is halted artificially.\\
 
-Recently, triphasic learning windows have been used to account for when it takes too long for the postsynaptic neuron to fire, and thus to decorrelate the relation between neurons. These learning windows are curves that were fitted to experimental data of the cortex and the hippocampus \cite{ChrolCannon2014}. 
+Recently, triphasic learning windows have been used to account for when it takes too long for the postsynaptic neuron to fire, and thus to decorrelate the relation between neurons that spike too soon and too late. These learning windows are curves that were fitted to experimental data of the cortex and the hippocampus \cite{ChrolCannon2014}. 
 Extending the work of \cite{Song2000} we can find a brief investigation of network topology and clustering using triphasic windows, \cite{ChrolCannon2012}. The method is as in \eqref{eq:learningwindowSong2000}, with the following learning window:
 \begin{align}
 W(t)_C = A_{p} \cdot \exp \left(\frac{-\left(t - 15 \right)^{2}}{ \tau_{p}}\right) - A_{n} \cdot \exp \left(\frac{-\left(t - 20\right)^{2}}{ \tau_{n}}\right)  \label{eq:learningwindowChrolCannon2012}
@@ -95,11 +98,6 @@ When comparing the qualities of the different learning windows presented here, o
 
 %The learning windows generally have $W(t^{\ast}) = 0$ for $t^{\ast} \geq 0$. This means that no learning will take place when the delay between neuron spikes is exactly $t^{\ast} \geq 0$. The triphasic windows show two of those points. 
 
-It is important to notice that learning only occurs when neurons spike, so that equilibrium states will disturb the learning process. However, these states were rarely encountered during the testing process, and it seems like there continues to exist enough randomness in the states of $\theta_i$ to persist spiking.
-When implementing \STDP, a time-step smaller than 0.01 is necessary, otherwise important details in the learning dynamics that are captured by the shape of the learning window will be lost. 
-
-Another important observation is that when computing the time delay between spikes of the same neuron, $t_{i}^{f}-t_i^{n}$ will always be zero by definition. It is much simpler to perform this operation than to filter it out. In the case that $W(0)$ is zero, $K_{ii}$ will not change. Though for $W_S$ and $W_C$ we have $W(0) < 0$ so that $K_{ii}$ will always be decrease in magnitude. Conclusions can therefore not be drawn from self-coupling.
-
 \begin{figure}[H]
 \centering
 \includegraphics[width = \textwidth]{../Figures/Learning/LearningWindows.pdf}
@@ -107,11 +105,15 @@ Another important observation is that when computing the time delay between spik
 \label{fig:LearningWindows}
 \end{figure}
 
-In recent years, criticism on \STDP has been growing, as experimental data has shown that \STDP is usually accompanied by homeostatic plasticity of the neurons excitability and the synaptic strength. Basing our learning behaviour on the correlation between neuronal activity can be quite unstable: changes to the synaptic strength cause changes in the postsynaptic firing rate, which generates further changes to the synaptic strength in a positive feedback loop. Processes like \textsl{intrinsic plasticity} (\IP), where one neuron's excitability changes over time as to self-regulate sensitivity to incoming action potentials, or \textsl{synaptic scaling}, where synapse characteristics are adjusted in unison to counteract positive feedback loops, have proven to stabilise the synchronisation \cite{ChrolCannon2014, Kirkwood2019}. When \STDP and \IP are combined, it seems like the two process balance each other out and stable network topologies can be found \cite{Song2017}.
+It is important to notice that learning only occurs when neurons spike, so that equilibrium states will halt the learning process. However, these states were rarely encountered during the testing process, and it seems like there continues to exist enough randomness in the states of $\theta_i$ to persist spiking.
+When implementing \STDP, a time-step smaller than 0.01 is necessary, otherwise important details in the learning dynamics that are captured by the shape of the learning window will be lost. 
+
+Another important observation is that when computing the time delay between spikes of the same neuron, $t_{i}^{f}-t_i^{n}$ will always be zero by definition. It is much simpler to perform this operation than to filter it out. In the case that $W(0)$ is zero, $K_{ii}$ will not change. Though for $W_S$ and $W_C$ we have $W(0) < 0$ so that $K_{ii}$ will always be decrease in magnitude. Conclusions can therefore not be drawn from self-coupling.
+
 %We can model intrinsic plasticity by adjusting the neuron's excitability as the inverse of the firing rate: he more spikes that a neuron will receive, the less affected it is \cite{Song2017}.  An observed phenomenon is that the excitability evolves together with the coupling strength, but that at the extremes this relation reverses \cite{Debanne2017, Debanne2018}.  These types of plasticities should be relatively easy to implement but have no impact on the network topology.
 
 
-\subsection{Synaptic scaling}
+\subsection{Synaptic Scaling}
 There is no upper or lower bound on the synapse strength, and generally connection strengths are nonzero. Positive reinforcement loops might disturb the learning process, which would not be beneficial for the model. One technique we can apply to keep the strengths within a definitive range is to scale homeostatically - a method where any increases in synaptic strength will balance out any decreases by scaling:
 \begin{align}
 K_{ij}^s = K_{ij} \frac{\frac{1}{N} \sum_{i,j} K_{ij}}{\sum_{i} K_{ij}}
@@ -119,7 +121,7 @@ K_{ij}^s = K_{ij} \frac{\frac{1}{N} \sum_{i,j} K_{ij}}{\sum_{i} K_{ij}}
 In this way, the out-degrees will remain constant. Using this approach, something has to remain constant, whether that is $\kmean$, or $\kmean^2$ or any other property of the adjacency matrix. However, this property is not one we are after: we want a method that is able to change the network topology entirely.
 
 
-\subsection{Intrinsic plasticity} \label{sec:IP}
+\subsection{Intrinsic Plasticity} \label{sec:IP}
 Instead of scaling the weights to preserve a certain quantity in the network, we can allow the neurons to adjust their sensitivity to incoming signals. So when some synaptic strengths are increased, we can reduce the excitability, and vice-versa. This should counteract positive feedback. 
 
 If we look at the formulation of the network of Theta neurons \eqref{eq:thetaneuronnetworkcurrent_adaptive}, we can see that $\eta_i$ is the threshold on $I_i(t)$ for which the result of the \PRC will be positive or negative. The neuron action potentials $\mathcal{P}_n(\theta_j)$ are scaled by the coupling matrix and the mean node degree. We expect that when neurons learn to adapt $K_{ij}$ and $\eta_i$, the two will try to cancel each other out.
