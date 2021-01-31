@@ -1,20 +1,20 @@
 % !TEX root = ../main.tex
 \newpage
 \section{Conclusions and Future Work} \label{sec:ConclusionAndDiscussion}
-Starting from the Theta neuron model, we have holistically discussed its use in directed networks and described synchronisation of different network topologies, simplifying the analysis with the \MFR. We have proven that from random initial topological conditions, a regular network structure can appear. Obtaining these results is the first step towards a unification in the theory of the dynamics \textsl{on} and \textsl{of} networks. \\
+Starting from the Theta neuron model, we have holistically discussed its use in directed networks and described synchronisation of different network topologies, simplifying the analysis with the \MFR. We have proven that from random initial topological conditions, a regular network structure can appear from a learning strategy. These results are the first step towards a unification in the theory of the dynamics \textsl{on} and \textsl{of} networks. \\
 
 Even though both fields have been well-established, currently there exists no theory that takes both approaches into account. The science of the different fields is scattered, a schism that is represented by the structure of this report. The only constant is the description of the behaviour of networks, which was rigorously adapted for this work. Going forward, it would be interesting to see whether a similar approach as in the \MFR can be taken: if the network dynamics can be represented per node degree, then why not find a learning strategy that allows for a coupling matrix defined on $\mathbb{N}^{N \times N}$? Or can we perhaps bin the node degrees so that even less equations are necessary for the \MFR to function? \\
 
 These questions are the seed for a future investigation.
 
 \subsection{Further investigation of initial and final conditions}
-The initial conditions of the different systems obtained in Chapter \ref{sec:initialconditions} by numerically solving for $f(z) = \| Z(0) - \bar{Z}(0) \|$ are satisfactory, but can be improved upon. The distribution of degrees over the attractive manifold can be taken into account by further analysis on the final conditions, and we should obtain a better understanding of the location of the manifold with respect to the resulting point in $\bar{Z}$. Then, a second condition can be added so that the numerical solution of $f$ converges to the manifold. 
+The initial conditions of the different systems obtained in Chapter \ref{sec:initialconditions} by numerically solving for $f(z) = \| Z(0) - \bar{Z}(0) \|$ are satisfactory, but can be improved upon. The distribution of degrees over the attractive manifold can be taken into account by further analysis on the final conditions, and we should obtain a better understanding of the location of the manifold with respect to the resulting $\bar{Z}$ in $\C$. Then, a second condition can be added so that the numerical solution of $f$ converges to the manifold. 
 
-In the current implementation, there is no objective function for the optimisation. $f$ is solved as an equality constraint so that the solution is exact and not just a minimum, and the constraint $| z | \leq 1$ is solved as an inequality. This leaves the objective function free to take the manifold into account: a metric like the Kullback-Leibler divergence can be introduced to take the target distribution into account. 
+In the current implementation, there is no objective function for the optimisation of $f$: the results have to be exact. $f$ is solved as an equality constraint so that the solution is exact and not just a minimum, and the constraint $| z | \leq 1$ is solved as an inequality. This leaves the objective function free to optimise on the manifold: a metric like the Kullback-Leibler divergence can be introduced to take the target distribution into account, or we can force \textsl{smoothness} of the results. 
 
 
 \subsection{A learning strategy with desirable properties}
-In Chapter \ref{sec:HebbianLearningAndSynapticPlasticity}, two different learning strategies were presented, and in Chapter \ref{sec:EmergingNetworkTopologies} their functionality was discussed. The feedback loops between $W$ and $\Delta K$ make it hard to find a formulation that would guarantee a stable network topology, without the artificial bounds on $K$. Another challenge is allowing inhibitive \textsl{and} excitatory coupling, which no other work has touched upon.
+In Chapter \ref{sec:HebbianLearningAndSynapticPlasticity}, two different learning strategies were presented, and in Chapter \ref{sec:EmergingNetworkTopologies} their functionality was discussed. The feedback loops between $W$ and $\Delta K_{ij}$ make it hard to find a formulation that would guarantee a stable network topology, without the artificial bounds on $K_{ij}$. Another challenge is allowing inhibitive \textsl{and} excitatory coupling, which no other work has touched upon.
 
 A constant in the formulation of a learning strategy is the in- and outgoing spike trains: 
 \begin{align}
@@ -30,11 +30,11 @@ The Hadamard product $\circ$ ensures that the sign of the coupling strength is p
 \subsection{Symmetry of the learned degree distributions}
 The degree distributions resulting from the learning procedure in Chapters \ref{sec:STDPlearning} and \ref{sec:STDPandIPlearning} should be investigated further, as it appears that $\kinb$ and $\koutb$ are variates from the same univariate distribution. The impact of using a bimodal degree distribution, which was the result of using $W_C$, is currently unknown.
 
-Perhaps the differences we observed between the \MFR and the solutions of the whole network in Chapter \ref{sec:resArbNetw} can be explained by the fact that fixed-degree and random networks have a degree distribution with $\kmean$ as the axis of symmetry, which the scale-free distribution does not have. The latter showed large differences between the two approaches.
+Perhaps the differences we observed between the \MFR and the solutions of the whole network in Chapter \ref{sec:resArbNetw} can be explained by the fact that fixed-degree and random networks have a degree distribution with $\kmean$ as the axis of symmetry, a property that the scale-free distribution does not have. The latter showed large differences between the prediction and the simulation.
 
 
 \subsection{Synchronisation and spiking rate}
-In accordance with most of the work conducted on the \MFR, the order parameter was used to measure synchrony in the network. In the context of \STDP and \IP, a better metric could have been the mean firing rate, the average neural activity of a node in the past:
+In accordance with most of the work conducted on the \MFR, the order parameter was used to measure synchrony in the network. In the context of \STDP and \IP, a better metric could have been the mean firing rate, the average neural activity of all neurons in the past:
 \begin{align}
 \rho(t)=\frac{1}{N} \sum_{j=1}^{N} \sum_{n} \delta\left(t-t_{j}^{n}\right)
 \end{align}
