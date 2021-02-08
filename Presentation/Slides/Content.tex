@@ -1,5 +1,26 @@
 % !TEX root = ../main.tex
 
+\section{Contents}
+\begin{frame}
+\frametitle{Holistic approach}
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+    %\draw [thin] (0,0) circle [radius=2];
+    \draw (0,2) node{Synchronisation};
+    \draw (1.732,-1) node{Topology};
+    \draw (-1.732,-1) node{Plasticity};
+         
+     \draw[black, <->, thick] (-1,1.73)to[out=180+25,in=120-7.5](-1.85,-0.77);
+     
+     \draw[black, <->, thick] (1,1.73)to[out=-25,in=180-120+7.5](1.85,-0.77);
+     
+     \draw[black, <->, thick] (-1.59,-1.22)to[out=-60+7.5,in=-120-7.5](1.59,-1.22);
+    \end{tikzpicture}
+\end{figure}
+\end{frame}
+
+
 \section{Introduction}
 \begin{frame}
 \frametitle{Neuron dynamics}
@@ -16,6 +37,19 @@
 \item The \MFR yields the average dynamics of the network 
 \end{itemize}
 \end{frame}
+
+\begin{frame}
+\frametitle{Synaptic plasticity}
+\setbeamercovered{transparent}
+\onslide<1->{How do neurons learn?}
+\begin{itemize}[<+(1)->]
+\item Hebbian learning: \textsl{Fire and wire} \\
+\item Correlation of neuronal activity \\
+\item Change response to incoming and outgoing signals \\
+\item Average response intensity = \textsl{synaptic strength} \\ 
+\end{itemize}
+\end{frame}
+
 
 
 
@@ -156,16 +190,19 @@ The \MFR yields a solution for $Z(t)$\\
 \begin{subfigure}[b]{0.32\linewidth}
    \centering
   \includegraphics[width=\linewidth]{../Figures/PhaseSpace/MFRPSR.pdf}
+  \caption{Partially Synchronous Rest state}
    \label{fig:MFRPSR} 
 \end{subfigure} \hfill
 \begin{subfigure}[b]{0.32\linewidth}
    \centering
   \includegraphics[width=\linewidth]{../Figures/PhaseSpace/MFRPSS.pdf}
+  \caption{Partially Synchronous Spiking state}
    \label{fig:MFRPSS}
 \end{subfigure} \hfill
 \begin{subfigure}[b]{0.32\linewidth}
    \centering
   \includegraphics[width=\linewidth]{../Figures/PhaseSpace/MFRCPW.pdf}
+  \caption{Collective Periodic wave state}
    \label{fig:MFRCPW}
 \end{subfigure}
    \label{fig:macroscopicstatesfixeddegree}
@@ -220,6 +257,32 @@ Find a probable solution by sampling from the in- and outdegrees
 \end{figure}
 \end{frame}
 
+\begin{frame}
+\frametitle{Final conditions} 
+\begin{figure}[H]
+\centering
+\includegraphics[width = \textwidth]{../Figures/Distributions/FinalConditions.pdf}
+\label{fig:FinalConditions}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Results} 
+\begin{figure}[H]
+\centering
+\includegraphics[width = \textwidth, trim={0 3mm 0 3mm},clip]{../Figures/InspectMeanFieldFixedDegree.pdf}
+\label{fig:InspectMeanFieldFixedDegree}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Results} 
+\begin{figure}[H]
+\centering
+\includegraphics[width = 0.5\textwidth]{../Figures/PhaseSpace/ScalefreeLimCycles.pdf}
+\label{fig:InspectMeanFieldScaleFreePhaseSpace}
+\end{figure}
+\end{frame}
 
 
 
