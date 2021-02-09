@@ -39,7 +39,7 @@ How can we capture this behaviour?
 
 
 
-\section{The Theta Neuron Model}
+\section{\theory The Theta Neuron Model}
 \begin{frame}
 \frametitle{Model Description}
 \tabitem Formulation
@@ -122,7 +122,7 @@ How can we capture this behaviour?
 
 
 
-\section{Network Topologies}
+\section{\theory Network Topologies}
 \begin{frame}
 \frametitle{Three basic networks}
 \begin{figure}[H]
@@ -148,7 +148,7 @@ Z(t) = \frac{1}{N} \sum_{j=1}^N e^{\ic\theta_j}  \qquad Z \in \C
 
 
 
-\section{Mean Field Reduction}
+\section{\theory Mean Field Reduction}
 \begin{frame}
 \frametitle{Predict synchronisation dynamics} 
 The \MFR = solution for $Z(t)$\\ [0.5cm]
@@ -266,16 +266,51 @@ Find a probable solution by sampling from the in- and outdegrees
 
 
 
-\section{Hebbian Learning and Synaptic Plasticity} 
+\section{\theory Hebbian Learning and Synaptic Plasticity} 
 \begin{frame}
-\frametitle{Hebbian Learning and Synaptic Plasticity}
+\frametitle{Temporal Interpretation: \STDP}
+\tabitem \textsl{Fire and wire}: correlate successive action potentials
+\begin{align*}
+\Delta \text{Synaptic strength  } \sim \sum_{t_{j}^{f}, t_{i}^{n} \in \mathcal{T}} W\left(t_{j}^{f}-t_{i}^{n}\right)
+\end{align*}
+\tabitem \IP: adjust neuron sensitivity to incoming action potentials
+\begin{figure}[H]
+\centering
+\includegraphics[width = \textwidth]{../Figures/Learning/LearningWindows.pdf}
+\label{fig:LearningWindows}
+\end{figure}
 \end{frame}
 
 
 \section{\mywork Emerging Network Topologies} 
 \begin{frame}
-\frametitle{\mywork Emerging Network Topologies}
+\frametitle{\STDP}
+\begin{figure}[H]
+\centering
+\includegraphics[trim=0cm 24.7cm 0cm 8.4cm, clip=true, height = 0.455\textheight]{../Figures/Learning/STDP.pdf}
+\label{fig:STDP}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[trim=0cm 7.2cm 0cm 26cm, clip=true, height = 0.45\textheight]{../Figures/Learning/STDP.pdf}
+\label{fig:STDP}
+\end{figure}
 \end{frame}
+
+\begin{frame}
+\frametitle{\STDP + \IP}
+\begin{figure}[H]
+\centering
+\includegraphics[trim=0cm 28.5cm 0cm 7.1cm, clip=true, height = 0.475\textheight]{../Figures/Learning/STDPandIP.pdf}
+\label{fig:STDP}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[trim=0cm 13.3cm 0cm 22.7cm, clip=true, height = 0.45\textheight]{../Figures/Learning/STDPandIP.pdf}
+\label{fig:STDP}
+\end{figure}
+\end{frame}
+
 
 
 \section{Conclusion and Discussion} 
