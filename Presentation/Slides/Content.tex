@@ -26,12 +26,12 @@ How do neurons communicate?
 \item Neurotransmitters \\
 \item Action potential = explosion of electrical activity \\ [0.5cm]
 \end{itemize}
+%How can we capture this behaviour?
+%\begin{itemize}
+%\item Human brain $\sim$ 100 billion neurons \\
+%\item \MFR: average dynamics of the network \\ [0.5cm]
+%\end{itemize}
 How do neurons learn?
-\begin{itemize}
-\item Human brain $\sim$ 100 billion neurons \\
-\item \MFR: average dynamics of the network \\ [0.5cm]
-\end{itemize}
-How can we capture this behaviour?
 \begin{itemize}
 \item \textsl{Fire and wire}: Correlation of neuronal activity \\
 \end{itemize}
@@ -42,10 +42,10 @@ How can we capture this behaviour?
 \section{\theory The Theta Neuron Model}
 \begin{frame}
 \frametitle{Model Description}
-\tabitem Formulation
-\begin{align*}
-\dot{\theta} = (1-\cos \theta)+(1+\cos \theta) \cdot I \qquad \theta \in \T 
-\end{align*}
+%\tabitem Formulation
+%\begin{align*}
+%\dot{\theta} = (1-\cos \theta)+(1+\cos \theta) \cdot I \qquad \theta \in \T 
+%\end{align*}
 
 \tabitem Normal form of SNIC bifurcation
 \begin{figure}[H]
@@ -151,16 +151,18 @@ Z(t) = \frac{1}{N} \sum_{j=1}^N e^{\ic\theta_j}  \qquad Z \in \C
 \section{\theory Mean Field Reduction}
 \begin{frame}
 \frametitle{Predict synchronisation dynamics} 
-The \MFR = solution for $Z(t)$\\ [0.5cm]
+The \MFR = solution for $Z(t)$\\ 
+Simple for fixed-degree networks: one equation\\[0.5cm]
 
-\textsl{Reduction?} Formulate $Z(t)$ per degree $z(\k,t)$!\\
-\tabitem $M_{\k} \ll N$ unique node degrees \\
-\tabitem Only $M_{\k}$ equations left \\
-\tabitem Weighed by $P(\k)$ 
+\textsl{Solution?} Formulate $Z(t)$ per degree $z(\k,t)$!\\
+\tabitem Less unique degrees than neurons = less equations! \\
+%\tabitem $M_{\k} \ll N$ unique node degrees \\
+%\tabitem Only $M_{\k}$ equations left \\
+%\tabitem Weighed by $P(\k)$ 
 \begin{align*}
 \bar{Z}(t) &= \frac{1}{N} \sum_{\k} P(\k) z(\k, t) \qquad \bar{Z} \in \C \label{eq:OttAntonsenMeanField}
 \end{align*}
-Problem: $M_{\k}$ still too large when $P(\k)$ is bivariate
+%Problem: $M_{\k}$ still too large when $P(\k)$ is bivariate
 \end{frame}
 
 \begin{frame}
@@ -170,19 +172,19 @@ Problem: $M_{\k}$ still too large when $P(\k)$ is bivariate
 \begin{subfigure}[b]{0.32\linewidth}
    \centering
   \includegraphics[width=\linewidth]{../Figures/PhaseSpace/MFRPSR.pdf}
-%  \caption{Partially Synchronous Rest state}
+  \caption{PSR}
    \label{fig:MFRPSR} 
 \end{subfigure} \hfill
 \begin{subfigure}[b]{0.32\linewidth}
    \centering
   \includegraphics[width=\linewidth]{../Figures/PhaseSpace/MFRPSS.pdf}
-%  \caption{Partially Synchronous Spiking state}
+  \caption{PSS}
    \label{fig:MFRPSS}
 \end{subfigure} \hfill
 \begin{subfigure}[b]{0.32\linewidth}
    \centering
   \includegraphics[width=\linewidth]{../Figures/PhaseSpace/MFRCPW.pdf}
-%  \caption{Collective Periodic wave state}
+    \caption{CPW}
    \label{fig:MFRCPW}
 \end{subfigure}
    \label{fig:macroscopicstatesfixeddegree}
@@ -196,7 +198,7 @@ $Z(t)$ can be measured and predicted: are they the same? \\
 \begin{itemize}
 \item Formulate directed networks \\
 \item Construct adjacency matrix from degree distribution \\
-\item Initial and final conditions 
+\item Initial conditions 
 \item Compare directed and undirected networks
 \end{itemize}
 \end{frame}
@@ -206,7 +208,7 @@ $Z(t)$ can be measured and predicted: are they the same? \\
 %Directed networks = bivariate degree distribution = asymmetric adjacency matrix \\
 Sample degree vectors from bivariate distribution? Difficult!\\
 \tabitem Use independant univariate distributions as marginal \\
-\tabitem In- and out degree vectors are found as a permutation
+\tabitem In- and out degree vectors are a permutation
 \end{frame}
 
 \begin{frame}
@@ -237,14 +239,14 @@ Find a probable solution by sampling from the in- and outdegrees
 \end{figure}
 \end{frame}
 
-\begin{frame}
-\frametitle{Final conditions} 
-\begin{figure}[H]
-\centering
-\includegraphics[width = \textwidth]{../Figures/Distributions/FinalConditions.pdf}
-\label{fig:FinalConditions}
-\end{figure}
-\end{frame}
+%\begin{frame}
+%\frametitle{Final conditions} 
+%\begin{figure}[H]
+%\centering
+%\includegraphics[width = \textwidth]{../Figures/Distributions/FinalConditions.pdf}
+%\label{fig:FinalConditions}
+%\end{figure}
+%\end{frame}
 
 \begin{frame}
 \frametitle{Results} 
@@ -326,7 +328,6 @@ Find a probable solution by sampling from the in- and outdegrees
 \frametitle{Future Work}
 \tabitem Further investigation of initial and final conditions \\
 \tabitem Find learning strategy with desirable properties \\
-\tabitem Understand symmetry of the learned degree distributions \\
 \tabitem Synchronisation or spiking rate? \\
 \tabitem Computational challenges
 \end{frame}
